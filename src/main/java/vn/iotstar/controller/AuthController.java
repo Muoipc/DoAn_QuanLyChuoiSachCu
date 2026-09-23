@@ -12,6 +12,13 @@ import vn.iotstar.dto.auth.ResetPasswordDTO;
 import vn.iotstar.dto.auth.VerifyOtpDTO;
 import vn.iotstar.service.IUserService;
 
+/**
+ * Controller điều hướng và xử lý toàn bộ luồng xác thực (Authentication):
+ * - Đăng nhập (Username hoặc Email)
+ * - Đăng ký tài khoản mới kèm gửi mã OTP xác thực email
+ * - Kích hoạt tài khoản qua OTP
+ * - Quên mật khẩu và đặt lại mật khẩu bằng mã xác minh OTP
+ */
 @Controller
 public class AuthController {
 
@@ -21,11 +28,18 @@ public class AuthController {
         this.userService = userService;
     }
 
+    /**
+     * Hiển thị trang đăng nhập.
+     * Spring Security sẽ tự động chặn các request POST /login để xác thực.
+     */
     @GetMapping("/login")
     public String login() {
         return "auth/login";
     }
 
+    /**
+     * Hiển thị form đăng ký tài khoản khách hàng mới.
+     */
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         if (!model.containsAttribute("registerDTO")) {
@@ -34,12 +48,18 @@ public class AuthController {
         return "auth/register";
     }
 
+    /**
+     * Tiếp nhận dữ liệu form đăng ký, kiểm tra tính hợp lệ (Validation).
+     * Nếu hợp lệ -> Gọi UserService lưu tài khoản ở trạng thái chờ kích hoạt (enabled=false)
+     * và gửi mã OTP qua email người dùng -> Chuyển hướng sang trang nhập OTP.
+     */
     @PostMapping("/register")
     public String handleRegister(
         @Valid @ModelAttribute("registerDTO") RegisterDTO dto,
         BindingResult bindingResult,
         RedirectAttributes redirectAttributes
     ) {
+        // Kiểm tra lỗi validation theo các annotation (@NotBlank, @Email, @Size,...)
         if (bindingResult.hasErrors()) {
             return "auth/register";
         }
@@ -50,11 +70,15 @@ public class AuthController {
                 "Đăng ký thành công! Mã OTP kích hoạt đã được gửi tới email của bạn.");
             return "redirect:/verify-otp?email=" + dto.getEmail();
         } catch (IllegalArgumentException ex) {
+            // Bắt lỗi trùng username hoặc email từ tầng Service
             bindingResult.rejectValue("email", "error.registerDTO", ex.getMessage());
             return "auth/register";
         }
     }
 
+    /**
+     * Hiển thị giao diện nhập mã OTP kích hoạt tài khoản.
+     */
     @GetMapping("/verify-otp")
     public String showVerifyOtpForm(@RequestParam(value = "email", required = false) String email, Model model) {
         VerifyOtpDTO dto = new VerifyOtpDTO();
@@ -63,6 +87,11 @@ public class AuthController {
         return "auth/verify-otp";
     }
 
+    /**
+     * Xử lý xác thực OTP:
+     * - Nếu mã đúng và còn hạn (5 phút) -> Kích hoạt tài khoản (enabled=true) và tạo giỏ hàng DB
+     * - Nếu sai/hết hạn -> Báo lỗi ngay trên ô nhập OTP
+     */
     @PostMapping("/verify-otp")
     public String handleVerifyOtp(
         @Valid @ModelAttribute("verifyOtpDTO") VerifyOtpDTO dto,
@@ -83,6 +112,9 @@ public class AuthController {
         return "redirect:/login?verified=true";
     }
 
+    /**
+     * Gửi lại mã OTP kích hoạt mới khi người dùng chưa nhận được hoặc mã cũ hết hạn.
+     */
     @GetMapping("/resend-otp")
     public String handleResendOtp(
         @RequestParam("email") String email,
@@ -97,6 +129,9 @@ public class AuthController {
         return "redirect:/verify-otp?email=" + email;
     }
 
+    /**
+     * Hiển thị trang yêu cầu quên mật khẩu.
+     */
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm(Model model) {
         if (!model.containsAttribute("forgotPasswordDTO")) {
@@ -105,6 +140,9 @@ public class AuthController {
         return "auth/forgot-password";
     }
 
+    /**
+     * Xử lý gửi OTP đặt lại mật khẩu vào email của người dùng.
+     */
     @PostMapping("/forgot-password")
     public String handleForgotPassword(
         @Valid @ModelAttribute("forgotPasswordDTO") ForgotPasswordDTO dto,
@@ -126,6 +164,9 @@ public class AuthController {
         }
     }
 
+    /**
+     * Hiển thị giao diện nhập mã OTP và mật khẩu mới.
+     */
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam(value = "email", required = false) String email, Model model) {
         ResetPasswordDTO dto = new ResetPasswordDTO();
@@ -134,6 +175,12 @@ public class AuthController {
         return "auth/reset-password";
     }
 
+    /**
+     * Xác nhận đổi mật khẩu:
+     * - Kiểm tra khớp mật khẩu xác nhận
+     * - Kiểm tra OTP hợp lệ
+     * - Mã hóa mật khẩu mới bằng BCrypt và lưu xuống DB
+     */
     @PostMapping("/reset-password")
     public String handleResetPassword(
         @Valid @ModelAttribute("resetPasswordDTO") ResetPasswordDTO dto,

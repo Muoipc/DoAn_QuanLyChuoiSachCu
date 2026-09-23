@@ -4,6 +4,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * DTO chứa dữ liệu đăng ký tài khoản mới từ form người dùng.
+ * Sử dụng Jakarta Validation để kiểm tra dữ liệu đầu vào chặt chẽ.
+ */
 public class RegisterDTO {
     @NotBlank(message = "Tên đăng nhập không được để trống")
     @Size(min = 4, max = 50, message = "Tên đăng nhập từ 4 đến 50 ký tự")

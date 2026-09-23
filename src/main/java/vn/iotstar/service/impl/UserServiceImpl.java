@@ -16,6 +16,11 @@ import vn.iotstar.service.IUserService;
 
 import java.util.Optional;
 
+/**
+ * Hiện thực nghiệp vụ quản lý người dùng:
+ * Tích hợp mã hóa BCrypt, phân quyền mặc định ROLE_USER, gửi OTP kích hoạt
+ * và khởi tạo giỏ hàng DB khi kích hoạt thành công.
+ */
 @Service
 public class UserServiceImpl implements IUserService {
 
@@ -39,6 +44,14 @@ public class UserServiceImpl implements IUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Đăng ký tài khoản:
+     * 1. Kiểm tra tính trùng khớp mật khẩu và sự tồn tại của username/email trong DB
+     * 2. Gán quyền mặc định ROLE_USER
+     * 3. Mã hóa mật khẩu bằng BCrypt
+     * 4. Lưu user ở trạng thái enabled = false
+     * 5. Sinh và gửi mã OTP qua email
+     */
     @Override
     @Transactional
     public void register(RegisterDTO dto) {
@@ -67,9 +80,15 @@ public class UserServiceImpl implements IUserService {
 
         userRepository.save(user);
 
+        // Sinh mã OTP kích hoạt và gửi email
         otpService.generateAndSendOtp(user.getEmail(), OtpToken.TokenType.REGISTER);
     }
 
+    /**
+     * Xác thực mã OTP kích hoạt:
+     * - Nếu mã đúng -> chuyển trạng thái user sang enabled = true
+     * - Khởi tạo 1 giỏ hàng rỗng trong DB cho user (nếu chưa có)
+     */
     @Override
     @Transactional
     public boolean verifyRegistration(String email, String otpCode) {
@@ -84,6 +103,7 @@ public class UserServiceImpl implements IUserService {
         user.setEnabled(true);
         userRepository.save(user);
 
+        // Đảm bảo người dùng luôn có giỏ hàng lưu trữ trên Database
         if (cartRepository.findByUserId(user.getId()).isEmpty()) {
             Cart cart = new Cart();
             cart.setUser(user);
@@ -93,6 +113,9 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
+    /**
+     * Gửi lại mã OTP kích hoạt mới
+     */
     @Override
     @Transactional
     public void resendRegistrationOtp(String email) {
@@ -106,6 +129,9 @@ public class UserServiceImpl implements IUserService {
         otpService.generateAndSendOtp(user.getEmail(), OtpToken.TokenType.REGISTER);
     }
 
+    /**
+     * Yêu cầu đặt lại mật khẩu: kiểm tra email tồn tại rồi sinh mã OTP
+     */
     @Override
     @Transactional
     public void requestForgotPassword(String email) {
@@ -115,6 +141,9 @@ public class UserServiceImpl implements IUserService {
         otpService.generateAndSendOtp(user.getEmail(), OtpToken.TokenType.FORGOT_PASSWORD);
     }
 
+    /**
+     * Đặt lại mật khẩu mới sau khi xác thực OTP thành công
+     */
     @Override
     @Transactional
     public boolean resetPassword(String email, String otpCode, String newPassword) {
@@ -132,6 +161,9 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
+    /**
+     * Tìm kiếm user theo Username hoặc Email (dùng cho Spring Security)
+     */
     @Override
     public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
         return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);

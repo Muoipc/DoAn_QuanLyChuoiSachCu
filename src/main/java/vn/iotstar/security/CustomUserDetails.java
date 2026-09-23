@@ -8,6 +8,10 @@ import vn.iotstar.entity.User;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Lớp chuyển đổi đối tượng User của cơ sở dữ liệu sang chuẩn UserDetails của Spring Security.
+ * Cho phép lưu trữ thông tin đăng nhập trong SecurityContext (id, email, fullName, vai trò,...).
+ */
 public class CustomUserDetails implements UserDetails {
     private final Long id;
     private final String username;
@@ -28,6 +32,7 @@ public class CustomUserDetails implements UserDetails {
         this.avatar = user.getAvatar();
         this.roleName = user.getRole().getName();
         this.enabled = Boolean.TRUE.equals(user.getEnabled());
+        // Phân quyền theo tên vai trò (ví dụ: ROLE_ADMIN, ROLE_USER, ROLE_MANAGER, ROLE_SHIPPER)
         this.authorities = List.of(new SimpleGrantedAuthority(user.getRole().getName()));
     }
 

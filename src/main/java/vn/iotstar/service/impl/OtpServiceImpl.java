@@ -11,6 +11,10 @@ import vn.iotstar.service.IOtpService;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 
+/**
+ * Service xử lý sinh mã OTP ngẫu nhiên 6 chữ số, thời hạn 5 phút.
+ * Tích hợp JavaMailSender gửi email thật và in ra Console để thuận tiện kiểm thử.
+ */
 @Service
 public class OtpServiceImpl implements IOtpService {
 
@@ -23,6 +27,10 @@ public class OtpServiceImpl implements IOtpService {
         this.mailSender = mailSender;
     }
 
+    /**
+     * Sinh mã OTP 6 số ngẫu nhiên an toàn (100000 - 999999), lưu vào DB với hạn 5 phút
+     * và gửi đến email đích.
+     */
     @Override
     @Transactional
     public String generateAndSendOtp(String email, OtpToken.TokenType tokenType) {
@@ -31,6 +39,7 @@ public class OtpServiceImpl implements IOtpService {
         OtpToken otpToken = new OtpToken(email, otpCode, tokenType, LocalDateTime.now().plusMinutes(5));
         otpTokenRepository.save(otpToken);
 
+        // Gửi email qua giao thức SMTP
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
@@ -39,16 +48,23 @@ public class OtpServiceImpl implements IOtpService {
                            "\nMã này có hiệu lực trong vòng 5 phút. Vui lòng không chia sẻ mã này cho bất kỳ ai.");
             mailSender.send(message);
         } catch (Exception e) {
-            System.err.println("Không gửi được email thật (kiểm tra cấu hình SMTP): " + e.getMessage());
+            System.err.println("Chưa cấu hình SMTP hoặc lỗi gửi mail: " + e.getMessage());
         }
 
+        // In mã OTP ra màn hình Console để thành viên nhóm kiểm tra nhanh mà không cần mở hộp thư
         System.out.println("==================================================");
-        System.out.println(">>> OTP TOKEN (" + tokenType + ") cho " + email + ": " + otpCode);
+        System.out.println(">>> [KIỂM THỬ] MÃ OTP (" + tokenType + ") cho " + email + ": " + otpCode);
         System.out.println("==================================================");
 
         return otpCode;
     }
 
+    /**
+     * Xác thực mã OTP:
+     * - Kiểm tra mã mới nhất theo email và mục đích (REGISTER / FORGOT_PASSWORD)
+     * - Kiểm tra thời gian hết hạn (expiresAt > now)
+     * - Đánh dấu mã đã dùng (isUsed = true) để chống tấn công Replay Attack
+     */
     @Override
     @Transactional
     public boolean verifyOtp(String email, String otpCode, OtpToken.TokenType tokenType) {

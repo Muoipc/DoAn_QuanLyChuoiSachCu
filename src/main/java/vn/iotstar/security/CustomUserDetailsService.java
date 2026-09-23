@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 import vn.iotstar.entity.User;
 import vn.iotstar.repository.UserRepository;
 
+/**
+ * Service cầu nối giữa Spring Security và Database:
+ * Tải thông tin người dùng dựa vào Username HOẶC Email khi đăng nhập.
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
