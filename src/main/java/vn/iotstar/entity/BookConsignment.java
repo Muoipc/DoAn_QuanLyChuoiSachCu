@@ -1,7 +1,6 @@
 package vn.iotstar.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,11 +9,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "book_consignments")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class BookConsignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,7 +51,6 @@ public class BookConsignment {
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    @Builder.Default
     private ConsignmentStatus status = ConsignmentStatus.PENDING;
 
     @Column(name = "admin_notes", columnDefinition = "TEXT")
@@ -71,7 +64,40 @@ public class BookConsignment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public enum ConsignmentStatus {
-        PENDING, APPROVED, REJECTED, STORED
-    }
+    public enum ConsignmentStatus { PENDING, APPROVED, REJECTED, STORED }
+
+    public BookConsignment() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public Store getStore() { return store; }
+    public void setStore(Store store) { this.store = store; }
+    public String getBookTitle() { return bookTitle; }
+    public void setBookTitle(String bookTitle) { this.bookTitle = bookTitle; }
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
+    public String getPublisher() { return publisher; }
+    public void setPublisher(String publisher) { this.publisher = publisher; }
+    public Integer getPublishYear() { return publishYear; }
+    public void setPublishYear(Integer publishYear) { this.publishYear = publishYear; }
+    public Integer getConditionPercent() { return conditionPercent; }
+    public void setConditionPercent(Integer conditionPercent) { this.conditionPercent = conditionPercent; }
+    public String getConditionDescription() { return conditionDescription; }
+    public void setConditionDescription(String conditionDescription) { this.conditionDescription = conditionDescription; }
+    public String getPhotosJson() { return photosJson; }
+    public void setPhotosJson(String photosJson) { this.photosJson = photosJson; }
+    public BigDecimal getProposedPrice() { return proposedPrice; }
+    public void setProposedPrice(BigDecimal proposedPrice) { this.proposedPrice = proposedPrice; }
+    public BigDecimal getAgreedPrice() { return agreedPrice; }
+    public void setAgreedPrice(BigDecimal agreedPrice) { this.agreedPrice = agreedPrice; }
+    public ConsignmentStatus getStatus() { return status; }
+    public void setStatus(ConsignmentStatus status) { this.status = status; }
+    public String getAdminNotes() { return adminNotes; }
+    public void setAdminNotes(String adminNotes) { this.adminNotes = adminNotes; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

@@ -12,9 +12,4 @@ public class HomeController {
         model.addAttribute("pageTitle", "Hệ Thống Chuỗi Cửa Hàng Sách Cũ - HCMUTE");
         return "home";
     }
-
-    @GetMapping("/login")
-    public String login() {
-        return "auth/login";
-    }
 }

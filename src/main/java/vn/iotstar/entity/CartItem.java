@@ -1,18 +1,12 @@
 package vn.iotstar.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cart_items")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,4 +30,19 @@ public class CartItem {
     @CreationTimestamp
     @Column(name = "added_at", updatable = false)
     private LocalDateTime addedAt;
+
+    public CartItem() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Cart getCart() { return cart; }
+    public void setCart(Cart cart) { this.cart = cart; }
+    public Book getBook() { return book; }
+    public void setBook(Book book) { this.book = book; }
+    public Store getStore() { return store; }
+    public void setStore(Store store) { this.store = store; }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public LocalDateTime getAddedAt() { return addedAt; }
+    public void setAddedAt(LocalDateTime addedAt) { this.addedAt = addedAt; }
 }

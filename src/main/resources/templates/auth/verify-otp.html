@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Xác Thực Mã OTP</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h4 class="card-title text-center fw-bold mb-2">Xác Thực Mã OTP</h4>
+                    <p class="text-center text-muted small mb-3">
+                        Vui lòng nhập mã OTP gồm 6 chữ số vừa được gửi vào email của bạn.
+                    </p>
+
+                    <div th:if="${successMessage}" class="alert alert-success py-2 small" th:text="${successMessage}"></div>
+                    <div th:if="${errorMessage}" class="alert alert-danger py-2 small" th:text="${errorMessage}"></div>
+
+                    <form th:action="@{/verify-otp}" th:object="${verifyOtpDTO}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Địa chỉ Email</label>
+                            <input type="email" th:field="*{email}" class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Mã OTP (6 chữ số)</label>
+                            <input type="text" th:field="*{otpCode}" class="form-control text-center fs-4 tracking-widest" maxlength="6" autofocus placeholder="123456">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('otpCode')}" th:errors="*{otpCode}"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100 py-2">Kích Hoạt Tài Khoản</button>
+                    </form>
+
+                    <div class="text-center mt-3 small">
+                        Chưa nhận được mã? 
+                        <a th:href="@{/resend-otp(email=${verifyOtpDTO.email})}" class="text-decoration-none fw-semibold">
+                            Gửi lại mã OTP
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

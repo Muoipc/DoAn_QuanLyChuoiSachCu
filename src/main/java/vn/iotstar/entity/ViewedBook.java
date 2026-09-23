@@ -1,7 +1,6 @@
 package vn.iotstar.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -10,11 +9,6 @@ import java.time.LocalDateTime;
 @Table(name = "viewed_books", uniqueConstraints = {
     @UniqueConstraint(name = "uk_user_book_viewed", columnNames = {"user_id", "book_id"})
 })
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class ViewedBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +25,15 @@ public class ViewedBook {
     @UpdateTimestamp
     @Column(name = "viewed_at")
     private LocalDateTime viewedAt;
+
+    public ViewedBook() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public Book getBook() { return book; }
+    public void setBook(Book book) { this.book = book; }
+    public LocalDateTime getViewedAt() { return viewedAt; }
+    public void setViewedAt(LocalDateTime viewedAt) { this.viewedAt = viewedAt; }
 }

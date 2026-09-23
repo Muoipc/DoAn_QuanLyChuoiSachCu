@@ -1,7 +1,6 @@
 package vn.iotstar.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -10,11 +9,6 @@ import java.time.LocalDateTime;
 @Table(name = "inventory", uniqueConstraints = {
     @UniqueConstraint(name = "uk_store_book", columnNames = {"store_id", "book_id"})
 })
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +28,17 @@ public class Inventory {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public Inventory() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Store getStore() { return store; }
+    public void setStore(Store store) { this.store = store; }
+    public Book getBook() { return book; }
+    public void setBook(Book book) { this.book = book; }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

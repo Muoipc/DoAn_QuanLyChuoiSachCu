@@ -1,15 +1,9 @@
 package vn.iotstar.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
 @Table(name = "categories")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +27,21 @@ public class Category {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
+
+    public Category() {}
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public Category getParent() { return parent; }
+    public void setParent(Category parent) { this.parent = parent; }
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+    public String getSlug() { return slug; }
+    public void setSlug(String slug) { this.slug = slug; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getIcon() { return icon; }
+    public void setIcon(String icon) { this.icon = icon; }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 }
