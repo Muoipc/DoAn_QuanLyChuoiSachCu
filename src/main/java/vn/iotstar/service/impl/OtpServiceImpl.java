@@ -22,7 +22,10 @@ public class OtpServiceImpl implements IOtpService {
     private final JavaMailSender mailSender;
     private final SecureRandom random = new SecureRandom();
 
-    public OtpServiceImpl(OtpTokenRepository otpTokenRepository, JavaMailSender mailSender) {
+    public OtpServiceImpl(
+        OtpTokenRepository otpTokenRepository,
+        @org.springframework.beans.factory.annotation.Autowired(required = false) JavaMailSender mailSender
+    ) {
         this.otpTokenRepository = otpTokenRepository;
         this.mailSender = mailSender;
     }
