@@ -1,52 +1,1443 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/base}">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Trang Chủ</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuỗi Sách Cũ — Sàn Mua Bán &amp; Ký Gửi Sách Cũ Giá Tốt Nhất</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* ================= COLOR PSYCHOLOGY FOR E-COMMERCE ================= */
+        :root {
+            /* Hot Deals & High Conversion */
+            --color-fire: #ee4d2d;
+            --color-fire-hover: #f05d40;
+            --color-fire-deep: #d83a1e;
+            --color-fire-light: #fef6f5;
+            
+            /* Trust, Condition & Verified */
+            --color-trust-green: #00966b;
+            --color-trust-bg: #e6f7f0;
+            
+            /* Excitement, Savings & Discount */
+            --color-discount-gold: #ffbe00;
+            --color-gold-text: #b7791f;
+            
+            /* Support & Logistics */
+            --color-accent-blue: #0288d1;
+            --color-accent-blue-light: #e1f5fe;
+
+            /* Neutral Canvas */
+            --color-bg-body: #f5f5f5;
+            --color-card-bg: #ffffff;
+            --color-text-main: rgba(0, 0, 0, 0.87);
+            --color-text-secondary: rgba(0, 0, 0, 0.54);
+            --color-text-light: rgba(0, 0, 0, 0.26);
+            --color-border: rgba(0, 0, 0, 0.09);
+            --color-shadow-card: 0 1px 2.5px 0 rgba(0, 0, 0, 0.08);
+            --color-shadow-hover: 0 4px 14px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-main);
+            font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.35;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.15s ease, color 0.15s ease;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        .container-shopee {
+            width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1220px) {
+            .container-shopee {
+                width: 100%;
+                padding: 0 12px;
+            }
+        }
+
+        /* ================= 1. SHOPEE TOPBAR: MÀU TRẮNG ĐEN ================= */
+        .shopee-topbar {
+            background: #18181b;
+            color: #d4d4d8;
+            font-size: 13px;
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .topbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar-links {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .topbar-links a {
+            color: #d4d4d8;
+            opacity: 0.95;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .topbar-links a:hover {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+        .topbar-divider {
+            height: 12px;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ================= 2. SHOPEE MAIN HEADER: MÀU TRẮNG ĐEN ================= */
+        .shopee-header-section {
+            background: #09090b;
+            color: #ffffff;
+            padding: 12px 0 18px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-main-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+        }
+
+        .shopee-brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .brand-logo-icon {
+            font-size: 38px;
+            color: #ffffff;
+        }
+
+        .brand-logo-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1;
+            color: #ffffff;
+        }
+
+        .brand-logo-text span {
+            font-size: 11px;
+            color: #a1a1aa;
+            font-weight: 400;
+            display: block;
+            margin-top: 3px;
+        }
+
+        /* Khung Tìm Kiếm Lớn Trắng Đen */
+        .shopee-search-container {
+            flex: 1;
+            max-width: 820px;
+        }
+
+        .shopee-search-bar {
+            background: #ffffff;
+            border-radius: 3px;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .shopee-search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 0 14px;
+            height: 40px;
+            font-size: 14px;
+            color: #18181b;
+        }
+
+        .btn-search-shopee {
+            background: #18181b;
+            color: #ffffff;
+            border: none;
+            height: 38px;
+            padding: 0 24px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .btn-search-shopee:hover {
+            background: #27272a;
+        }
+
+        /* Dải từ khóa hot dưới thanh tìm kiếm (Shopee Hot Keywords) */
+        .shopee-hot-keywords {
+            display: flex;
+            gap: 16px;
+            margin-top: 6px;
+            padding-left: 4px;
+            font-size: 11.5px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .shopee-hot-keywords a {
+            color: #a1a1aa;
+        }
+
+        .shopee-hot-keywords a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        /* Giỏ Hàng Shopee Trắng Đen */
+        .shopee-cart-wrap {
+            position: relative;
+            padding: 0 14px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .shopee-cart-icon {
+            font-size: 26px;
+            color: #ffffff;
+        }
+
+        .shopee-cart-badge {
+            position: absolute;
+            top: -6px;
+            right: 4px;
+            background: #ffffff;
+            color: #09090b;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 1px 6px;
+            border-radius: 40px;
+            border: 2px solid #09090b;
+        }
+
+        /* ================= 3. SHOPEE HERO BANNERS (2/3 + 1/3) ================= */
+        .shopee-hero-banners {
+            padding: 18px 0 14px;
+        }
+
+        .banners-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 820px) {
+            .banners-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left Big Banner */
+        .big-banner-slider {
+            background: linear-gradient(135deg, #ffffff 60%, #fff2ee 100%);
+            border: 1px solid rgba(238, 77, 45, 0.15);
+            border-radius: 3px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            align-items: center;
+            min-height: 250px;
+            box-shadow: var(--color-shadow-card);
+        }
+
+        .slider-text-panel {
+            padding: 28px 24px;
+        }
+
+        .slider-badge-shopee {
+            background: var(--color-fire);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(238, 77, 45, 0.3);
+        }
+
+        .slider-book-title {
+            font-size: 23px;
+            font-weight: 800;
+            color: var(--color-text-main);
+            line-height: 1.25;
+            margin-bottom: 8px;
+        }
+
+        .slider-book-desc {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-bottom: 18px;
+            line-height: 1.45;
+        }
+
+        .btn-shopee-fire {
+            background: linear-gradient(90deg, var(--color-fire), #ff6e40);
+            color: #ffffff !important;
+            padding: 9px 22px;
+            font-size: 13.5px;
+            font-weight: 700;
+            border-radius: 3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 3px 8px rgba(238, 77, 45, 0.35);
+            transition: all 0.15s;
+        }
+
+        .btn-shopee-fire:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(238, 77, 45, 0.45);
+        }
+
+        .slider-img-panel {
+            background: #fff8f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            height: 100%;
+        }
+
+        .slider-img-panel img {
+            max-height: 210px;
+            border-radius: 3px;
+            box-shadow: 0 6px 16px rgba(238, 77, 45, 0.15);
+        }
+
+        /* Right 2 Sub Banners */
+        .right-banners-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sub-banner-box {
+            background: #ffffff;
+            border: 1px solid var(--color-border);
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            box-shadow: var(--color-shadow-card);
+            flex: 1;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .sub-banner-box:hover {
+            border-color: var(--color-fire);
+            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.12);
+        }
+
+        .sub-banner-box h4 {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--color-text-main);
+            margin-bottom: 4px;
+        }
+
+        .sub-banner-box p {
+            font-size: 11.5px;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .sub-banner-box span.cta {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-fire);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sub-banner-thumb {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 3px;
+            margin-left: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        /* ================= 4. SHOPEE SHORTCUT ICONS: ĐA DẠNG SẮC MÀU BẮT MẮT ================= */
+        .shopee-shortcuts-section {
+            background: #ffffff;
+            border-radius: 3px;
+            padding: 18px 10px;
+            margin-bottom: 16px;
+            box-shadow: var(--color-shadow-card);
+        }
+
+        .shortcuts-flex-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .shortcuts-flex-row {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+
+        .shortcut-entry {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-text-main);
+            transition: transform 0.15s;
+        }
+
+        .shortcut-entry:hover {
+            transform: translateY(-2px);
+            color: var(--color-fire);
+        }
+
+        .shortcut-circle-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+            transition: all 0.15s;
+        }
+
+        /* Phối màu tâm lý cho từng biểu tượng */
+        .icon-fire { background: #ffebe7; color: #ee4d2d; border: 1px solid #ffd8cf; }
+        .icon-gold { background: #fff8e1; color: #f57f17; border: 1px solid #ffecb3; }
+        .icon-green { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .icon-blue { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
+        .icon-purple { background: #f3e5f5; color: #7b1fa2; border: 1px solid #e1bee7; }
+        .icon-teal { background: #e0f2f1; color: #00796b; border: 1px solid #b2dfdb; }
+
+        .shortcut-entry:hover .shortcut-circle-icon {
+            transform: scale(1.08);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+        }
+
+        .shortcut-entry span {
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.25;
+        }
+
+        /* ================= 5. SHOPEE FLASH SALE: ĐỎ CAM KÍCH THÍCH MUA HÀNG ================= */
+        .shopee-flash-sale {
+            background: #ffffff;
+            border-radius: 3px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--color-shadow-card);
+        }
+
+        .flash-sale-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 12px;
+        }
+
+        .flash-title-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .flash-title-text {
+            font-size: 19px;
+            font-weight: 900;
+            color: var(--color-fire);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.3px;
+            text-transform: uppercase;
+        }
+
+        .countdown-wrap {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .countdown-block {
+            background: #222222;
+            color: #ffffff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .btn-view-all-flash {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--color-fire);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-view-all-flash:hover {
+            color: var(--color-fire-deep);
+        }
+
+        /* 5-Column Flash Sale Grid */
+        .flash-sale-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 600px) {
+            .flash-sale-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 900px) {
+            .flash-sale-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .flash-card {
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--color-border);
+            border-radius: 3px;
+            padding: 8px;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .flash-card:hover {
+            box-shadow: var(--color-shadow-hover);
+            border-color: var(--color-fire);
+            transform: translateY(-2px);
+        }
+
+        .flash-thumb-wrap {
+            position: relative;
+            aspect-ratio: 3/4;
+            background: #fdfdfd;
+            margin-bottom: 8px;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .flash-thumb-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Huy Hiệu Giảm Giá Vàng Rực Rỡ (Top Right) */
+        .shopee-discount-tag {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 212, 36, 0.96);
+            color: var(--color-fire);
+            font-size: 10.5px;
+            font-weight: 800;
+            padding: 3px 5px;
+            text-align: center;
+            line-height: 1;
+            border-radius: 0 0 0 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Huy Hiệu Độ Mới Xanh Ngọc (Top Left) */
+        .shopee-condition-tag {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: var(--color-trust-green);
+            color: #ffffff;
+            font-size: 9.5px;
+            font-weight: 700;
+            padding: 1.5px 5px;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .flash-book-title {
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--color-text-main);
+            line-height: 1.35;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 34px;
+        }
+
+        .flash-price-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 2px;
+            margin-top: 4px;
+        }
+
+        .flash-price-unit {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-fire);
+            text-decoration: underline;
+        }
+
+        .flash-price-main {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--color-fire);
+        }
+
+        /* Thanh Tiến Trình Bán Hàng Shopee Màu Lửa Rực Rỡ */
+        .flash-progress-bar {
+            position: relative;
+            background: #ffcbbb;
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-inner-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, #ff3d00, #ff6e40);
+            border-radius: 8px;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 1;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+        }
+
+        /* ================= 6. SHOPEE GỢI Ý HÔM NAY (DAILY DISCOVER) ================= */
+        .daily-discover-section {
+            margin-bottom: 24px;
+        }
+
+        .discover-sticky-tabs {
+            position: sticky;
+            top: 76px;
+            z-index: 99;
+            background: #ffffff;
+            border-bottom: 3.5px solid var(--color-fire);
+            display: flex;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 12px;
+        }
+
+        .tab-discover-item {
+            flex: 1;
+            text-align: center;
+            padding: 14px 0;
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--color-text-main);
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .tab-discover-item.active {
+            color: var(--color-fire);
+        }
+
+        .tab-discover-item:hover {
+            color: var(--color-fire);
+        }
+
+        .shopee-discover-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        @media (min-width: 600px) {
+            .shopee-discover-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 900px) {
+            .shopee-discover-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        @media (min-width: 1100px) {
+            .shopee-discover-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        .shopee-product-card {
+            background: #ffffff;
+            border: 1px solid var(--color-border);
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: var(--color-shadow-card);
+            transition: all 0.15s ease;
+        }
+
+        .shopee-product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--color-shadow-hover);
+            border-color: var(--color-fire);
+        }
+
+        .prod-thumb-box {
+            position: relative;
+            aspect-ratio: 3/4;
+            background: #f8f8f8;
+            overflow: hidden;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .prod-thumb-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Huy hiệu Đã Kiểm Định Đỏ Cam */
+        .tag-shopee-mall {
+            position: absolute;
+            top: 4px;
+            left: 0;
+            background: var(--color-fire);
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 1.5px 5px;
+            border-radius: 0 2px 2px 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
+
+        .prod-body {
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .prod-title {
+            font-size: 12.5px;
+            font-weight: 500;
+            line-height: 1.35;
+            color: var(--color-text-main);
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 34px;
+        }
+
+        .prod-badge-branch {
+            font-size: 10px;
+            color: var(--color-fire);
+            background: var(--color-fire-light);
+            border: 1px solid rgba(238, 77, 45, 0.2);
+            padding: 1px 5px;
+            border-radius: 2px;
+            width: fit-content;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .prod-footer-row {
+            margin-top: auto;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+        }
+
+        .prod-price {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: var(--color-fire);
+        }
+
+        .prod-sold-count {
+            font-size: 11px;
+            color: var(--color-text-secondary);
+        }
+
+        /* ================= 7. SHOPEE 3 CHI NHÁNH KHO ================= */
+        .stores-locator-section {
+            background: #ffffff;
+            border-radius: 3px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--color-shadow-card);
+        }
+
+        .locator-header {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--color-text-main);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .locator-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .locator-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .branch-shopee-card {
+            background: #fbfbfb;
+            border: 1px solid var(--color-border);
+            border-radius: 3px;
+            padding: 14px;
+            border-left: 3.5px solid var(--color-fire);
+            transition: border-color 0.15s;
+        }
+
+        .branch-shopee-card:hover {
+            border-color: var(--color-fire);
+            background: #fffafa;
+        }
+
+        .branch-shopee-card h5 {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--color-text-main);
+            margin-bottom: 4px;
+        }
+
+        .branch-shopee-card p {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .branch-shopee-card .hotline {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-fire);
+        }
+
+        /* ================= 8. SHOPEE FOOTER ================= */
+        .shopee-footer {
+            background: #fbfbfb;
+            border-top: 4px solid var(--color-fire);
+            color: var(--color-text-secondary);
+            font-size: 12px;
+            padding: 38px 0 20px;
+        }
+
+        .footer-cols-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding-bottom: 26px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        @media (min-width: 768px) {
+            .footer-cols-row {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .footer-col-title {
+            font-size: 12.5px;
+            font-weight: 800;
+            color: var(--color-text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 12px;
+        }
+
+        .footer-links-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-links-list a {
+            color: var(--color-text-secondary);
+        }
+
+        .footer-links-list a:hover {
+            color: var(--color-fire);
+        }
+
+        .footer-bottom-info {
+            padding-top: 20px;
+            text-align: center;
+            font-size: 11.5px;
+            color: var(--color-text-light);
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="p-5 mb-4 bg-white rounded-3 border shadow-sm">
-        <div class="container-fluid py-2">
-            <h1 class="display-6 fw-bold text-dark">Hệ Thống Chuỗi Cửa Hàng Sách Cũ</h1>
-            <p class="col-md-8 fs-6 text-muted">
-                Nền tảng mua bán, trao đổi và ký gửi sách cũ đa chi nhánh trên toàn quốc. Đảm bảo độ nguyên vẹn từng trang sách, định giá minh bạch và kết nối độc giả yêu sách.
-            </p>
-            <div class="d-flex gap-2">
-                <a th:href="@{/search}" class="btn btn-dark btn-sm px-4 py-2">
-                    <i class="fa-solid fa-compass me-1"></i> Khám phá kho sách
-                </a>
-                <a th:href="@{/consignments}" class="btn btn-outline-secondary btn-sm px-4 py-2">
-                    <i class="fa-solid fa-hand-holding-dollar me-1"></i> Đăng ký ký gửi sách
-                </a>
+
+    <!-- 1. Shopee Topbar -->
+    <div class="shopee-topbar">
+        <div class="container-shopee topbar-flex">
+            <div class="topbar-links">
+                <a th:href="@{/search}">Kênh Ký Gửi Sách</a>
+                <span class="topbar-divider"></span>
+                <a href="#stores">Hệ Thống 3 Chi Nhánh</a>
+                <span class="topbar-divider"></span>
+                <span><i class="fa-solid fa-phone me-1"></i> Hotline: 028 3896 8641</span>
+            </div>
+
+            <div class="topbar-links">
+                <span><i class="fa-solid fa-shield-check me-1"></i> 100% Sách Đã Kiểm Định</span>
+                <span class="topbar-divider"></span>
+                <a href="#stores">Hỗ Trợ</a>
+                <span class="topbar-divider"></span>
+
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/register}" style="font-weight: 700;">Đăng Ký</a>
+                    <span class="mx-1">|</span>
+                    <a th:href="@{/login}" style="font-weight: 700;">Đăng Nhập</a>
+                </div>
+
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/profile}"><i class="fa-solid fa-user-check me-1"></i> <span sec:authentication="name">Tài khoản</span></a>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="p-3 bg-white border rounded text-center">
-                <i class="fa-solid fa-store fs-2 text-primary mb-2"></i>
-                <h6 class="fw-bold">Hệ Thống Đa Chi Nhánh</h6>
-                <p class="text-muted small mb-0">Quản lý kho hàng độc lập tại Thủ Đức, Quận 1 và Hà Nội. Hỗ trợ nhận sách tại cửa hàng.</p>
+    <!-- 2. Shopee Main Header (Logo - Search Box - Cart) -->
+    <header class="shopee-header-section">
+        <div class="container-shopee header-main-row">
+            <!-- Brand Logo -->
+            <a th:href="@{/}" class="shopee-brand-logo">
+                <i class="fa-solid fa-bag-shopping brand-logo-icon"></i>
+                <div class="brand-logo-text">
+                    <h1>CHUỖI SÁCH CŨ</h1>
+                    <span>Hệ Thống Kho Sách Kiểm Định Giá Tốt</span>
+                </div>
+            </a>
+
+            <!-- Search Container Lớn Nổi Bật -->
+            <div class="shopee-search-container">
+                <form th:action="@{/search}" method="get" class="shopee-search-bar">
+                    <input type="text" name="q" placeholder="Tìm tên sách, tác giả, ISBN, hoặc giáo trình HCMUTE (Độ mới 80% – 99%)...">
+                    <button type="submit" class="btn-search-shopee">
+                        <i class="fa-solid fa-magnifying-glass me-1"></i>
+                        <span>Tìm Kiếm</span>
+                    </button>
+                </form>
+
+                <!-- Dải từ khóa hot dưới thanh tìm kiếm (Shopee Hot Keywords) -->
+                <div class="shopee-hot-keywords">
+                    <a th:href="@{/search(q='Yêu những điều không hoàn hảo')}">Yêu những điều không hoàn hảo</a>
+                    <a th:href="@{/search(q='Nhà giả kim')}">Nhà giả kim</a>
+                    <a th:href="@{/search(q='Cây cam ngọt của tôi')}">Cây cam ngọt của tôi</a>
+                    <a th:href="@{/search(q='Đắc nhân tâm')}">Đắc nhân tâm</a>
+                    <a th:href="@{/search(q='Giáo trình')}">Giáo trình HCMUTE</a>
+                    <a th:href="@{/search(cond=95)}">Độ mới &ge; 95%</a>
+                </div>
+            </div>
+
+            <!-- Giỏ Hàng Shopee -->
+            <div class="shopee-cart-wrap">
+                <a th:href="@{/cart}" title="Giỏ hàng của bạn">
+                    <i class="fa-solid fa-cart-shopping shopee-cart-icon"></i>
+                    <span class="shopee-cart-badge">2</span>
+                </a>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="p-3 bg-white border rounded text-center">
-                <i class="fa-solid fa-stamp fs-2 text-success mb-2"></i>
-                <h6 class="fw-bold">Kiểm Định Độ Mới Chuẩn Xác</h6>
-                <p class="text-muted small mb-0">Phân loại sách 80% - 99%, chụp ảnh thực tế các góc cạnh và ghi chú rõ tình trạng trang sách.</p>
+    </header>
+
+    <main class="container-shopee">
+        <!-- 3. Shopee Hero Banners (2/3 Slider + 1/3 Right Column) -->
+        <section class="shopee-hero-banners">
+            <div class="banners-grid">
+                <!-- Left Big Banner Slider -->
+                <div class="big-banner-slider">
+                    <div class="slider-text-panel">
+                        <span class="slider-badge-shopee"><i class="fa-solid fa-fire me-1"></i>SÁCH BÁN CHẠY NHẤT THÁNG</span>
+                        <h2 class="slider-book-title">Yêu Những Điều Không Hoàn Hảo</h2>
+                        <p class="slider-book-desc">
+                            Tác phẩm bán chạy hàng đầu từ Đại đức Hae Min. Bản in nguyên vẹn 95%, gáy sách thẳng tắp, sẵn sàng giao ngay từ kho Thủ Đức.
+                        </p>
+                        <a th:href="@{/search}" class="btn-shopee-fire">
+                            <span>Mua Ngay — 68.000₫</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="slider-img-panel">
+                        <img src="/images/yeu-nhung-dieu-khong-hoan-hao.jpg" alt="Yêu Những Điều Không Hoàn Hảo">
+                    </div>
+                </div>
+
+                <!-- Right 2 Sub Banners -->
+                <div class="right-banners-column">
+                    <div class="sub-banner-box">
+                        <div>
+                            <h4>KÝ GỬI SÁCH CŨ 24H</h4>
+                            <p>Định giá tự động, nhận tiền nhanh</p>
+                            <span class="cta">Bán Sách Ngay &gt;</span>
+                        </div>
+                        <img src="/images/hero-reading-coffee.jpg" alt="Ký gửi sách" class="sub-banner-thumb">
+                    </div>
+
+                    <div class="sub-banner-box">
+                        <div>
+                            <h4>KHO SÁCH MỚI 99%</h4>
+                            <p>Đồng kiểm COD, không mất trang</p>
+                            <span class="cta">Khám Phá Ngay &gt;</span>
+                        </div>
+                        <img src="/images/hero-books-vintage.jpg" alt="Kho sách mới" class="sub-banner-thumb">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Shopee Circle Shortcuts Bar (Dải 8 biểu tượng sắc màu bắt mắt) -->
+        <section class="shopee-shortcuts-section">
+            <div class="shortcuts-flex-row">
+                <a th:href="@{/search}" class="shortcut-entry">
+                    <div class="shortcut-circle-icon icon-fire"><i class="fa-solid fa-fire"></i></div>
+                    <span>Bán Chạy</span>
+                </a>
+                <a th:href="@{/search(cond=95)}" class="shortcut-entry">
+                    <div class="shortcut-circle-icon icon-green"><i class="fa-solid fa-award"></i></div>
+                    <span>Mới &ge; 95%</span>
+                </a>
+                <a th:href="@{/search(store=1)}" class="shortcut-entry">
+                    <div class="shortcut-circle-icon icon-blue"><i class="fa-solid fa-store"></i></div>
+                    <span>Kho Thủ Đức</span>
+                </a>
+                <a th:href="@{/search(store=2)}" class="shortcut-entry">
+                    <div class="shortcut-circle-icon icon-purple"><i class="fa-solid fa-shop"></i></div>
+                    <span>Kho Quận 1</span>
+                </a>
+                <a th:href="@{/search(store=3)}" class="shortcut-entry">
+                    <div class="shortcut-circle-icon icon-teal"><i class="fa-solid fa-building-columns"></i></div>
+                    <span>Kho Hà Nội</span>
+                </a>
+                <a th:href="@{/search(cat='giao-trinh')}" class="shortcut-entry">
+                    <div class="shortcut-circle-icon icon-blue"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <span>Giáo Trình</span>
+                </a>
+                <a th:href="@{/search}" class="shortcut-entry">
+                    <div class="shortcut-circle-icon icon-gold"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                    <span>Ký Gửi Sách</span>
+                </a>
+                <a href="#stores" class="shortcut-entry">
+                    <div class="shortcut-circle-icon icon-fire"><i class="fa-solid fa-truck-fast"></i></div>
+                    <span>Freeship 200k</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 5. Shopee Flash Sale Section (Đỏ cam kích thích mua hàng) -->
+        <section class="shopee-flash-sale" id="flash-sale">
+            <div class="flash-sale-header">
+                <div class="flash-title-area">
+                    <div class="flash-title-text">
+                        <i class="fa-solid fa-bolt" style="color: #ffbe00;"></i>
+                        <span>FLASH SALE SÁCH CŨ</span>
+                    </div>
+                    <div class="countdown-wrap">
+                        <span style="color: var(--color-text-secondary); margin-right: 2px;">KẾT THÚC TRONG</span>
+                        <span class="countdown-block">02</span> :
+                        <span class="countdown-block">45</span> :
+                        <span class="countdown-block">18</span>
+                    </div>
+                </div>
+
+                <a th:href="@{/search}" class="btn-view-all-flash">
+                    <span>Xem tất cả</span>
+                    <i class="fa-solid fa-angle-right"></i>
+                </a>
+            </div>
+
+            <!-- 5-Column Flash Sale Grid -->
+            <div class="flash-sale-grid">
+                <!-- Book 1 -->
+                <article class="flash-card">
+                    <div class="flash-thumb-wrap">
+                        <img src="/images/yeu-nhung-dieu-khong-hoan-hao.jpg" alt="Yêu Những Điều Không Hoàn Hảo">
+                        <span class="shopee-discount-tag">-43%</span>
+                        <span class="shopee-condition-tag">95% Mới</span>
+                    </div>
+                    <h4 class="flash-book-title">Yêu Những Điều Không Hoàn Hảo - Hae Min</h4>
+                    <div class="flash-price-row">
+                        <span class="flash-price-unit">₫</span>
+                        <span class="flash-price-main">68.000</span>
+                    </div>
+                    <div class="flash-progress-bar">
+                        <div class="progress-inner-fill" style="width: 85%;"></div>
+                        <span class="progress-text"><i class="fa-solid fa-fire me-1"></i>ĐÃ BÁN 48</span>
+                    </div>
+                </article>
+
+                <!-- Book 2 -->
+                <article class="flash-card">
+                    <div class="flash-thumb-wrap">
+                        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=500&q=80" alt="Nhà Giả Kim">
+                        <span class="shopee-discount-tag">-43%</span>
+                        <span class="shopee-condition-tag">90% Mới</span>
+                    </div>
+                    <h4 class="flash-book-title">Nhà Giả Kim (The Alchemist) - Paulo Coelho</h4>
+                    <div class="flash-price-row">
+                        <span class="flash-price-unit">₫</span>
+                        <span class="flash-price-main">45.000</span>
+                    </div>
+                    <div class="flash-progress-bar">
+                        <div class="progress-inner-fill" style="width: 70%;"></div>
+                        <span class="progress-text"><i class="fa-solid fa-fire me-1"></i>ĐÃ BÁN 35</span>
+                    </div>
+                </article>
+
+                <!-- Book 3 -->
+                <article class="flash-card">
+                    <div class="flash-thumb-wrap">
+                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=500&q=80" alt="Cây Cam Ngọt Của Tôi">
+                        <span class="shopee-discount-tag">-46%</span>
+                        <span class="shopee-condition-tag">98% Mới</span>
+                    </div>
+                    <h4 class="flash-book-title">Cây Cam Ngọt Của Tôi - José Mauro</h4>
+                    <div class="flash-price-row">
+                        <span class="flash-price-unit">₫</span>
+                        <span class="flash-price-main">58.000</span>
+                    </div>
+                    <div class="flash-progress-bar">
+                        <div class="progress-inner-fill" style="width: 58%;"></div>
+                        <span class="progress-text"><i class="fa-solid fa-fire me-1"></i>ĐÃ BÁN 29</span>
+                    </div>
+                </article>
+
+                <!-- Book 4 -->
+                <article class="flash-card">
+                    <div class="flash-thumb-wrap">
+                        <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=500&q=80" alt="Đắc Nhân Tâm">
+                        <span class="shopee-discount-tag">-53%</span>
+                        <span class="shopee-condition-tag">85% Mới</span>
+                    </div>
+                    <h4 class="flash-book-title">Đắc Nhân Tâm (Bản Bìa Cứng) - First News</h4>
+                    <div class="flash-price-row">
+                        <span class="flash-price-unit">₫</span>
+                        <span class="flash-price-main">40.000</span>
+                    </div>
+                    <div class="flash-progress-bar">
+                        <div class="progress-inner-fill" style="width: 44%;"></div>
+                        <span class="progress-text"><i class="fa-solid fa-fire me-1"></i>ĐÃ BÁN 22</span>
+                    </div>
+                </article>
+
+                <!-- Book 5 -->
+                <article class="flash-card">
+                    <div class="flash-thumb-wrap">
+                        <img src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=500&q=80" alt="Tuổi Trẻ Đáng Giá Bao Nhiêu">
+                        <span class="shopee-discount-tag">-49%</span>
+                        <span class="shopee-condition-tag">92% Mới</span>
+                    </div>
+                    <h4 class="flash-book-title">Tuổi Trẻ Đáng Giá Bao Nhiêu? - Rosie Nguyễn</h4>
+                    <div class="flash-price-row">
+                        <span class="flash-price-unit">₫</span>
+                        <span class="flash-price-main">38.000</span>
+                    </div>
+                    <div class="flash-progress-bar">
+                        <div class="progress-inner-fill" style="width: 36%;"></div>
+                        <span class="progress-text"><i class="fa-solid fa-fire me-1"></i>ĐÃ BÁN 18</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 6. Shopee Gợi Ý Hôm Nay (Daily Discover) -->
+        <section class="daily-discover-section">
+            <div class="discover-sticky-tabs">
+                <div class="tab-discover-item active">GỢI Ý HÔM NAY</div>
+                <div class="tab-discover-item">SÁCH BÁN CHẠY NHẤT</div>
+                <div class="tab-discover-item">KHO THỦ ĐỨC</div>
+                <div class="tab-discover-item">KHO QUẬN 1</div>
+            </div>
+
+            <div class="shopee-discover-grid">
+                <!-- Book Item 1 -->
+                <article class="shopee-product-card">
+                    <div class="prod-thumb-box">
+                        <img src="/images/yeu-nhung-dieu-khong-hoan-hao.jpg" alt="Yêu Những Điều Không Hoàn Hảo">
+                        <span class="tag-shopee-mall">ĐÃ KIỂM ĐỊNH</span>
+                    </div>
+                    <div class="prod-body">
+                        <h4 class="prod-title">Yêu Những Điều Không Hoàn Hảo - Hae Min (Bản Đẹp)</h4>
+                        <span class="prod-badge-branch">Thủ Đức (4) · Q.1 (2)</span>
+                        <div class="prod-footer-row">
+                            <span class="prod-price">₫68.000</span>
+                            <span class="prod-sold-count">Đã bán 48</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Book Item 2 -->
+                <article class="shopee-product-card">
+                    <div class="prod-thumb-box">
+                        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=500&q=80" alt="Nhà Giả Kim">
+                        <span class="tag-shopee-mall">ĐÃ KIỂM ĐỊNH</span>
+                    </div>
+                    <div class="prod-body">
+                        <h4 class="prod-title">Nhà Giả Kim - Paulo Coelho (Bản Dịch Nhã Nam)</h4>
+                        <span class="prod-badge-branch">Thủ Đức (6) · HN (3)</span>
+                        <div class="prod-footer-row">
+                            <span class="prod-price">₫45.000</span>
+                            <span class="prod-sold-count">Đã bán 35</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Book Item 3 -->
+                <article class="shopee-product-card">
+                    <div class="prod-thumb-box">
+                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=500&q=80" alt="Cây Cam Ngọt Của Tôi">
+                        <span class="tag-shopee-mall">ĐÃ KIỂM ĐỊNH</span>
+                    </div>
+                    <div class="prod-body">
+                        <h4 class="prod-title">Cây Cam Ngọt Của Tôi - José Mauro (98% Mới)</h4>
+                        <span class="prod-badge-branch">Quận 1 (5) · Thủ Đức (1)</span>
+                        <div class="prod-footer-row">
+                            <span class="prod-price">₫58.000</span>
+                            <span class="prod-sold-count">Đã bán 29</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Book Item 4 -->
+                <article class="shopee-product-card">
+                    <div class="prod-thumb-box">
+                        <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=500&q=80" alt="Đắc Nhân Tâm">
+                        <span class="tag-shopee-mall">ĐÃ KIỂM ĐỊNH</span>
+                    </div>
+                    <div class="prod-body">
+                        <h4 class="prod-title">Đắc Nhân Tâm - Dale Carnegie (Bản Bìa Cứng)</h4>
+                        <span class="prod-badge-branch">Hà Nội (8) · Thủ Đức (2)</span>
+                        <div class="prod-footer-row">
+                            <span class="prod-price">₫40.000</span>
+                            <span class="prod-sold-count">Đã bán 22</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Book Item 5 -->
+                <article class="shopee-product-card">
+                    <div class="prod-thumb-box">
+                        <img src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=500&q=80" alt="Tuổi Trẻ Đáng Giá Bao Nhiêu">
+                        <span class="tag-shopee-mall">ĐÃ KIỂM ĐỊNH</span>
+                    </div>
+                    <div class="prod-body">
+                        <h4 class="prod-title">Tuổi Trẻ Đáng Giá Bao Nhiêu? - Rosie Nguyễn</h4>
+                        <span class="prod-badge-branch">Thủ Đức (7) · Q.1 (3)</span>
+                        <div class="prod-footer-row">
+                            <span class="prod-price">₫38.000</span>
+                            <span class="prod-sold-count">Đã bán 18</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Book Item 6 -->
+                <article class="shopee-product-card">
+                    <div class="prod-thumb-box">
+                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=500&q=80" alt="Giáo Trình Cấu Trúc Dữ Liệu">
+                        <span class="tag-shopee-mall">ĐÃ KIỂM ĐỊNH</span>
+                    </div>
+                    <div class="prod-body">
+                        <h4 class="prod-title">Giáo Trình Cấu Trúc Dữ Liệu &amp; Giải Thuật HCMUTE</h4>
+                        <span class="prod-badge-branch">Kho Thủ Đức (12)</span>
+                        <div class="prod-footer-row">
+                            <span class="prod-price">₫30.000</span>
+                            <span class="prod-sold-count">Đã bán 15</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 7. Hệ Thống 3 Chi Nhánh Kho -->
+        <section class="stores-locator-section" id="stores">
+            <div class="locator-header">
+                <i class="fa-solid fa-map-location-dot" style="color: var(--color-fire);"></i>
+                <span>HỆ THỐNG 3 CHI NHÁNH KHO TOÀN QUỐC</span>
+            </div>
+
+            <div class="locator-grid">
+                <div class="branch-shopee-card">
+                    <h5>Kho Trung Tâm Thủ Đức</h5>
+                    <p>01 Võ Văn Ngân, P. Linh Chiểu, TP. Thủ Đức (Cạnh ĐH Sư Phạm Kỹ Thuật HCMUTE)</p>
+                    <p>Giờ mở cửa: 08:00 – 21:30</p>
+                    <span class="hotline"><i class="fa-solid fa-phone me-1"></i> 028 3896 8641</span>
+                </div>
+
+                <div class="branch-shopee-card">
+                    <h5>Cửa Hàng Đường Sách Quận 1</h5>
+                    <p>Đường Sách Nguyễn Văn Bình, P. Bến Nghé, Quận 1, TP. Hồ Chí Minh</p>
+                    <p>Giờ mở cửa: 08:30 – 22:00</p>
+                    <span class="hotline"><i class="fa-solid fa-phone me-1"></i> 028 3822 5410</span>
+                </div>
+
+                <div class="branch-shopee-card">
+                    <h5>Kho Hoài Cổ Hà Nội</h5>
+                    <p>Phố Sách 19 Tháng 12, P. Trần Hưng Đạo, Q. Hoàn Kiếm, Hà Nội</p>
+                    <p>Giờ mở cửa: 08:00 – 21:00</p>
+                    <span class="hotline"><i class="fa-solid fa-phone me-1"></i> 024 3938 1279</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 8. Shopee Footer -->
+    <footer class="shopee-footer">
+        <div class="container-shopee">
+            <div class="footer-cols-row">
+                <div>
+                    <h5 class="footer-col-title">Chăm Sóc Khách Hàng</h5>
+                    <ul class="footer-links-list">
+                        <li><a href="#stores">Hệ thống chi nhánh kho</a></li>
+                        <li><a th:href="@{/search}">Tra cứu tồn kho trực tiếp</a></li>
+                        <li><a th:href="@{/cart}">Hướng dẫn đặt hàng COD</a></li>
+                        <li><a th:href="@{/login}">Chính sách đồng kiểm &amp; đổi trả 48h</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="footer-col-title">Về Chuỗi Sách Cũ</h5>
+                    <ul class="footer-links-list">
+                        <li><a th:href="@{/}">Giới thiệu hệ thống</a></li>
+                        <li><a th:href="@{/search}">Tiêu chuẩn độ mới (80% - 99%)</a></li>
+                        <li><a th:href="@{/search}">Quy trình chụp ảnh thật từng cuốn</a></li>
+                        <li><a th:href="@{/login}">Cổng Quản trị Admin</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="footer-col-title">Ký Gửi &amp; Thu Mua</h5>
+                    <ul class="footer-links-list">
+                        <li><a th:href="@{/search}">Bán lại sách cũ cho chuỗi</a></li>
+                        <li><a th:href="@{/search}">Định giá tự động bằng AI</a></li>
+                        <li><a href="#stores">Gửi sách tại chi nhánh gần nhất</a></li>
+                        <li><a th:href="@{/login}">Thanh toán nhanh sau 24h</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="footer-col-title">Đồ Án Môn Học</h5>
+                    <ul class="footer-links-list">
+                        <li><a th:href="@{/}">Lập trình Web (WEBPR330479)</a></li>
+                        <li><a th:href="@{/}">Đại học Sư phạm Kỹ thuật TP.HCM (HCMUTE)</a></li>
+                        <li><a th:href="@{/}">Sinh viên: Nguyễn Song Hoàng Phúc (24162096)</a></li>
+                        <li><a th:href="@{/}">Sinh viên: Thái Duy Cường (24162013)</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom-info">
+                <div>© 2026 - Bản quyền thuộc về Chuỗi Cửa Hàng Sách Cũ HCMUTE</div>
+                <div>Thiết kế theo tâm lý học hành vi người mua hàng — Bắt mắt, kích thích chuyển đổi</div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="p-3 bg-white border rounded text-center">
-                <i class="fa-solid fa-robot fs-2 text-warning mb-2"></i>
-                <h6 class="fw-bold">AI Trợ Lý Đọc Sách</h6>
-                <p class="text-muted small mb-0">Gợi ý tác phẩm theo sở thích, hỗ trợ định giá tự động và tóm tắt đánh giá bạn đọc.</p>
-            </div>
-        </div>
-    </div>
-</div>
+    </footer>
+
 </body>
 </html>
