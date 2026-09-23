@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Trang Chủ</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="p-5 mb-4 bg-white rounded-3 border shadow-sm">
+        <div class="container-fluid py-2">
+            <h1 class="display-6 fw-bold text-dark">Hệ Thống Chuỗi Cửa Hàng Sách Cũ</h1>
+            <p class="col-md-8 fs-6 text-muted">
+                Nền tảng mua bán, trao đổi và ký gửi sách cũ đa chi nhánh trên toàn quốc. Đảm bảo độ nguyên vẹn từng trang sách, định giá minh bạch và kết nối độc giả yêu sách.
+            </p>
+            <div class="d-flex gap-2">
+                <a th:href="@{/search}" class="btn btn-dark btn-sm px-4 py-2">
+                    <i class="fa-solid fa-compass me-1"></i> Khám phá kho sách
+                </a>
+                <a th:href="@{/consignments}" class="btn btn-outline-secondary btn-sm px-4 py-2">
+                    <i class="fa-solid fa-hand-holding-dollar me-1"></i> Đăng ký ký gửi sách
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="p-3 bg-white border rounded text-center">
+                <i class="fa-solid fa-store fs-2 text-primary mb-2"></i>
+                <h6 class="fw-bold">Hệ Thống Đa Chi Nhánh</h6>
+                <p class="text-muted small mb-0">Quản lý kho hàng độc lập tại Thủ Đức, Quận 1 và Hà Nội. Hỗ trợ nhận sách tại cửa hàng.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 bg-white border rounded text-center">
+                <i class="fa-solid fa-stamp fs-2 text-success mb-2"></i>
+                <h6 class="fw-bold">Kiểm Định Độ Mới Chuẩn Xác</h6>
+                <p class="text-muted small mb-0">Phân loại sách 80% - 99%, chụp ảnh thực tế các góc cạnh và ghi chú rõ tình trạng trang sách.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 bg-white border rounded text-center">
+                <i class="fa-solid fa-robot fs-2 text-warning mb-2"></i>
+                <h6 class="fw-bold">AI Trợ Lý Đọc Sách</h6>
+                <p class="text-muted small mb-0">Gợi ý tác phẩm theo sở thích, hỗ trợ định giá tự động và tóm tắt đánh giá bạn đọc.</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Đăng Nhập</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h4 class="card-title text-center fw-bold mb-3">Đăng Nhập</h4>
+                    <div th:if="${param.error}" class="alert alert-danger py-2 small">
+                        Tài khoản hoặc mật khẩu không chính xác.
+                    </div>
+                    <div th:if="${param.logout}" class="alert alert-success py-2 small">
+                        Bạn đã đăng xuất an toàn.
+                    </div>
+
+                    <form th:action="@{/login}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Tên đăng nhập hoặc Email</label>
+                            <input type="text" name="username" class="form-control" required autofocus placeholder="admin, phuc_customer...">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Mật khẩu</label>
+                            <input type="password" name="password" class="form-control" required placeholder="123456">
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 py-2">Đăng Nhập</button>
+                    </form>
+
+                    <div class="text-center mt-3 small">
+                        <a th:href="@{/forgot-password}" class="text-muted text-decoration-none">Quên mật khẩu?</a> |
+                        <a th:href="@{/register}" class="text-decoration-none fw-semibold">Đăng ký tài khoản</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<header th:fragment="header" class="sticky-top bg-white border-bottom shadow-sm">
+    <div class="container py-2 d-flex justify-content-between align-items-center">
+        <a th:href="@{/}" class="d-flex align-items-center text-decoration-none text-dark">
+            <i class="fa-solid fa-book-bookmark fs-3 me-2 text-warning"></i>
+            <div>
+                <span class="fs-5 fw-bold tracking-tight">CHUỖI SÁCH CŨ</span>
+                <span class="badge bg-secondary ms-1">HCMUTE</span>
+                <div class="text-muted" style="font-size: 11px;">Hệ Thống Phân Phối & Ký Gửi Sách Cũ Đa Chi Nhánh</div>
+            </div>
+        </a>
+
+        <form class="d-flex w-50 mx-4" th:action="@{/search}" method="get">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Tìm tên sách cũ, tác giả, nhà xuất bản...">
+                <button class="btn btn-outline-dark" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i> Tìm
+                </button>
+            </div>
+        </form>
+
+        <div class="d-flex align-items-center gap-3">
+            <a th:href="@{/cart}" class="btn btn-outline-secondary position-relative">
+                <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng
+            </a>
+
+            <div sec:authorize="isAnonymous()">
+                <a th:href="@{/login}" class="btn btn-dark btn-sm">
+                    <i class="fa-solid fa-right-to-bracket me-1"></i> Đăng nhập
+                </a>
+            </div>
+
+            <div sec:authorize="isAuthenticated()" class="dropdown">
+                <button class="btn btn-light dropdown-toggle border btn-sm" type="button" data-bs-toggle="dropdown">
+                    <i class="fa-solid fa-user-circle me-1"></i>
+                    <span sec:authentication="name">Tài khoản</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <li><a class="dropdown-item" th:href="@{/profile}"><i class="fa-solid fa-id-card me-2"></i>Hồ sơ & Sổ địa chỉ</a></li>
+                    <li><a class="dropdown-item" th:href="@{/orders}"><i class="fa-solid fa-clock-rotate-left me-2"></i>Lịch sử đơn hàng</a></li>
+                    <li><a class="dropdown-item" th:href="@{/consignments}"><i class="fa-solid fa-hand-holding-dollar me-2"></i>Ký gửi sách cũ</a></li>
+                    <li sec:authorize="hasRole('ADMIN')"><hr class="dropdown-divider"></li>
+                    <li sec:authorize="hasRole('ADMIN')"><a class="dropdown-item text-danger fw-bold" th:href="@{/admin}"><i class="fa-solid fa-shield-halved me-2"></i>Trang Quản Trị Admin</a></li>
+                    <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')"><a class="dropdown-item text-primary" th:href="@{/store-manager}"><i class="fa-solid fa-store me-2"></i>Quản Lý Chi Nhánh</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post" class="px-2">
+                            <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                                <i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Đăng xuất
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>
