@@ -17,6 +17,12 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Cấu hình chuỗi lọc bảo mật SecurityFilterChain:
+     * - Phân quyền truy cập các URL công khai (Trang chủ, Tìm kiếm, Đăng nhập, Đăng ký, OTP)
+     * - Phân quyền các phân hệ: Admin, Quản lý chi nhánh (Store Manager), Nhân viên giao hàng (Shipper)
+     * - Tùy biến trang đăng nhập (/login) và đăng xuất (/logout)
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -25,7 +31,8 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/", "/home", "/books/**", "/stores/**", "/categories/**",
                     "/search/**", "/login", "/register/**", "/verify-otp/**",
-                    "/forgot-password/**", "/css/**", "/js/**", "/images/**", "/webjars/**"
+                    "/resend-otp/**", "/forgot-password/**", "/reset-password/**",
+                    "/css/**", "/js/**", "/images/**", "/webjars/**"
                 ).permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/store-manager/**").hasAnyRole("ADMIN", "MANAGER")
