@@ -12,10 +12,10 @@
 
 ### THÀNH VIÊN NHÓM VÀ PHÂN CÔNG NHIỆM VỤ
 
-| STT | Họ và tên | MSSV | Vai trò đảm nhận | Phân hệ chức năng chính |
-| :---: | :--- | :---: | :--- | :--- |
-| 1 | **Nguyễn Song Hoàng Phúc** | **24162096** | **Khách (Guest) & Khách hàng (Customer)** | - Xác thực: Đăng ký OTP qua Email, Đăng nhập Spring Security, Đổi/Quên mật khẩu OTP.<br>- Khám phá sách cũ: Bộ lọc đa tiêu chí (độ mới 80%-99%, tình trạng trang sách, tác giả, NXB, chi nhánh còn sách).<br>- Giỏ hàng DB, Đặt hàng chuỗi (Click & Collect nhận tại shop hoặc giao tận nơi).<br>- Thanh toán tích hợp VNPAY Sandbox & COD.<br>- Đánh giá sách (kèm ảnh/video Cloudinary, text $\ge$ 50 ký tự), Sổ đa địa chỉ.<br>- Ký gửi sách cũ: Gửi form bán lại/ký gửi sách cho hệ thống.<br>- **AI Shopping Assistant:** Trợ lý ảo tư vấn chọn sách thông minh. |
-| 2 | **Cường** |  | **Quản lý chi nhánh (Store Manager) & Quản trị viên (Admin) & Shipper** | - Quản lý chuỗi chi nhánh (Store): Thông tin shop, kho hàng từng chi nhánh, điều chuyển sách giữa các kho.<br>- Quản lý Sách cũ: Thêm/sửa sách, phân loại độ mới, upload bộ ảnh góc cạnh qua Cloudinary.<br>- Duyệt yêu cầu ký gửi/thu mua sách cũ từ khách hàng.<br>- Xử lý đơn hàng đa trạng thái, phân công giao hàng cho Shipper.<br>- Quản trị toàn hệ thống (Admin): Quản lý Users, Vouchers, Đơn vị vận chuyển, Cấu hình chiết khấu sàn.<br>- Thống kê & Báo cáo doanh thu trực quan bằng Chart.js, xuất file Excel/PDF.<br>- **WebSocket (STOMP):** Thông báo đơn hàng & trạng thái thời gian thực.<br>- **AI Auto-Writer & Valuation:** AI viết mô tả sách và hỗ trợ định giá sách cũ. |
+| STT | Họ và tên | Vai trò đảm nhận | Phân hệ chức năng chính |
+| :---: | :--- | :--- | :--- |
+| 1 | **Nguyễn Song Hoàng Phúc** | **Khách (Guest) & Khách hàng (Customer)** | - Xác thực: Đăng ký OTP qua Email, Đăng nhập Spring Security, Đổi/Quên mật khẩu OTP.<br>- Khám phá sách cũ: Bộ lọc đa tiêu chí (độ mới 80%-99%, tình trạng trang sách, tác giả, NXB, chi nhánh còn sách).<br>- Giỏ hàng DB, Đặt hàng chuỗi (Click & Collect nhận tại shop hoặc giao tận nơi).<br>- Thanh toán tích hợp VNPAY Sandbox & COD.<br>- Đánh giá sách (kèm ảnh/video Cloudinary, text $\ge$ 50 ký tự), Sổ đa địa chỉ.<br>- Ký gửi sách cũ: Gửi form bán lại/ký gửi sách cho hệ thống.<br>- **AI Shopping Assistant:** Trợ lý ảo tư vấn chọn sách thông minh. |
+| 2 | **Cường** | **Quản lý chi nhánh (Store Manager) & Quản trị viên (Admin) & Shipper** | - Quản lý chuỗi chi nhánh (Store): Thông tin shop, kho hàng từng chi nhánh, điều chuyển sách giữa các kho.<br>- Quản lý Sách cũ: Thêm/sửa sách, phân loại độ mới, upload bộ ảnh góc cạnh qua Cloudinary.<br>- Duyệt yêu cầu ký gửi/thu mua sách cũ từ khách hàng.<br>- Xử lý đơn hàng đa trạng thái, phân công giao hàng cho Shipper.<br>- Quản trị toàn hệ thống (Admin): Quản lý Users, Vouchers, Đơn vị vận chuyển, Cấu hình chiết khấu sàn.<br>- Thống kê & Báo cáo doanh thu trực quan bằng Chart.js, xuất file Excel/PDF.<br>- **WebSocket (STOMP):** Thông báo đơn hàng & trạng thái thời gian thực.<br>- **AI Auto-Writer & Valuation:** AI viết mô tả sách và hỗ trợ định giá sách cũ. |
 
 ---
 
@@ -43,8 +43,8 @@
 
 1. **Clone repository:**
    ```bash
-   git clone https://github.com/Muoipc/DoAn_QuanLyChuoiSachCu_24162096.git
-   cd DoAn_QuanLyChuoiSachCu_24162096
+   git clone https://github.com/Muoipc/DoAn_QuanLyChuoiSachCu.git
+   cd DoAn_QuanLyChuoiSachCu
    ```
 
 2. **Cấu hình Cơ sở dữ liệu:**
