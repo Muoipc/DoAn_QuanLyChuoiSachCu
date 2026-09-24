@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Ký Gửi Của Tôi — Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --color-fire: #ee4d2d;
+            --color-fire-hover: #f05d40;
+            --color-bg-body: #f7f5f0;
+            --color-text-main: #1C1917;
+            --color-text-secondary: #44403C;
+            --color-text-light: #78716C;
+            --radius-md: 8px;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: var(--color-bg-body);
+            color: var(--color-text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a { color: inherit; text-decoration: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+        .page-header {
+            background: rgba(45, 24, 15, 0.28);
+            backdrop-filter: blur(36px);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; }
+        .brand-box { display: flex; align-items: center; gap: 16px; }
+        .brand-img { height: 48px; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35)); }
+        .page-title {
+            font-size: 20px; font-weight: 800; color: var(--color-fire);
+            border-left: 2px solid #1C1917; padding-left: 14px; text-transform: uppercase;
+        }
+
+        /* TABS PHÂN LOẠI */
+        .tabs-header-wrap {
+            background: white; border-radius: var(--radius-md);
+            border: 1px solid #f0eae1; margin: 24px auto 20px;
+            display: flex; overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .tab-item {
+            flex: 1; text-align: center; padding: 14px 10px;
+            font-size: 14px; font-weight: 700; color: #44403C;
+            border-bottom: 3px solid transparent; cursor: pointer;
+            white-space: nowrap; transition: 0.2s;
+        }
+        .tab-item:hover { color: var(--color-fire); }
+        .tab-item.active {
+            color: var(--color-fire); border-bottom-color: var(--color-fire);
+            background: #fffdfb;
+        }
+        .tab-badge {
+            background: #f0eae1; color: #1C1917; font-size: 11px;
+            padding: 1px 6px; border-radius: 10px; margin-left: 4px;
+        }
+        .tab-item.active .tab-badge {
+            background: var(--color-fire); color: white;
+        }
+
+        /* THẺ PHIẾU KÝ GỬI */
+        .consignment-card {
+            background: white; border-radius: var(--radius-md);
+            border: 1px solid #f0eae1; padding: 20px 24px; margin-bottom: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            display: flex; flex-direction: column; gap: 14px;
+        }
+
+        .card-top-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid #f5efe6; padding-bottom: 10px;
+        }
+        .consignment-code { font-size: 13.5px; font-weight: 800; color: #1C1917; }
+        .store-assigned-badge {
+            font-size: 12px; color: #78716C; background: #f5f0e6;
+            padding: 3px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;
+        }
+
+        .status-badge {
+            font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .status-pending { background: #fff8e5; color: #b7791f; border: 1px solid #ffe8b3; }
+        .status-approved { background: #e6f7f0; color: #007a57; border: 1px solid #b7ebd6; }
+        .status-stored { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .status-rejected { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+        .card-body-row {
+            display: grid; grid-template-columns: 80px 1fr 220px; gap: 18px; align-items: center;
+        }
+        .book-img-thumb {
+            width: 80px; height: 100px; object-fit: cover; border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .book-title-h4 { font-size: 16px; font-weight: 800; color: #1C1917; margin-bottom: 4px; }
+        .book-meta-sub { font-size: 13px; color: #78716C; line-height: 1.5; }
+
+        .price-compare-box {
+            background: #faf8f5; border: 1px solid #f0eae1; border-radius: 6px;
+            padding: 12px; text-align: right;
+        }
+        .price-line { font-size: 12px; color: #78716C; margin-bottom: 4px; }
+        .price-val { font-size: 16px; font-weight: 800; color: var(--color-fire); }
+
+        .card-footer-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px dashed #f0eae1; padding-top: 12px;
+            font-size: 12.5px; color: #78716C;
+        }
+
+        .btn-action-sm {
+            padding: 6px 14px; border-radius: 4px; font-size: 12.5px; font-weight: 700;
+            border: none; cursor: pointer; transition: 0.15s;
+        }
+        .btn-accept-price { background: #007a57; color: white; }
+        .btn-accept-price:hover { background: #006044; }
+        .btn-cancel-req { background: #f5efe6; color: #dc2626; border: 1px solid #fecaca; }
+        .btn-cancel-req:hover { background: #fee2e2; }
+
+        .page-footer {
+            background: #25160d; color: #b7b0a5; padding: 24px 0;
+            font-size: 12px; text-align: center; margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="page-header">
+        <div class="container header-inner">
+            <div class="brand-box">
+                <a th:href="@{/}">
+                    <img th:src="@{/images/logo-books.png}" alt="Logo Books" class="brand-img">
+                </a>
+                <span class="page-title">Phiếu Ký Gửi Sách Cũ</span>
+            </div>
+            <div style="display:flex; gap:12px;">
+                <a th:href="@{/consignments}" style="background:var(--color-fire); color:white; padding:7px 16px; border-radius:20px; font-size:13px; font-weight:700;">
+                    <i class="fa-solid fa-plus me-1"></i> Gửi Phiếu Mới
+                </a>
+                <a th:href="@{/}" style="font-size:13px; font-weight:700; color:#1C1917; padding:7px 0;">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Mua sắm
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="flex:1;">
+
+        <!-- TABS -->
+        <div class="tabs-header-wrap">
+            <a th:href="@{/consignments/my-list(tab='ALL')}" class="tab-item" th:classappend="${currentTab == 'ALL'} ? 'active' : ''">
+                Tất cả <span class="tab-badge" th:text="${countAll}">0</span>
+            </a>
+            <a th:href="@{/consignments/my-list(tab='PENDING')}" class="tab-item" th:classappend="${currentTab == 'PENDING'} ? 'active' : ''">
+                Chờ duyệt <span class="tab-badge" th:text="${countPending}">0</span>
+            </a>
+            <a th:href="@{/consignments/my-list(tab='APPROVED')}" class="tab-item" th:classappend="${currentTab == 'APPROVED'} ? 'active' : ''">
+                Đã duyệt giá <span class="tab-badge" th:text="${countApproved}">0</span>
+            </a>
+            <a th:href="@{/consignments/my-list(tab='STORED')}" class="tab-item" th:classappend="${currentTab == 'STORED'} ? 'active' : ''">
+                Đang bày bán <span class="tab-badge" th:text="${countStored}">0</span>
+            </a>
+            <a th:href="@{/consignments/my-list(tab='REJECTED')}" class="tab-item" th:classappend="${currentTab == 'REJECTED'} ? 'active' : ''">
+                Từ chối <span class="tab-badge" th:text="${countRejected}">0</span>
+            </a>
+        </div>
+
+        <!-- THÔNG BÁO FLASH -->
+        <div th:if="${successMessage}" style="background:#e6f7f0; border:1px solid #b7ebd6; color:#007a57; padding:12px 16px; border-radius:6px; margin-bottom:16px; font-weight:700;">
+            <i class="fa-solid fa-circle-check me-1"></i> <span th:text="${successMessage}">Thành công!</span>
+        </div>
+
+        <!-- DANH SÁCH PHIẾU KÝ GỬI -->
+        <div th:unless="${#lists.isEmpty(consignments)}">
+            <div th:each="c : ${consignments}" class="consignment-card">
+                <div class="card-top-bar">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span class="consignment-code" th:text="'MÃ PHIẾU #CS' + ${c.id}">#CS1</span>
+                        <span class="store-assigned-badge">
+                            <i class="fa-solid fa-store text-danger"></i>
+                            <span th:text="${c.store.storeName}">Chi Nhánh 1: Thủ Đức</span>
+                        </span>
+                    </div>
+
+                    <!-- TRẠNG THÁI -->
+                    <div>
+                        <span th:if="${c.status.name() == 'PENDING'}" class="status-badge status-pending">
+                            <i class="fa-solid fa-hourglass-half me-1"></i> Đang Chờ Duyệt (24h)
+                        </span>
+                        <span th:if="${c.status.name() == 'APPROVED'}" class="status-badge status-approved">
+                            <i class="fa-solid fa-circle-check me-1"></i> Đã Duyệt Giá
+                        </span>
+                        <span th:if="${c.status.name() == 'STORED'}" class="status-badge status-stored">
+                            <i class="fa-solid fa-shop me-1"></i> Đã Nhập Kho Bày Bán
+                        </span>
+                        <span th:if="${c.status.name() == 'REJECTED'}" class="status-badge status-rejected">
+                            <i class="fa-solid fa-circle-xmark me-1"></i> Từ Chối Thu Mua
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body-row">
+                    <img th:src="${c.photosJson != null ? c.photosJson : '/images/books/book_1.jpg'}" alt="Bìa sách" class="book-img-thumb">
+                    <div>
+                        <h4 class="book-title-h4" th:text="${c.bookTitle}">Tên cuốn sách</h4>
+                        <div class="book-meta-sub">
+                            Tác giả: <strong th:text="${c.author}">Tác giả</strong> | NXB: <span th:text="${c.publisher}">NXB</span> (Năm <span th:text="${c.publishYear}">2021</span>)
+                        </div>
+                        <div class="book-meta-sub" style="margin-top:2px;">
+                            Độ mới: <strong style="color:#007a57;" th:text="${c.conditionPercent} + '% Mới'">90% Mới</strong> — <span th:text="${c.conditionDescription}">Tình trạng</span>
+                        </div>
+                    </div>
+
+                    <div class="price-compare-box">
+                        <div class="price-line">Giá đề xuất: <strong th:text="'₫' + ${#numbers.formatDecimal(c.proposedPrice, 0, 'POINT', 0, 'COMMA')}">₫60.000</strong></div>
+                        <div class="price-line" th:if="${c.agreedPrice != null}">
+                            Giá chuỗi duyệt: <span class="price-val" th:text="'₫' + ${#numbers.formatDecimal(c.agreedPrice, 0, 'POINT', 0, 'COMMA')}">₫55.000</span>
+                        </div>
+                        <div class="price-line" th:if="${c.agreedPrice == null}" style="color:#b7791f; font-weight:700;">
+                            (Đang thẩm định giá)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer-bar">
+                    <div>
+                        <i class="fa-regular fa-clock me-1"></i> Ngày gửi: 
+                        <span th:text="${#temporals.format(c.createdAt, 'dd/MM/yyyy HH:mm')}">24/09/2026 14:00</span>
+                        <span th:if="${c.adminNotes != null}" style="margin-left: 12px; color:#1C1917; font-weight:600;">
+                            | Ghi chú: <span th:text="${c.adminNotes}" style="color:#44403C;">Ghi chú</span>
+                        </span>
+                    </div>
+
+                    <div style="display:flex; gap:8px;">
+                        <!-- Nút Khách đồng ý giá duyệt -->
+                        <form th:if="${c.status.name() == 'APPROVED'}" th:attr="action='/consignments/' + ${c.id} + '/accept-price'" method="post">
+                            <button type="submit" class="btn-action-sm btn-accept-price">
+                                <i class="fa-solid fa-handshake me-1"></i> Đồng Ý Giá &amp; Gửi Sách
+                            </button>
+                        </form>
+
+                        <!-- Nút Hủy nếu còn PENDING -->
+                        <form th:if="${c.status.name() == 'PENDING'}" th:attr="action='/consignments/' + ${c.id} + '/cancel'" method="post" onsubmit="return confirm('Bạn có chắc muốn hủy phiếu ký gửi này?');">
+                            <button type="submit" class="btn-action-sm btn-cancel-req">
+                                <i class="fa-solid fa-trash-can me-1"></i> Hủy Phiếu
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DANH SÁCH RỖNG -->
+        <div th:if="${#lists.isEmpty(consignments)}" style="text-align:center; padding:60px 20px; background:white; border-radius:var(--radius-md); border:1px solid #f0eae1; margin:20px 0;">
+            <i class="fa-solid fa-box-open" style="font-size:54px; color:#dcd7ce; margin-bottom:14px;"></i>
+            <h3 style="font-size:16px; font-weight:800; color:#1C1917;">Không có phiếu ký gửi nào ở trạng thái này</h3>
+            <p style="color:#78716C; margin:6px 0 18px; font-size:13px;">Bạn có thể tạo yêu cầu ký gửi mới để thanh lý sách cũ tại 5 chi nhánh TP.HCM.</p>
+            <a th:href="@{/consignments}" style="background:var(--color-fire); color:white; padding:10px 24px; border-radius:4px; font-size:13px; font-weight:700; display:inline-block;">
+                TẠO PHIẾU KÝ GỬI NGAY
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="page-footer">
+        <div class="container">
+            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+        </div>
+    </footer>
+</body>
+</html>

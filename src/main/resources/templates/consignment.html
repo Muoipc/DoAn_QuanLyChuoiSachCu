@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ký Gửi Sách Cũ — Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --color-fire: #ee4d2d;
+            --color-fire-hover: #f05d40;
+            --color-bg-body: #f7f5f0;
+            --color-text-main: #1C1917;
+            --color-text-secondary: #44403C;
+            --color-text-light: #78716C;
+            --color-border: rgba(45, 24, 15, 0.12);
+            --color-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --radius-md: 8px;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: var(--color-bg-body);
+            color: var(--color-text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a { color: inherit; text-decoration: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+        /* HEADER */
+        .page-header {
+            background: rgba(45, 24, 15, 0.28);
+            backdrop-filter: blur(36px);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; }
+        .brand-box { display: flex; align-items: center; gap: 16px; }
+        .brand-img { height: 48px; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35)); }
+        .page-title {
+            font-size: 20px; font-weight: 800; color: var(--color-fire);
+            border-left: 2px solid #1C1917; padding-left: 14px; text-transform: uppercase;
+        }
+        .header-actions { display: flex; align-items: center; gap: 14px; }
+        .btn-my-consignments {
+            background: white; border: 1px solid #dcd7ce; border-radius: 20px;
+            padding: 7px 16px; font-size: 13px; font-weight: 700; color: #1C1917;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-my-consignments:hover {
+            border-color: var(--color-fire); color: var(--color-fire);
+        }
+
+        /* HERO BANNER */
+        .consignment-hero {
+            background: linear-gradient(135deg, #382012 0%, #201007 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .consignment-hero::after {
+            content: ''; position: absolute; right: -50px; bottom: -50px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(238, 77, 45, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-tag {
+            background: var(--color-fire); color: white;
+            font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 4px;
+            display: inline-block; margin-bottom: 12px; text-transform: uppercase;
+        }
+        .hero-title { font-size: 32px; font-weight: 900; margin-bottom: 10px; }
+        .hero-desc { font-size: 14.5px; color: #dcd3c9; max-width: 650px; line-height: 1.6; }
+
+        /* QUY TRÌNH 4 BƯỚC */
+        .process-steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 26px;
+        }
+        .step-item-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .step-num {
+            width: 26px; height: 26px; background: var(--color-fire); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 800;
+        }
+        .step-title { font-size: 14px; font-weight: 700; color: white; margin-top: 4px; }
+        .step-desc { font-size: 12px; color: #c4bbb0; line-height: 1.4; }
+
+        /* FORM KÝ GỬI */
+        .form-card-glass {
+            background: white;
+            border-radius: var(--radius-md);
+            border: 1px solid #f0eae1;
+            box-shadow: var(--color-shadow-card);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        .form-section-title {
+            font-size: 18px; font-weight: 800; color: #1C1917;
+            margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #f0eae1;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .form-grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        .form-group { margin-bottom: 18px; }
+        .form-label {
+            display: block; font-size: 13.5px; font-weight: 700;
+            color: var(--color-text-main); margin-bottom: 6px;
+        }
+        .form-label .required { color: var(--color-fire); margin-left: 2px; }
+        .form-input, .form-select, .form-textarea {
+            width: 100%; border: 1px solid #dcd7ce; border-radius: 6px;
+            padding: 10px 14px; font-size: 14px; font-family: inherit;
+            color: #1C1917; background: #faf8f5; transition: 0.2s; outline: none;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--color-fire); background: white;
+            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.12);
+        }
+
+        /* KHUNG AI GỢI Ý ĐỊNH GIÁ */
+        .ai-price-helper-card {
+            background: #fff8f6;
+            border: 1px dashed var(--color-fire);
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+        .ai-helper-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 8px; font-size: 13.5px; font-weight: 800; color: var(--color-fire);
+        }
+        .ai-calc-row {
+            display: flex; gap: 10px; align-items: center;
+        }
+        .btn-calc-ai {
+            background: var(--color-fire); color: white; border: none;
+            border-radius: 4px; padding: 10px 16px; font-size: 13px; font-weight: 700;
+            cursor: pointer; white-space: nowrap; transition: 0.2s;
+        }
+        .btn-calc-ai:hover { background: var(--color-fire-hover); }
+        .ai-result-tag {
+            font-size: 12.5px; color: #44403C; margin-top: 8px; display: none;
+        }
+
+        /* SLIDER ĐỘ MỚI */
+        .slider-wrap {
+            display: flex; align-items: center; gap: 14px;
+        }
+        .condition-slider {
+            flex: 1; accent-color: var(--color-fire); cursor: pointer;
+        }
+        .condition-val-pill {
+            background: #e6f7f0; color: #007a57; font-weight: 800; font-size: 13px;
+            padding: 4px 10px; border-radius: 12px; border: 1px solid #b7ebd6;
+            min-width: 60px; text-align: center;
+        }
+
+        /* SUBMIT BUTTON */
+        .btn-submit-consignment {
+            background: var(--color-fire); color: white; border: none;
+            border-radius: 6px; padding: 15px 36px; font-size: 16px; font-weight: 800;
+            cursor: pointer; box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35);
+            transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;
+            width: 100%; margin-top: 10px;
+        }
+        .btn-submit-consignment:hover {
+            background: var(--color-fire-hover); transform: translateY(-1px);
+        }
+
+        /* FOOTER */
+        .page-footer {
+            background: #25160d; color: #b7b0a5; padding: 24px 0;
+            font-size: 12px; text-align: center; margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="page-header">
+        <div class="container header-inner">
+            <div class="brand-box">
+                <a th:href="@{/}">
+                    <img th:src="@{/images/logo-books.png}" alt="Logo Books" class="brand-img">
+                </a>
+                <span class="page-title">Cổng Ký Gửi Sách Cũ</span>
+            </div>
+            <div class="header-actions">
+                <a th:href="@{/consignments/my-list}" class="btn-my-consignments">
+                    <i class="fa-solid fa-list-check" style="color:var(--color-fire);"></i>
+                    <span>Phiếu Ký Gửi Của Tôi</span>
+                    <span th:if="${myPendingCount != null and myPendingCount > 0}" 
+                          style="background:var(--color-fire); color:white; font-size:11px; font-weight:800; border-radius:10px; padding:1px 6px;"
+                          th:text="${myPendingCount}">1</span>
+                </a>
+                <a th:href="@{/}" style="font-size:13px; font-weight:700; color:#1C1917;">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Mua sắm
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO BANNER & 4 BƯỚC -->
+    <section class="consignment-hero">
+        <div class="container">
+            <span class="hero-tag"><i class="fa-solid fa-recycle me-1"></i> Chuỗi Sách Cũ TP.HCM</span>
+            <h1 class="hero-title">Hồi Sinh Tủ Sách, Nhận Tiền Ngay</h1>
+            <p class="hero-desc">
+                Đăng ký ký gửi hoặc bán lại sách cũ không dùng đến. Chuỗi 5 cửa hàng tại TP.HCM tiếp nhận, thẩm định minh bạch bằng AI và chi trả chuyển khoản trong 24 giờ.
+            </p>
+
+            <div class="process-steps-grid">
+                <div class="step-item-card">
+                    <div class="step-num">1</div>
+                    <div class="step-title">Khai Báo Sách</div>
+                    <div class="step-desc">Điền tên sách, năm XB và sử dụng công cụ AI định giá gợi ý.</div>
+                </div>
+                <div class="step-item-card">
+                    <div class="step-num">2</div>
+                    <div class="step-title">Chọn Chi Nhánh</div>
+                    <div class="step-desc">Chọn 1 trong 5 chi nhánh TP.HCM gần bạn nhất để gửi sách.</div>
+                </div>
+                <div class="step-item-card">
+                    <div class="step-num">3</div>
+                    <div class="step-title">Thẩm Định 24h</div>
+                    <div class="step-desc">Thủ kho chi nhánh kiểm tra thực tế và chốt giá mua hợp lý.</div>
+                </div>
+                <div class="step-item-card">
+                    <div class="step-num">4</div>
+                    <div class="step-title">Nhận Tiền Mặt / Đổi Sách</div>
+                    <div class="step-desc">Chuyển khoản ngay hoặc nhận voucher giảm giá mua sách mới.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN FORM ĐĂNG KÝ KÝ GỬI -->
+    <main class="container">
+
+        <!-- THÔNG BÁO FLASH -->
+        <div th:if="${errorMessage}" style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:12px 16px; border-radius:6px; margin-bottom:20px; font-weight:700;">
+            <i class="fa-solid fa-circle-exclamation me-1"></i> <span th:text="${errorMessage}">Lỗi!</span>
+        </div>
+
+        <div class="form-card-glass">
+            <div class="form-section-title">
+                <span><i class="fa-solid fa-file-signature text-danger me-2"></i> ĐIỀN THÔNG TIN SÁCH KÝ GỬI</span>
+                <span style="font-size:12.5px; font-weight:500; color:#78716C;">
+                    Hỗ trợ sinh viên HCMUTE và bạn đọc toàn thành phố
+                </span>
+            </div>
+
+            <form action="/consignments/submit" method="post">
+                <div class="form-grid-2col">
+
+                    <!-- CỘT TRÁI: THÔNG TIN SÁCH -->
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Tên sách cũ cần ký gửi <span class="required">*</span></label>
+                            <input type="text" name="bookTitle" class="form-input" placeholder="Ví dụ: Tuổi Trẻ Đáng Giá Bao Nhiêu, Lập trình Java..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tác giả <span class="required">*</span></label>
+                            <input type="text" name="author" class="form-input" placeholder="Tên tác giả hoặc dịch giả..." required>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                            <div class="form-group">
+                                <label class="form-label">Nhà xuất bản</label>
+                                <input type="text" name="publisher" class="form-input" placeholder="NXB Trẻ, NXB Kim Đồng...">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Năm xuất bản</label>
+                                <input type="number" name="publishYear" id="inputYear" class="form-input" value="2021" min="1900" max="2026">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Chi nhánh chuỗi bạn muốn gửi sách <span class="required">*</span></label>
+                            <select name="storeId" class="form-select" required>
+                                <option th:each="s : ${stores}" th:value="${s.id}" 
+                                        th:text="${s.storeName} + ' — ' + ${s.address}">
+                                    CN 1: Thủ Đức — 48 Võ Văn Ngân
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Ảnh chụp thực tế các góc sách (Bìa, gáy, trang sách)</label>
+                            <input type="text" name="photosJson" class="form-input" placeholder="Dán link ảnh hoặc để trống dùng ảnh mặc định...">
+                            <div style="font-size:11.5px; color:#78716C; margin-top:4px;">
+                                * Bạn có thể mang sách trực tiếp đến quầy chi nhánh để nhân viên chụp ảnh kiểm định hộ.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CỘT PHẢI: THẨM ĐỊNH & ĐỊNH GIÁ -->
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Độ mới tự đánh giá: <span id="conditionText" style="color:#007a57; font-weight:800;">90% Mới</span></label>
+                            <div class="slider-wrap">
+                                <input type="range" name="conditionPercent" id="conditionSlider" min="70" max="99" value="90" class="condition-slider" oninput="updateCond(this.value)">
+                                <span class="condition-val-pill" id="conditionPill">90%</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Mô tả chi tiết tình trạng sách <span class="required">*</span></label>
+                            <textarea name="conditionDescription" rows="3" class="form-textarea" placeholder="Ví dụ: Bìa hơi ố nhẹ mép ngoài, bên trong giấy trắng nguyên vẹn không rách, không gạch chân highlight..." required>Bìa và gáy sách còn nguyên vẹn, ruột sách sạch sẽ không rách hay viết vẽ.</textarea>
+                        </div>
+
+                        <!-- CÔNG CỤ AI GỢI Ý ĐỊNH GIÁ -->
+                        <div class="ai-price-helper-card">
+                            <div class="ai-helper-header">
+                                <span><i class="fa-solid fa-wand-magic-sparkles me-1"></i> AI Gợi Ý Định Giá Thị Trường</span>
+                                <span style="font-size:11px; background:rgba(238, 77, 45, 0.1); padding:2px 6px; border-radius:4px;">Miễn Phí</span>
+                            </div>
+                            <div class="ai-calc-row">
+                                <input type="number" id="inputCoverPrice" class="form-input" placeholder="Nhập giá bìa (₫)..." value="100000" style="background:white;">
+                                <button type="button" class="btn-calc-ai" onclick="calculateAiPrice()">
+                                    <i class="fa-solid fa-bolt me-1"></i> Tính Giá
+                                </button>
+                            </div>
+                            <div id="aiResultTag" class="ai-result-tag">
+                                Gợi ý thu mua: <strong id="aiPriceVal" style="color:var(--color-fire); font-size:15px;">₫65.000</strong>
+                                <span id="aiNoteVal" style="font-size:11.5px; color:#78716C; margin-left:6px;"></span>
+                                <button type="button" onclick="applyAiPrice()" style="margin-left:8px; border:none; background:#007a57; color:white; font-size:11px; font-weight:700; padding:2px 8px; border-radius:3px; cursor:pointer;">Áp Dụng</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Mức giá bạn mong muốn nhận (₫) <span class="required">*</span></label>
+                            <input type="number" name="proposedPrice" id="proposedPriceInput" class="form-input" placeholder="Ví dụ: 50000" value="65000" required style="font-size:16px; font-weight:800; color:var(--color-fire);">
+                        </div>
+
+                        <button type="submit" class="btn-submit-consignment">
+                            <i class="fa-solid fa-paper-plane me-2"></i> GỬI PHIẾU KÝ GỬI THẨM ĐỊNH
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="page-footer">
+        <div class="container">
+            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+        </div>
+    </footer>
+
+    <script>
+        function updateCond(val) {
+            document.getElementById('conditionPill').textContent = val + '%';
+            document.getElementById('conditionText').textContent = val + '% Mới';
+        }
+
+        let calculatedPrice = 0;
+        function calculateAiPrice() {
+            const coverPrice = parseFloat(document.getElementById('inputCoverPrice').value) || 100000;
+            const cond = parseInt(document.getElementById('conditionSlider').value) || 90;
+            const year = parseInt(document.getElementById('inputYear').value) || 2021;
+
+            const formData = new FormData();
+            formData.append('originalPrice', coverPrice);
+            formData.append('conditionPercent', cond);
+            formData.append('publishYear', year);
+
+            fetch('/consignments/api/estimate-price', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    calculatedPrice = data.estimatedPrice;
+                    document.getElementById('aiPriceVal').textContent = '₫' + Number(data.estimatedPrice).toLocaleString('vi-VN');
+                    document.getElementById('aiNoteVal').textContent = '(' + data.categoryNote + ')';
+                    document.getElementById('aiResultTag').style.display = 'block';
+                }
+            })
+            .catch(err => {
+                // Fallback offline calculation
+                calculatedPrice = Math.round(coverPrice * (cond / 100) * 0.65);
+                document.getElementById('aiPriceVal').textContent = '₫' + calculatedPrice.toLocaleString('vi-VN');
+                document.getElementById('aiResultTag').style.display = 'block';
+            });
+        }
+
+        function applyAiPrice() {
+            if (calculatedPrice > 0) {
+                document.getElementById('proposedPriceInput').value = calculatedPrice;
+            }
+        }
+    </script>
+</body>
+</html>

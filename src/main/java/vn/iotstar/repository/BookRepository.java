@@ -15,6 +15,7 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findBySlug(String slug);
+    List<Book> findByTitleContainingIgnoreCase(String title);
 
     /**
      * Ghi chú cho Cường: Truy vấn danh sách sách bán chạy trên mức số lượng quy định (minSold),
