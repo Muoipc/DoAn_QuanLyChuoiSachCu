@@ -342,38 +342,307 @@ INSERT INTO categories (id, parent_id, category_name, slug, description, icon, i
 (4, NULL, 'Lịch Sử & Văn Hóa', 'lich-su-van-hoa', 'Sách nghiên cứu sử liệu, văn hóa cổ truyền', 'fa-landmark', TRUE),
 (5, NULL, 'Ngoại Ngữ & Từ Điển', 'ngoai-ngu-tu-dien', 'Giáo trình tiếng Anh, TOEIC, từ điển cổ xưa', 'fa-language', TRUE);
 
--- 6. Nạp danh sách sách cũ mẫu (Có cuốn sold > 10 phục vụ test trang chủ Guest)
-INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured) VALUES
-(1, 1, 'Số Đỏ (Bản in NXB Văn Học 1996)', 'so-do-nxb-van-hoc-1996', 'Vũ Trọng Phụng', 'NXB Văn Học', 1996, '9786046912341', 85, 'Bìa hơi sờn mép theo thời gian, ruột nguyên vẹn đầy đủ trang, giấy ố vàng cổ kính.', 'Tác phẩm hiện thực phê phán trứ danh của văn học Việt Nam trước 1945.', 80000.00, 45000.00, 40000.00, 24, 350, TRUE, TRUE),
-(2, 1, 'Nhà Giả Kim (Bản bìa mềm 2015)', 'nha-gia-kim-2015', 'Paulo Coelho', 'NXB Hội Nhà Văn', 2015, '9786045332211', 95, 'Sách còn như mới, không gập góc, không ghi chép.', 'Cuốn sách bán chạy nhất mọi thời đại về hành trình tìm kiếm vận mệnh.', 79000.00, 50000.00, 45000.00, 18, 520, TRUE, TRUE),
-(3, 1, 'Rừng Na Uy (Bản dịch Trịnh Lữ)', 'rung-na-uy-trinh-lu', 'Haruki Murakami', 'NXB Nhã Nam', 2011, '9786049281144', 90, 'Gáy sách chắc chắn, mép dưới có chữ ký của chủ cũ.', 'Tiểu thuyết kinh điển của văn học đương đại Nhật Bản.', 115000.00, 70000.00, 65000.00, 15, 410, TRUE, TRUE),
-(4, 2, 'Lập Trình Web Với Java & Spring (Giáo trình)', 'lap-trinh-web-java-spring', 'Bộ Môn CNPM HCMUTE', 'NXB Đại Học Quốc Gia', 2021, '9786047388992', 92, 'Sách dùng lướt, vài trang đầu có highlight bút nhớ vàng.', 'Giáo trình cốt lõi cho sinh viên theo học môn Lập trình Web.', 150000.00, 85000.00, 80000.00, 32, 890, TRUE, TRUE),
-(5, 2, 'Design Patterns: Elements of Reusable Object-Oriented Software', 'design-patterns-gang-of-four', 'Erich Gamma et al.', 'Addison-Wesley', 2008, '9780201633610', 88, 'Bản gốc tiếng Anh, bìa cứng, góc gáy hơi mòn, trang sách sạch sẽ.', 'Cuốn kinh thánh về 23 mẫu thiết kế phần mềm kinh điển của Gang of Four.', 450000.00, 190000.00, 180000.00, 12, 670, TRUE, TRUE),
-(6, 3, 'Đắc Nhân Tâm (Bản dịch Nguyễn Hiến Lê 1974)', 'dac-nhan-tam-nguyen-hien-le-1974', 'Dale Carnegie (Nguyễn Hiến Lê dịch)', 'Cơ sở xuất bản Tao Đàn', 1974, 'N/A-1974', 80, 'Ấn bản hiếm trước 1975, gáy dán băng keo trong bảo vệ, trang ngả nâu cổ điển.', 'Bản dịch huyền thoại giữ trọn vẹn văn phong mộc mạc triết lý.', 250000.00, 160000.00, 150000.00, 11, 820, TRUE, TRUE),
-(7, 3, 'Cha Giàu Cha Nghèo (Tập 1 - 2012)', 'cha-giau-cha-ngheo-tap-1', 'Robert T. Kiyosaki', 'NXB Trẻ', 2012, '9786041011223', 90, 'Tình trạng tốt, không rách trang.', 'Bài học cơ bản về tư duy tự do tài chính và đầu tư cá nhân.', 95000.00, 55000.00, 50000.00, 28, 480, TRUE, TRUE),
-(8, 4, 'Đại Việt Sử Ký Toàn Thư (Bản trọn bộ 2004)', 'dai-viet-su-ky-toan-thu-2004', 'Ngô Sĩ Liên', 'NXB Khoa Học Xã Hội', 2004, '9786048991201', 95, 'Bìa cứng gáy mạ vàng, bảo quản trong tủ kính, gần như mới 95%.', 'Bộ quốc sử ghi chép đầy đủ từ thời Hồng Bàng đến triều Hậu Lê.', 600000.00, 380000.00, 350000.00, 8, 290, TRUE, FALSE),
-(9, 5, 'English Grammar in Use (Raymond Murphy - 4th Edition)', 'english-grammar-in-use-4th', 'Raymond Murphy', 'Cambridge University Press', 2015, '9780521189064', 85, 'Đã làm bài tập bằng bút chì các Unit 1-10, các trang sau mới tinh.', 'Cẩm nang học ngữ pháp tiếng Anh thông dụng và hiệu quả nhất thế giới.', 180000.00, 95000.00, 90000.00, 22, 610, TRUE, TRUE);
-
--- 7. Nạp ảnh chi tiết nhiều góc cạnh của sách (Cloudinary)
-INSERT INTO book_images (id, book_id, image_url, public_id, angle_description, is_primary, display_order) VALUES
-(1, 1, 'https://res.cloudinary.com/demo/image/upload/v1/samples/books/so-do-bia.jpg', 'so-do-bia', 'Bìa trước NXB Văn Học 1996', TRUE, 1),
-(2, 1, 'https://res.cloudinary.com/demo/image/upload/v1/samples/books/so-do-gay.jpg', 'so-do-gay', 'Gáy sách cổ', FALSE, 2),
-(3, 2, 'https://res.cloudinary.com/demo/image/upload/v1/samples/books/nha-gia-kim-bia.jpg', 'nha-gia-kim-bia', 'Bìa trước', TRUE, 1),
-(4, 3, 'https://res.cloudinary.com/demo/image/upload/v1/samples/books/rung-na-uy-bia.jpg', 'rung-na-uy-bia', 'Bìa trước Nhã Nam', TRUE, 1),
-(5, 4, 'https://res.cloudinary.com/demo/image/upload/v1/samples/books/java-spring-bia.jpg', 'java-spring-bia', 'Bìa giáo trình HCMUTE', TRUE, 1),
-(6, 6, 'https://res.cloudinary.com/demo/image/upload/v1/samples/books/dac-nhan-tam-1974.jpg', 'dac-nhan-tam-1974', 'Ấn bản Tao Đàn 1974', TRUE, 1);
-
--- 8. Nạp số lượng tồn kho theo từng chi nhánh
-INSERT INTO inventory (store_id, book_id, quantity) VALUES
-(1, 1, 3), (2, 1, 2),                  -- Sách 1 có tại CN Thủ Đức và CN Quận 1
-(1, 2, 5), (2, 2, 4), (3, 2, 2),        -- Sách 2 có tại cả 3 chi nhánh
-(1, 3, 2), (2, 3, 3),                  -- Sách 3
-(1, 4, 15), (2, 4, 8),                 -- Giáo trình Java có nhiều ở CN Thủ Đức
-(1, 5, 1), (3, 5, 2),                  -- Design Patterns
-(2, 6, 1),                             -- Đắc Nhân Tâm 1974 bản hiếm duy nhất tại CN Quận 1
-(1, 7, 6), (2, 7, 4),
-(2, 8, 1), (3, 8, 1),
-(1, 9, 7), (2, 9, 5);
+-- 6. Nạp danh sách 20 cuốn sách cũ mẫu chuẩn bìa thật 100% (Khớp ảnh bìa thực tế)
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (1, 1, 'Yêu Những Điều Không Hoàn Hảo', 'yeu-nhung-dieu-khong-hoan-hao', 'Hae Min', 'NXB Thế Giới', 2018, '9786047748123', 95, 'Bản in nguyên vẹn 95%, ruột sạch đẹp không ghi chú, đã niêm phong màng co bảo quản.', 'Tác phẩm tản văn chữa lành tâm hồn sâu sắc của Đại đức Hae Min, giúp người đọc bao dung và thấu hiểu chính mình giữa dòng đời vội vã.', 120000, 68000, 65000, 48, 1250, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (1, '/images/books/book-1.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 1, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 1, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 1, 0);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (2, 1, 'Nhà Giả Kim (The Alchemist)', 'nha-gia-kim-paulo-coelho', 'Paulo Coelho', 'NXB Nhã Nam', 2015, '9780062315007', 90, 'Sách nguyên vẹn, gáy chắc, mép sách hơi ố vàng nhẹ theo thời gian, không thiếu trang.', 'Kiệt tác vượt thời gian về hành trình theo đuổi vận mệnh của chàng chăn cừu Santiago qua sa mạc.', 79000, 45000, 42000, 35, 980, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (2, '/images/books/book-2.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 2, 6);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 2, 0);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 2, 3);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (3, 3, 'Thay Đổi Tí Hon (Atomic Habits)', 'thay-doi-ti-hon-atomic-habits', 'James Clear', 'NXB Thế Giới', 2019, '9780735211292', 98, 'Sách mới 98%, không nếp gấp, hệ thống phương pháp xây dựng thói quen tốt vượt trội.', 'Cẩm nang hướng dẫn từng bước thay đổi những thói quen nhỏ để đạt được kết quả phi thường.', 189000, 95000, 90000, 32, 1100, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (3, '/images/books/book-3.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 3, 5);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 3, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 3, 1);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (4, 3, 'Đắc Nhân Tâm (How to Win Friends)', 'dac-nhan-tam-dale-carnegie', 'Dale Carnegie', 'First News - NXB Tổng Hợp', 2016, '9780671027032', 85, 'Bìa cứng sang trọng, gáy vững chắc, ruột sách sạch sẽ, cẩm nang giao tiếp kinh điển.', 'Cẩm nang giao tiếp, đối nhân xử thế kinh điển có ảnh hưởng lớn nhất mọi thời đại.', 86000, 40000, 38000, 22, 760, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (4, '/images/books/book-4.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 4, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 4, 0);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 4, 8);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (5, 3, 'Dạy Con Làm Giàu (Rich Dad Poor Dad)', 'day-con-lam-giau-robert-kiyosaki', 'Robert T. Kiyosaki', 'NXB Trẻ', 2012, '9781612680194', 88, 'Sách đọc tốt, các bài học tư duy phân biệt tài sản và tiêu sản còn nguyên giá trị.', 'Bộ sách giáo dục tài chính cá nhân bán chạy nhất hành tinh, thay đổi tư duy làm giàu.', 95000, 48000, 45000, 33, 790, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (5, '/images/books/book-5.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 5, 6);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 5, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 5, 0);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (6, 3, 'Tư Duy Nhanh Và Chậm', 'tu-duy-nhanh-va-cham-kahneman', 'Daniel Kahneman', 'NXB Thế Giới', 2018, '9780374533557', 92, 'Ấn bản đẹp, giải thưởng Nobel Kinh tế, phân tích sâu sắc hệ thống tư duy 1 và 2.', 'Kiệt tác tâm lý học hành vi vạch trần những sai lầm có hệ thống trong cách con người phán đoán.', 220000, 110000, 105000, 26, 890, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (6, '/images/books/book-6.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 6, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 6, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 6, 2);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (7, 3, 'Thấu Hiểu Sang Chấn (The Body Keeps the Score)', 'thau-hieu-sang-chan', 'Bessel van der Kolk', 'NXB Lao Động', 2021, '9780143127741', 95, 'Sách như mới 95%, chuyên khảo y khoa tâm lý sâu sắc về chữa lành sang chấn tâm lý.', 'Công trình khoa học đột phá về cách sang chấn định hình lại não bộ và phương pháp chữa lành.', 250000, 125000, 120000, 28, 940, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (7, '/images/books/book-7.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 7, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 7, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 7, 1);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (8, 1, 'Những Thứ Ba Với Thầy Morrie', 'nhung-thu-ba-voi-thay-morrie', 'Mitch Albom', 'NXB Trẻ', 2014, '9780767905923', 90, 'Sách nguyên vẹn, các bài học về tình yêu, công việc, tuổi già và sự tha thứ lay động tâm can.', 'Hồi ký cảm động về những buổi trò chuyện thứ ba đầy minh triết giữa một học trò và người thầy sắp qua đời.', 85000, 45000, 42000, 24, 710, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (8, '/images/books/book-8.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 8, 5);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 8, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 8, 1);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (9, 1, 'Tội Ác Và Trừng Phạt (Crime and Punishment)', 'toi-ac-va-trung-phat-crime-and-punishment', 'Fyodor Dostoevsky', 'NXB Văn Học', 2016, '9780679734772', 85, 'Tiểu thuyết kinh điển nước Nga, độ dày hơn 700 trang giữ nguyên vẹn gáy keo chỉ chắc chắn.', 'Đỉnh cao phân tích tâm lý tội phạm và sự cứu chuộc lương tâm con người của Dostoevsky.', 165000, 85000, 80000, 19, 650, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (9, '/images/books/book-9.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 9, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 9, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 9, 1);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (10, 1, 'Hoàng Tử Bé (The Little Prince)', 'hoang-tu-be-saint-exupery', 'Antoine de Saint-Exupéry', 'NXB Kim Đồng', 2019, '9780140283334', 95, 'Ấn bản minh họa màu đẹp mắt của NXB Kim Đồng, gáy vuông vắn, không nhăn mép.', 'Tác phẩm văn học kỳ diệu về tình bạn, bông hồng duy nhất và cái nhìn thuần khiết của trẻ thơ.', 75000, 38000, 35000, 31, 920, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (10, '/images/books/book-10.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 10, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 10, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 10, 2);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (11, 1, 'Một Chín Tám Bốn (1984)', 'mot-chin-tam-bon-1984-orwell', 'George Orwell', 'NXB Nhã Nam', 2017, '9780451524935', 90, 'Kiệt tác phản địa đàng thế kỷ 20, sách giữ gìn cẩn thận, ruột giấy vàng cổ điển.', 'Bức tranh tiên tri rùng mình về một xã hội bị giám sát tuyệt đối và sự tha hóa của quyền lực.', 110000, 55000, 50000, 27, 880, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (11, '/images/books/book-11.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 11, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 11, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 11, 2);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (12, 1, 'Trại Súc Vật (Animal Farm)', 'trai-suc-vat-animal-farm', 'George Orwell', 'NXB Nhã Nam', 2016, '9780451526342', 92, 'Sách nhỏ gọn, gáy phẳng phiu, truyện ngụ ngôn chính trị sắc sảo bậc nhất.', 'Truyện ngụ ngôn trào phúng kinh điển về cuộc nổi dậy của muông thú và sự biến chất của lý tưởng.', 68000, 35000, 32000, 25, 780, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (12, '/images/books/book-12.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 12, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 12, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 12, 1);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (13, 1, 'Gatsby Vĩ Đại (The Great Gatsby)', 'gatsby-vi-dai-fitzgerald', 'F. Scott Fitzgerald', 'NXB Văn Học', 2018, '9780743273565', 88, 'Bản dịch kinh điển, bìa đẹp, trang sách sạch không vết bẩn, khắc họa thời kỳ Jazz lộng lẫy.', 'Bi kịch tình yêu và giấc mơ Mỹ tan vỡ của triệu phú bí ẩn Jay Gatsby bên bờ vịnh Long Island.', 95000, 48000, 45000, 21, 670, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (13, '/images/books/book-13.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 13, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 13, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 13, 0);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (14, 1, '451 Độ F (Fahrenheit 451)', '451-do-f-fahrenheit-451', 'Ray Bradbury', 'NXB Nhã Nam', 2017, '9781451673319', 90, 'Sách nguyên vẹn, câu chuyện về chàng lính cứu hỏa Montag đốt sách và sự thức tỉnh.', 'Tác phẩm viễn tưởng kinh điển cảnh báo về một thế giới mà tri thức và sách vở bị cấm đoán.', 105000, 52000, 48000, 23, 740, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (14, '/images/books/book-14.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 14, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 14, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 14, 1);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (15, 1, 'Người Đàn Ông Mang Tên Ove', 'nguoi-dan-ong-mang-ten-ove', 'Fredrik Backman', 'NXB Trẻ', 2018, '9781476738024', 95, 'Sách gần như mới 95%, câu chuyện ấm áp về sự tử tế và tình người trong xóm nhỏ.', 'Tiểu thuyết cảm động hài hước về một ông lão khó tính nhưng mang trái tim ấm áp nhất thế giới.', 135000, 68000, 65000, 38, 1150, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (15, '/images/books/book-15.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 15, 6);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 15, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 15, 2);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (16, 1, 'Chúa Ruồi (Lord of the Flies)', 'chua-ruoi-william-golding', 'William Golding', 'NXB Hội Nhà Văn', 2015, '9780425274866', 88, 'Bản in tốt, tác phẩm đoạt giải Nobel văn học, giải mã bản tính con người khi cô lập.', 'Câu chuyện rùng mình về một nhóm học sinh mắc kẹt trên đảo hoang và sự thoái hóa nhân tính.', 110000, 55000, 50000, 17, 590, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (16, '/images/books/book-16.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 16, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 16, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 16, 1);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (17, 1, 'Kiêu Hãnh Và Định Kiến', 'kieu-hanh-va-dinh-kien-jane-austen', 'Jane Austen', 'NXB Văn Học', 2019, '9780141439518', 90, 'Bìa hoa văn cổ điển nước Anh, gáy sách chắc chắn, thiên tình sử Elizabeth và Darcy.', 'Kiệt tác lãng mạn bất hủ về tình yêu vượt qua định kiến xã hội và tự ái cá nhân của Jane Austen.', 120000, 60000, 58000, 25, 680, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (17, '/images/books/book-17.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 17, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 17, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 17, 1);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (18, 1, 'Đồi Gió Hú (Wuthering Heights)', 'doi-gio-hu-emily-bronte', 'Emily Brontë', 'NXB Văn Học', 2016, '9780141439600', 85, 'Bản in giữ gìn tốt, thiên tiểu thuyết tình yêu và hận thù dữ dội trên đồng hoang Yorkshire.', 'Bi tình sử cuồng nhiệt và ám ảnh nhất lịch sử văn học giữa Heathcliff và Catherine Earnshaw.', 115000, 58000, 55000, 16, 530, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (18, '/images/books/book-18.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 18, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 18, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 18, 1);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (19, 3, 'Học Cách Mặc Kệ (The Let Them Theory)', 'hoc-cach-mac-ke-mel-robbins', 'Mel Robbins', 'NXB Dân Trí', 2024, '9781401971366', 98, 'Sách gần như mới 98%, cuốn sách tâm lý thực hành tạo cơn sốt toàn cầu của Mel Robbins.', 'Phương pháp giải phóng năng lượng tinh thần bằng cách buông bỏ nhu cầu kiểm soát người khác.', 195000, 98000, 95000, 36, 1280, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (19, '/images/books/book-19.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 19, 6);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 19, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 19, 2);
+INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
+VALUES (20, 1, 'Bảy Người Chồng Của Evelyn Hugo', 'bay-nguoi-chong-cua-evelyn-hugo', 'Taylor Jenkins Reid', 'NXB Trẻ', 2022, '9781501161933', 95, 'Sách mới 95%, bản in bìa áo xanh ngọc tuyệt đẹp, tác phẩm bán chạy hàng đầu thời gian qua.', 'Hồi ký rực rỡ và bi thương của huyền thoại điện ảnh Hollywood Evelyn Hugo và bí mật cuộc đời bà.', 168000, 85000, 80000, 30, 1020, 1, 1)
+ON DUPLICATE KEY UPDATE
+category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
+publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
+description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
+total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
+INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
+VALUES (20, '/images/books/book-20.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (1, 20, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (2, 20, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (3, 20, 1);
 
 -- 9. Nạp đơn vị vận chuyển
 INSERT INTO shipping_units (id, name, code, contact_phone, base_fee, estimated_days, is_active) VALUES

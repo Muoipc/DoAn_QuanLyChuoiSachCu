@@ -16,6 +16,19 @@ import java.util.Optional;
 public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findBySlug(String slug);
 
+    /**
+     * Ghi chú cho Cường: Truy vấn danh sách sách bán chạy trên mức số lượng quy định (minSold),
+     * kết hợp FETCH JOIN để load sẵn danh mục và ảnh sách, tránh lỗi LazyInitializationException.
+     */
+    @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.category LEFT JOIN FETCH b.images WHERE b.isActive = true AND b.totalSold >= :minSold ORDER BY b.totalSold DESC")
+    List<Book> findTopSoldWithImages(@Param("minSold") int minSold);
+
+    /**
+     * Ghi chú cho Cường: Lấy toàn bộ sách cũ đang hoạt động để hiển thị trên trang chủ 'Gợi ý hôm nay'.
+     */
+    @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.category LEFT JOIN FETCH b.images WHERE b.isActive = true ORDER BY b.totalSold DESC")
+    List<Book> findAllActiveWithImages();
+
     List<Book> findTop10ByTotalSoldGreaterThanEqualAndIsActiveTrueOrderByTotalSoldDesc(int minSold);
 
     List<Book> findTop20ByIsActiveTrueOrderByCreatedAtDesc();

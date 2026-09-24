@@ -124,4 +124,33 @@ public class Book {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    /**
+     * Ghi chú cho Cường: Phương thức tiện ích lấy đường dẫn ảnh bìa chính của sách.
+     * Ưu tiên ảnh có isPrimary = true trong bảng book_images, nếu chưa có thì lấy ảnh mặc định.
+     */
+    public String getPrimaryImageUrl() {
+        if (images != null && !images.isEmpty()) {
+            for (BookImage img : images) {
+                if (Boolean.TRUE.equals(img.getIsPrimary()) && img.getImageUrl() != null && !img.getImageUrl().isBlank()) {
+                    return img.getImageUrl();
+                }
+            }
+            return images.get(0).getImageUrl();
+        }
+        return "/images/books/book-" + id + ".jpg";
+    }
+
+    /**
+     * Ghi chú cho Cường: Tính toán phần trăm giảm giá giữa giá gốc bìa và giá bán sách cũ.
+     */
+    public int getDiscountPercent() {
+        if (originalPrice != null && originalPrice.compareTo(BigDecimal.ZERO) > 0 && price != null) {
+            BigDecimal diff = originalPrice.subtract(price);
+            if (diff.compareTo(BigDecimal.ZERO) > 0) {
+                return diff.multiply(new BigDecimal(100)).divide(originalPrice, 0, java.math.RoundingMode.HALF_UP).intValue();
+            }
+        }
+        return 0;
+    }
 }
