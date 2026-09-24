@@ -328,11 +328,13 @@ INSERT INTO addresses (id, user_id, receiver_name, phone, province, district, wa
 (2, 4, 'Hoàng Phúc (Nhà riêng)', '0934567890', 'TP. Hồ Chí Minh', 'Quận Bình Thạnh', 'Phường 25', '125 Điện Biên Phủ', FALSE),
 (3, 5, 'Thái Duy Cường', '0945678901', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', 'Hiệp Phú', 'Khu Công Nghệ Cao Q9', TRUE);
 
--- 4. Nạp chi nhánh chuỗi cửa hàng sách cũ
+-- 4. Nạp 5 chi nhánh chuỗi cửa hàng sách cũ tại TP. Hồ Chí Minh
 INSERT INTO stores (id, manager_id, store_name, slug, phone, email, address, province, district, open_time, close_time, image, is_active) VALUES
-(1, 2, 'Chi Nhánh Thủ Đức (Gần HCMUTE)', 'chi-nhanh-thu-duc', '02837221223', 'thu_duc@oldbookstore.vn', 'Số 48 Võ Văn Ngân, Phường Linh Chiểu', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', '08:00', '21:30', 'https://images.unsplash.com/photo-1507842229451-7f01be777a26?w=800', TRUE),
-(2, 3, 'Chi Nhánh Đường Sách Quận 1', 'chi-nhanh-quan-1', '02838229988', 'quan1@oldbookstore.vn', 'Đường Sách Nguyễn Văn Bình, Phường Bến Nghé', 'TP. Hồ Chí Minh', 'Quận 1', '08:30', '22:00', 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800', TRUE),
-(3, NULL, 'Chi Nhánh Phố Cổ Hà Nội', 'chi-nhanh-ha-noi', '02439268899', 'hanoi@oldbookstore.vn', 'Phố Sách Đinh Lễ, Phường Tràng Tiền', 'Hà Nội', 'Quận Hoàn Kiếm', '08:00', '21:00', 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800', TRUE);
+(1, 2, 'Chi Nhánh 1: Thủ Đức (Gần HCMUTE)', 'chi-nhanh-thu-duc', '02837221223', 'thuduc@oldbookstore.vn', 'Số 48 Võ Văn Ngân, Phường Linh Chiểu', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', '08:00', '21:30', 'https://images.unsplash.com/photo-1507842229451-7f01be777a26?w=800', TRUE),
+(2, 3, 'Chi Nhánh 2: Đường Sách Quận 1', 'chi-nhanh-quan-1', '02838229988', 'quan1@oldbookstore.vn', 'Đường Sách Nguyễn Văn Bình, Phường Bến Nghé', 'TP. Hồ Chí Minh', 'Quận 1', '08:30', '22:00', 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800', TRUE),
+(3, NULL, 'Chi Nhánh 3: Làng Đại Học Quốc Gia', 'chi-nhanh-lang-dai-hoc', '02837244555', 'langdaihoc@oldbookstore.vn', 'Khu Đô Thị ĐHQG-HCM, Phường Linh Trung', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', '07:30', '21:30', 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800', TRUE),
+(4, NULL, 'Chi Nhánh 4: Phố Sách Cũ Phú Nhuận', 'chi-nhanh-phu-nhuan', '02838447766', 'phunhuan@oldbookstore.vn', 'Số 120 Trần Huy Liệu, Phường 15', 'TP. Hồ Chí Minh', 'Quận Phú Nhuận', '08:00', '21:00', 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800', TRUE),
+(5, NULL, 'Chi Nhánh 5: Khu Học Thuật Quận 5', 'chi-nhanh-quan-5', '02838351122', 'quan5@oldbookstore.vn', 'Số 280 An Dương Vương, Phường 4', 'TP. Hồ Chí Minh', 'Quận 5', '08:00', '21:30', 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800', TRUE);
 
 -- 5. Nạp danh mục thể loại sách
 INSERT INTO categories (id, parent_id, category_name, slug, description, icon, is_active) VALUES
@@ -358,6 +360,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 1, 2);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 1, 0);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 1, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 1, 4);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (2, 1, 'Nhà Giả Kim (The Alchemist)', 'nha-gia-kim-paulo-coelho', 'Paulo Coelho', 'NXB Nhã Nam', 2015, '9780062315007', 90, 'Sách nguyên vẹn, gáy chắc, mép sách hơi ố vàng nhẹ theo thời gian, không thiếu trang.', 'Kiệt tác vượt thời gian về hành trình theo đuổi vận mệnh của chàng chăn cừu Santiago qua sa mạc.', 79000, 45000, 42000, 35, 980, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -373,6 +379,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 2, 0);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 2, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 2, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 2, 5);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (3, 3, 'Thay Đổi Tí Hon (Atomic Habits)', 'thay-doi-ti-hon-atomic-habits', 'James Clear', 'NXB Thế Giới', 2019, '9780735211292', 98, 'Sách mới 98%, không nếp gấp, hệ thống phương pháp xây dựng thói quen tốt vượt trội.', 'Cẩm nang hướng dẫn từng bước thay đổi những thói quen nhỏ để đạt được kết quả phi thường.', 189000, 95000, 90000, 32, 1100, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -388,6 +398,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 3, 4);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 3, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 3, 5);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 3, 2);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (4, 3, 'Đắc Nhân Tâm (How to Win Friends)', 'dac-nhan-tam-dale-carnegie', 'Dale Carnegie', 'First News - NXB Tổng Hợp', 2016, '9780671027032', 85, 'Bìa cứng sang trọng, gáy vững chắc, ruột sách sạch sẽ, cẩm nang giao tiếp kinh điển.', 'Cẩm nang giao tiếp, đối nhân xử thế kinh điển có ảnh hưởng lớn nhất mọi thời đại.', 86000, 40000, 38000, 22, 760, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -403,6 +417,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 4, 0);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 4, 8);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 4, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 4, 3);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (5, 3, 'Dạy Con Làm Giàu (Rich Dad Poor Dad)', 'day-con-lam-giau-robert-kiyosaki', 'Robert T. Kiyosaki', 'NXB Trẻ', 2012, '9781612680194', 88, 'Sách đọc tốt, các bài học tư duy phân biệt tài sản và tiêu sản còn nguyên giá trị.', 'Bộ sách giáo dục tài chính cá nhân bán chạy nhất hành tinh, thay đổi tư duy làm giàu.', 95000, 48000, 45000, 33, 790, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -418,6 +436,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 5, 4);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 5, 0);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 5, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 5, 4);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (6, 3, 'Tư Duy Nhanh Và Chậm', 'tu-duy-nhanh-va-cham-kahneman', 'Daniel Kahneman', 'NXB Thế Giới', 2018, '9780374533557', 92, 'Ấn bản đẹp, giải thưởng Nobel Kinh tế, phân tích sâu sắc hệ thống tư duy 1 và 2.', 'Kiệt tác tâm lý học hành vi vạch trần những sai lầm có hệ thống trong cách con người phán đoán.', 220000, 110000, 105000, 26, 890, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -433,6 +455,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 6, 3);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 6, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 6, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 6, 5);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (7, 3, 'Thấu Hiểu Sang Chấn (The Body Keeps the Score)', 'thau-hieu-sang-chan', 'Bessel van der Kolk', 'NXB Lao Động', 2021, '9780143127741', 95, 'Sách như mới 95%, chuyên khảo y khoa tâm lý sâu sắc về chữa lành sang chấn tâm lý.', 'Công trình khoa học đột phá về cách sang chấn định hình lại não bộ và phương pháp chữa lành.', 250000, 125000, 120000, 28, 940, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -448,6 +474,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 7, 2);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 7, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 7, 5);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 7, 2);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (8, 1, 'Những Thứ Ba Với Thầy Morrie', 'nhung-thu-ba-voi-thay-morrie', 'Mitch Albom', 'NXB Trẻ', 2014, '9780767905923', 90, 'Sách nguyên vẹn, các bài học về tình yêu, công việc, tuổi già và sự tha thứ lay động tâm can.', 'Hồi ký cảm động về những buổi trò chuyện thứ ba đầy minh triết giữa một học trò và người thầy sắp qua đời.', 85000, 45000, 42000, 24, 710, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -463,6 +493,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 8, 2);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 8, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 8, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 8, 3);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (9, 1, 'Tội Ác Và Trừng Phạt (Crime and Punishment)', 'toi-ac-va-trung-phat-crime-and-punishment', 'Fyodor Dostoevsky', 'NXB Văn Học', 2016, '9780679734772', 85, 'Tiểu thuyết kinh điển nước Nga, độ dày hơn 700 trang giữ nguyên vẹn gáy keo chỉ chắc chắn.', 'Đỉnh cao phân tích tâm lý tội phạm và sự cứu chuộc lương tâm con người của Dostoevsky.', 165000, 85000, 80000, 19, 650, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -478,6 +512,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 9, 3);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 9, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 9, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 9, 4);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (10, 1, 'Hoàng Tử Bé (The Little Prince)', 'hoang-tu-be-saint-exupery', 'Antoine de Saint-Exupéry', 'NXB Kim Đồng', 2019, '9780140283334', 95, 'Ấn bản minh họa màu đẹp mắt của NXB Kim Đồng, gáy vuông vắn, không nhăn mép.', 'Tác phẩm văn học kỳ diệu về tình bạn, bông hồng duy nhất và cái nhìn thuần khiết của trẻ thơ.', 75000, 38000, 35000, 31, 920, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -493,6 +531,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 10, 4);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 10, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 10, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 10, 5);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (11, 1, 'Một Chín Tám Bốn (1984)', 'mot-chin-tam-bon-1984-orwell', 'George Orwell', 'NXB Nhã Nam', 2017, '9780451524935', 90, 'Kiệt tác phản địa đàng thế kỷ 20, sách giữ gìn cẩn thận, ruột giấy vàng cổ điển.', 'Bức tranh tiên tri rùng mình về một xã hội bị giám sát tuyệt đối và sự tha hóa của quyền lực.', 110000, 55000, 50000, 27, 880, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -508,6 +550,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 11, 2);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 11, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 11, 5);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 11, 2);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (12, 1, 'Trại Súc Vật (Animal Farm)', 'trai-suc-vat-animal-farm', 'George Orwell', 'NXB Nhã Nam', 2016, '9780451526342', 92, 'Sách nhỏ gọn, gáy phẳng phiu, truyện ngụ ngôn chính trị sắc sảo bậc nhất.', 'Truyện ngụ ngôn trào phúng kinh điển về cuộc nổi dậy của muông thú và sự biến chất của lý tưởng.', 68000, 35000, 32000, 25, 780, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -523,6 +569,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 12, 3);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 12, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 12, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 12, 3);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (13, 1, 'Gatsby Vĩ Đại (The Great Gatsby)', 'gatsby-vi-dai-fitzgerald', 'F. Scott Fitzgerald', 'NXB Văn Học', 2018, '9780743273565', 88, 'Bản dịch kinh điển, bìa đẹp, trang sách sạch không vết bẩn, khắc họa thời kỳ Jazz lộng lẫy.', 'Bi kịch tình yêu và giấc mơ Mỹ tan vỡ của triệu phú bí ẩn Jay Gatsby bên bờ vịnh Long Island.', 95000, 48000, 45000, 21, 670, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -538,6 +588,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 13, 3);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 13, 0);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 13, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 13, 4);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (14, 1, '451 Độ F (Fahrenheit 451)', '451-do-f-fahrenheit-451', 'Ray Bradbury', 'NXB Nhã Nam', 2017, '9781451673319', 90, 'Sách nguyên vẹn, câu chuyện về chàng lính cứu hỏa Montag đốt sách và sự thức tỉnh.', 'Tác phẩm viễn tưởng kinh điển cảnh báo về một thế giới mà tri thức và sách vở bị cấm đoán.', 105000, 52000, 48000, 23, 740, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -553,6 +607,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 14, 2);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 14, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 14, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 14, 5);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (15, 1, 'Người Đàn Ông Mang Tên Ove', 'nguoi-dan-ong-mang-ten-ove', 'Fredrik Backman', 'NXB Trẻ', 2018, '9781476738024', 95, 'Sách gần như mới 95%, câu chuyện ấm áp về sự tử tế và tình người trong xóm nhỏ.', 'Tiểu thuyết cảm động hài hước về một ông lão khó tính nhưng mang trái tim ấm áp nhất thế giới.', 135000, 68000, 65000, 38, 1150, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -568,6 +626,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 15, 4);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 15, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 15, 5);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 15, 2);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (16, 1, 'Chúa Ruồi (Lord of the Flies)', 'chua-ruoi-william-golding', 'William Golding', 'NXB Hội Nhà Văn', 2015, '9780425274866', 88, 'Bản in tốt, tác phẩm đoạt giải Nobel văn học, giải mã bản tính con người khi cô lập.', 'Câu chuyện rùng mình về một nhóm học sinh mắc kẹt trên đảo hoang và sự thoái hóa nhân tính.', 110000, 55000, 50000, 17, 590, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -583,6 +645,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 16, 4);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 16, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 16, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 16, 3);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (17, 1, 'Kiêu Hãnh Và Định Kiến', 'kieu-hanh-va-dinh-kien-jane-austen', 'Jane Austen', 'NXB Văn Học', 2019, '9780141439518', 90, 'Bìa hoa văn cổ điển nước Anh, gáy sách chắc chắn, thiên tình sử Elizabeth và Darcy.', 'Kiệt tác lãng mạn bất hủ về tình yêu vượt qua định kiến xã hội và tự ái cá nhân của Jane Austen.', 120000, 60000, 58000, 25, 680, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -598,6 +664,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 17, 3);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 17, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 17, 3);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 17, 4);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (18, 1, 'Đồi Gió Hú (Wuthering Heights)', 'doi-gio-hu-emily-bronte', 'Emily Brontë', 'NXB Văn Học', 2016, '9780141439600', 85, 'Bản in giữ gìn tốt, thiên tiểu thuyết tình yêu và hận thù dữ dội trên đồng hoang Yorkshire.', 'Bi tình sử cuồng nhiệt và ám ảnh nhất lịch sử văn học giữa Heathcliff và Catherine Earnshaw.', 115000, 58000, 55000, 16, 530, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -613,6 +683,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 18, 2);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 18, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 18, 4);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 18, 5);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (19, 3, 'Học Cách Mặc Kệ (The Let Them Theory)', 'hoc-cach-mac-ke-mel-robbins', 'Mel Robbins', 'NXB Dân Trí', 2024, '9781401971366', 98, 'Sách gần như mới 98%, cuốn sách tâm lý thực hành tạo cơn sốt toàn cầu của Mel Robbins.', 'Phương pháp giải phóng năng lượng tinh thần bằng cách buông bỏ nhu cầu kiểm soát người khác.', 195000, 98000, 95000, 36, 1280, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -628,6 +702,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 19, 3);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 19, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 19, 5);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 19, 2);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (20, 1, 'Bảy Người Chồng Của Evelyn Hugo', 'bay-nguoi-chong-cua-evelyn-hugo', 'Taylor Jenkins Reid', 'NXB Trẻ', 2022, '9781501161933', 95, 'Sách mới 95%, bản in bìa áo xanh ngọc tuyệt đẹp, tác phẩm bán chạy hàng đầu thời gian qua.', 'Hồi ký rực rỡ và bi thương của huyền thoại điện ảnh Hollywood Evelyn Hugo và bí mật cuộc đời bà.', 168000, 85000, 80000, 30, 1020, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -643,6 +721,10 @@ INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (2, 20, 4);
 INSERT INTO inventory (store_id, book_id, quantity)
 VALUES (3, 20, 1);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (4, 20, 2);
+INSERT INTO inventory (store_id, book_id, quantity)
+VALUES (5, 20, 3);
 
 -- 9. Nạp đơn vị vận chuyển
 INSERT INTO shipping_units (id, name, code, contact_phone, base_fee, estimated_days, is_active) VALUES

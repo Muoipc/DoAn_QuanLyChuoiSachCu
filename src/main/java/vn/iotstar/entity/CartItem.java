@@ -3,6 +3,7 @@ package vn.iotstar.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -45,4 +46,27 @@ public class CartItem {
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
     public LocalDateTime getAddedAt() { return addedAt; }
     public void setAddedAt(LocalDateTime addedAt) { this.addedAt = addedAt; }
+
+    /**
+     * Ghi chú cho Cường: Tính thành tiền cho dòng sản phẩm sách cũ này (Đơn giá x Số lượng).
+     */
+    public BigDecimal getItemTotal() {
+        if (book != null && book.getPrice() != null && quantity != null) {
+            return book.getPrice().multiply(new BigDecimal(quantity));
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * Ghi chú cho Cường: Tính tổng số tiền tiết kiệm được so với giá bìa gốc.
+     */
+    public BigDecimal getSavings() {
+        if (book != null && book.getOriginalPrice() != null && book.getPrice() != null && quantity != null) {
+            BigDecimal diff = book.getOriginalPrice().subtract(book.getPrice());
+            if (diff.compareTo(BigDecimal.ZERO) > 0) {
+                return diff.multiply(new BigDecimal(quantity));
+            }
+        }
+        return BigDecimal.ZERO;
+    }
 }

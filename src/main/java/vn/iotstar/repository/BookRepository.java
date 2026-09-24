@@ -29,6 +29,24 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.category LEFT JOIN FETCH b.images WHERE b.isActive = true ORDER BY b.totalSold DESC")
     List<Book> findAllActiveWithImages();
 
+    /**
+     * Ghi chú cho Cường: Lấy chi tiết sách theo ID kèm danh mục và toàn bộ danh sách ảnh các góc chụp.
+     */
+    @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.category LEFT JOIN FETCH b.images WHERE b.id = :id AND b.isActive = true")
+    Optional<Book> findDetailById(@Param("id") Long id);
+
+    /**
+     * Ghi chú cho Cường: Lấy chi tiết sách theo Slug kèm danh mục và ảnh.
+     */
+    @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.category LEFT JOIN FETCH b.images WHERE b.slug = :slug AND b.isActive = true")
+    Optional<Book> findDetailBySlug(@Param("slug") String slug);
+
+    /**
+     * Ghi chú cho Cường: Lấy danh sách sách liên quan cùng thể loại (loại trừ chính nó).
+     */
+    @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.category LEFT JOIN FETCH b.images WHERE b.category.id = :categoryId AND b.id != :excludeId AND b.isActive = true ORDER BY b.totalSold DESC")
+    List<Book> findRelatedBooks(@Param("categoryId") Integer categoryId, @Param("excludeId") Long excludeId, Pageable pageable);
+
     List<Book> findTop10ByTotalSoldGreaterThanEqualAndIsActiveTrueOrderByTotalSoldDesc(int minSold);
 
     List<Book> findTop20ByIsActiveTrueOrderByCreatedAtDesc();

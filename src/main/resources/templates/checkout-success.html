@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Đặt Hàng Thành Công - Chuỗi Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --color-bg-base: #f7f5f0;
+            --shopee-orange: #ee4d2d;
+            --color-text-primary: #1C1917;
+            --color-text-secondary: #44403C;
+            --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--color-bg-base);
+            color: var(--color-text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 16px;
+            flex: 1;
+        }
+        .success-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e7e0d5;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            padding: 40px;
+            text-align: center;
+        }
+        .success-icon-wrap {
+            width: 80px;
+            height: 80px;
+            background: #e6f7f0;
+            color: #007a57;
+            font-size: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 4px solid #b7ebd6;
+        }
+        .success-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1C1917;
+            margin-bottom: 8px;
+        }
+        .order-code-badge {
+            display: inline-block;
+            background: #fef6f5;
+            color: var(--shopee-orange);
+            font-weight: 800;
+            font-size: 16px;
+            padding: 6px 18px;
+            border-radius: 20px;
+            border: 1px solid #fcd5cf;
+            margin-bottom: 24px;
+        }
+        .details-box {
+            background: #faf8f5;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: left;
+            margin: 24px 0;
+            font-size: 14px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e6ded4;
+        }
+        .detail-row:last-child { border-bottom: none; }
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .btn-action {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .btn-primary-shopee {
+            background: var(--shopee-orange);
+            color: white;
+        }
+        .btn-outline {
+            border: 1px solid #d5cec4;
+            color: var(--color-text-primary);
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-card">
+            <div class="success-icon-wrap">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <h1 class="success-title">ĐẶT HÀNG THÀNH CÔNG!</h1>
+            <p style="color: var(--color-text-secondary); margin-bottom: 12px;">Cảm ơn bạn đã đồng hành hồi sinh những cuốn sách tri thức cũ.</p>
+            
+            <div class="order-code-badge">
+                MÃ ĐƠN HÀNG: <span th:text="${order.orderCode}">ORD123456</span>
+            </div>
+
+            <div class="details-box">
+                <div class="detail-row">
+                    <span style="color:var(--color-text-secondary);">Hình thức nhận sách:</span>
+                    <strong th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Nhận tại Cửa hàng (Click & Collect)' : 'Giao hàng tận nơi'}">Nhận tại Cửa hàng</strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color:var(--color-text-secondary);">Chi nhánh phục vụ:</span>
+                    <strong th:text="${order.store.storeName}">Chi Nhánh 1: Thủ Đức</strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color:var(--color-text-secondary);">Người nhận:</span>
+                    <strong th:text="${order.receiverName} + ' (' + ${order.receiverPhone} + ')'">Nguyễn Song Hoàng Phúc (0912345678)</strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color:var(--color-text-secondary);">Địa chỉ bàn giao:</span>
+                    <strong th:text="${order.receiverAddress}">48 Võ Văn Ngân, P. Linh Chiểu</strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color:var(--color-text-secondary);">Phương thức thanh toán:</span>
+                    <strong th:text="${order.paymentMethod.name() == 'VNPAY' ? 'Cổng trực tuyến VNPay' : 'Thanh toán tiền mặt khi nhận sách (COD)'}">COD</strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color:var(--color-text-secondary);">Trạng thái thanh toán:</span>
+                    <span th:if="${order.paymentStatus.name() == 'PAID'}" style="color: #007a57; font-weight:800;">
+                        <i class="fa-solid fa-circle-check"></i> ĐÃ THANH TOÁN (PAID)
+                    </span>
+                    <span th:unless="${order.paymentStatus.name() == 'PAID'}" style="color: #b45309; font-weight:800;">
+                        <i class="fa-solid fa-clock"></i> CHƯA THANH TOÁN (Chờ nhận sách COD)
+                    </span>
+                </div>
+                <div class="detail-row" style="font-size: 16px; font-weight: 800; padding-top: 12px; margin-top: 6px; border-top: 1px solid #dcd5c9;">
+                    <span>TỔNG THANH TOÁN:</span>
+                    <span style="color: var(--shopee-orange); font-size: 20px;" th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫204.000</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a th:href="@{/}" class="btn-action btn-primary-shopee"><i class="fa-solid fa-house me-1"></i> VỀ TRANG CHỦ</a>
+                <a th:href="@{/cart}" class="btn-action btn-outline"><i class="fa-solid fa-cart-shopping me-1"></i> XEM GIỎ HÀNG</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

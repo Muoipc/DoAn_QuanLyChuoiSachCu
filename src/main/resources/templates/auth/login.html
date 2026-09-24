@@ -1,56 +1,410 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/base}">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Đăng Nhập</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập — Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --color-fire: #ee4d2d;
+            --color-fire-hover: #f05d40;
+            --color-bg-body: #f7f5f0;
+            --color-text-main: #1C1917;
+            --color-text-secondary: #44403C;
+            --color-text-light: #78716C;
+            --color-border: rgba(45, 24, 15, 0.12);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: var(--color-bg-body);
+            color: var(--color-text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a { color: inherit; text-decoration: none; }
+
+        /* HEADER CHUẨN AUTH SHOPEE */
+        .auth-header {
+            background: rgba(45, 24, 15, 0.28);
+            backdrop-filter: blur(36px);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .brand-img {
+            height: 50px;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+        }
+        .auth-page-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1C1917;
+            border-left: 2px solid #1C1917;
+            padding-left: 14px;
+            text-transform: uppercase;
+        }
+        .auth-help-link {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-fire);
+        }
+
+        /* MAIN AUTH BANNER SPLIT (LAYOUT ĐẶC TRƯNG CỦA SHOPEE) */
+        .auth-main-section {
+            flex: 1;
+            background: linear-gradient(135deg, #382012 0%, #201007 100%);
+            display: flex;
+            align-items: center;
+            padding: 50px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hiệu ứng hạt sáng vàng cổ điển */
+        .auth-main-section::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(238, 77, 45, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .auth-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* BÊN TRÁI: BANNER THƯƠNG HIỆU TRI THỨC SÁCH CŨ */
+        .auth-banner-left {
+            color: #ffffff;
+            padding-right: 20px;
+        }
+        .banner-tag {
+            display: inline-block;
+            background: var(--color-fire);
+            color: white;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .banner-heading {
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .banner-sub {
+            font-size: 15px;
+            color: #dcd3c9;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .banner-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .feat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* BÊN PHẢI: THẺ APPLE LIQUID GLASS ĐĂNG NHẬP */
+        .auth-card-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-radius: 14px;
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+            padding: 34px;
+        }
+        .auth-card-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #1C1917;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* INPUTS */
+        .form-group {
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .form-input-wrap {
+            display: flex;
+            align-items: center;
+            border: 1px solid #dcd7ce;
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 0 14px;
+            transition: all 0.2s;
+        }
+        .form-input-wrap:focus-within {
+            border-color: var(--color-fire);
+            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.12);
+        }
+        .input-icon {
+            color: #78716C;
+            font-size: 15px;
+            width: 20px;
+        }
+        .auth-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            padding: 13px 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1C1917;
+            background: transparent;
+        }
+
+        /* SUBMIT BUTTON */
+        .btn-submit-shopee {
+            background: var(--color-fire);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 800;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35);
+            transition: all 0.2s;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .btn-submit-shopee:hover {
+            background: var(--color-fire-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.45);
+        }
+
+        /* HINT TÀI KHOẢN MẪU TEST */
+        .test-accounts-box {
+            background: #faf8f5;
+            border: 1px dashed #d5cec4;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-top: 18px;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+        .test-acc-btn {
+            background: white;
+            border: 1px solid #d5cec4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 4px;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .test-acc-btn:hover {
+            border-color: var(--color-fire);
+            color: var(--color-fire);
+        }
+
+        .auth-footer-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12.5px;
+            margin-top: 16px;
+        }
+        .auth-footer-links a {
+            color: var(--color-fire);
+            font-weight: 700;
+        }
+
+        /* ALERTS */
+        .auth-alert {
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .alert-success { background: #e6f7f0; color: #007a57; border: 1px solid #b7ebd6; }
+
+        /* FOOTER */
+        .auth-footer {
+            background: #25160d;
+            color: #b7b0a5;
+            padding: 24px 0;
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <!-- Tiêu đề form đăng nhập -->
-                    <h4 class="card-title text-center fw-bold mb-3">Đăng Nhập</h4>
 
-                    <!-- Hiển thị các thông báo từ Spring Security hoặc Flash Attributes -->
-                    <div th:if="${param.error}" class="alert alert-danger py-2 small">
-                        Tài khoản hoặc mật khẩu không chính xác.
-                    </div>
-                    <div th:if="${param.logout}" class="alert alert-success py-2 small">
-                        Bạn đã đăng xuất an toàn.
-                    </div>
-                    <div th:if="${param.verified}" class="alert alert-success py-2 small">
-                        Tài khoản đã kích hoạt thành công! Mời bạn đăng nhập.
-                    </div>
-                    <div th:if="${param.reset}" class="alert alert-success py-2 small">
-                        Đổi mật khẩu thành công! Mời bạn đăng nhập lại với mật khẩu mới.
-                    </div>
-                    <div th:if="${successMessage}" class="alert alert-success py-2 small" th:text="${successMessage}"></div>
+    <!-- HEADER AUTH -->
+    <header class="auth-header">
+        <div class="container header-inner">
+            <div class="brand-box">
+                <a th:href="@{/}">
+                    <img th:src="@{/images/logo-books.png}" alt="Logo Books" class="brand-img">
+                </a>
+                <span class="auth-page-title">Đăng Nhập</span>
+            </div>
+            <a th:href="@{/}" class="auth-help-link">
+                <i class="fa-solid fa-arrow-left me-1"></i> Quay lại mua sắm
+            </a>
+        </div>
+    </header>
 
-                    <!-- Form đăng nhập: Spring Security tự động bắt action="/login" method="post" -->
-                    <form th:action="@{/login}" method="post">
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Tên đăng nhập hoặc Email</label>
-                            <input type="text" name="username" class="form-control" required autofocus placeholder="admin, phuc_customer...">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Mật khẩu</label>
-                            <input type="password" name="password" class="form-control" required placeholder="123456">
-                        </div>
-                        <button type="submit" class="btn btn-dark w-100 py-2">Đăng Nhập</button>
-                    </form>
+    <!-- MAIN BANNER SPLIT -->
+    <main class="auth-main-section">
+        <div class="container">
+            <div class="auth-grid">
 
-                    <!-- Điều hướng chức năng phụ -->
-                    <div class="text-center mt-3 small">
-                        <a th:href="@{/forgot-password}" class="text-muted text-decoration-none">Quên mật khẩu?</a> |
-                        <a th:href="@{/register}" class="text-decoration-none fw-semibold">Đăng ký tài khoản</a>
+                <!-- BÊN TRÁI: BANNER THƯƠNG HIỆU -->
+                <div class="auth-banner-left">
+                    <span class="banner-tag"><i class="fa-solid fa-shop me-1"></i> Chuỗi Sách Cũ TP.HCM</span>
+                    <h1 class="banner-heading">Hồi Sinh Tri Thức,<br>Tiết Kiệm Đến 60%</h1>
+                    <p class="banner-sub">
+                        Hệ thống kết nối 5 chi nhánh kho tại TP.HCM (Thủ Đức, Q.1, Làng ĐHQG, Phú Nhuận, Q.5). Đồng kiểm khi nhận, 100% sách đã qua kiểm định độ mới.
+                    </p>
+
+                    <div class="banner-features">
+                        <div class="feat-item"><i class="fa-solid fa-award text-warning"></i> Sách thật nguyên bản &ge; 90%</div>
+                        <div class="feat-item"><i class="fa-solid fa-truck-fast text-success"></i> Freeship cho đơn từ 150K</div>
+                        <div class="feat-item"><i class="fa-solid fa-shield-halved text-info"></i> Thanh toán VNPay / COD</div>
+                        <div class="feat-item"><i class="fa-solid fa-hand-holding-dollar text-warning"></i> Ký gửi sách nhận tiền 24h</div>
                     </div>
                 </div>
+
+                <!-- BÊN PHẢI: FORM ĐĂNG NHẬP APPLE LIQUID GLASS -->
+                <div class="auth-card-glass">
+                    <div class="auth-card-title">
+                        <span>ĐĂNG NHẬP</span>
+                        <span style="font-size: 13px; font-weight: 500; color: #78716C;">hoặc <a th:href="@{/register}" style="color:var(--color-fire); font-weight:700;">Đăng ký</a></span>
+                    </div>
+
+                    <!-- THÔNG BÁO FLASH & SECURITY -->
+                    <div th:if="${param.error}" class="auth-alert alert-danger">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>Tài khoản hoặc mật khẩu không chính xác!</span>
+                    </div>
+                    <div th:if="${param.logout}" class="auth-alert alert-success">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Bạn đã đăng xuất an toàn.</span>
+                    </div>
+                    <div th:if="${param.verified}" class="auth-alert alert-success">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Tài khoản đã kích hoạt thành công! Mời bạn đăng nhập.</span>
+                    </div>
+                    <div th:if="${param.reset}" class="auth-alert alert-success">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Đổi mật khẩu thành công! Mời bạn đăng nhập lại.</span>
+                    </div>
+                    <div th:if="${successMessage}" class="auth-alert alert-success" th:text="${successMessage}"></div>
+
+                    <!-- FORM -->
+                    <form action="/login" method="post">
+                        <div class="form-group">
+                            <div class="form-input-wrap">
+                                <i class="fa-regular fa-user input-icon"></i>
+                                <input type="text" name="username" id="loginUsername" class="auth-input" placeholder="Tên đăng nhập hoặc Email..." required autofocus>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-input-wrap">
+                                <i class="fa-solid fa-lock input-icon"></i>
+                                <input type="password" name="password" id="loginPassword" class="auth-input" placeholder="Mật khẩu..." required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit-shopee">
+                            ĐĂNG NHẬP
+                        </button>
+                    </form>
+
+                    <!-- QUÊN MẬT KHẨU -->
+                    <div class="auth-footer-links">
+                        <a th:href="@{/forgot-password}">Quên mật khẩu?</a>
+                        <span style="color:#78716C;">Chưa có tài khoản? <a th:href="@{/register}">Đăng ký ngay</a></span>
+                    </div>
+
+                    <!-- TÀI KHOẢN MẪU DÀNH CHO THẦY CÔ & BẠN BÈ TEST -->
+                    <div class="test-accounts-box">
+                        <strong style="color:#1C1917;"><i class="fa-solid fa-key me-1 text-warning"></i> Tài khoản mẫu dùng nhanh:</strong>
+                        <div style="margin-top: 4px;">
+                            <span class="test-acc-btn" onclick="fillTestAcc('phuc_customer', '123456')">Khách hàng (Phúc)</span>
+                            <span class="test-acc-btn" onclick="fillTestAcc('admin', '123456')">Quản trị viên</span>
+                            <span class="test-acc-btn" onclick="fillTestAcc('manager_thuduc', '123456')">Thủ kho Thủ Đức</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="auth-footer">
+        <div class="container">
+            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+            <p style="margin-top: 4px; color:#857d72;">Nguyễn Song Hoàng Phúc (24162096) & Thái Duy Cường (24162013)</p>
+        </div>
+    </footer>
+
+    <script>
+        function fillTestAcc(user, pass) {
+            document.getElementById('loginUsername').value = user;
+            document.getElementById('loginPassword').value = pass;
+        }
+    </script>
 </body>
 </html>

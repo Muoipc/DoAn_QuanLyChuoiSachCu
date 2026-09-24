@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Controller điều hướng trang chủ và các trang công cộng dành cho khách (Guest).
  * Ghi chú cho Cường: Controller này sử dụng Spring Data JPA Repository để truy vấn danh sách
- * 20 cuốn sách cũ đã thẩm định, sách bán chạy (> 10 cuốn), danh mục và 3 chi nhánh kho từ MySQL lên Thymeleaf.
+ * 20 cuốn sách cũ đã thẩm định, sách bán chạy (> 10 cuốn), danh mục và 5 chi nhánh kho tại TP.HCM từ MySQL lên Thymeleaf.
  */
 @Controller
 public class HomeController {
@@ -32,7 +32,8 @@ public class HomeController {
 
     /**
      * Điều hướng trang chủ hệ thống chuỗi sách cũ.
-     * Cung cấp dữ liệu động cho cả khối Flash Sale và toàn bộ 20 cuốn sách tại 'Gợi ý hôm nay'.
+     * Cung cấp dữ liệu động cho cả khối Flash Sale, toàn bộ 20 cuốn sách tại 'Gợi ý hôm nay'
+     * và danh sách 5 chi nhánh kho tại TP.HCM.
      */
     @GetMapping({"/", "/home"})
     public String home(Model model) {
@@ -45,7 +46,7 @@ public class HomeController {
         // 2. Lấy toàn bộ danh sách 20 cuốn sách cũ đang hoạt động
         List<Book> dailyBooks = bookRepository.findAllActiveWithImages();
 
-        // 3. Lấy danh sách danh mục thể loại và hệ thống 3 chi nhánh
+        // 3. Lấy danh sách danh mục thể loại và hệ thống 5 chi nhánh tại TP.HCM
         List<Category> categories = categoryRepository.findByIsActiveTrue();
         List<Store> stores = storeRepository.findByIsActiveTrue();
 

@@ -1,65 +1,224 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/base}">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Đăng Ký Tài Khoản</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Tài Khoản — Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --color-fire: #ee4d2d;
+            --color-fire-hover: #f05d40;
+            --color-bg-body: #f7f5f0;
+            --color-text-main: #1C1917;
+            --color-text-secondary: #44403C;
+            --color-text-light: #78716C;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: var(--color-bg-body);
+            color: var(--color-text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a { color: inherit; text-decoration: none; }
+
+        .auth-header {
+            background: rgba(45, 24, 15, 0.28);
+            backdrop-filter: blur(36px);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; }
+        .brand-box { display: flex; align-items: center; gap: 16px; }
+        .brand-img { height: 50px; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35)); }
+        .auth-page-title {
+            font-size: 22px; font-weight: 800; color: #1C1917;
+            border-left: 2px solid #1C1917; padding-left: 14px; text-transform: uppercase;
+        }
+
+        .auth-main-section {
+            flex: 1;
+            background: linear-gradient(135deg, #382012 0%, #201007 100%);
+            display: flex;
+            align-items: center;
+            padding: 40px 0;
+            position: relative;
+        }
+        .auth-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .auth-banner-left { color: #ffffff; padding-right: 20px; }
+        .banner-heading { font-size: 32px; font-weight: 900; line-height: 1.25; margin-bottom: 16px; }
+        .banner-sub { font-size: 14px; color: #dcd3c9; line-height: 1.6; margin-bottom: 20px; }
+
+        .auth-card-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(28px);
+            border-radius: 14px;
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+            padding: 30px;
+        }
+        .auth-card-title {
+            font-size: 20px; font-weight: 900; color: #1C1917; margin-bottom: 8px;
+        }
+
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .form-group { margin-bottom: 12px; }
+        .form-input-wrap {
+            display: flex; align-items: center;
+            border: 1px solid #dcd7ce; border-radius: 8px;
+            background: #ffffff; padding: 0 12px; transition: 0.2s;
+        }
+        .form-input-wrap:focus-within {
+            border-color: var(--color-fire);
+            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.12);
+        }
+        .input-icon { color: #78716C; font-size: 14px; width: 18px; }
+        .auth-input {
+            width: 100%; border: none; outline: none; padding: 11px 8px;
+            font-size: 13.5px; font-family: inherit; color: #1C1917; background: transparent;
+        }
+        .field-err { color: #dc2626; font-size: 11px; margin-top: 2px; }
+
+        .btn-submit-shopee {
+            background: var(--color-fire); color: white; border: none;
+            border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 800;
+            width: 100%; cursor: pointer; box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35);
+            transition: all 0.2s; margin-top: 8px; text-transform: uppercase;
+        }
+        .btn-submit-shopee:hover {
+            background: var(--color-fire-hover);
+        }
+
+        .auth-footer {
+            background: #25160d; color: #b7b0a5; padding: 20px 0; font-size: 12px; text-align: center;
+        }
+    </style>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <h4 class="card-title text-center fw-bold mb-2">Đăng Ký Tài Khoản</h4>
-                    <p class="text-center text-muted small mb-3">Mã OTP kích hoạt sẽ được gửi tới Email của bạn</p>
 
-                    <form th:action="@{/register}" th:object="${registerDTO}" method="post">
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Tên đăng nhập</label>
-                            <input type="text" th:field="*{username}" class="form-control" placeholder="Nhập tên đăng nhập...">
-                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
-                        </div>
+    <header class="auth-header">
+        <div class="container header-inner">
+            <div class="brand-box">
+                <a th:href="@{/}">
+                    <img th:src="@{/images/logo-books.png}" alt="Logo Books" class="brand-img">
+                </a>
+                <span class="auth-page-title">Đăng Ký Tài Khoản</span>
+            </div>
+            <a th:href="@{/login}" style="font-size:13px; font-weight:700; color:var(--color-fire);">
+                Đã có tài khoản? Đăng nhập ngay &gt;
+            </a>
+        </div>
+    </header>
 
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Địa chỉ Email</label>
-                            <input type="email" th:field="*{email}" class="form-control" placeholder="name@example.com">
-                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-                        </div>
+    <main class="auth-main-section">
+        <div class="container">
+            <div class="auth-grid">
 
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Họ và tên</label>
-                            <input type="text" th:field="*{fullName}" class="form-control" placeholder="Nguyễn Văn A">
-                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Số điện thoại</label>
-                            <input type="text" th:field="*{phone}" class="form-control" placeholder="0901234567">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Mật khẩu</label>
-                            <input type="password" th:field="*{password}" class="form-control" placeholder="Tối thiểu 6 ký tự">
-                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Xác nhận mật khẩu</label>
-                            <input type="password" th:field="*{confirmPassword}" class="form-control" placeholder="Nhập lại mật khẩu">
-                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
-                        </div>
-
-                        <button type="submit" class="btn btn-dark w-100 py-2">Đăng Ký & Nhận Mã OTP</button>
-                    </form>
-
-                    <div class="text-center mt-3 small">
-                        Đã có tài khoản? <a th:href="@{/login}" class="text-decoration-none fw-semibold">Đăng nhập</a>
+                <div class="auth-banner-left">
+                    <h1 class="banner-heading">Tham Gia Cộng Đồng<br>Mọt Sách Cũ TP.HCM</h1>
+                    <p class="banner-sub">
+                        Tạo tài khoản để nhận voucher giảm 20.000₫ cho đơn đầu tiên, tích điểm đổi sách tại 5 chi nhánh và tham gia ký gửi sách cũ nhận tiền trực tiếp.
+                    </p>
+                    <div style="font-size: 13px; color: #e5ded3; line-height: 1.8;">
+                        <div><i class="fa-solid fa-circle-check text-success me-2"></i> Miễn phí 100% khi nhận sách tại 5 chi nhánh TP.HCM</div>
+                        <div><i class="fa-solid fa-circle-check text-success me-2"></i> Định giá & thẩm định sách cũ hoàn toàn minh bạch</div>
+                        <div><i class="fa-solid fa-circle-check text-success me-2"></i> Bảo mật tài khoản với cơ chế OTP xác thực email</div>
                     </div>
                 </div>
+
+                <div class="auth-card-glass">
+                    <div class="auth-card-title">ĐĂNG KÝ TÀI KHOẢN</div>
+                    <p style="font-size:12.5px; color:#78716C; margin-bottom: 16px;">
+                        Mã OTP xác thực sẽ được gửi tới Email của bạn.
+                    </p>
+
+                    <form action="/register" th:object="${registerDTO}" method="post">
+                        <div class="form-group">
+                            <div class="form-input-wrap">
+                                <i class="fa-regular fa-user input-icon"></i>
+                                <input type="text" th:field="*{username}" class="auth-input" placeholder="Tên đăng nhập (viết liền không dấu)..." required>
+                            </div>
+                            <div class="field-err" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-input-wrap">
+                                <i class="fa-regular fa-envelope input-icon"></i>
+                                <input type="email" th:field="*{email}" class="auth-input" placeholder="Địa chỉ Email nhận mã OTP..." required>
+                            </div>
+                            <div class="field-err" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        </div>
+
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <div class="form-input-wrap">
+                                    <i class="fa-solid fa-id-card input-icon"></i>
+                                    <input type="text" th:field="*{fullName}" class="auth-input" placeholder="Họ và tên..." required>
+                                </div>
+                                <div class="field-err" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-input-wrap">
+                                    <i class="fa-solid fa-phone input-icon"></i>
+                                    <input type="text" th:field="*{phone}" class="auth-input" placeholder="Số điện thoại..." required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-input-wrap">
+                                <i class="fa-solid fa-lock input-icon"></i>
+                                <input type="password" th:field="*{password}" class="auth-input" placeholder="Mật khẩu (tối thiểu 6 ký tự)..." required>
+                            </div>
+                            <div class="field-err" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-input-wrap">
+                                <i class="fa-solid fa-shield-halved input-icon"></i>
+                                <input type="password" th:field="*{confirmPassword}" class="auth-input" placeholder="Xác nhận lại mật khẩu..." required>
+                            </div>
+                            <div class="field-err" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                        </div>
+
+                        <button type="submit" class="btn-submit-shopee">
+                            ĐĂNG KÝ &amp; NHẬN MÃ OTP
+                        </button>
+                    </form>
+
+                    <div style="text-align:center; font-size:12.5px; color:#78716C; margin-top:16px;">
+                        Đã có tài khoản? <a th:href="@{/login}" style="color:var(--color-fire); font-weight:700;">Đăng nhập</a>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</div>
+    </main>
+
+    <footer class="auth-footer">
+        <div class="container">
+            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+        </div>
+    </footer>
 </body>
 </html>

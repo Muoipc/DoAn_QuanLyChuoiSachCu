@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Tìm Kiếm Sách Cũ — Chuỗi Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --color-fire: #ee4d2d;
+            --color-fire-hover: #f05d40;
+            --color-bg-body: #f7f5f0;
+            --color-text-main: #1C1917;
+            --color-text-secondary: #44403C;
+            --color-text-light: #78716C;
+            --color-border: rgba(45, 24, 15, 0.12);
+            --color-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-main);
+            font-family: "Roboto", sans-serif;
+            font-size: 14px;
+        }
+        a { color: inherit; text-decoration: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+        /* HEADER */
+        .header-wrap {
+            background: rgba(45, 24, 15, 0.28);
+            backdrop-filter: blur(36px);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .header-inner { display:flex; align-items:center; justify-content:space-between; }
+        .brand { display:flex; align-items:center; gap:12px; }
+        .brand img { height: 48px; }
+
+        /* SEARCH BAR */
+        .search-box-top {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 30px;
+            display: flex;
+            background: white;
+            border-radius: 24px;
+            padding: 4px 6px 4px 16px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        }
+        .search-box-top input {
+            flex: 1; border:none; outline:none; font-size:14px; font-family:inherit;
+        }
+        .btn-search {
+            background: var(--color-fire); color:white; border:none; border-radius:20px;
+            padding: 8px 20px; font-weight:700; cursor:pointer;
+        }
+
+        /* MAIN SEARCH LAYOUT */
+        .search-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 24px;
+            margin: 24px auto 60px;
+        }
+
+        /* SIDEBAR FILTERS (SHOPEE FILTER) */
+        .filter-sidebar {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #f0eae1;
+            padding: 20px;
+            box-shadow: var(--color-shadow-card);
+            align-self: start;
+        }
+        .filter-header-title {
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0eae1;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-group {
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed #ede8e1;
+        }
+        .filter-group-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1C1917;
+        }
+        .filter-item-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .filter-item-label:hover {
+            color: var(--color-fire);
+        }
+        .filter-item-label input { accent-color: var(--color-fire); }
+
+        .price-inputs-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .input-price {
+            width: 85px;
+            padding: 6px 8px;
+            border: 1px solid #dcd7ce;
+            border-radius: 4px;
+            font-size: 12px;
+            outline: none;
+        }
+        .btn-apply-filter {
+            background: var(--color-fire);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-clear-filter {
+            background: #faf8f5;
+            color: var(--color-text-secondary);
+            border: 1px solid #dcd7ce;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+            text-align: center;
+            display: block;
+        }
+
+        /* SORT BAR (SHOPEE STYLE) */
+        .sort-bar-shopee {
+            background: #eae5dc;
+            padding: 12px 18px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+        .btn-sort {
+            background: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--color-text-main);
+            text-decoration: none;
+        }
+        .btn-sort.active {
+            background: var(--color-fire);
+            color: white;
+        }
+
+        /* PRODUCT GRID (5 COLS) */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        .book-card {
+            background: white;
+            border: 1px solid #f0eae1;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: 0.2s;
+            box-shadow: var(--color-shadow-card);
+        }
+        .book-card:hover {
+            border-color: var(--color-fire);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(45, 24, 15, 0.1);
+        }
+        .card-thumb {
+            height: 180px;
+            background: #faf8f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .card-thumb img {
+            max-height: 90%;
+            max-width: 90%;
+            object-fit: contain;
+        }
+        .card-body {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
+        }
+        .book-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1C1917;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 35px;
+            margin-bottom: 6px;
+        }
+        .price-text {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--color-fire);
+        }
+        .tag-cond {
+            position: absolute;
+            bottom: 6px; left: 6px;
+            background: rgba(0, 122, 87, 0.9);
+            color: white; font-size: 10px; font-weight: 800;
+            padding: 2px 6px; border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header-wrap">
+        <div class="container header-inner">
+            <a th:href="@{/}" class="brand">
+                <img th:src="@{/images/logo-books.png}" alt="Logo">
+                <span style="font-weight:900; font-size:18px; color:#1C1917;">TÌM KIẾM SÁCH CŨ</span>
+            </a>
+
+            <form th:action="@{/search}" method="get" class="search-box-top">
+                <input type="text" name="q" th:value="${selectedQuery}" placeholder="Tìm tên sách, tác giả, ISBN, giáo trình...">
+                <button type="submit" class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+
+            <a th:href="@{/cart}" style="font-weight:700; color:#1C1917; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-cart-shopping" style="font-size:22px;"></i>
+                <span>Giỏ Hàng</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="container">
+        <div class="search-layout">
+
+            <!-- SIDEBAR BỘ LỌC SHOPEE -->
+            <aside class="filter-sidebar">
+                <div class="filter-header-title">
+                    <i class="fa-solid fa-filter text-danger"></i>
+                    <span>Bộ Lọc Tìm Kiếm</span>
+                </div>
+
+                <form th:action="@{/search}" method="get" id="filterForm">
+                    <input type="hidden" name="q" th:value="${selectedQuery}">
+                    <input type="hidden" name="sort" th:value="${selectedSort}">
+
+                    <!-- 1. Danh mục thể loại -->
+                    <div class="filter-group">
+                        <div class="filter-group-title">Danh Mục Sách</div>
+                        <label class="filter-item-label" th:each="cat : ${categories}">
+                            <input type="radio" name="cat" th:value="${cat.id}" th:checked="${selectedCat == cat.id}" onchange="this.form.submit()">
+                            <span th:text="${cat.categoryName}">Văn Học</span>
+                        </label>
+                    </div>
+
+                    <!-- 2. Độ mới thẩm định -->
+                    <div class="filter-group">
+                        <div class="filter-group-title">Độ Mới Thẩm Định</div>
+                        <label class="filter-item-label">
+                            <input type="radio" name="cond" value="95" th:checked="${selectedCond == 95}" onchange="this.form.submit()">
+                            <span>Mới &ge; 95% (Như mới)</span>
+                        </label>
+                        <label class="filter-item-label">
+                            <input type="radio" name="cond" value="90" th:checked="${selectedCond == 90}" onchange="this.form.submit()">
+                            <span>Mới &ge; 90% (Rất tốt)</span>
+                        </label>
+                        <label class="filter-item-label">
+                            <input type="radio" name="cond" value="85" th:checked="${selectedCond == 85}" onchange="this.form.submit()">
+                            <span>Mới &ge; 85% (Tốt)</span>
+                        </label>
+                        <label class="filter-item-label">
+                            <input type="radio" name="cond" value="80" th:checked="${selectedCond == 80}" onchange="this.form.submit()">
+                            <span>Mới &ge; 80% (Khá)</span>
+                        </label>
+                    </div>
+
+                    <!-- 3. Chi nhánh kho còn hàng -->
+                    <div class="filter-group">
+                        <div class="filter-group-title">Chi Nhánh Sẵn Hàng</div>
+                        <label class="filter-item-label" th:each="s : ${stores}">
+                            <input type="radio" name="store" th:value="${s.id}" th:checked="${selectedStore == s.id}" onchange="this.form.submit()">
+                            <span th:text="${s.storeName}">CN Thủ Đức</span>
+                        </label>
+                    </div>
+
+                    <!-- 4. Khoảng giá -->
+                    <div class="filter-group" style="border-bottom:none;">
+                        <div class="filter-group-title">Khoảng Giá (₫)</div>
+                        <div class="price-inputs-row">
+                            <input type="number" name="minPrice" class="input-price" placeholder="₫ TỪ" th:value="${selectedMinPrice}">
+                            <span>-</span>
+                            <input type="number" name="maxPrice" class="input-price" placeholder="₫ ĐẾN" th:value="${selectedMaxPrice}">
+                        </div>
+                        <button type="submit" class="btn-apply-filter">ÁP DỤNG</button>
+                    </div>
+
+                    <a th:href="@{/search}" class="btn-clear-filter">XÓA BỘ LỌC</a>
+                </form>
+            </aside>
+
+            <!-- KẾT QUẢ TÌM KIẾM & SẮP XẾP -->
+            <main>
+                <!-- THANH SẮP XẾP SHOPEE -->
+                <div class="sort-bar-shopee">
+                    <span style="font-weight:700; color:#1C1917;">Sắp xếp theo:</span>
+                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, sort='popular')}" 
+                       class="btn-sort" th:classappend="${selectedSort == 'popular'} ? 'active' : ''">Phổ Biến</a>
+                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, sort='latest')}" 
+                       class="btn-sort" th:classappend="${selectedSort == 'latest'} ? 'active' : ''">Mới Nhất</a>
+                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, sort='sales')}" 
+                       class="btn-sort" th:classappend="${selectedSort == 'sales'} ? 'active' : ''">Bán Chạy</a>
+                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, sort='price-asc')}" 
+                       class="btn-sort" th:classappend="${selectedSort == 'price-asc'} ? 'active' : ''">Giá Tăng Dần</a>
+                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, sort='price-desc')}" 
+                       class="btn-sort" th:classappend="${selectedSort == 'price-desc'} ? 'active' : ''">Giá Giảm Dần</a>
+                    
+                    <span style="margin-left:auto; font-weight:700; color:var(--color-text-secondary);">
+                        Tìm thấy <strong th:text="${totalFound}" style="color:var(--color-fire);">0</strong> cuốn sách
+                    </span>
+                </div>
+
+                <!-- LƯỚI SẢN PHẨM -->
+                <div th:if="${totalFound > 0}" class="product-grid">
+                    <a th:each="book : ${books}" th:href="@{'/books/' + ${book.id}}" class="book-card">
+                        <div class="card-thumb">
+                            <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" alt="Bìa sách">
+                            <span class="tag-cond" th:text="${book.conditionPercent} + '% Mới'">95% Mới</span>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="book-title" th:text="${book.title}">Tên sách</h4>
+                            <div style="font-size:11px; color:#78716C; margin-bottom: 4px;">
+                                <i class="fa-solid fa-pen-nib me-1"></i> <span th:text="${book.author}">Tác giả</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:auto;">
+                                <span class="price-text" th:text="'₫' + ${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                                <span style="font-size:11px; color:#78716C;" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- NẾU KHÔNG CÓ KẾT QUẢ -->
+                <div th:unless="${totalFound > 0}" style="text-align:center; padding: 60px 0; background:white; border-radius:8px;">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size:48px; color:#d5cec4; margin-bottom:14px;"></i>
+                    <h3 style="font-size:16px; font-weight:700;">Không tìm thấy cuốn sách nào phù hợp</h3>
+                    <p style="color:#78716C; margin-top:4px;">Hãy thử điều chỉnh bộ lọc hoặc tìm kiếm từ khóa khác.</p>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+</body>
+</html>

@@ -3,6 +3,7 @@ package vn.iotstar.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,4 +36,38 @@ public class Cart {
     public void setItems(List<CartItem> items) { this.items = items; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    /**
+     * Ghi chú cho Cường: Tính tổng tiền toàn bộ giỏ hàng sách cũ.
+     */
+    public BigDecimal getTotalPrice() {
+        if (items == null || items.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        return items.stream()
+                .map(CartItem::getItemTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /**
+     * Ghi chú cho Cường: Tính tổng số tiền tiết kiệm được từ giỏ hàng.
+     */
+    public BigDecimal getTotalSavings() {
+        if (items == null || items.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        return items.stream()
+                .map(CartItem::getSavings)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /**
+     * Ghi chú cho Cường: Tính tổng số cuốn sách hiện có trong giỏ hàng.
+     */
+    public int getTotalQuantity() {
+        if (items == null || items.isEmpty()) {
+            return 0;
+        }
+        return items.stream().mapToInt(CartItem::getQuantity).sum();
+    }
 }

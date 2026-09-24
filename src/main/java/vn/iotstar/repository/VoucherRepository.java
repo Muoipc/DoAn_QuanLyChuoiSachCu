@@ -13,6 +13,8 @@ import java.util.Optional;
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     Optional<Voucher> findByCode(String code);
+    Optional<Voucher> findByCodeAndIsActiveTrue(String code);
+    List<Voucher> findByIsActiveTrue();
 
     @Query("SELECT v FROM Voucher v WHERE v.isActive = true " +
            "AND v.startDate <= :now AND v.endDate >= :now " +

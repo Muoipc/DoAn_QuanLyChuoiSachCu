@@ -15,6 +15,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByBookIdOrderByCreatedAtDesc(Long bookId);
     Page<Review> findByBookIdOrderByCreatedAtDesc(Long bookId, Pageable pageable);
     boolean existsByUserIdAndBookIdAndOrderId(Long userId, Long bookId, Long orderId);
+    List<Review> findByUserIdOrderByCreatedAtDesc(Long userId);
+    List<Review> findByOrderId(Long orderId);
 
     @Query("SELECT AVG(r.rating) FROM Review r WHERE r.book.id = :bookId")
     Double getAverageRatingByBookId(@Param("bookId") Long bookId);

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Chi Tiết Đơn Hàng - Chuỗi Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --color-bg-base: #f7f5f0;
+            --color-surface: rgba(255, 255, 255, 0.94);
+            --color-border-subtle: #eae5dc;
+            --shopee-orange: #ee4d2d;
+            --color-text-primary: #1C1917;
+            --color-text-secondary: #44403C;
+            --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --radius-box: 14px;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--color-bg-base);
+            color: var(--color-text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 16px;
+            flex: 1;
+        }
+        .card-box {
+            background: white;
+            border-radius: var(--radius-box);
+            border: 1px solid var(--color-border-subtle);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        }
+        /* TIMELINE TRACKING */
+        .tracking-timeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            position: relative;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .tracking-step {
+            position: relative;
+            z-index: 2;
+        }
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ede8e1;
+            color: #78716c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 0 auto 10px;
+            border: 4px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .tracking-step.done .step-icon {
+            background: #007a57;
+            color: white;
+        }
+        .tracking-step.active .step-icon {
+            background: var(--shopee-orange);
+            color: white;
+        }
+        .step-title {
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .step-time {
+            font-size: 11px;
+            color: #78716c;
+            margin-top: 2px;
+        }
+        .item-row {
+            display: grid;
+            grid-template-columns: 65px 1fr 120px 100px;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0eae1;
+        }
+        .item-row:last-child { border-bottom: none; }
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+        .calc-row.final {
+            border-top: 1px solid #e5ded3;
+            margin-top: 10px;
+            padding-top: 12px;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--color-text-primary);
+        }
+        .final-price {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--shopee-orange);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER TRANG -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <a th:href="@{/orders}" style="color: var(--color-text-secondary); font-weight:700; text-decoration:none;">
+                <i class="fa-solid fa-arrow-left me-1"></i> Trở về danh sách đơn mua
+            </a>
+            <div style="font-size: 14px; font-weight: 700;">
+                MÃ ĐƠN HÀNG: <span style="color:var(--shopee-orange);" th:text="${order.orderCode}">ORD...</span>
+            </div>
+        </div>
+
+        <!-- HÀNH TRÌNH ĐƠN HÀNG (TRACKING TIMELINE) -->
+        <div class="card-box">
+            <h3 style="font-size: 16px; font-weight:800; margin-bottom: 16px;">
+                <i class="fa-solid fa-route text-danger me-1"></i> Hành Trình & Trạng Thái Đơn Hàng
+            </h3>
+
+            <div class="tracking-timeline">
+                <div class="tracking-step done">
+                    <div class="step-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                    <div class="step-title">Đặt Hàng Thành Công</div>
+                    <div class="step-time" th:text="${#temporals.format(order.createdAt, 'HH:mm dd/MM')}">09:15 20/09</div>
+                </div>
+
+                <div class="tracking-step" th:classappend="${order.orderStatus.name() != 'NEW' and order.orderStatus.name() != 'CANCELLED'} ? 'done' : (${order.orderStatus.name() == 'NEW'} ? 'active' : '')">
+                    <div class="step-icon"><i class="fa-solid fa-box-open"></i></div>
+                    <div class="step-title">Chi Nhánh Chuẩn Bị Sách</div>
+                    <div class="step-time" th:text="${order.store != null ? order.store.storeName : 'Chi nhánh'}">Chi Nhánh 1</div>
+                </div>
+
+                <div class="tracking-step" th:classappend="${order.orderStatus.name() == 'DELIVERED'} ? 'done' : (${order.orderStatus.name() == 'SHIPPING'} ? 'active' : '')">
+                    <div class="step-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                    <div class="step-title" th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Sẵn Sàng Tại Quầy Chi Nhánh' : 'Đang Giao Hàng'}">Đang Giao</div>
+                    <div class="step-time" th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Khách ghé nhận' : 'Đơn vị vận chuyển'}">GHTK</div>
+                </div>
+
+                <div class="tracking-step" th:classappend="${order.orderStatus.name() == 'DELIVERED'} ? 'done' : ''">
+                    <div class="step-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="step-title">Đã Hoàn Thành</div>
+                    <div class="step-time" th:if="${order.orderStatus.name() == 'DELIVERED'}">Giao dịch hoàn tất</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ĐỊA CHỈ & THÔNG TIN BÀN GIAO -->
+        <div class="card-box">
+            <h3 style="font-size: 16px; font-weight:800; margin-bottom: 14px;">
+                <i class="fa-solid fa-location-dot text-danger me-1"></i> Thông Tin Nhận Sách
+            </h3>
+            <div style="font-size: 14px; line-height: 1.6;">
+                <div>Người nhận: <strong th:text="${order.receiverName} + ' - ' + ${order.receiverPhone}">Phúc</strong></div>
+                <div>Hình thức: <strong th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Đến nhận tại chi nhánh (Click & Collect)' : 'Giao hàng tận nơi'}">Nhận tại chi nhánh</strong></div>
+                <div>Chi nhánh phụ trách: <strong th:text="${order.store != null ? order.store.storeName : ''}">Chi Nhánh 1: Thủ Đức</strong></div>
+                <div>Địa chỉ: <strong th:text="${order.receiverAddress}">Số 48 Võ Văn Ngân, P. Linh Chiểu</strong></div>
+                <div th:if="${order.customerNotes != null and !order.customerNotes.isBlank()}">
+                    Ghi chú của bạn: <em th:text="${order.customerNotes}">Ghi chú</em>
+                </div>
+            </div>
+        </div>
+
+        <!-- SẢN PHẨM & THANH TOÁN -->
+        <div class="card-box">
+            <h3 style="font-size: 16px; font-weight:800; margin-bottom: 14px;">
+                <i class="fa-solid fa-book-bookmark text-danger me-1"></i> Danh Sách Sách Trong Đơn
+            </h3>
+
+            <div th:each="item : ${order.items}" class="item-row">
+                <img th:src="${item.book != null and item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
+                     alt="Ảnh bìa" style="width: 55px; height: 75px; object-fit: cover; border-radius: 6px;">
+                <div>
+                    <strong th:text="${item.bookTitle}" style="font-size:14px;">Tên sách</strong>
+                    <div style="font-size: 12px; color: var(--color-text-secondary); margin-top: 2px;">
+                        Độ mới: <span th:text="${item.conditionPercent} + '%'">95%</span>
+                    </div>
+                </div>
+                <div style="text-align: right;" th:text="'x' + ${item.quantity}">x1</div>
+                <div style="text-align: right; font-weight: 800; color: #1C1917;" th:text="'₫' + ${#numbers.formatDecimal(item.totalPrice, 0, 'POINT', 0, 'COMMA')}">₫68.000</div>
+            </div>
+
+            <!-- TÍNH TOÁN TIỀN -->
+            <div style="margin-top: 20px; padding-top: 14px; border-top: 1px dashed #e5ded3;">
+                <div class="calc-row">
+                    <span>Tổng tiền hàng:</span>
+                    <strong th:text="'₫' + ${#numbers.formatDecimal(order.subtotal, 0, 'POINT', 0, 'COMMA')}">₫68.000</strong>
+                </div>
+                <div class="calc-row">
+                    <span>Phí vận chuyển:</span>
+                    <strong th:text="${order.shippingFee != null and order.shippingFee.doubleValue() > 0} ? '₫' + ${#numbers.formatDecimal(order.shippingFee, 0, 'POINT', 0, 'COMMA')} : 'MIỄN PHÍ'">MIỄN PHÍ</strong>
+                </div>
+                <div class="calc-row" th:if="${order.discountAmount != null and order.discountAmount.doubleValue() > 0}">
+                    <span>Giảm giá voucher:</span>
+                    <strong style="color: var(--shopee-orange);" th:text="'-₫' + ${#numbers.formatDecimal(order.discountAmount, 0, 'POINT', 0, 'COMMA')}">-₫20.000</strong>
+                </div>
+                <div class="calc-row final">
+                    <span>TỔNG CỘNG THANH TOÁN:</span>
+                    <span class="final-price" th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

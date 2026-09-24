@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Đơn Mua Của Tôi - Chuỗi Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --color-bg-base: #f7f5f0;
+            --color-surface: rgba(255, 255, 255, 0.94);
+            --color-surface-glass: rgba(255, 255, 255, 0.82);
+            --color-border-subtle: #eae5dc;
+            
+            --shopee-orange: #ee4d2d;
+            --shopee-orange-hover: #d73211;
+            --shopee-orange-light: #fef6f5;
+
+            --color-text-primary: #1C1917;
+            --color-text-secondary: #44403C;
+            --color-text-muted: #78716C;
+
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --radius-box: 14px;
+            --shadow-subtle: 0 4px 20px -2px rgba(45, 24, 15, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-bg-base);
+            color: var(--color-text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TOPBAR & HEADER */
+        .shopee-topbar {
+            background: rgba(35, 18, 10, 0.22);
+            backdrop-filter: blur(28px);
+            font-size: 13px;
+            padding: 7px 0;
+            color: #1C1917;
+        }
+        .container-shopee {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        .topbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .topbar-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        .topbar-links a {
+            color: #1C1917;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .order-header {
+            background: rgba(45, 24, 15, 0.28);
+            backdrop-filter: blur(36px);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .order-header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+        }
+        .brand-logo-img {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+        }
+        .header-title-badge {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1C1917;
+            border-left: 2px solid #1C1917;
+            padding-left: 14px;
+            text-transform: uppercase;
+        }
+
+        /* SHOPEE STATUS TABS */
+        .order-tabs-bar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--color-border-subtle);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+        .tabs-list {
+            display: flex;
+            list-style: none;
+            overflow-x: auto;
+        }
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .tab-link {
+            display: block;
+            padding: 16px 14px;
+            text-decoration: none;
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab-link:hover {
+            color: var(--shopee-orange);
+        }
+        .tab-link.active {
+            color: var(--shopee-orange);
+            border-bottom-color: var(--shopee-orange);
+            font-weight: 800;
+        }
+        .tab-badge {
+            display: inline-block;
+            background: #e2ded7;
+            color: #1C1917;
+            font-size: 11px;
+            padding: 1px 7px;
+            border-radius: 10px;
+            margin-left: 4px;
+        }
+        .tab-link.active .tab-badge {
+            background: var(--shopee-orange);
+            color: white;
+        }
+
+        /* MAIN */
+        .order-main {
+            flex: 1;
+            padding-bottom: 60px;
+        }
+
+        /* ORDER CARD */
+        .order-card {
+            background: var(--color-surface);
+            backdrop-filter: blur(16px);
+            border-radius: var(--radius-box);
+            border: 1px solid var(--color-border-subtle);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .order-card:hover {
+            box-shadow: 0 6px 24px -2px rgba(45, 24, 15, 0.1);
+        }
+
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #faf8f5;
+            border-bottom: 1px solid #f0eae1;
+        }
+        .store-tag {
+            font-weight: 800;
+            font-size: 14px;
+            color: #1C1917;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .status-badge-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .status-pill {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .status-NEW { color: #d97706; }
+        .status-CONFIRMED { color: #0284c7; }
+        .status-SHIPPING { color: #7c3aed; }
+        .status-DELIVERED { color: #007a57; }
+        .status-CANCELLED { color: #78716c; }
+
+        /* ITEMS IN ORDER */
+        .order-item-row {
+            display: grid;
+            grid-template-columns: 70px 1fr 140px 140px;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f4efe8;
+        }
+        .order-item-row:last-child {
+            border-bottom: none;
+        }
+        .item-thumb-img {
+            width: 65px;
+            height: 85px;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .item-title-link {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--color-text-primary);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .item-title-link:hover {
+            color: var(--shopee-orange);
+        }
+        .item-condition-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            background: #f5f0e6;
+            color: #78350f;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* CARD FOOTER */
+        .order-card-footer {
+            padding: 16px 20px;
+            background: #ffffff;
+            border-top: 1px solid #f0eae1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .order-meta-info {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+        .order-total-box {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        .order-total-num {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--shopee-orange);
+        }
+
+        .order-actions-bar {
+            padding: 12px 20px;
+            background: #faf8f5;
+            border-top: 1px dashed #e8e2d8;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            align-items: center;
+        }
+        .btn-order-action {
+            padding: 9px 18px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid transparent;
+        }
+        .btn-action-primary {
+            background: var(--shopee-orange);
+            color: white;
+        }
+        .btn-action-primary:hover {
+            background: var(--shopee-orange-hover);
+        }
+        .btn-action-outline {
+            background: white;
+            border-color: #d1c8bb;
+            color: var(--color-text-primary);
+        }
+        .btn-action-outline:hover {
+            border-color: var(--shopee-orange);
+            color: var(--shopee-orange);
+        }
+        .btn-action-danger {
+            background: white;
+            border-color: #fca5a5;
+            color: #dc2626;
+        }
+        .btn-action-danger:hover {
+            background: #fef2f2;
+        }
+
+        /* MODAL ĐÁNH GIÁ CHẤT LƯỢNG SÁCH */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .modal-overlay.open {
+            display: flex;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 520px;
+            padding: 28px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .star-rating-box {
+            display: flex;
+            gap: 10px;
+            font-size: 28px;
+            color: #d1c8bb;
+            margin: 14px 0;
+            cursor: pointer;
+        }
+        .star-rating-box i.active {
+            color: #f59e0b;
+        }
+
+        /* FLASH MESSAGE */
+        .flash-alert {
+            background: #e6f7f0;
+            border: 1px solid #b7ebd6;
+            color: #007a57;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* FOOTER */
+        .shopee-footer-clean {
+            background: #25160d;
+            color: #e6dfd8;
+            padding: 30px 0;
+            font-size: 13px;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOPBAR -->
+    <div class="shopee-topbar">
+        <div class="container-shopee topbar-content">
+            <div style="font-weight: 700; color: #1C1917;">
+                <i class="fa-solid fa-shop me-1 text-danger"></i> Hệ Thống 5 Chi Nhánh Chuỗi Sách Cũ TP.HCM Sẵn Sàng Phục Vụ
+            </div>
+            <ul class="topbar-links">
+                <li><a th:href="@{/}"><i class="fa-solid fa-house"></i> Trang Chủ</a></li>
+                <li><a th:href="@{/cart}"><i class="fa-solid fa-cart-shopping"></i> Giỏ Hàng</a></li>
+                <li><span style="font-weight: 700; color: #1C1917;"><i class="fa-solid fa-circle-user text-success"></i> Nguyễn Song Hoàng Phúc</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="order-header">
+        <div class="container-shopee order-header-inner">
+            <a th:href="@{/}" class="brand-box">
+                <img th:src="@{/images/logo-books.png}" alt="Logo Books Báo Chí" class="brand-logo-img">
+                <span class="header-title-badge">Đơn Mua Của Tôi</span>
+            </a>
+            <a th:href="@{/}" class="btn-order-action btn-action-outline">
+                <i class="fa-solid fa-magnifying-glass"></i> Mua thêm sách cũ
+            </a>
+        </div>
+    </header>
+
+    <!-- SHOPEE TABS BAR -->
+    <div class="order-tabs-bar">
+        <div class="container-shopee">
+            <ul class="tabs-list">
+                <li class="tab-item">
+                    <a th:href="@{/orders}" class="tab-link" th:classappend="${currentStatus == 'ALL'} ? 'active' : ''">
+                        Tất cả <span class="tab-badge" th:text="${countAll}">0</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a th:href="@{/orders?status=NEW}" class="tab-link" th:classappend="${currentStatus == 'NEW'} ? 'active' : ''">
+                        Chờ xác nhận <span class="tab-badge" th:text="${countNew}">0</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a th:href="@{/orders?status=CONFIRMED}" class="tab-link" th:classappend="${currentStatus == 'CONFIRMED'} ? 'active' : ''">
+                        Đã xác nhận <span class="tab-badge" th:text="${countConfirmed}">0</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a th:href="@{/orders?status=SHIPPING}" class="tab-link" th:classappend="${currentStatus == 'SHIPPING'} ? 'active' : ''">
+                        Đang giao / Chờ nhận <span class="tab-badge" th:text="${countShipping}">0</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a th:href="@{/orders?status=DELIVERED}" class="tab-link" th:classappend="${currentStatus == 'DELIVERED'} ? 'active' : ''">
+                        Hoàn thành <span class="tab-badge" th:text="${countDelivered}">0</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a th:href="@{/orders?status=CANCELLED}" class="tab-link" th:classappend="${currentStatus == 'CANCELLED'} ? 'active' : ''">
+                        Đã hủy <span class="tab-badge" th:text="${countCancelled}">0</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- MAIN ORDERS LIST -->
+    <main class="order-main">
+        <div class="container-shopee">
+
+            <!-- THÔNG BÁO FLASH -->
+            <div class="flash-alert" th:if="${successMessage}">
+                <i class="fa-solid fa-circle-check"></i>
+                <span th:text="${successMessage}">Thông báo</span>
+            </div>
+
+            <!-- NẾU KHÔNG CÓ ĐƠN HÀNG NÀO -->
+            <div th:if="${#lists.isEmpty(orders)}" style="text-align: center; padding: 60px 0; background: white; border-radius: var(--radius-box);">
+                <i class="fa-solid fa-box-open" style="font-size: 54px; color: #d5cec4; margin-bottom: 16px;"></i>
+                <h3 style="font-size: 18px; font-weight: 700;">Chưa có đơn hàng nào trong mục này</h3>
+                <p style="color: var(--color-text-secondary); margin-top: 6px;">Hàng ngàn cuốn sách cũ thẩm định chất lượng cao đang chờ đón bạn.</p>
+                <a th:href="@{/}" class="btn-order-action btn-action-primary" style="margin-top: 18px;">
+                    <i class="fa-solid fa-store"></i> Khám phá sách ngay
+                </a>
+            </div>
+
+            <!-- DANH SÁCH CÁC THẺ ĐƠN HÀNG -->
+            <div th:each="order : ${orders}" class="order-card">
+                
+                <!-- HEADER THẺ ĐƠN -->
+                <div class="order-card-header">
+                    <div class="store-tag">
+                        <i class="fa-solid fa-shop text-danger"></i>
+                        <span th:text="${order.store != null ? order.store.storeName : 'Chi nhánh trung tâm TP.HCM'}">Chi Nhánh</span>
+                        
+                        <span style="margin-left: 8px; font-weight: 600; font-size: 12px; background: #f0ebe1; padding: 2px 8px; border-radius: 4px;"
+                              th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Click & Collect (Nhận tại Cửa hàng)' : 'Giao tận nơi'}">
+                            Click & Collect
+                        </span>
+                    </div>
+
+                    <div class="status-badge-wrap">
+                        <span class="status-pill" th:classappend="'status-' + ${order.orderStatus.name()}">
+                            <i class="fa-solid fa-circle-check me-1" th:if="${order.orderStatus.name() == 'DELIVERED'}"></i>
+                            <i class="fa-solid fa-truck-fast me-1" th:if="${order.orderStatus.name() == 'SHIPPING'}"></i>
+                            <i class="fa-solid fa-box me-1" th:if="${order.orderStatus.name() == 'CONFIRMED'}"></i>
+                            <i class="fa-solid fa-clock me-1" th:if="${order.orderStatus.name() == 'NEW'}"></i>
+                            <i class="fa-solid fa-ban me-1" th:if="${order.orderStatus.name() == 'CANCELLED'}"></i>
+                            <span th:text="${order.orderStatus.name() == 'DELIVERED' ? 'HOÀN THÀNH' : (order.orderStatus.name() == 'SHIPPING' ? 'ĐANG GIAO / SẴN SÀNG NHẬN' : (order.orderStatus.name() == 'CONFIRMED' ? 'ĐÃ XÁC NHẬN' : (order.orderStatus.name() == 'NEW' ? 'CHỜ XÁC NHẬN' : 'ĐÃ HỦY')))}">TRẠNG THÁI</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- CÁC SẢN PHẨM TRONG ĐƠN -->
+                <div class="order-card-body">
+                    <div th:each="item : ${order.items}" class="order-item-row">
+                        <img th:src="${item.book != null and item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
+                             alt="Bìa sách" class="item-thumb-img">
+                        <div>
+                            <a th:href="@{'/books/' + ${item.book != null ? item.book.id : 1}}" class="item-title-link" th:text="${item.bookTitle}">
+                                Tên sách cũ
+                            </a>
+                            <div style="display:flex; gap: 8px; align-items:center;">
+                                <span class="item-condition-badge" th:text="'Độ mới: ' + ${item.conditionPercent} + '%'">Độ mới 95%</span>
+                                <span style="font-size:12px; color:var(--color-text-muted);">Mã đơn: <strong th:text="${order.orderCode}">ORD...</strong></span>
+                            </div>
+                        </div>
+                        <div style="text-align: right; color: var(--color-text-secondary); font-size: 14px;">
+                            <span th:text="'₫' + ${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                            <span style="font-size: 12px; color: var(--color-text-muted);" th:text="'x' + ${item.quantity}">x1</span>
+                        </div>
+                        <div style="text-align: right; font-weight: 800; color: #1C1917; font-size: 15px;" 
+                             th:text="'₫' + ${#numbers.formatDecimal(item.totalPrice, 0, 'POINT', 0, 'COMMA')}">
+                            ₫68.000
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FOOTER & NÚT THAO TÁC -->
+                <div class="order-card-footer">
+                    <div class="order-meta-info">
+                        <div>Ngày đặt: <strong th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}">24/09/2026</strong></div>
+                        <div style="margin-top: 2px;">
+                            Thanh toán: 
+                            <span th:if="${order.paymentStatus.name() == 'PAID'}" style="color: #007a57; font-weight:700;">
+                                <i class="fa-solid fa-circle-check"></i> Đã thanh toán (<span th:text="${order.paymentMethod}">VNPAY</span>)
+                            </span>
+                            <span th:unless="${order.paymentStatus.name() == 'PAID'}" style="color: #b45309; font-weight:700;">
+                                <i class="fa-solid fa-money-bill-wave"></i> Thu tiền khi nhận (COD)
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="order-total-box">
+                        <span style="font-size: 14px; color: var(--color-text-secondary);">Thành tiền:</span>
+                        <span class="order-total-num" th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫204.000</span>
+                    </div>
+                </div>
+
+                <!-- HÀNG NÚT BẤM THAO TÁC -->
+                <div class="order-actions-bar">
+                    <!-- Nút xem chi tiết đơn -->
+                    <a th:href="@{'/orders/' + ${order.orderCode}}" class="btn-order-action btn-action-outline">
+                        <i class="fa-regular fa-eye"></i> Xem Chi Tiết Đơn
+                    </a>
+
+                    <!-- Nút Hủy đơn nếu đơn còn Mới (NEW) -->
+                    <form th:if="${order.orderStatus.name() == 'NEW'}" th:attr="action='/orders/cancel/' + ${order.orderCode}" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này? Sách sẽ được hoàn trả lại tồn kho chi nhánh.');">
+                        <button type="submit" class="btn-order-action btn-action-danger">
+                            <i class="fa-solid fa-xmark"></i> Hủy Đơn Hàng
+                        </button>
+                    </form>
+
+                    <!-- Nút Đánh giá chất lượng sách nếu đã hoàn thành (DELIVERED) -->
+                    <th:block th:if="${order.orderStatus.name() == 'DELIVERED'}">
+                        <div th:each="item : ${order.items}" th:if="${item.book != null}">
+                            <!-- Nếu chưa đánh giá -->
+                            <button th:unless="${reviewedKeySet.contains(order.id + '_' + item.book.id)}" 
+                                    type="button" 
+                                    class="btn-order-action btn-action-primary"
+                                    th:onclick="'openReviewModal(' + ${order.id} + ', ' + ${item.book.id} + ', '' + ${item.bookTitle} + '')'">
+                                <i class="fa-solid fa-star"></i> Đánh Giá Sách
+                            </button>
+                            <!-- Nếu đã đánh giá rồi -->
+                            <span th:if="${reviewedKeySet.contains(order.id + '_' + item.book.id)}" class="btn-order-action btn-action-outline" style="color:#007a57; border-color:#b7ebd6; background:#e6f7f0;">
+                                <i class="fa-solid fa-check"></i> Đã Đánh Giá
+                            </span>
+                        </div>
+                    </th:block>
+
+                    <!-- Nút Mua Lại -->
+                    <a th:href="@{/}" class="btn-order-action btn-action-outline">
+                        <i class="fa-solid fa-rotate-right"></i> Mua Lại
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL ĐÁNH GIÁ CHẤT LƯỢNG SÁCH CŨ -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal-box">
+            <h3 style="font-size: 18px; font-weight: 800; color: #1C1917; margin-bottom: 6px;">
+                <i class="fa-solid fa-star text-warning me-1"></i> Đánh Giá Chất Lượng Sách Cũ
+            </h3>
+            <p id="modalBookTitle" style="font-size: 14px; font-weight: 700; color: var(--shopee-orange); margin-bottom: 14px;">
+                Tên sách
+            </p>
+
+            <form action="/reviews/create" method="post">
+                <input type="hidden" name="orderId" id="modalOrderId">
+                <input type="hidden" name="bookId" id="modalBookId">
+                <input type="hidden" name="rating" id="modalRatingInput" value="5">
+
+                <div style="font-size: 13px; font-weight: 700; color: var(--color-text-secondary);">
+                    Mức độ hài lòng về tình trạng sách thực tế:
+                </div>
+                <div class="star-rating-box" id="starContainer">
+                    <i class="fa-solid fa-star active" data-val="1"></i>
+                    <i class="fa-solid fa-star active" data-val="2"></i>
+                    <i class="fa-solid fa-star active" data-val="3"></i>
+                    <i class="fa-solid fa-star active" data-val="4"></i>
+                    <i class="fa-solid fa-star active" data-val="5"></i>
+                </div>
+                <div id="ratingText" style="font-size: 13px; font-weight: 700; color: #f59e0b; margin-top: -6px; margin-bottom: 14px;">
+                    Tuyệt vời - Sách cũ như mới đúng cam kết (5 sao)
+                </div>
+
+                <div style="margin-bottom: 18px;">
+                    <label style="display:block; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                        Nhận xét chi tiết (Độ mới, mép giấy, bìa, đóng gói...):
+                    </label>
+                    <textarea name="comment" rows="4" style="width: 100%; border: 1px solid #d5cec4; border-radius: 8px; padding: 10px; font-family: inherit; font-size: 14px; outline:none;" placeholder="Sách được kiểm định rất kỹ, không rách gáy, chữ in rõ nét, cửa hàng giao nhanh..."></textarea>
+                </div>
+
+                <div style="display:flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn-order-action btn-action-outline" onclick="closeReviewModal()">Hủy</button>
+                    <button type="submit" class="btn-order-action btn-action-primary"><i class="fa-solid fa-paper-plane me-1"></i> Gửi Đánh Giá</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="shopee-footer-clean">
+        <div class="container-shopee" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <strong>CHUỖI CỬA HÀNG SÁCH CŨ TP.HCM</strong> - Đồ án Web HCMUTE 2026
+            </div>
+            <div>
+                Hệ thống 5 chi nhánh: Thủ Đức - Q.1 - Làng ĐHQG - Phú Nhuận - Q.5
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT ĐIỀU KHIỂN MODAL & SAO -->
+    <script>
+        function openReviewModal(orderId, bookId, bookTitle) {
+            document.getElementById('modalOrderId').value = orderId;
+            document.getElementById('modalBookId').value = bookId;
+            document.getElementById('modalBookTitle').innerText = bookTitle;
+            document.getElementById('reviewModal').classList.add('open');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.remove('open');
+        }
+
+        // Tương tác chọn sao đánh giá
+        const stars = document.querySelectorAll('#starContainer i');
+        const ratingInput = document.getElementById('modalRatingInput');
+        const ratingText = document.getElementById('ratingText');
+        const starLabels = {
+            1: 'Rất tệ (1 sao)',
+            2: 'Tệ (2 sao)',
+            3: 'Bình thường (3 sao)',
+            4: 'Hài lòng - Sách tốt (4 sao)',
+            5: 'Tuyệt vời - Sách cũ như mới đúng cam kết (5 sao)'
+        };
+
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const val = parseInt(this.getAttribute('data-val'));
+                ratingInput.value = val;
+                ratingText.innerText = starLabels[val];
+                stars.forEach(s => {
+                    const sVal = parseInt(s.getAttribute('data-val'));
+                    if (sVal <= val) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
