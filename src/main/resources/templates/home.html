@@ -201,10 +201,9 @@
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             transform: rotate(-3deg);
-            transition: transform 0.3s;
         }
         .main-slider-card:hover .slider-book-img {
-            transform: rotate(0deg) scale(1.05);
+            transform: rotate(-3deg);
         }
 
         /* 2 Banner phụ bên phải */
@@ -226,10 +225,10 @@
             background: #ffffff;
             border: 1px solid var(--color-border);
             box-shadow: var(--color-shadow-card);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: box-shadow 0.2s;
         }
         .sub-banner-item:hover {
-            transform: translateY(-2px);
+            transform: none;
             box-shadow: var(--color-shadow-hover);
         }
 
@@ -252,11 +251,13 @@
 
         /* ================= 4. DẢI 8 BIỂU TƯỢNG TIỆN ÍCH DỊCH VỤ ================= */
         .shopee-shortcuts-section {
-            background: #ffffff;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--color-border);
-            box-shadow: var(--color-shadow-card);
-            padding: 18px 12px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%);
+            border-radius: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
+            padding: 16px 14px;
             margin-bottom: 24px;
         }
 
@@ -270,12 +271,21 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 8px;
+            padding: 4px;
+            text-decoration: none;
             cursor: pointer;
-            transition: transform 0.2s ease;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            user-select: none;
         }
         .shortcut-item:hover {
-            transform: translateY(-3px);
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            transform: none;
         }
 
         .shortcut-icon-circle {
@@ -286,34 +296,51 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
         }
         .shortcut-item:hover .shortcut-icon-circle {
-            transform: scale(1.08);
+            transform: none;
         }
 
-        .icon-fire   { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
-        .icon-green  { background: #e6f7f0; color: #007a57; border: 1px solid #b7ebd6; }
-        .icon-blue   { background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd; }
-        .icon-gold   { background: #fefce8; color: #ca8a04; border: 1px solid #fef08a; }
-        .icon-purple { background: #faf5ff; color: #9333ea; border: 1px solid #e9d5ff; }
-        .icon-amber  { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+        .icon-fire   { background: #fff1f2; color: #e11d48; }
+        .icon-green  { background: #f0fdf4; color: #16a34a; }
+        .icon-blue   { background: #f0f9ff; color: #0284c7; }
+        .icon-gold   { background: #fefce8; color: #ca8a04; }
+        .icon-purple { background: #faf5ff; color: #9333ea; }
+        .icon-amber  { background: #fffbeb; color: #d97706; }
 
         .shortcut-label {
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 600;
             color: #1C1917;
             max-width: 90px;
             line-height: 1.25;
+            transition: color 0.2s ease;
+        }
+        .shortcut-item:hover .shortcut-label {
+            color: #8C4A27;
+        }
+
+        .shortcut-label {
+            font-size: 12px;
+            font-weight: 750;
+            color: #1C1917;
+            max-width: 95px;
+            line-height: 1.25;
+            transition: color 0.2s ease;
+        }
+        .shortcut-item:hover .shortcut-label {
+            color: #8C4A27;
         }
 
         /* ================= 5. SHOPEE FLASH SALE SECTION ================= */
         .shopee-flash-sale {
-            background: #ffffff;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--color-border);
-            box-shadow: var(--color-shadow-card);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            border-radius: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
             margin-bottom: 24px;
             overflow: hidden;
         }
@@ -323,8 +350,8 @@
             align-items: center;
             justify-content: space-between;
             padding: 16px 20px;
-            border-bottom: 1px solid #f0eae1;
-            background: #fff;
+            border-bottom: 1px solid rgba(240, 234, 225, 0.7);
+            background: transparent;
         }
 
         .flash-title-wrap {
@@ -336,7 +363,7 @@
         .flash-logo-text {
             font-size: 20px;
             font-weight: 900;
-            color: var(--color-fire);
+            color: #ee4d2d;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             display: flex;
@@ -347,7 +374,7 @@
         .flash-countdown {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             font-size: 12px;
             font-weight: 700;
             color: var(--color-text-secondary);
@@ -357,10 +384,11 @@
             background: #1C1917;
             color: #ffffff;
             font-weight: 800;
-            padding: 3px 6px;
-            border-radius: 3px;
+            padding: 4px 8px;
+            border-radius: 8px;
             min-width: 24px;
             text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2);
         }
 
         .flash-view-all {
@@ -372,7 +400,7 @@
             gap: 4px;
         }
         .flash-view-all:hover {
-            color: var(--color-fire);
+            color: #ee4d2d;
         }
 
         .flash-sale-grid {
@@ -383,20 +411,24 @@
         }
 
         .flash-book-card {
-            background: #ffffff;
-            border: 1px solid #f0eae1;
-            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(20px) saturate(185%);
+            -webkit-backdrop-filter: blur(20px) saturate(185%);
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
             padding: 12px;
             display: flex;
             flex-direction: column;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
+            box-shadow: 0 8px 24px -4px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.95);
         }
         .flash-book-card:hover {
-            border-color: var(--color-fire);
-            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.15);
-            transform: translateY(-3px);
+            background: #ffffff;
+            border-color: rgba(255, 255, 255, 1);
+            box-shadow: 0 8px 24px -4px rgba(140, 74, 39, 0.12), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            transform: none;
         }
 
         .flash-thumb-box {
@@ -406,44 +438,53 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #faf8f5;
-            border-radius: 4px;
+            background: linear-gradient(180deg, rgba(248, 245, 238, 0.65) 0%, rgba(232, 222, 200, 0.35) 100%);
+            backdrop-filter: blur(14px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            box-shadow: inset 0 1px 3px rgba(45, 24, 15, 0.04);
             overflow: hidden;
             margin-bottom: 10px;
         }
 
         .flash-thumb-img {
-            max-height: 100%;
-            max-width: 100%;
+            max-height: 90%;
+            max-width: 90%;
             object-fit: contain;
-            transition: transform 0.3s ease;
+            border-radius: 10px;
         }
         .flash-book-card:hover .flash-thumb-img {
-            transform: scale(1.06);
+            transform: none;
         }
 
-        .badge-discount-percent {
+        .badge-discount-percent, .flash-sale-badge {
             position: absolute;
             top: 0;
             right: 0;
             background: rgba(255, 230, 0, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             color: #b73a00;
             font-weight: 900;
-            font-size: 12px;
-            padding: 3px 6px;
-            border-bottom-left-radius: 6px;
+            font-size: 11px;
+            padding: 3px 7px;
+            border-bottom-left-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
         }
 
         .badge-condition-pill {
             position: absolute;
             bottom: 6px;
             left: 6px;
-            background: rgba(0, 122, 87, 0.9);
+            background: rgba(0, 122, 87, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             color: white;
             font-size: 10px;
             font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 2.5px 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 122, 87, 0.25);
         }
 
         .flash-card-title {
@@ -466,14 +507,14 @@
         .flash-price-main {
             font-size: 18px;
             font-weight: 900;
-            color: var(--color-fire);
+            color: #ee4d2d !important;
         }
 
         /* Thanh tiến trình ĐÃ BÁN kiểu Shopee */
         .flash-progress-track {
             height: 16px;
             background: #D7B59C;
-            border-radius: 10px;
+            border-radius: 9999px;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -484,7 +525,7 @@
             position: absolute;
             left: 0; top: 0; bottom: 0;
             background: linear-gradient(90deg, #ff5722, #8C4A27);
-            border-radius: 10px;
+            border-radius: 9999px;
         }
         .flash-progress-text {
             position: relative;
@@ -539,7 +580,7 @@
         .cat-box-item:hover {
             border-color: var(--color-fire);
             box-shadow: 0 4px 12px rgba(238, 77, 45, 0.12);
-            transform: translateY(-2px);
+            transform: none;
         }
 
         .cat-icon-wrap {
@@ -612,8 +653,8 @@
         }
         .shopee-product-card:hover {
             border-color: var(--color-fire);
-            box-shadow: 0 6px 18px rgba(45, 24, 15, 0.12);
-            transform: translateY(-3px);
+            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.08);
+            transform: none;
             z-index: 2;
         }
 
@@ -632,10 +673,38 @@
             max-height: 92%;
             max-width: 92%;
             object-fit: contain;
-            transition: transform 0.3s ease;
         }
         .shopee-product-card:hover .product-thumb-img {
-            transform: scale(1.06);
+            transform: none;
+        }
+
+        /* Nút Mua Ngay Nhanh trên Thẻ Sách */
+        .btn-card-buy-now {
+            margin-top: 8px;
+            background: #ee4d2d;
+            color: #ffffff;
+            border: 1px solid #ee4d2d;
+            border-radius: 9999px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.25);
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+        .btn-card-buy-now:hover {
+            background: #d73211;
+            border-color: #d73211;
+            transform: none !important;
+        }
+        .btn-card-buy-now:active {
+            transform: scale(0.96) !important;
         }
 
         .card-discount-tag {
@@ -703,8 +772,8 @@
 
         .price-current {
             font-size: 16px;
-            font-weight: 900;
-            color: var(--color-fire);
+            font-weight: 800;
+            color: #ee4d2d !important;
         }
 
         .price-sold-count {
@@ -712,53 +781,66 @@
             color: #78716C;
         }
 
-        /* Nút xem thêm */
+        /* Nút xem thêm chuẩn Apple Capsule Pill căn giữa */
         .btn-load-more-shopee {
-            display: block;
-            width: 320px;
-            margin: 30px auto 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 260px;
+            padding: 12px 40px;
+            margin: 0 auto;
             text-align: center;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             color: #1C1917;
-            border: 1px solid #d5cec4;
-            padding: 12px 24px;
-            border-radius: 4px;
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            border-radius: 9999px;
             font-weight: 700;
-            font-size: 14px;
-            transition: all 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            font-size: 14.5px;
+            box-shadow: 0 6px 20px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
         }
         .btn-load-more-shopee:hover {
-            border-color: var(--color-fire);
-            color: var(--color-fire);
-            background: #fffdfc;
+            border-color: rgba(238, 77, 45, 0.4);
+            color: #ee4d2d;
+            background: #ffffff;
+        }
+        .btn-load-more-shopee:active {
+            transform: scale(0.97);
         }
 
         /* ================= 8. MODAL HỆ THỐNG 5 CỬA HÀNG TP.HCM (TINH TẾ & GỌN GÀNG) ================= */
         .modal-stores-backdrop {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 100005;
         }
         .modal-stores-backdrop.open {
             display: flex;
         }
 
         .modal-stores-content {
-            background: #ffffff;
-            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(32px) saturate(190%) brightness(102%);
+            -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(102%);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
             width: 90%;
             max-width: 840px;
             max-height: 85vh;
             overflow-y: auto;
             padding: 28px;
             position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 24px 60px rgba(45, 24, 15, 0.2), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
         }
 
         .modal-close-btn {
@@ -770,8 +852,19 @@
             cursor: pointer;
             border: none;
             background: transparent;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
-        .modal-close-btn:hover { color: var(--color-fire); }
+        .modal-close-btn:hover { 
+            color: #ee4d2d; 
+            background: rgba(238, 77, 45, 0.08);
+            transform: rotate(90deg);
+        }
 
         .modal-store-grid {
             display: grid;
@@ -781,15 +874,20 @@
         }
 
         .modal-store-card {
-            border: 1px solid #e7e0d5;
-            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
             padding: 16px;
-            background: #faf8f5;
-            transition: 0.2s;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .modal-store-card:hover {
-            border-color: var(--color-fire);
-            background: #fffdfc;
+            border-color: rgba(238, 77, 45, 0.4);
+            background: rgba(255, 255, 255, 0.95);
+            transform: none;
+            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.08);
         }
 
         /* ================= 9. FOOTER CHUẨN SHOPEE ================= */
@@ -896,6 +994,8 @@
         }
 
     </style>
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 </head>
 <body>
 
@@ -1027,6 +1127,10 @@
                         <div class="flash-progress-fill" th:style="'width: ' + (${book.totalSold != null ? (book.totalSold * 3 + 40) : 75}) + '%;'"></div>
                         <span class="flash-progress-text"><i class="fa-solid fa-fire me-1"></i>ĐÃ BÁN <span th:text="${book.totalSold != null ? book.totalSold : 24}">24</span></span>
                     </div>
+                    <button type="button" class="btn-card-buy-now" 
+                            th:attr="onclick=|quickBuyNow(event, '${book.id}')|">
+                        <i class="fa-solid fa-bolt-lightning"></i> Mua Ngay
+                    </button>
                 </a>
             </div>
         </section>
@@ -1084,14 +1188,21 @@
                             <span class="price-current" th:text="'₫' + ${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                             <span class="price-sold-count" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
                         </div>
+
+                        <button type="button" class="btn-card-buy-now" 
+                                th:attr="onclick=|quickBuyNow(event, '${book.id}')|">
+                            <i class="fa-solid fa-bolt-lightning"></i> Mua Ngay
+                        </button>
                     </div>
                 </a>
             </div>
 
-            <!-- Nút Xem Thêm Kiểu Shopee -->
-            <a th:href="@{/search}" class="btn-load-more-shopee">
-                XEM THÊM CÁC ĐẦU SÁCH KHÁC &gt;
-            </a>
+            <!-- Nút Xem Thêm Kiểu Shopee Căn Giữa Trang Web -->
+            <div style="text-align: center; margin-top: 36px; margin-bottom: 24px;">
+                <a th:href="@{/search}" class="btn-load-more-shopee">
+                    Xem thêm
+                </a>
+            </div>
         </section>
 
     </main>
@@ -1126,8 +1237,8 @@
                 </div>
             </div>
 
-            <div style="margin-top: 20px; text-align: center;">
-                <button type="button" class="btn-shopee-fire" onclick="closeStoreModal()" style="border:none; padding:10px 24px; border-radius:20px; font-weight:700; cursor:pointer;">
+            <div style="margin-top: 24px; text-align: center;">
+                <button type="button" class="btn-shopee-fire" onclick="closeStoreModal()" style="border:none; padding:12px 36px; border-radius:9999px; font-weight:700; font-size:14px; cursor:pointer; background:linear-gradient(135deg, #ee4d2d 0%, #d73211 100%); color:#fff; box-shadow: 0 4px 14px rgba(238,77,45,0.35); transition: all 0.25s cubic-bezier(0.16,1,0.3,1);">
                     ĐÓNG LẠI
                 </button>
             </div>
@@ -1201,6 +1312,15 @@
         }
         function closeStoreModal() {
             document.getElementById('storeModal').classList.remove('open');
+        }
+
+        // Mua ngay trực tiếp 1 click
+        function quickBuyNow(event, bookId) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            window.location.href = '/checkout?buyNow=true&bookId=' + encodeURIComponent(bookId) + '&quantity=1';
         }
 
         // Live Cart Counter từ API

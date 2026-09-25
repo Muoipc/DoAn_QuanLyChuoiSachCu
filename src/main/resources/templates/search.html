@@ -49,30 +49,34 @@
             margin: 24px auto 60px;
         }
 
-        /* SIDEBAR FILTERS (SHOPEE FILTER) */
+        /* SIDEBAR FILTERS (SHOPEE FILTER WITH APPLE LIQUID GLASS) */
         .filter-sidebar {
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #f0eae1;
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(24px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(24px) saturate(190%) brightness(103%);
+            border-radius: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
             padding: 20px;
-            box-shadow: var(--color-shadow-card);
+            box-shadow: 0 10px 28px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
             align-self: start;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .filter-header-title {
             font-size: 15px;
             font-weight: 800;
             text-transform: uppercase;
             padding-bottom: 12px;
-            border-bottom: 1px solid #f0eae1;
+            border-bottom: 1px solid rgba(240, 234, 225, 0.8);
             margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
+            color: #1C1917;
         }
         .filter-group {
             margin-bottom: 20px;
             padding-bottom: 16px;
-            border-bottom: 1px dashed #ede8e1;
+            border-bottom: 1px dashed rgba(237, 232, 225, 0.8);
         }
         .filter-group-title {
             font-size: 13px;
@@ -88,11 +92,12 @@
             color: var(--color-text-secondary);
             margin-bottom: 8px;
             cursor: pointer;
+            transition: color 0.15s ease;
         }
         .filter-item-label:hover {
-            color: var(--color-fire);
+            color: #ee4d2d;
         }
-        .filter-item-label input { accent-color: var(--color-fire); }
+        .filter-item-label input { accent-color: #ee4d2d; }
 
         .price-inputs-row {
             display: flex;
@@ -100,32 +105,54 @@
             gap: 6px;
             margin-top: 8px;
         }
-        .input-price {
-            width: 85px;
-            padding: 6px 8px;
-            border: 1px solid #dcd7ce;
-            border-radius: 4px;
+        .input-price, .filter-price-input {
+            width: 88px;
+            padding: 8px 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
             font-size: 12px;
             outline: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
+        }
+        .input-price:focus, .filter-price-input:focus {
+            border-color: rgba(238, 77, 45, 0.5);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.12);
         }
         .btn-apply-filter {
-            background: var(--color-fire);
+            background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%);
             color: white;
             border: none;
-            border-radius: 4px;
-            padding: 8px 16px;
+            border-radius: 9999px;
+            padding: 10px 16px;
             font-weight: 700;
             font-size: 13px;
             cursor: pointer;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 12px;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-apply-filter:hover {
+            transform: none;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.4);
+        }
+        .btn-apply-filter:active {
+            transform: scale(0.96);
         }
         .btn-clear-filter {
-            background: #faf8f5;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             color: var(--color-text-secondary);
-            border: 1px solid #dcd7ce;
-            border-radius: 4px;
-            padding: 8px 16px;
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            border-radius: 9999px;
+            padding: 9px 16px;
             font-weight: 700;
             font-size: 13px;
             cursor: pointer;
@@ -133,33 +160,260 @@
             margin-top: 8px;
             text-align: center;
             display: block;
+            box-sizing: border-box;
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-clear-filter:hover {
+            border-color: rgba(238, 77, 45, 0.4);
+            color: #ee4d2d;
+            background: #ffffff;
+            transform: none;
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.12);
+        }
+        .btn-clear-filter:active {
+            transform: scale(0.96);
         }
 
-        /* SORT BAR (SHOPEE STYLE) */
-        .sort-bar-shopee {
-            background: #eae5dc;
+        /* ================= APPLE LIQUID GLASS SORT BAR & MINI PAGINATION ================= */
+        .shopee-sort-bar {
+            position: relative !important;
+            z-index: 80 !important;
+            overflow: visible !important;
+            background: rgba(255, 255, 255, 0.78) !important;
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
             padding: 12px 18px;
-            border-radius: 6px;
+            border-radius: 16px !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            font-size: 13px;
+            height: 60px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555555;
+            user-select: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .btn-sort {
-            background: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
+        .shopee-sort-bar:hover {
+            z-index: 100 !important;
+        }
+
+        .sort-label {
+            margin-right: 15px;
+            color: #574E45;
             font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            color: var(--color-text-main);
-            text-decoration: none;
+            white-space: nowrap;
         }
-        .btn-sort.active {
-            background: var(--color-fire);
-            color: white;
+
+        .btn-sort-tab {
+            height: 36px;
+            min-width: 92px;
+            padding: 0 16px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 10px !important;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            color: #292524;
+            margin-right: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 650;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+        }
+        .btn-sort-tab:hover {
+            background: #ffffff !important;
+            border-color: rgba(238, 77, 45, 0.3) !important;
+            color: #ee4d2d !important;
+            transform: none;
+            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.12), inset 0 1px 1px #ffffff !important;
+        }
+        .btn-sort-tab.active {
+            background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%) !important;
+            color: #ffffff !important;
+            border-color: transparent !important;
+            font-weight: 750;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+        }
+        .btn-sort-tab:active {
+            transform: scale(0.96) !important;
+        }
+
+        /* Hộp Chọn Giá Dropdown */
+        .select-price-box {
+            position: relative !important;
+            height: 36px;
+            width: 200px;
+            margin-right: 10px;
+            z-index: 120 !important;
+        }
+        .select-price-box:hover {
+            z-index: 150 !important;
+        }
+        .select-price-trigger {
+            height: 100%;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.92);
+            border-radius: 10px !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            color: #292524;
+            font-size: 13.5px;
+            font-weight: 650;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
+        }
+        .select-price-trigger:hover {
+            background: #ffffff;
+            border-color: rgba(238, 77, 45, 0.3);
+            color: #ee4d2d;
+            box-shadow: 0 6px 14px rgba(238, 77, 45, 0.12);
+        }
+        .select-price-box.active .select-price-trigger {
+            color: #ee4d2d;
+            font-weight: 750;
+            border-color: rgba(238, 77, 45, 0.4);
+        }
+        .select-price-icon {
+            font-size: 11px;
+            color: #78716C;
+            transition: transform 0.25s ease;
+        }
+        .select-price-box:hover .select-price-icon {
+            transform: rotate(180deg);
+            color: #ee4d2d;
+        }
+
+        /* Vùng đệm hover bridge giúp chuột di chuyển xuống không bao giờ bị tắt */
+        .select-price-box::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background: transparent;
+            pointer-events: auto;
+        }
+
+        .select-price-menu {
+            position: absolute !important;
+            top: calc(100% + 6px) !important;
+            left: 0 !important;
+            width: 100% !important;
+            background: rgba(255, 255, 255, 0.96) !important;
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            border-radius: 14px !important;
+            box-shadow: 0 18px 40px -4px rgba(45, 24, 15, 0.22), 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 1) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+            padding: 6px !important;
+            display: none;
+            z-index: 9999 !important;
+            animation: applePopoverFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box !important;
+        }
+        .select-price-box:hover .select-price-menu {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 2px !important;
+        }
+        .select-price-item {
+            display: flex !important;
+            align-items: center !important;
+            height: 36px !important;
+            padding: 0 12px !important;
+            font-size: 13px !important;
+            color: #292524 !important;
+            text-decoration: none !important;
+            transition: all 0.15s ease !important;
+            font-weight: 650 !important;
+            border-radius: 8px !important;
+            box-sizing: border-box !important;
+            white-space: nowrap !important;
+        }
+        .select-price-item:hover {
+            color: #ee4d2d !important;
+            background: rgba(238, 77, 45, 0.08) !important;
+            transform: none !important;
+        }
+        .select-price-item.selected {
+            color: #ee4d2d !important;
+            font-weight: 750 !important;
+            background: rgba(238, 77, 45, 0.08) !important;
+        }
+
+        /* Phân Trang Mini Góc Phải */
+        .pagination-mini {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .page-num-mini {
+            color: #292524;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .page-current-mini {
+            color: #ee4d2d;
+            font-weight: 800;
+        }
+        .page-nav-mini {
+            display: flex;
+            gap: 4px;
+            background: transparent;
+        }
+        .page-btn-mini {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 10px !important;
+            color: #574E45;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .page-btn-mini:first-child {
+            border-right: 1px solid rgba(255, 255, 255, 0.9);
+        }
+        .page-btn-mini.disabled {
+            background: rgba(255, 255, 255, 0.45);
+            color: #c4bbb0;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: none;
+        }
+        .page-btn-mini:not(.disabled):hover {
+            background: #ffffff;
+            color: #ee4d2d;
+            border-color: rgba(238, 77, 45, 0.3);
+            transform: none;
+            box-shadow: 0 4px 10px rgba(238, 77, 45, 0.12);
+        }
+        .page-btn-mini:not(.disabled):active {
+            transform: scale(0.94);
         }
 
         /* PRODUCT GRID (5 COLS) */
@@ -167,37 +421,82 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 14px;
+            position: relative;
+            z-index: 10;
         }
         .book-card {
-            background: white;
-            border: 1px solid #f0eae1;
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(20px) saturate(185%);
+            -webkit-backdrop-filter: blur(20px) saturate(185%);
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: 0.2s;
-            box-shadow: var(--color-shadow-card);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.95);
+            padding: 10px;
+            box-sizing: border-box;
         }
         .book-card:hover {
-            border-color: var(--color-fire);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(45, 24, 15, 0.1);
+            background: #ffffff;
+            border-color: rgba(255, 255, 255, 1);
+            transform: none;
+            box-shadow: 0 8px 24px -4px rgba(140, 74, 39, 0.1), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
         }
         .card-thumb {
             height: 180px;
-            background: #faf8f5;
+            background: linear-gradient(180deg, rgba(248, 245, 238, 0.65) 0%, rgba(232, 222, 200, 0.35) 100%);
+            backdrop-filter: blur(14px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            box-shadow: inset 0 1px 3px rgba(45, 24, 15, 0.04);
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            overflow: hidden;
         }
         .card-thumb img {
             max-height: 90%;
             max-width: 90%;
             object-fit: contain;
+            border-radius: 10px;
+        }
+        .book-card:hover .card-thumb img {
+            transform: none;
+        }
+
+        /* Nút Mua Ngay Nhanh trên Thẻ Sách */
+        .btn-card-buy-now {
+            margin-top: 8px;
+            background: #ee4d2d;
+            color: #ffffff;
+            border: 1px solid #ee4d2d;
+            border-radius: 9999px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.25);
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+        .btn-card-buy-now:hover {
+            background: #d73211;
+            border-color: #d73211;
+            transform: none !important;
+        }
+        .btn-card-buy-now:active {
+            transform: scale(0.96) !important;
         }
         .card-body {
-            padding: 12px;
+            padding: 10px 2px 2px 2px;
             display: flex;
             flex-direction: column;
             flex: 1;
@@ -216,17 +515,22 @@
         }
         .price-text {
             font-size: 16px;
-            font-weight: 900;
-            color: var(--color-fire);
+            font-weight: 800;
+            color: #ee4d2d !important;
         }
         .tag-cond {
             position: absolute;
             bottom: 6px; left: 6px;
-            background: rgba(0, 122, 87, 0.9);
+            background: rgba(0, 122, 87, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             color: white; font-size: 10px; font-weight: 800;
-            padding: 2px 6px; border-radius: 3px;
+            padding: 2.5px 8px; border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 122, 87, 0.25);
         }
     </style>
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 </head>
 <body>
 
@@ -291,9 +595,9 @@
                     <div class="filter-group" style="border-bottom:none;">
                         <div class="filter-group-title">Khoảng Giá (₫)</div>
                         <div class="price-inputs-row">
-                            <input type="number" name="minPrice" class="input-price" placeholder="₫ TỪ" th:value="${selectedMinPrice}">
+                            <input type="number" name="minPrice" class="input-price filter-price-input" placeholder="₫ TỪ" th:value="${selectedMinPrice}">
                             <span>-</span>
-                            <input type="number" name="maxPrice" class="input-price" placeholder="₫ ĐẾN" th:value="${selectedMaxPrice}">
+                            <input type="number" name="maxPrice" class="input-price filter-price-input" placeholder="₫ ĐẾN" th:value="${selectedMaxPrice}">
                         </div>
                         <button type="submit" class="btn-apply-filter">ÁP DỤNG</button>
                     </div>
@@ -304,23 +608,56 @@
 
             <!-- KẾT QUẢ TÌM KIẾM & SẮP XẾP -->
             <main>
-                <!-- THANH SẮP XẾP SHOPEE -->
-                <div class="sort-bar-shopee">
-                    <span style="font-weight:700; color:#1C1917;">Sắp xếp theo:</span>
-                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, sort='popular')}" 
-                       class="btn-sort" th:classappend="${selectedSort == 'popular'} ? 'active' : ''">Phổ Biến</a>
-                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, sort='latest')}" 
-                       class="btn-sort" th:classappend="${selectedSort == 'latest'} ? 'active' : ''">Mới Nhất</a>
-                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, sort='sales')}" 
-                       class="btn-sort" th:classappend="${selectedSort == 'sales'} ? 'active' : ''">Bán Chạy</a>
-                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, sort='price-asc')}" 
-                       class="btn-sort" th:classappend="${selectedSort == 'price-asc'} ? 'active' : ''">Giá Tăng Dần</a>
-                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, sort='price-desc')}" 
-                       class="btn-sort" th:classappend="${selectedSort == 'price-desc'} ? 'active' : ''">Giá Giảm Dần</a>
-                    
-                    <span style="margin-left:auto; font-weight:700; color:var(--color-text-secondary);">
-                        Tìm thấy <strong th:text="${totalFound}" style="color:var(--color-fire);">0</strong> cuốn sách
-                    </span>
+                <!-- THANH SẮP XẾP VÀ PHÂN TRANG MINI CHUẨN SHOPEE (KHỚP 100% ẢNH IMAGE_BB8D8C.PNG) -->
+                <div class="shopee-sort-bar">
+                    <span class="sort-label">Sắp xếp theo</span>
+
+                    <!-- Tab Phổ Biến -->
+                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort='popular')}" 
+                       class="btn-sort-tab" th:classappend="${selectedSort == 'popular' or selectedSort == null} ? 'active' : ''">Phổ Biến</a>
+
+                    <!-- Tab Mới Nhất -->
+                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort='latest')}" 
+                       class="btn-sort-tab" th:classappend="${selectedSort == 'latest'} ? 'active' : ''">Mới Nhất</a>
+
+                    <!-- Tab Bán Chạy -->
+                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort='sales')}" 
+                       class="btn-sort-tab" th:classappend="${selectedSort == 'sales'} ? 'active' : ''">Bán Chạy</a>
+
+                    <!-- Menu Thả Xuống: Giá -->
+                    <div class="select-price-box" th:classappend="${selectedSort == 'price-asc' or selectedSort == 'price-desc'} ? 'active' : ''">
+                        <div class="select-price-trigger">
+                            <span th:if="${selectedSort == 'price-asc'}">Giá: Thấp đến Cao</span>
+                            <span th:if="${selectedSort == 'price-desc'}">Giá: Cao đến Thấp</span>
+                            <span th:if="${selectedSort != 'price-asc' and selectedSort != 'price-desc'}">Giá</span>
+                            <i class="fa-solid fa-chevron-down select-price-icon"></i>
+                        </div>
+                        <div class="select-price-menu">
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort='price-asc')}" 
+                               class="select-price-item" th:classappend="${selectedSort == 'price-asc'} ? 'selected' : ''">
+                               Giá: Thấp đến Cao
+                            </a>
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort='price-desc')}" 
+                               class="select-price-item" th:classappend="${selectedSort == 'price-desc'} ? 'selected' : ''">
+                               Giá: Cao đến Thấp
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Cụm Phân Trang Mini Góc Phải -->
+                    <div class="pagination-mini">
+                        <div class="page-num-mini">
+                            <span class="page-current-mini">1</span>/<span th:text="${totalFound != null and totalFound > 20 ? (totalFound + 19) / 20 : 1}">7</span>
+                        </div>
+                        <div class="page-nav-mini">
+                            <button class="page-btn-mini disabled" disabled aria-label="Trang trước">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <button class="page-btn-mini" aria-label="Trang sau">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- LƯỚI SẢN PHẨM -->
@@ -339,6 +676,10 @@
                                 <span class="price-text" th:text="'₫' + ${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                                 <span style="font-size:11px; color:#78716C;" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
                             </div>
+                            <button type="button" class="btn-card-buy-now" 
+                                    th:attr="onclick=|quickBuyNow(event, '${book.id}')|">
+                                <i class="fa-solid fa-bolt-lightning"></i> Mua Ngay
+                            </button>
                         </div>
                     </a>
                 </div>
@@ -354,5 +695,17 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT XỬ LÝ MUA NGAY & POPOVER -->
+    <script>
+        function quickBuyNow(event, bookId) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            window.location.href = '/checkout?buyNow=true&bookId=' + encodeURIComponent(bookId) + '&quantity=1';
+        }
+    </script>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/cart-popover.js"></script>
 </body>
 </html>

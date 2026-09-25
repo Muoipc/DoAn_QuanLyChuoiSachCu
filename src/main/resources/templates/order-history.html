@@ -10,50 +10,70 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
+
     <style>
         :root {
             --color-bg-base: #F8F5EE;
-            --color-surface: rgba(255, 255, 255, 0.94);
-            --color-surface-glass: rgba(255, 255, 255, 0.82);
-            --color-border-subtle: #eae5dc;
+            --color-surface: rgba(255, 255, 255, 0.88);
+            --color-border-glass: rgba(255, 255, 255, 0.92);
             
             --shopee-orange: #8C4A27;
-            --shopee-orange-hover: #d73211;
+            --shopee-orange-hover: #733615;
             --shopee-orange-light: #F5ECE4;
+            --color-shopee-red: #ee4d2d;
 
             --color-text-primary: #1C1917;
             --color-text-secondary: #44403C;
             --color-text-muted: #78716C;
 
             --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            --radius-box: 14px;
-            --shadow-subtle: 0 4px 20px -2px rgba(45, 24, 15, 0.06);
+            --radius-box: 18px;
+            --spring-ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: var(--font-sans);
-            background-color: var(--color-bg-base);
+            background: 
+                radial-gradient(ellipse 90% 60% at 12% 10%, rgba(217, 119, 6, 0.09) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 50% at 88% 20%, rgba(140, 74, 39, 0.08) 0%, transparent 55%),
+                radial-gradient(ellipse 90% 70% at 15% 80%, rgba(245, 158, 11, 0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 85% 60% at 85% 90%, rgba(140, 74, 39, 0.08) 0%, transparent 55%),
+                #F8F5EE;
+            background-attachment: fixed;
             color: var(--color-text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* SHOPEE STATUS TABS */
+        .container-shopee {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* SHOPEE STATUS TABS BAR (APPLE LIQUID GLASS SPEC: 18PX, BLUR 28PX) */
         .order-tabs-bar {
-            background: #ffffff;
-            border-bottom: 1px solid var(--color-border-subtle);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            border: 1.5px solid var(--color-border-glass);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px -4px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            margin: 24px auto 20px;
+            padding: 6px;
             position: sticky;
-            top: 0;
+            top: 12px;
             z-index: 20;
         }
         .tabs-list {
             display: flex;
             list-style: none;
             overflow-x: auto;
+            gap: 6px;
         }
         .tab-item {
             flex: 1;
@@ -61,35 +81,40 @@
             white-space: nowrap;
         }
         .tab-link {
-            display: block;
-            padding: 16px 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            padding: 12px 16px;
             text-decoration: none;
             color: var(--color-text-secondary);
-            font-weight: 600;
+            font-weight: 700;
             font-size: 14px;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
+            border-radius: 9999px;
+            transition: all 0.25s var(--spring-ease);
         }
         .tab-link:hover {
             color: var(--shopee-orange);
+            background: rgba(140, 74, 39, 0.06);
         }
         .tab-link.active {
-            color: var(--shopee-orange);
-            border-bottom-color: var(--shopee-orange);
-            font-weight: 800;
+            color: #ffffff;
+            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%);
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.28);
         }
         .tab-badge {
             display: inline-block;
-            background: #e2ded7;
-            color: #1C1917;
+            background: rgba(45, 24, 15, 0.08);
+            color: inherit;
             font-size: 11px;
-            padding: 1px 7px;
-            border-radius: 10px;
-            margin-left: 4px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 8px;
         }
         .tab-link.active .tab-badge {
-            background: var(--shopee-orange);
-            color: white;
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
         }
 
         /* MAIN */
@@ -98,28 +123,29 @@
             padding-bottom: 60px;
         }
 
-        /* ORDER CARD */
-        .order-card {
-            background: var(--color-surface);
-            backdrop-filter: blur(16px);
-            border-radius: var(--radius-box);
-            border: 1px solid var(--color-border-subtle);
-            box-shadow: var(--shadow-subtle);
-            margin-bottom: 20px;
-            overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
+        /* ORDER CARD (APPLE LIQUID GLASS SPEC: 18PX, BLUR 28PX, SPECULAR RIM HIGHLIGHT) */
+        .order-card, .order-item-card, .order-info-block {
+            background: rgba(255, 255, 255, 0.88) !important;
+            backdrop-filter: blur(28px) saturate(190%) brightness(102%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%) !important;
+            border-radius: 18px !important;
+            border: 1.5px solid var(--color-border-glass) !important;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
+            margin-bottom: 22px;
+            overflow: hidden !important;
+            transition: all 0.35s var(--spring-ease) !important;
         }
         .order-card:hover {
-            box-shadow: 0 6px 24px -2px rgba(45, 24, 15, 0.1);
+            box-shadow: 0 20px 48px -6px rgba(140, 74, 39, 0.14), inset 0 1.5px 1.5px rgba(255, 255, 255, 1) !important;
         }
 
         .order-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 20px;
-            background: #faf8f5;
-            border-bottom: 1px solid #f0eae1;
+            padding: 16px 24px;
+            background: rgba(250, 248, 245, 0.65);
+            border-bottom: 1px solid rgba(240, 234, 225, 0.8);
         }
         .store-tag {
             font-weight: 800;
@@ -134,36 +160,54 @@
             align-items: center;
             gap: 12px;
         }
+
+        /* Status badges bo cong 8px */
         .status-pill {
             font-size: 12px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.3px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
         }
-        .status-NEW { color: #d97706; }
-        .status-CONFIRMED { color: #0284c7; }
-        .status-SHIPPING { color: #7c3aed; }
-        .status-DELIVERED { color: #007a57; }
-        .status-CANCELLED { color: #78716c; }
+        .status-NEW { color: #d97706; border: 1px solid #fde68a; }
+        .status-CONFIRMED { color: #0284c7; border: 1px solid #bae6fd; }
+        .status-SHIPPING { color: #7c3aed; border: 1px solid #ddd6fe; }
+        .status-DELIVERED { color: #007a57; border: 1px solid #a7f3d0; }
+        .status-CANCELLED { color: #78716c; border: 1px solid #e7e5e4; }
 
-        /* ITEMS IN ORDER */
+        /* ITEMS IN ORDER: Thẻ lồng thẻ bo cong 14px, subtle hover lift */
+        .order-card-body {
+            padding: 8px 12px;
+        }
         .order-item-row {
             display: grid;
             grid-template-columns: 70px 1fr 140px 140px;
             align-items: center;
             gap: 16px;
             padding: 16px 20px;
-            border-bottom: 1px solid #f4efe8;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(232, 222, 200, 0.65);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+            transition: all 0.3s var(--spring-ease);
         }
-        .order-item-row:last-child {
-            border-bottom: none;
+        .order-item-row:hover {
+            background: #ffffff;
+            box-shadow: 0 12px 26px -4px rgba(140, 74, 39, 0.12), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            border-color: rgba(255, 255, 255, 0.95);
         }
+
         .item-thumb-img {
-            width: 65px;
-            height: 85px;
+            width: 66px;
+            height: 86px;
             object-fit: cover;
-            border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
         .item-title-link {
             font-weight: 700;
@@ -171,85 +215,101 @@
             color: var(--color-text-primary);
             text-decoration: none;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            line-height: 1.35;
+            transition: color 0.15s;
         }
         .item-title-link:hover {
-            color: var(--shopee-orange);
+            color: #ee4d2d;
         }
         .item-condition-badge {
             display: inline-block;
             font-size: 11px;
-            font-weight: 700;
-            background: #f5f0e6;
+            font-weight: 800;
+            background: rgba(245, 240, 230, 0.9);
             color: #78350f;
-            padding: 2px 8px;
-            border-radius: 4px;
+            padding: 3px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(232, 222, 200, 0.8);
         }
 
         /* CARD FOOTER */
         .order-card-footer {
-            padding: 16px 20px;
-            background: #ffffff;
-            border-top: 1px solid #f0eae1;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.85);
+            border-top: 1px solid rgba(240, 234, 225, 0.8);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .order-meta-info {
-            font-size: 13px;
+            font-size: 13.5px;
             color: var(--color-text-secondary);
         }
         .order-total-box {
             display: flex;
             align-items: baseline;
-            gap: 8px;
+            gap: 10px;
         }
         .order-total-num {
-            font-size: 22px;
-            font-weight: 900;
-            color: var(--shopee-orange);
+            font-size: 24px;
+            font-weight: 800 !important;
+            color: #ee4d2d !important;
         }
 
+        /* ACTION BUTTONS (CAPSULE 9999PX, SPRING PRESS SCALE(0.96)) */
         .order-actions-bar {
-            padding: 12px 20px;
-            background: #faf8f5;
-            border-top: 1px dashed #e8e2d8;
+            padding: 14px 24px;
+            background: rgba(250, 248, 245, 0.65);
+            border-top: 1px dashed rgba(232, 222, 200, 0.8);
             display: flex;
             justify-content: flex-end;
             gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
-        .btn-order-action {
-            padding: 9px 18px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 700;
+        .btn-order-action, .btn-cancel-order, .btn-track, .btn-reorder {
+            padding: 10px 22px;
+            border-radius: 9999px !important;
+            font-size: 13.5px;
+            font-weight: 800;
             cursor: pointer;
             text-decoration: none;
-            transition: 0.2s;
+            transition: all 0.25s var(--spring-ease);
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            border: 1px solid transparent;
+            border: 1.5px solid transparent;
         }
+        .btn-order-action:active, .btn-cancel-order:active, .btn-track:active, .btn-reorder:active {
+            opacity: 0.85;
+        }
+
         .btn-action-primary {
-            background: var(--shopee-orange);
-            color: white;
+            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%) !important;
+            color: white !important;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3);
+            border: none;
         }
         .btn-action-primary:hover {
-            background: var(--shopee-orange-hover);
+            opacity: 0.92;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35);
         }
+
         .btn-action-outline {
-            background: white;
-            border-color: #d1c8bb;
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(209, 200, 187, 0.9);
             color: var(--color-text-primary);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
         }
         .btn-action-outline:hover {
             border-color: var(--shopee-orange);
             color: var(--shopee-orange);
+            background: #ffffff;
         }
+
         .btn-action-danger {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             border-color: #fca5a5;
             color: #dc2626;
         }
@@ -257,12 +317,13 @@
             background: #fef2f2;
         }
 
-        /* MODAL ĐÁNH GIÁ CHẤT LƯỢNG SÁCH */
+        /* MODAL ĐÁNH GIÁ CHẤT LƯỢNG SÁCH (APPLE LIQUID GLASS) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -272,39 +333,44 @@
             display: flex;
         }
         .modal-box {
-            background: white;
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(32px) saturate(200%);
+            -webkit-backdrop-filter: blur(32px) saturate(200%);
+            border-radius: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
             width: 90%;
             max-width: 520px;
-            padding: 28px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+            box-shadow: 0 24px 60px rgba(45, 24, 15, 0.2), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
             position: relative;
         }
         .star-rating-box {
             display: flex;
             gap: 10px;
-            font-size: 28px;
+            font-size: 30px;
             color: #d1c8bb;
             margin: 14px 0;
             cursor: pointer;
         }
         .star-rating-box i.active {
-            color: #f59e0b;
+            color: #ee4d2d;
         }
 
         /* FLASH MESSAGE */
         .flash-alert {
-            background: #e6f7f0;
-            border: 1px solid #b7ebd6;
+            background: rgba(230, 247, 240, 0.9);
+            backdrop-filter: blur(16px);
+            border: 1.5px solid rgba(183, 235, 214, 0.9);
             color: #007a57;
-            padding: 12px 18px;
-            border-radius: 10px;
+            padding: 14px 20px;
+            border-radius: 14px;
             margin-bottom: 20px;
-            font-size: 14px;
+            font-size: 14.5px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            box-shadow: 0 4px 14px rgba(0, 122, 87, 0.1);
         }
 
         /* FOOTER */
@@ -315,60 +381,6 @@
             font-size: 13px;
             margin-top: auto;
         }
-    
-        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
-        .lang-dropdown-box {
-            position: relative;
-            display: inline-block;
-        }
-        .lang-trigger-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            font-weight: 700;
-            color: #292524;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: all 0.15s ease;
-        }
-        .lang-trigger-btn:hover {
-            color: #8C4A27;
-            background: rgba(140, 74, 39, 0.08);
-        }
-        .lang-dropdown-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: #ffffff;
-            border-radius: 4px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            border: 1px solid #E8DEC8;
-            min-width: 145px;
-            display: none;
-            z-index: 1000;
-            padding: 6px 0;
-        }
-        .lang-dropdown-box:hover .lang-dropdown-menu {
-            display: block;
-        }
-        .lang-item-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            font-size: 13px;
-            color: #1C1917;
-            cursor: pointer;
-            transition: background 0.15s;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        .lang-item-btn:hover {
-            background: #F5ECE4;
-            color: #8C4A27;
-        }
-
     </style>
 </head>
 <body>
@@ -376,8 +388,7 @@
     <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
     <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
 
-
-    <!-- SHOPEE TABS BAR -->
+    <!-- SHOPEE TABS BAR (APPLE LIQUID GLASS PILL DOCK) -->
     <div class="order-tabs-bar">
         <div class="container-shopee">
             <ul class="tabs-list">
@@ -426,17 +437,17 @@
             </div>
 
             <!-- NẾU KHÔNG CÓ ĐƠN HÀNG NÀO -->
-            <div th:if="${#lists.isEmpty(orders)}" style="text-align: center; padding: 60px 0; background: white; border-radius: var(--radius-box);">
+            <div th:if="${#lists.isEmpty(orders)}" class="order-card" style="text-align: center; padding: 60px 20px;">
                 <i class="fa-solid fa-box-open" style="font-size: 54px; color: #d5cec4; margin-bottom: 16px;"></i>
-                <h3 style="font-size: 18px; font-weight: 700;">Chưa có đơn hàng nào trong mục này</h3>
-                <p style="color: var(--color-text-secondary); margin-top: 6px;">Hàng ngàn cuốn sách cũ thẩm định chất lượng cao đang chờ đón bạn.</p>
-                <a th:href="@{/}" class="btn-order-action btn-action-primary" style="margin-top: 18px;">
+                <h3 style="font-size: 18px; font-weight: 800; color: #1C1917;">Chưa có đơn hàng nào trong mục này</h3>
+                <p style="color: var(--color-text-secondary); margin-top: 8px;">Hàng ngàn cuốn sách cũ thẩm định chất lượng cao đang chờ đón bạn.</p>
+                <a th:href="@{/}" class="btn-order-action btn-action-primary" style="margin-top: 20px;">
                     <i class="fa-solid fa-store"></i> Khám phá sách ngay
                 </a>
             </div>
 
-            <!-- DANH SÁCH CÁC THẺ ĐƠN HÀNG -->
-            <div th:each="order : ${orders}" class="order-card">
+            <!-- DANH SÁCH CÁC THẺ ĐƠN HÀNG (APPLE LIQUID GLASS SPEC: 18PX) -->
+            <div th:each="order : ${orders}" class="order-card order-item-card">
                 
                 <!-- HEADER THẺ ĐƠN -->
                 <div class="order-card-header">
@@ -444,7 +455,7 @@
                         <i class="fa-solid fa-shop text-danger"></i>
                         <span th:text="${order.store != null ? order.store.storeName : 'Chi nhánh trung tâm TP.HCM'}">Chi Nhánh</span>
                         
-                        <span style="margin-left: 8px; font-weight: 600; font-size: 12px; background: #f0ebe1; padding: 2px 8px; border-radius: 4px;"
+                        <span style="margin-left: 8px; font-weight: 700; font-size: 12px; background: rgba(240, 235, 225, 0.9); padding: 3px 10px; border-radius: 8px; border: 1px solid rgba(232, 222, 200, 0.8);"
                               th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Click & Collect (Nhận tại Cửa hàng)' : 'Giao tận nơi'}">
                             Click & Collect
                         </span>
@@ -462,7 +473,7 @@
                     </div>
                 </div>
 
-                <!-- CÁC SẢN PHẨM TRONG ĐƠN -->
+                <!-- CÁC SẢN PHẨM TRONG ĐƠN (CARD-IN-CARD 14PX) -->
                 <div class="order-card-body">
                     <div th:each="item : ${order.items}" class="order-item-row">
                         <img th:src="${item.book != null and item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
@@ -480,7 +491,7 @@
                             <span th:text="'₫' + ${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                             <span style="font-size: 12px; color: var(--color-text-muted);" th:text="'x' + ${item.quantity}">x1</span>
                         </div>
-                        <div style="text-align: right; font-weight: 800; color: #1C1917; font-size: 15px;" 
+                        <div style="text-align: right; font-weight: 800; color: #ee4d2d; font-size: 15.5px;" 
                              th:text="'₫' + ${#numbers.formatDecimal(item.totalPrice, 0, 'POINT', 0, 'COMMA')}">
                             ₫68.000
                         </div>
@@ -491,7 +502,7 @@
                 <div class="order-card-footer">
                     <div class="order-meta-info">
                         <div>Ngày đặt: <strong th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}">24/09/2026</strong></div>
-                        <div style="margin-top: 2px;">
+                        <div style="margin-top: 3px;">
                             Thanh toán: 
                             <span th:if="${order.paymentStatus.name() == 'PAID'}" style="color: #007a57; font-weight:700;">
                                 <i class="fa-solid fa-circle-check"></i> Đã thanh toán (<span th:text="${order.paymentMethod}">VNPAY</span>)
@@ -503,44 +514,45 @@
                     </div>
 
                     <div class="order-total-box">
-                        <span style="font-size: 14px; color: var(--color-text-secondary);">Thành tiền:</span>
+                        <span style="font-size: 14.5px; color: var(--color-text-secondary); font-weight: 600;">Thành tiền:</span>
                         <span class="order-total-num" th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫204.000</span>
                     </div>
                 </div>
 
-                <!-- HÀNG NÚT BẤM THAO TÁC -->
+                <!-- HÀNG NÚT BẤM THAO TÁC (CAPSULE 9999PX) -->
                 <div class="order-actions-bar">
                     <!-- Nút xem chi tiết đơn -->
-                    <a th:href="@{'/orders/' + ${order.orderCode}}" class="btn-order-action btn-action-outline">
+                    <a th:href="@{'/orders/' + ${order.orderCode}}" class="btn-order-action btn-action-outline btn-track">
                         <i class="fa-regular fa-eye"></i> Xem Chi Tiết Đơn
                     </a>
 
                     <!-- Nút Hủy đơn nếu đơn còn Mới (NEW) -->
                     <form th:if="${order.orderStatus.name() == 'NEW'}" th:attr="action='/orders/cancel/' + ${order.orderCode}" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này? Sách sẽ được hoàn trả lại tồn kho chi nhánh.');">
-                        <button type="submit" class="btn-order-action btn-action-danger">
+                        <button type="submit" class="btn-order-action btn-action-danger btn-cancel-order">
                             <i class="fa-solid fa-xmark"></i> Hủy Đơn Hàng
                         </button>
                     </form>
 
                     <!-- Nút Đánh giá chất lượng sách nếu đã hoàn thành (DELIVERED) -->
                     <th:block th:if="${order.orderStatus.name() == 'DELIVERED'}">
-                        <div th:each="item : ${order.items}" th:if="${item.book != null}">
+                        <div th:each="item : ${order.items}" th:if="${item.book != null}" th:id="'reviewBtnWrapper_' + ${order.id} + '_' + ${item.book.id}">
                             <!-- Nếu chưa đánh giá -->
                             <button th:unless="${reviewedKeySet.contains(order.id + '_' + item.book.id)}" 
                                     type="button" 
                                     class="btn-order-action btn-action-primary"
-                                    th:onclick="'openReviewModal(' + ${order.id} + ', ' + ${item.book.id} + ', '' + ${item.bookTitle} + '')'">
+                                    th:id="'btnReview_' + ${order.id} + '_' + ${item.book.id}"
+                                    th:onclick="'openReviewModal(' + ${order.id} + ', ' + ${item.book.id} + ', \'' + ${#strings.escapeJavaScript(item.bookTitle)} + '\')'">
                                 <i class="fa-solid fa-star"></i> Đánh Giá Sách
                             </button>
                             <!-- Nếu đã đánh giá rồi -->
-                            <span th:if="${reviewedKeySet.contains(order.id + '_' + item.book.id)}" class="btn-order-action btn-action-outline" style="color:#007a57; border-color:#b7ebd6; background:#e6f7f0;">
+                            <span th:if="${reviewedKeySet.contains(order.id + '_' + item.book.id)}" class="btn-order-action btn-action-outline" style="color:#007a57; border-color:#b7ebd6; background:rgba(230, 247, 240, 0.9);">
                                 <i class="fa-solid fa-check"></i> Đã Đánh Giá
                             </span>
                         </div>
                     </th:block>
 
                     <!-- Nút Mua Lại -->
-                    <a th:href="@{/}" class="btn-order-action btn-action-outline">
+                    <a th:href="@{/}" class="btn-order-action btn-action-outline btn-reorder">
                         <i class="fa-solid fa-rotate-right"></i> Mua Lại
                     </a>
                 </div>
@@ -551,21 +563,24 @@
     </main>
 
     <!-- MODAL ĐÁNH GIÁ CHẤT LƯỢNG SÁCH CŨ -->
-    <div class="modal-overlay" id="reviewModal">
-        <div class="modal-box">
-            <h3 style="font-size: 18px; font-weight: 800; color: #1C1917; margin-bottom: 6px;">
-                <i class="fa-solid fa-star text-warning me-1"></i> Đánh Giá Chất Lượng Sách Cũ
-            </h3>
-            <p id="modalBookTitle" style="font-size: 14px; font-weight: 700; color: var(--shopee-orange); margin-bottom: 14px;">
+    <div class="modal-overlay" id="reviewModal" onclick="if(event.target===this)closeReviewModal()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 style="font-size: 18px; font-weight: 800; color: #1C1917; margin:0;">
+                    <i class="fa-solid fa-star" style="color:#ee4d2d; margin-right:4px;"></i> Đánh Giá Chất Lượng Sách Cũ
+                </h3>
+                <span style="font-size:24px; cursor:pointer; color:#78716C; line-height:1;" onclick="closeReviewModal()">&times;</span>
+            </div>
+            <p id="modalBookTitle" style="font-size: 14.5px; font-weight: 700; color: #ee4d2d; margin-bottom: 16px;">
                 Tên sách
             </p>
 
-            <form action="/reviews/create" method="post">
+            <form id="orderReviewForm" onsubmit="handleOrderReviewSubmit(event)">
                 <input type="hidden" name="orderId" id="modalOrderId">
                 <input type="hidden" name="bookId" id="modalBookId">
                 <input type="hidden" name="rating" id="modalRatingInput" value="5">
 
-                <div style="font-size: 13px; font-weight: 700; color: var(--color-text-secondary);">
+                <div style="font-size: 13.5px; font-weight: 700; color: #44403C;">
                     Mức độ hài lòng về tình trạng sách thực tế:
                 </div>
                 <div class="star-rating-box" id="starContainer">
@@ -575,23 +590,29 @@
                     <i class="fa-solid fa-star active" data-val="4"></i>
                     <i class="fa-solid fa-star active" data-val="5"></i>
                 </div>
-                <div id="ratingText" style="font-size: 13px; font-weight: 700; color: #f59e0b; margin-top: -6px; margin-bottom: 14px;">
-                    Tuyệt vời - Sách cũ như mới đúng cam kết (5 sao)
+                <div id="ratingText" style="font-size: 13px; font-weight: 700; color: #ee4d2d; margin-top: -6px; margin-bottom: 16px;">
+                    5 - Tuyệt vời (Sách cũ như mới đúng cam kết)
                 </div>
 
-                <div style="margin-bottom: 18px;">
-                    <label style="display:block; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                <div style="margin-bottom: 20px;">
+                    <label style="display:block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color:#292524;">
                         Nhận xét chi tiết (Độ mới, mép giấy, bìa, đóng gói...):
                     </label>
-                    <textarea name="comment" rows="4" style="width: 100%; border: 1px solid #d5cec4; border-radius: 8px; padding: 10px; font-family: inherit; font-size: 14px; outline:none;" placeholder="Sách được kiểm định rất kỹ, không rách gáy, chữ in rõ nét, cửa hàng giao nhanh..."></textarea>
+                    <textarea name="comment" id="modalCommentInput" rows="4" style="width: 100%; border: 1.5px solid #d5cec4; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 13.5px; outline:none; background: #ffffff; resize:vertical; box-sizing:border-box;" placeholder="Sách được kiểm định rất kỹ, không rách gáy, chữ in rõ nét, cửa hàng giao nhanh..." required></textarea>
                 </div>
 
-                <div style="display:flex; justify-content: flex-end; gap: 10px;">
+                <div style="display:flex; justify-content: flex-end; gap: 12px;">
                     <button type="button" class="btn-order-action btn-action-outline" onclick="closeReviewModal()">Hủy</button>
-                    <button type="submit" class="btn-order-action btn-action-primary"><i class="fa-solid fa-paper-plane me-1"></i> Gửi Đánh Giá</button>
+                    <button type="submit" id="btnSubmitOrderReview" class="btn-order-action btn-action-primary"><i class="fa-solid fa-paper-plane me-1"></i> Gửi Đánh Giá</button>
                 </div>
             </form>
         </div>
+    </div>
+
+    <!-- TOAST THÔNG BÁO CHUẨN SHOPEE -->
+    <div id="shopeeToast" style="display:none; position:fixed; top:24px; right:24px; z-index:999999; background:#1c1917; color:#ffffff; padding:12px 20px; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.18); font-size:13.5px; font-weight:600; align-items:center; gap:8px;">
+        <i class="fa-solid fa-circle-check" style="color:#10b981;"></i>
+        <span id="shopeeToastText"></span>
     </div>
 
     <!-- FOOTER -->
@@ -612,6 +633,8 @@
             document.getElementById('modalOrderId').value = orderId;
             document.getElementById('modalBookId').value = bookId;
             document.getElementById('modalBookTitle').innerText = bookTitle;
+            document.getElementById('modalCommentInput').value = '';
+            setModalRating(5);
             document.getElementById('reviewModal').classList.add('open');
         }
 
@@ -619,33 +642,116 @@
             document.getElementById('reviewModal').classList.remove('open');
         }
 
+        function showShopeeToast(message, isError) {
+            const toast = document.getElementById('shopeeToast');
+            const text = document.getElementById('shopeeToastText');
+            if (!toast || !text) return;
+            text.innerText = message;
+            const icon = toast.querySelector('i');
+            if (icon) {
+                icon.className = isError ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check';
+                icon.style.color = isError ? '#ef4444' : '#10b981';
+            }
+            toast.style.display = 'inline-flex';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3500);
+        }
+
         // Tương tác chọn sao đánh giá
         const stars = document.querySelectorAll('#starContainer i');
         const ratingInput = document.getElementById('modalRatingInput');
         const ratingText = document.getElementById('ratingText');
         const starLabels = {
-            1: 'Rất tệ (1 sao)',
-            2: 'Tệ (2 sao)',
-            3: 'Bình thường (3 sao)',
-            4: 'Hài lòng - Sách tốt (4 sao)',
-            5: 'Tuyệt vời - Sách cũ như mới đúng cam kết (5 sao)'
+            1: '1 - Rất tệ',
+            2: '2 - Tệ',
+            3: '3 - Bình thường',
+            4: '4 - Hài lòng (Sách tốt)',
+            5: '5 - Tuyệt vời (Sách cũ như mới đúng cam kết)'
         };
+
+        function setModalRating(val) {
+            if (ratingInput) ratingInput.value = val;
+            if (ratingText) ratingText.innerText = starLabels[val] || (val + ' sao');
+            stars.forEach(s => {
+                const sVal = parseInt(s.getAttribute('data-val'));
+                if (sVal <= val) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+        }
 
         stars.forEach(star => {
             star.addEventListener('click', function() {
                 const val = parseInt(this.getAttribute('data-val'));
-                ratingInput.value = val;
-                ratingText.innerText = starLabels[val];
-                stars.forEach(s => {
-                    const sVal = parseInt(s.getAttribute('data-val'));
-                    if (sVal <= val) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
-                });
+                setModalRating(val);
             });
         });
+
+        function handleOrderReviewSubmit(e) {
+            e.preventDefault();
+            const orderId = document.getElementById('modalOrderId').value;
+            const bookId = document.getElementById('modalBookId').value;
+            const rating = document.getElementById('modalRatingInput').value;
+            const comment = document.getElementById('modalCommentInput').value.trim();
+
+            if (!comment) {
+                showShopeeToast('Vui lòng nhập nhận xét chất lượng sách!', true);
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitOrderReview');
+            const originalText = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Đang gửi...';
+            }
+
+            const params = new URLSearchParams();
+            params.append('orderId', orderId);
+            params.append('bookId', bookId);
+            params.append('rating', rating);
+            params.append('comment', comment);
+
+            fetch('/api/reviews/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+                if (data.success) {
+                    closeReviewModal();
+                    showShopeeToast(data.message || 'Cảm ơn bạn đã gửi đánh giá chất lượng sách cũ!', false);
+
+                    // Cập nhật nút Đánh Giá thành Đã Đánh Giá
+                    const wrapper = document.getElementById('reviewBtnWrapper_' + orderId + '_' + bookId);
+                    if (wrapper) {
+                        wrapper.innerHTML = `
+                            <span class="btn-order-action btn-action-outline" style="color:#007a57; border-color:#b7ebd6; background:rgba(230, 247, 240, 0.9);">
+                                <i class="fa-solid fa-check"></i> Đã Đánh Giá
+                            </span>
+                        `;
+                    }
+                } else {
+                    showShopeeToast(data.message || 'Không thể gửi đánh giá!', true);
+                }
+            })
+            .catch(err => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+                console.error(err);
+                showShopeeToast('Đã có lỗi xảy ra khi kết nối máy chủ!', true);
+            });
+        }
     </script>
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>

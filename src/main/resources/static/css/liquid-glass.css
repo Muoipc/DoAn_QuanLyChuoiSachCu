@@ -1,0 +1,983 @@
+/**
+ * Apple Liquid Glass Design System (iOS 26 / macOS) for Chuỗi Sách Cũ
+ * Toàn diện 21 templates - Chuẩn Apple Squircle & Kính Lỏng Tinh Khiết
+ */
+
+:root {
+  /* Apple Continuous Corner Radius Tokens */
+  --apple-radius-pill: 9999px;
+  --apple-radius-large: 20px;
+  --apple-radius-card: 16px;
+  --apple-radius-inner: 12px;
+  --apple-radius-chip: 8px;
+
+  /* Apple Liquid Glass Tokens (Chuẩn Thần Thái Dropdown Ngôn Ngữ Yêu Thích) */
+  --liquid-glass-bg: rgba(255, 255, 255, 0.88);
+  --liquid-glass-bg-hover: rgba(255, 255, 255, 0.96);
+  --liquid-glass-border: rgba(255, 255, 255, 0.92);
+  --liquid-glass-blur: blur(28px) saturate(190%) brightness(103%);
+  --liquid-glass-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
+  --liquid-glass-shadow-hover: 0 20px 48px -6px rgba(140, 74, 39, 0.16), 0 4px 14px -2px rgba(45, 24, 15, 0.04);
+  --liquid-glass-highlight: inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98), inset 0 -1px 1px 0 rgba(45, 24, 15, 0.02);
+  
+  --spring-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --color-shopee-red: #ee4d2d;
+}
+
+/* ================= 1. TOÀN BỘ KHUNG & CONTAINER LỚN TRÊN MỌI TRANG ================= */
+.shopee-shortcuts-section,
+.shopee-flash-sale,
+.shopee-categories-section,
+.stores-locator-section,
+.filter-sidebar,
+.detail-main-card,
+.store-stock-card,
+.review-card,
+.cart-table-card,
+.cart-summary-card,
+.checkout-section-card,
+.order-summary-sticky,
+.order-item-card,
+.order-info-block,
+.consignment-form-card,
+.consignment-card,
+.profile-content-card,
+.profile-sidebar,
+.chat-card-wrap,
+.help-content-card,
+.help-sidebar,
+.auth-card-glass,
+.auth-box,
+.auth-form-card,
+.glass-surface {
+  position: relative !important;
+  background: var(--liquid-glass-bg) !important;
+  backdrop-filter: var(--liquid-glass-blur) !important;
+  -webkit-backdrop-filter: var(--liquid-glass-blur) !important;
+  border: 1.5px solid var(--liquid-glass-border) !important;
+  border-radius: var(--apple-radius-large) !important;
+  box-shadow: var(--liquid-glass-shadow), var(--liquid-glass-highlight) !important;
+  overflow: hidden !important;
+  transition: all 0.35s var(--spring-ease) !important;
+}
+
+/* Thanh sticky và tab bar */
+.daily-sticky-tab-bar,
+.sub-banner-item,
+.cart-checkout-sticky {
+  position: relative !important;
+  background: var(--liquid-glass-bg) !important;
+  backdrop-filter: var(--liquid-glass-blur) !important;
+  -webkit-backdrop-filter: var(--liquid-glass-blur) !important;
+  border: 1.5px solid var(--liquid-glass-border) !important;
+  border-radius: 18px !important;
+  box-shadow: var(--liquid-glass-shadow), var(--liquid-glass-highlight) !important;
+  overflow: hidden !important;
+  transition: all 0.35s var(--spring-ease) !important;
+}
+
+/* ================= 2. BANNER SLIDER NÂU DA CỔ CAO CẤP ================= */
+.main-slider-card {
+  position: relative !important;
+  background: linear-gradient(135deg, #7A3F20 0%, #4D250E 100%) !important;
+  border-radius: var(--apple-radius-large) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 16px 36px -6px rgba(77, 37, 14, 0.35), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.35) !important;
+  overflow: hidden !important;
+  transition: all 0.35s var(--spring-ease) !important;
+}
+
+.main-slider-card .slider-title {
+  color: #ffffff !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45) !important;
+}
+
+.main-slider-card .slider-desc {
+  color: #F8F5EE !important;
+  opacity: 0.95 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* ================= 3. THẺ SÁCH & CARD SẢN PHẨM TRÊN MỌI TRANG ================= */
+.shopee-product-card,
+.book-card,
+.flash-book-card,
+.branch-shopee-card,
+.recommend-card,
+.related-book-card {
+  position: relative !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(20px) saturate(185%) brightness(103%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(185%) brightness(103%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+  border-radius: var(--apple-radius-card) !important;
+  overflow: hidden !important;
+  box-shadow: var(--liquid-glass-shadow), var(--liquid-glass-highlight) !important;
+  transition: all 0.35s var(--spring-ease) !important;
+  padding: 10px !important;
+  box-sizing: border-box !important;
+}
+
+.shopee-product-card:hover,
+.book-card:hover,
+.flash-book-card:hover,
+.branch-shopee-card:hover,
+.recommend-card:hover,
+.related-book-card:hover {
+  background: #ffffff !important;
+  border-color: rgba(255, 255, 255, 1) !important;
+  box-shadow: var(--liquid-glass-shadow-hover), inset 0 1.5px 1.5px rgba(255, 255, 255, 1) !important;
+  transform: translateY(-6px) scale(1.015) !important;
+  z-index: 3 !important;
+}
+
+/* Khung Chứa Bìa Sách: Bo Cong Nhẹ Đồng Tâm */
+.prod-thumb-box,
+.product-thumb-wrap,
+.card-thumb,
+.flash-thumb-box,
+.detail-thumb-box,
+.recommend-thumb-box {
+  position: relative !important;
+  background: #ffffff !important;
+  border-radius: var(--apple-radius-inner) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+  overflow: hidden !important;
+}
+
+.prod-thumb-box img,
+.product-thumb-wrap img,
+.card-thumb img,
+.flash-thumb-box img,
+.detail-thumb-box img,
+.recommend-thumb-box img {
+  border-radius: calc(var(--apple-radius-inner) - 2px) !important;
+  transition: transform 0.35s var(--spring-ease) !important;
+}
+
+.shopee-product-card:hover .prod-thumb-box img,
+.book-card:hover .card-thumb img {
+  transform: scale(1.04) !important;
+}
+
+/* ================= 4. GIÁ BÁN MÀU ĐỎ SHOPEE NỔI BẬT BẮT MẮT 100% ================= */
+.price-current,
+.price-text,
+.flash-price-main,
+.price-current-fire,
+.price-cart-active,
+.popover-item-price,
+.item-right-price .price-final-txt,
+.mini-book-price,
+.recommend-price,
+.price-val,
+.item-price-unit {
+  color: var(--color-shopee-red) !important;
+  font-weight: 800 !important;
+}
+
+/* ================= 5. NÚT BẤM VIÊN THUỐC CAPSULE (9999PX) ================= */
+.shopee-search-bar,
+.btn-search-shopee,
+.shopee-cart-wrap,
+.btn-apply-filter,
+.btn-clear-filter,
+.btn-view-more-shopee,
+.btn-buy-now,
+.btn-checkout-primary,
+.btn-auth-primary,
+.btn-shopee-save,
+.btn-submit-shopee {
+  border-radius: var(--apple-radius-pill) !important;
+  transition: all 0.25s var(--spring-ease) !important;
+}
+
+.btn-search-shopee:active,
+.btn-apply-filter:active,
+.btn-buy-now:active,
+.btn-checkout-primary:active,
+.btn-view-more-shopee:active,
+.btn-auth-primary:active {
+  transform: scale(0.96) !important;
+}
+
+/* ================= 6. HUY HIỆU & TEM KIỂM ĐỊNH (8PX) ================= */
+.tag-cond,
+.tag-branch,
+.shopee-discount-tag,
+.card-discount-tag,
+.prod-badge-branch,
+.price-discount-tag,
+.order-status-badge {
+  border-radius: var(--apple-radius-chip) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* Huy hiệu Yêu Thích+ Chuẩn Apple Liquid Glass (Tĩnh, không rung giật) */
+.tag-shopee-mall,
+.badge-mall-tag,
+.shop-badge-fav,
+.badge-favorite-plus {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%) !important;
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 2px 6px rgba(238, 77, 45, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  cursor: default !important;
+  user-select: none !important;
+}
+
+/* ================= 7. POPOVER & MENU CON BO CONG THANH LỊCH (16PX) ================= */
+.shopee-noti-popover,
+.lang-dropdown-menu {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 20px 48px rgba(45, 24, 15, 0.16), 0 4px 12px rgba(0, 0, 0, 0.04), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95) !important;
+}
+
+/* ================= 8. NỀN ÁNH SÁNG KHUẾCH TÁN CỐ ĐỊNH ================= */
+body {
+  background: 
+    radial-gradient(ellipse 90% 60% at 12% 10%, rgba(217, 119, 6, 0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 88% 20%, rgba(140, 74, 39, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 15% 80%, rgba(245, 158, 11, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 85% 60% at 85% 90%, rgba(140, 74, 39, 0.08) 0%, transparent 55%),
+    #F8F5EE !important;
+  background-attachment: fixed !important;
+  min-height: 100vh;
+}
+
+/* ================= 9. GOLDEN STANDARD APPLE LIQUID GLASS (AGENT 4 ENHANCEMENTS) ================= */
+
+/* --- 9.1 KÝ GỬI (CONSIGNMENT & CONSIGNMENT-LIST) --- */
+.consignment-form-card,
+.ai-price-helper-card,
+.consignment-table-card,
+.consignment-card {
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95) !important;
+  transition: all 0.35s var(--spring-ease) !important;
+}
+
+.condition-radio-chip,
+.condition-chip,
+.file-upload-zone,
+.photos-upload-zone {
+  border-radius: 14px !important;
+  border: 1.5px dashed rgba(140, 74, 39, 0.35) !important;
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  transition: all 0.25s var(--spring-ease) !important;
+}
+
+.condition-radio-chip:hover,
+.file-upload-zone:hover,
+.photos-upload-zone:hover {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: #8C4A27 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(140, 74, 39, 0.12) !important;
+}
+
+.condition-radio-chip.active {
+  background: rgba(140, 74, 39, 0.12) !important;
+  border: 1.5px solid #8C4A27 !important;
+  color: #8C4A27 !important;
+  font-weight: 800 !important;
+}
+
+.btn-submit-consignment,
+.btn-calc-ai,
+.btn-accept-price,
+.btn-cancel-req,
+.btn-my-consignments {
+  border-radius: 9999px !important;
+}
+
+/* --- 9.2 TRỢ LÝ AI (AI-ASSISTANT) --- */
+.chat-card-wrap,
+.chat-messages-container,
+.chat-main-card,
+.chat-sidebar {
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95) !important;
+}
+
+.msg-row.ai .msg-bubble {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  border-radius: 18px 18px 18px 4px !important;
+  box-shadow: 0 4px 16px rgba(45, 24, 15, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+}
+
+.msg-row.user .msg-bubble {
+  background: linear-gradient(135deg, #8C4A27 0%, #6B3416 100%) !important;
+  color: #ffffff !important;
+  border-radius: 18px 18px 4px 18px !important;
+  box-shadow: 0 6px 18px rgba(140, 74, 39, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.prompt-chip,
+.prompt-suggestion-pill {
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.88) !important;
+  transition: all 0.25s var(--spring-ease) !important;
+}
+
+.prompt-chip:hover,
+.prompt-suggestion-pill:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-color: #8C4A27 !important;
+  box-shadow: 0 6px 18px rgba(140, 74, 39, 0.16) !important;
+}
+
+.chat-input-bar,
+.input-message-bar {
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 8px 24px rgba(45, 24, 15, 0.06), inset 0 1px 1.5px rgba(255, 255, 255, 0.95) !important;
+}
+
+.input-pill-field {
+  border-radius: 9999px !important;
+}
+
+/* --- 9.3 HỒ SƠ & TRỢ GIÚP (PROFILE & HELP) --- */
+.profile-sidebar,
+.profile-content-card,
+.account-sidebar-card,
+.account-main-card,
+.help-sidebar,
+.help-content-card,
+.faq-card,
+.faq-accordion-card,
+.support-card {
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95) !important;
+}
+
+.profile-input,
+.form-input-control,
+.form-control-custom,
+.form-control {
+  border-radius: 12px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  transition: all 0.2s var(--spring-ease) !important;
+}
+
+.profile-input:focus,
+.form-input-control:focus,
+.form-control-custom:focus,
+.form-control:focus {
+  background: #ffffff !important;
+  border-color: #8C4A27 !important;
+  box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.14) !important;
+}
+
+.btn-shopee-save,
+.btn-submit-profile,
+.btn-choose-avatar,
+.btn-submit-ticket,
+.btn-help-search {
+  border-radius: 9999px !important;
+}
+
+/* --- 9.4 XÁC THỰC AUTH (LOGIN, REGISTER, VERIFY-OTP, FORGOT-PASSWORD, RESET-PASSWORD) --- */
+.auth-card-glass,
+.auth-box,
+.auth-form-card {
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(32px) saturate(190%) brightness(103%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(103%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 24px 60px rgba(45, 24, 15, 0.18), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98) !important;
+}
+
+.auth-input,
+.auth-form-card .form-control,
+.form-input-wrap {
+  border-radius: 12px !important;
+}
+
+.btn-auth-primary,
+.auth-form-card .btn-dark,
+.btn-submit-shopee {
+  border-radius: 9999px !important;
+}
+
+/* ================= 9.5 GIỎ HÀNG, THANH TOÁN & ĐƠN HÀNG (AGENT 3 - CHUẨN GOLDEN STANDARD) ================= */
+.cart-table-card,
+.cart-summary-card,
+.cart-voucher-box,
+.voucher-and-coins-card,
+.cart-recommend-section,
+.recommend-section,
+.cart-sticky-bottom-bar,
+.checkout-section-card,
+.shopee-checkout-card,
+.order-summary-sticky,
+.address-box,
+.payment-methods-card,
+.final-summary-card,
+.success-card,
+.order-item-card,
+.order-timeline-card,
+.stepper-timeline-card,
+.order-info-block,
+.shipping-envelope-card,
+.order-items-card,
+.order-breakdown-card,
+.order-top-nav-card,
+.order-thankyou-banner {
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(28px) saturate(190%) brightness(102%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98) !important;
+}
+
+.cart-item-row,
+.checkout-item-row,
+.order-item-row,
+.item-row-box,
+.details-box {
+  border-radius: 14px !important;
+}
+
+.payment-option-pill {
+  border-radius: 14px !important;
+}
+
+.payment-option-pill.active {
+  border: 2px solid var(--color-shopee-red, #ee4d2d) !important;
+}
+
+.qty-stepper-wrap {
+  border-radius: 8px !important;
+}
+
+.status-pill,
+.status-badge-lg,
+.item-condition-badge,
+.badge-default-addr,
+.badge-mall-tag,
+.badge-favorite-plus,
+.cart-variant-box,
+.cart-store-tag,
+.tag-cond-pill,
+.tag-store-pill,
+.variant-pill-tag,
+.store-pill-tag,
+.tab-badge {
+  border-radius: 8px !important;
+}
+
+.btn-checkout-primary,
+.btn-shopee-checkout,
+.btn-apply-voucher,
+.btn-place-order,
+.btn-shopee-place-order,
+.btn-cancel-order,
+.btn-track,
+.btn-reorder,
+.btn-order-action,
+.btn-shopee-orange,
+.btn-shopee-outline,
+.btn-action,
+.btn-primary-shopee,
+.btn-del-all,
+.btn-back-history,
+.btn-change-addr,
+.mode-pill-btn {
+  border-radius: 9999px !important;
+}
+
+.btn-checkout-primary:active,
+.btn-shopee-checkout:active,
+.btn-apply-voucher:active,
+.btn-place-order:active,
+.btn-shopee-place-order:active,
+.btn-cancel-order:active,
+.btn-track:active,
+.btn-reorder:active,
+.btn-order-action:active,
+.btn-shopee-orange:active,
+.btn-shopee-outline:active,
+.btn-action:active,
+.btn-primary-shopee:active {
+  transform: scale(0.96) !important;
+}
+
+.total-amount-fire,
+.item-subtotal-cell,
+.price-cart-active,
+.recommend-price,
+.total-pay-number,
+.item-subtotal-col,
+#itemsSubtotalDisplay,
+.order-total-num,
+.total-number-lg,
+.price-final-txt {
+  color: var(--color-shopee-red, #ee4d2d) !important;
+  font-weight: 800 !important;
+}
+
+/* ================= 9.6 STOREFRONT & DISCOVERY (AGENT 2 - HOME, SEARCH, BOOK-DETAIL) ================= */
+/* 1. Nút xem thêm chuẩn Apple Capsule Pill 9999px */
+.btn-load-more-shopee,
+.btn-view-more-shopee {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 8px 24px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95) !important;
+  transition: all 0.25s var(--spring-ease) !important;
+  text-decoration: none !important;
+}
+
+.btn-load-more-shopee:hover,
+.btn-view-more-shopee:hover {
+  transform: scale(1.02) !important;
+  color: #ee4d2d !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-color: rgba(238, 77, 45, 0.4) !important;
+  box-shadow: 0 12px 28px rgba(140, 74, 39, 0.16), inset 0 1.5px 1.5px #ffffff !important;
+}
+
+.btn-load-more-shopee:active,
+.btn-view-more-shopee:active {
+  transform: scale(0.96) !important;
+}
+
+/* 2. Modal cửa hàng Squircle 24px */
+.modal-stores-content {
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(32px) saturate(190%) brightness(102%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(102%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 24px 60px rgba(45, 24, 15, 0.2), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95) !important;
+}
+
+.modal-store-card {
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 4px 12px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8) !important;
+}
+
+/* 3. Flash sale badges & countdown boxes Squircle 8px - 10px */
+.flash-sale-badge,
+.badge-discount-percent,
+.timer-box,
+.badge-condition-pill,
+.card-discount-tag,
+.card-condition-tag {
+  border-radius: 8px !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+.timer-box {
+  border-radius: 8px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 4. Sidebar bộ lọc search.html */
+.filter-sidebar {
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(24px) saturate(190%) brightness(103%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) brightness(103%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 10px 28px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.filter-price-input,
+.input-price {
+  border-radius: 10px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.2s var(--spring-ease) !important;
+}
+
+.filter-price-input:focus,
+.input-price:focus {
+  border-color: rgba(238, 77, 45, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.12) !important;
+  background: #ffffff !important;
+}
+
+.btn-apply-filter,
+.btn-clear-filter {
+  border-radius: 9999px !important;
+}
+
+.btn-apply-filter:active,
+.btn-clear-filter:active {
+  transform: scale(0.96) !important;
+}
+
+/* 5. Khung chi tiết sách book-detail.html */
+.detail-main-card,
+.product-main-container,
+.store-stock-card,
+.review-card,
+.related-books-section,
+.product-specs-section,
+.reviews-section {
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+.btn-buy-now,
+.btn-buy-now-shopee,
+.btn-add-cart,
+.btn-add-cart-shopee {
+  border-radius: 9999px !important;
+  transition: all 0.25s var(--spring-ease) !important;
+}
+
+.btn-buy-now:active,
+.btn-buy-now-shopee:active,
+.btn-add-cart:active,
+.btn-add-cart-shopee:active {
+  transform: scale(0.96) !important;
+}
+
+.qty-btn,
+.btn-qty-step,
+.qty-input,
+.input-qty-step {
+  border-radius: 8px !important;
+}
+
+/* 6. Giá màu đỏ chuẩn Shopee */
+.price-current,
+.price-text,
+.flash-price-main,
+.price-current-fire,
+.price-val,
+.ticket-amount-highlight {
+  color: #ee4d2d !important;
+  font-weight: 800 !important;
+}
+
+/* 7. Kho Voucher Shopee & Apple Liquid Glass Ticket Stub Tokens */
+.voucher-ticket-card {
+  position: relative !important;
+  display: flex !important;
+  background: var(--liquid-glass-bg) !important;
+  backdrop-filter: var(--liquid-glass-blur) !important;
+  -webkit-backdrop-filter: var(--liquid-glass-blur) !important;
+  border: 1.5px solid var(--liquid-glass-border) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 10px 24px -4px rgba(45, 24, 15, 0.06), 0 2px 8px rgba(0, 0, 0, 0.02) !important;
+  overflow: visible !important;
+  min-height: 142px !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.voucher-ticket-card:hover {
+  border-color: rgba(238, 77, 45, 0.35) !important;
+  box-shadow: 0 12px 28px -4px rgba(45, 24, 15, 0.09) !important;
+}
+
+/* ================= 11. HỆ THỐNG GIAO DIỆN CO GIÃN LINH HOẠT (RESPONSIVE & FLUID ADAPTATION) ================= */
+
+/* 11.1 Chống tràn ngang và tự động thích ứng khung chứa */
+html, body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit !important;
+}
+
+/* Khung container co giãn mượt mà theo màn hình */
+.container-shopee,
+.container,
+.container-wishlist,
+.container-fluid-custom {
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+/* Hình ảnh tự co giãn theo tỷ lệ */
+img, video {
+  max-width: 100% !important;
+  height: auto;
+}
+
+/* 11.2 MÀN HÌNH LAPTOP NHỎ (DƯỚI 1200PX) */
+@media screen and (max-width: 1200px) {
+  /* Lưới 6 cột sản phẩm tự động co về 4 cột */
+  .daily-grid-6cols,
+  .categories-grid-2rows,
+  .books-grid-shopee,
+  .products-grid-6col,
+  .shopee-products-grid,
+  .books-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* Flash sale co về 4 cột */
+  .flash-products-grid,
+  .flash-sale-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  /* Dải 8 tiện ích co thành 4 cột x 2 hàng */
+  .shortcuts-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 12px 6px !important;
+  }
+
+  /* Lưới tìm kiếm 4 cột co về 3 cột */
+  .search-results-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* 11.3 MÀN HÌNH TABLET & CỬA SỔ THU NHỎ (DƯỚI 992PX) */
+@media screen and (max-width: 992px) {
+  /* Banner chính và phụ xếp chồng dọc */
+  .hero-banner-grid {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    gap: 12px !important;
+  }
+  .main-slider-card {
+    height: 220px !important;
+  }
+
+  /* Header chính tự co giãn linh hoạt thành 2 hàng */
+  .header-main-row {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    padding: 10px 0 !important;
+  }
+  .shopee-brand-logo {
+    order: 1 !important;
+  }
+  .header-action-group {
+    order: 2 !important;
+    margin-left: auto !important;
+  }
+  .shopee-search-container {
+    order: 3 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Lưới sách co về 3 cột */
+  .daily-grid-6cols,
+  .categories-grid-2rows,
+  .books-grid-shopee,
+  .products-grid-6col,
+  .shopee-products-grid,
+  .books-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .flash-products-grid,
+  .flash-sale-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* Trang Tìm kiếm: Bộ lọc sidebar và kết quả xếp dọc */
+  .search-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  .filter-sidebar {
+    width: 100% !important;
+    position: static !important;
+  }
+
+  /* Trang Chi Tiết Sách: Cột ảnh bìa và Cột thông tin xếp dọc */
+  .product-main-container {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    padding: 20px !important;
+  }
+  .main-cover-box {
+    height: 380px !important;
+  }
+
+  /* Kho Voucher: Lưới thẻ voucher co về 1 cột */
+  .vouchers-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Footer 4 cột co về 2 cột */
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 24px !important;
+  }
+}
+
+/* 11.4 MÀN HÌNH ĐIỆN THOẠI DI ĐỘNG (DƯỚI 768PX) */
+@media screen and (max-width: 768px) {
+  /* Topbar co gọn */
+  .topbar-content {
+    flex-wrap: wrap !important;
+    gap: 6px 10px !important;
+    justify-content: center !important;
+  }
+  .topbar-nav {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 6px !important;
+  }
+  .topbar-links {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+
+  /* Lưới sản phẩm co về 2 cột chuẩn trải nghiệm mua sắm di động */
+  .daily-grid-6cols,
+  .categories-grid-2rows,
+  .books-grid-shopee,
+  .products-grid-6col,
+  .shopee-products-grid,
+  .books-grid,
+  .search-results-grid,
+  .flash-products-grid,
+  .flash-sale-grid,
+  .wishlist-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  /* Dải 8 tiện ích giữ 4 cột x 2 hàng */
+  .shortcuts-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 10px 4px !important;
+  }
+  .shortcut-label {
+    font-size: 11px !important;
+  }
+
+  /* Nút Xem Thêm co vừa vặn */
+  .btn-load-more-shopee {
+    width: 100% !important;
+    max-width: 300px !important;
+    padding: 12px 24px !important;
+  }
+
+  /* Chi tiết sách: Cụm 3 nút hành động đồng bộ chuẩn Apple Squircle & Shopee */
+  .action-buttons-group {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .btn-action-ai, .btn-ai-consult-mini {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    border-radius: 10px !important;
+    font-size: 17px !important;
+  }
+  .btn-action-cart, .btn-add-cart-shopee, .btn-add-cart {
+    height: 44px !important;
+    padding: 0 10px !important;
+    font-size: 13px !important;
+    border-radius: 10px !important;
+  }
+  .btn-action-buy, .btn-buy-now-shopee, .btn-buy-now {
+    height: 44px !important;
+    padding: 0 12px !important;
+    font-size: 13.5px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Footer 2 cột co về 1 cột duy nhất */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    text-align: center !important;
+  }
+}
+
+/* 11.5 MÀN HÌNH ĐIỆN THOẠI RẤT NHỎ (DƯỚI 480PX) */
+@media screen and (max-width: 480px) {
+  .shopee-brand-logo .brand-logo-text h1 {
+    font-size: 16px !important;
+  }
+  .shopee-brand-logo .brand-logo-text span {
+    display: none !important;
+  }
+  .shortcut-icon-circle {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 16px !important;
+  }
+}
+
+
+
+

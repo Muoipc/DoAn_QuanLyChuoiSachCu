@@ -26,7 +26,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/ws/**", "/cart/**", "/checkout/**", "/orders/**", "/reviews/**", "/consignments/**", "/ai-assistant/**", "/help/**", "/user/**", "/profile/**", "/login", "/register", "/logout"))
+            .csrf(csrf -> csrf.ignoringRequestMatchers(
+                "/api/**", "/ws/**", "/cart/**", "/checkout/**", "/orders/**", 
+                "/reviews/**", "/consignments/**", "/ai-assistant/**", "/help/**", 
+                "/user/**", "/profile/**", "/login", "/register", "/logout",
+                "/vouchers", "/vouchers/**", "/api/vouchers/**"
+            ))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/", "/home", "/books/**", "/stores/**", "/categories/**",
@@ -34,6 +39,7 @@ public class SecurityConfig {
                     "/orders", "/orders/**", "/reviews/**", "/consignments", "/consignments/**",
                     "/ai-assistant", "/ai-assistant/**", "/help", "/help/**",
                     "/user/**", "/profile/**",
+                    "/vouchers", "/vouchers/**", "/api/vouchers/**",
                     "/api/**", "/login", "/register/**", "/verify-otp/**",
                     "/resend-otp/**", "/forgot-password/**", "/reset-password/**",
                     "/css/**", "/js/**", "/images/**", "/webjars/**", "/error"

@@ -139,28 +139,28 @@
             gap: 10px;
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
             font-size: 13px;
             font-weight: 600;
         }
 
         /* BÊN PHẢI: THẺ APPLE LIQUID GLASS ĐĂNG NHẬP */
-        .auth-card-glass {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border-radius: 14px;
-            border: 1.5px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
-            padding: 34px;
+        .auth-card-glass, .auth-box, .auth-form-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(32px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(103%);
+            border-radius: 24px;
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 24px 60px rgba(45, 24, 15, 0.18), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: 38px;
         }
         .auth-card-title {
             font-size: 20px;
             font-weight: 900;
             color: #1C1917;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -168,21 +168,24 @@
 
         /* INPUTS */
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             position: relative;
         }
         .form-input-wrap {
             display: flex;
             align-items: center;
-            border: 1px solid #dcd7ce;
-            border-radius: 8px;
-            background: #ffffff;
-            padding: 0 14px;
-            transition: all 0.2s;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 0 16px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .form-input-wrap:focus-within {
+            background: #ffffff;
             border-color: var(--color-fire);
-            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.12);
+            box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.14);
         }
         .input-icon {
             color: #78716C;
@@ -193,61 +196,70 @@
             width: 100%;
             border: none;
             outline: none;
-            padding: 13px 10px;
+            padding: 14px 10px;
             font-size: 14px;
             font-family: inherit;
             color: #1C1917;
             background: transparent;
+            border-radius: 12px;
         }
 
-        /* SUBMIT BUTTON */
-        .btn-submit-shopee {
-            background: var(--color-fire);
+        /* SUBMIT BUTTON (APPLE PILL) */
+        .btn-submit-shopee, .btn-auth-primary {
+            background: linear-gradient(135deg, #8C4A27 0%, #6B3416 100%);
             color: white;
-            border: none;
-            border-radius: 8px;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            border-radius: 9999px;
             padding: 14px;
             font-size: 15px;
             font-weight: 800;
             width: 100%;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35);
-            transition: all 0.2s;
-            margin-top: 8px;
+            box-shadow: 0 6px 20px rgba(140, 74, 39, 0.32), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.4);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-top: 10px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
-        .btn-submit-shopee:hover {
-            background: var(--color-fire-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.45);
+        .btn-submit-shopee:hover, .btn-auth-primary:hover {
+            background: linear-gradient(135deg, #733615 0%, #52270f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 26px rgba(140, 74, 39, 0.45);
+        }
+        .btn-submit-shopee:active, .btn-auth-primary:active {
+            transform: scale(0.97);
         }
 
         /* HINT TÀI KHOẢN MẪU TEST */
         .test-accounts-box {
-            background: #faf8f5;
-            border: 1px dashed #d5cec4;
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin-top: 18px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px dashed rgba(140, 74, 39, 0.3);
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin-top: 20px;
             font-size: 12px;
             color: var(--color-text-secondary);
         }
         .test-acc-btn {
-            background: white;
-            border: 1px solid #d5cec4;
-            padding: 3px 8px;
-            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(213, 206, 196, 0.8);
+            padding: 4px 12px;
+            border-radius: 9999px;
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 4px;
+            margin-top: 6px;
             display: inline-block;
             margin-right: 6px;
+            transition: all 0.2s;
         }
         .test-acc-btn:hover {
             border-color: var(--color-fire);
             color: var(--color-fire);
+            background: #ffffff;
+            transform: translateY(-1px);
         }
 
         .auth-footer-links {
@@ -339,6 +351,8 @@
         }
 
     </style>
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 </head>
 <body>
 
@@ -396,7 +410,7 @@
                 </div>
 
                 <!-- BÊN PHẢI: FORM ĐĂNG NHẬP APPLE LIQUID GLASS -->
-                <div class="auth-card-glass">
+                <div class="auth-card-glass auth-box auth-form-card">
                     <div class="auth-card-title">
                         <span>ĐĂNG NHẬP</span>
                         <span style="font-size: 13px; font-weight: 500; color: #78716C;">hoặc <a th:href="@{/register}" style="color:var(--color-fire); font-weight:700;">Đăng ký</a></span>
@@ -437,7 +451,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn-submit-shopee">
+                        <button type="submit" class="btn-submit-shopee btn-auth-primary">
                             ĐĂNG NHẬP
                         </button>
                     </form>

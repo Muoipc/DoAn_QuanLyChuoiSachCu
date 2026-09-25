@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sách Yêu Thích Của Tôi - Chuỗi Sách Cũ</title>
+    <!-- Font Inter & FontAwesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Apple Liquid Glass & Squircle CSS Toàn Cục -->
+    <link rel="stylesheet" th:href="@{/css/liquid-glass.css}">
+    <style>
+        :root {
+            --color-bg-base: #f7f3ee;
+            --color-surface-glass: rgba(255, 255, 255, 0.88);
+            --color-fire: #ee4d2d;
+            --color-primary: #8C4A27;
+            --color-text-main: #1C1917;
+            --color-text-sub: #78716C;
+            --color-border-glass: rgba(255, 255, 255, 0.92);
+        }
+        body {
+            background-color: var(--color-bg-base);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--color-text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container-wishlist {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 16px;
+            flex: 1;
+        }
+        .wishlist-header-card {
+            background: var(--color-surface-glass);
+            backdrop-filter: blur(28px) saturate(190%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%);
+            border-radius: 20px;
+            border: 1.5px solid var(--color-border-glass);
+            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: 24px 30px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .wishlist-book-card {
+            background: var(--color-surface-glass);
+            backdrop-filter: blur(28px);
+            border-radius: 18px;
+            border: 1.5px solid var(--color-border-glass);
+            box-shadow: 0 8px 24px -4px rgba(45, 24, 15, 0.06);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            position: relative;
+        }
+        .wishlist-thumb-box {
+            width: 100%;
+            height: 240px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #f5efe6;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .wishlist-thumb-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .wishlist-book-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--color-text-main);
+            line-height: 1.35;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        .wishlist-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-top: auto;
+            margin-bottom: 12px;
+        }
+        .wishlist-price {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--color-fire) !important;
+        }
+        .wishlist-condition-tag {
+            font-size: 11px;
+            font-weight: 700;
+            background: rgba(140, 74, 39, 0.1);
+            color: var(--color-primary);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+        .wishlist-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-view-detail {
+            flex: 1;
+            background: var(--color-primary);
+            color: white;
+            text-align: center;
+            padding: 8px 12px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+        }
+        .btn-remove-wishlist {
+            background: #fff;
+            border: 1px solid #e7dfd5;
+            color: #ef4444;
+            padding: 8px 14px;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .wishlist-empty-box {
+            background: var(--color-surface-glass);
+            border-radius: 20px;
+            border: 1.5px solid var(--color-border-glass);
+            padding: 60px 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="container-wishlist">
+        <div class="wishlist-header-card">
+            <div>
+                <h1 style="font-size:22px; font-weight:800; color:#1C1917; margin-bottom:4px;">
+                    <i class="fa-solid fa-heart me-2" style="color:#ee4d2d;"></i> Danh Sách Sách Yêu Thích
+                </h1>
+                <p style="font-size:13px; color:#78716C; margin:0;">
+                    Những cuốn sách cũ quý giá bạn đã lưu lại để theo dõi giá và kiểm tra tồn kho chi nhánh
+                </p>
+            </div>
+            <a th:href="@{/search}" class="btn-view-detail" style="flex:none; padding:10px 20px;">
+                <i class="fa-solid fa-magnifying-glass me-1"></i> Khám Phá Thêm Sách
+            </a>
+        </div>
+
+        <!-- LƯỚI SÁCH YÊU THÍCH -->
+        <div th:if="${wishlistItems != null and not #lists.isEmpty(wishlistItems)}" class="wishlist-grid">
+            <div th:each="item : ${wishlistItems}" class="wishlist-book-card" th:id="'wishlist-card-' + ${item.book.id}">
+                <div class="wishlist-thumb-box">
+                    <img th:src="${item.book.coverImage != null ? item.book.coverImage : '/images/books/book_1.jpg'}" 
+                         th:alt="${item.book.title}" class="wishlist-thumb-img">
+                </div>
+                <a th:href="@{'/books/' + ${item.book.id}}" class="wishlist-book-title" th:text="${item.book.title}">
+                    Tên Cuốn Sách Cũ
+                </a>
+                <div class="wishlist-price-row">
+                    <span class="wishlist-price" th:text="${#numbers.formatDecimal(item.book.price, 0, 'COMMA', 0, 'POINT')} + '₫'">45.000₫</span>
+                    <span class="wishlist-condition-tag" th:text="'Mới ' + ${item.book.conditionPercent} + '%'">Mới 95%</span>
+                </div>
+                <div class="wishlist-actions">
+                    <a th:href="@{'/books/' + ${item.book.id}}" class="btn-view-detail">Xem Chi Tiết</a>
+                    <button type="button" class="btn-remove-wishlist" th:onclick="'removeFromWishlist(' + ${item.book.id} + ')'" title="Bỏ yêu thích">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KHI CHƯA LƯU SÁCH NÀO -->
+        <div th:if="${wishlistItems == null or #lists.isEmpty(wishlistItems)}" class="wishlist-empty-box">
+            <i class="fa-regular fa-heart" style="font-size:48px; color:#d6cec2; margin-bottom:16px;"></i>
+            <h3 style="font-size:18px; font-weight:700; color:#44403C; margin-bottom:8px;">Danh sách yêu thích của bạn đang trống</h3>
+            <p style="font-size:13.5px; color:#78716C; margin-bottom:20px;">Hãy duyệt qua kho sách cũ để thả tim những cuốn sách bạn yêu thích nhé!</p>
+            <a th:href="@{/search}" class="btn-view-detail" style="display:inline-block; padding:10px 24px;">Khám Phá Sách Cũ Ngay</a>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        function removeFromWishlist(bookId) {
+            if (!confirm('Bạn có chắc muốn bỏ cuốn sách này khỏi danh sách yêu thích?')) return;
+            fetch('/api/wishlist/toggle?bookId=' + bookId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const card = document.getElementById('wishlist-card-' + bookId);
+                    if (card) card.remove();
+                    if (document.querySelectorAll('.wishlist-book-card').length === 0) {
+                        location.reload();
+                    }
+                }
+            })
+            .catch(err => console.error(err));
+        }
+    </script>
+</body>
+</html>

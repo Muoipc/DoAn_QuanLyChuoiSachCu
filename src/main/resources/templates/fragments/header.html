@@ -8,6 +8,8 @@
 
 <!-- FRAGMENT SHOPEE HEADER NGUYÊN BẢN (KHÔNG CÓ THẺ WRAPPER BỌC NGOÀI, THUẦN NATIVE BROWSER STICKY SIÊU MƯỢT) -->
 <th:block th:fragment="shopeeHeader">
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (claudiusnoc/liquid-glass-design-system) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 
     <style>
         /* CONTAINER SHOPEE GOM VÔ GIỮA CHUẨN 1200PX ĐỒNG BỘ MỌI TRANG */
@@ -102,11 +104,12 @@
             color: #8C4A27;
         }
 
-        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        /* ================= APPLE LIQUID GLASS LANGUAGE DROPDOWN ================= */
         .lang-dropdown-box {
             position: relative;
             display: inline-block;
             flex-shrink: 0;
+            padding: 4px 0;
         }
         .lang-trigger-btn {
             display: inline-flex;
@@ -115,29 +118,44 @@
             cursor: pointer;
             font-weight: 700;
             color: #292524;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: all 0.15s ease;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             font-size: 12.5px;
             white-space: nowrap;
             flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04);
         }
         .lang-trigger-btn:hover {
             color: #8C4A27;
-            background: rgba(140, 74, 39, 0.08);
+            background: #ffffff;
+            border-color: rgba(140, 74, 39, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.1);
+        }
+        .lang-trigger-btn:active {
+            transform: scale(0.96);
         }
         .lang-dropdown-menu {
             position: absolute;
-            top: 100%;
+            top: calc(100% + 4px);
             right: 0;
-            background: #ffffff;
-            border-radius: 4px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            border: 1px solid #E8DEC8;
-            min-width: 145px;
+            background: rgba(255, 255, 255, 0.90) !important;
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.14), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+            min-width: 155px;
             display: none;
             z-index: 100010 !important;
-            padding: 6px 0;
+            padding: 6px !important;
+            box-sizing: border-box;
+            animation: applePopoverFade 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .lang-dropdown-box:hover .lang-dropdown-menu {
             display: block;
@@ -145,19 +163,24 @@
         .lang-item-btn {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
+            gap: 10px;
+            padding: 9px 14px;
             font-size: 13px;
             color: #1C1917;
             cursor: pointer;
-            transition: background 0.15s;
-            font-weight: 600;
+            border-radius: 10px !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-weight: 700;
             text-decoration: none;
             white-space: nowrap;
         }
         .lang-item-btn:hover {
-            background: #F5ECE4;
-            color: #8C4A27;
+            background: rgba(140, 74, 39, 0.09) !important;
+            color: #8C4A27 !important;
+            transform: translateX(3px) !important;
+        }
+        .lang-item-btn:active {
+            transform: scale(0.96);
         }
 
         /* SHOPEE NOTIFICATION POPOVER (KHỚP 100% ẢNH SHOPEE IMAGE_8B39D3.PNG) */
@@ -190,90 +213,124 @@
             margin-left: 2px;
         }
 
+        /* ================= APPLE LIQUID GLASS NOTIFICATION POPOVER ================= */
+        .shopee-noti-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+        .shopee-noti-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: -20px;
+            right: -20px;
+            height: 18px;
+            background: transparent;
+            z-index: 100008;
+            pointer-events: auto;
+        }
         .shopee-noti-popover {
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 6px);
             right: 0;
-            width: 404px;
-            background: #ffffff;
-            border-radius: 2px;
-            box-shadow: 0 1px 16px rgba(0, 0, 0, 0.18);
-            border: 1px solid rgba(0, 0, 0, 0.09);
+            width: 410px;
+            background: rgba(255, 255, 255, 0.88) !important;
+            backdrop-filter: blur(32px) saturate(200%) brightness(103%) !important;
+            -webkit-backdrop-filter: blur(32px) saturate(200%) brightness(103%) !important;
+            border-radius: 20px !important;
+            box-shadow: 
+                0 20px 48px -6px rgba(45, 24, 15, 0.16),
+                0 4px 14px -2px rgba(45, 24, 15, 0.05),
+                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
             display: none;
             flex-direction: column;
             z-index: 100010 !important;
             cursor: default;
             white-space: normal !important;
+            padding: 6px !important;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .shopee-noti-popover::before {
             content: '';
             position: absolute;
-            top: -10px;
+            top: -18px;
             left: 0;
             width: 100%;
-            height: 10px;
+            height: 18px;
+            background: transparent;
+            pointer-events: auto;
         }
         .shopee-noti-arrow {
-            position: absolute;
-            top: -7px;
-            right: 32px;
-            width: 0;
-            height: 0;
-            border-left: 7px solid transparent;
-            border-right: 7px solid transparent;
-            border-bottom: 7px solid #ffffff;
+            display: none !important;
         }
         .shopee-noti-wrapper:hover .shopee-noti-popover {
             display: flex;
+            animation: applePopoverFade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes applePopoverFade {
+            from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .noti-popover-header {
-            height: 38px;
-            line-height: 38px;
-            padding: 0 14px;
+            padding: 12px 16px;
             font-size: 13.5px;
-            color: rgba(0, 0, 0, 0.4);
-            font-weight: 600;
-            background: #fafafa;
-            border-bottom: 1px solid #f0f0f0;
+            color: #1C1917;
+            font-weight: 800;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 14px;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
             user-select: none;
             text-align: left;
-            white-space: nowrap !important;
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
         .noti-popover-list {
             display: flex !important;
             flex-direction: column !important;
+            gap: 6px !important;
             max-height: 380px;
             overflow-y: auto;
             width: 100% !important;
+            padding: 2px;
         }
         .noti-popover-list a.noti-item {
             display: flex !important;
             flex-direction: row !important;
             align-items: flex-start !important;
             width: 100% !important;
-            padding: 10px 14px !important;
+            padding: 12px 14px !important;
             text-decoration: none !important;
-            background: #ffffff;
-            border-bottom: 1px solid #f5f5f5;
-            transition: background-color 0.15s ease;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 14px !important;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             gap: 12px !important;
             text-align: left !important;
             white-space: normal !important;
             box-sizing: border-box !important;
         }
         .noti-popover-list a.noti-item.unread {
-            background-color: #fff8f7 !important;
+            background: rgba(255, 248, 244, 0.85) !important;
+            border-color: rgba(217, 119, 6, 0.2) !important;
         }
         .noti-popover-list a.noti-item:hover {
-            background-color: #f7f7f7 !important;
+            background: #ffffff !important;
+            transform: translateY(-2px) scale(1.01) !important;
+            box-shadow: 0 8px 20px rgba(140, 74, 39, 0.12), inset 0 1px 1px rgba(255, 255, 255, 1) !important;
+            border-color: rgba(255, 255, 255, 1) !important;
         }
         .noti-thumb {
-            width: 44px !important;
-            height: 44px !important;
-            border-radius: 4px;
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 10px !important;
             object-fit: cover;
             flex-shrink: 0 !important;
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.08);
             display: block !important;
         }
         .noti-body {
@@ -283,8 +340,8 @@
             flex-direction: column !important;
         }
         .noti-title {
-            font-size: 13px !important;
-            font-weight: 700 !important;
+            font-size: 13.5px !important;
+            font-weight: 800 !important;
             color: #1C1917 !important;
             margin-bottom: 4px !important;
             line-height: 18px !important;
@@ -297,7 +354,7 @@
         }
         .noti-desc {
             font-size: 12px !important;
-            color: #666666 !important;
+            color: #574E45 !important;
             line-height: 16px !important;
             white-space: normal !important;
             display: -webkit-box;
@@ -305,50 +362,76 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-align: left !important;
-            font-weight: normal !important;
+            font-weight: 500 !important;
         }
         .noti-preview-grid {
             display: flex !important;
             flex-direction: row !important;
-            gap: 6px !important;
-            margin-top: 6px !important;
+            gap: 8px !important;
+            margin-top: 8px !important;
         }
         .noti-preview-grid img {
             width: 44px !important;
             height: 44px !important;
-            border-radius: 3px !important;
+            border-radius: 8px !important;
             object-fit: cover !important;
-            border: 1px solid #E8DEC8 !important;
+            border: 1px solid rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
             display: block !important;
             flex-shrink: 0 !important;
+            transition: transform 0.2s ease;
+        }
+        .noti-preview-grid img:hover {
+            transform: scale(1.08);
         }
         a.noti-popover-footer {
             display: block !important;
-            width: 100% !important;
-            height: 40px !important;
-            line-height: 40px !important;
+            width: calc(100% - 16px) !important;
+            margin: 8px auto 4px auto !important;
+            padding: 10px 20px !important;
             text-align: center !important;
-            font-size: 13.5px !important;
-            color: #1C1917 !important;
-            font-weight: 600 !important;
+            font-size: 13px !important;
+            color: #8C4A27 !important;
+            font-weight: 800 !important;
             text-decoration: none !important;
-            background: #ffffff !important;
-            border-top: 1px solid #f0f0f0 !important;
-            transition: background-color 0.15s !important;
+            background: rgba(140, 74, 39, 0.08) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(140, 74, 39, 0.15) !important;
+            border-radius: 9999px !important;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
             box-sizing: border-box !important;
             white-space: nowrap !important;
         }
         a.noti-popover-footer:hover {
-            background-color: #f5f5f5 !important;
-            color: #8C4A27 !important;
+            background: linear-gradient(135deg, #8C4A27 0%, #6B3416 100%) !important;
+            color: #ffffff !important;
+            border-color: transparent !important;
+            box-shadow: 0 6px 18px rgba(140, 74, 39, 0.35) !important;
+            transform: translateY(-2px) !important;
+        }
+        a.noti-popover-footer:active {
+            transform: scale(0.96) !important;
         }
 
-        /* SHOPEE USER POPOVER (KHỚP 100% ẢNH SHOPEE IMAGE_557563.PNG) */
+        /* ================= SHOPEE USER POPOVER (FIX HOVER BRIDGE & CHỐNG TỰ ĐỘNG TẮT) ================= */
         .shopee-user-wrapper {
             position: relative;
             display: inline-block;
             cursor: pointer;
-            padding: 2px 0;
+            padding: 4px 0;
+        }
+        /* Cầu nối hover vô hình phía dưới trigger giúp chuột rê xuống popover không bao giờ bị mất */
+        .shopee-user-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: -30px;
+            right: -30px;
+            height: 24px;
+            background: transparent;
+            z-index: 100008;
+            pointer-events: auto;
         }
         .shopee-user-trigger {
             display: flex;
@@ -357,6 +440,12 @@
             color: #1C1917;
             font-size: 13px;
             font-weight: 700;
+            padding: 2px 4px;
+            border-radius: 9999px;
+            transition: all 0.15s ease;
+        }
+        .shopee-user-wrapper:hover .shopee-user-trigger {
+            color: #8C4A27;
         }
         .shopee-user-avatar {
             width: 22px;
@@ -375,46 +464,67 @@
         }
         .shopee-user-popover {
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 4px);
             right: 0;
-            width: 160px;
-            background: #ffffff;
-            border-radius: 2px;
-            box-shadow: 0 1px 12px 0 rgba(0,0,0,0.18);
-            border: 1px solid rgba(0,0,0,0.08);
+            width: 185px;
+            background: rgba(255, 255, 255, 0.92) !important;
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            border-radius: 18px !important;
+            box-shadow: 
+                0 20px 48px -6px rgba(45, 24, 15, 0.16),
+                0 4px 14px -2px rgba(45, 24, 15, 0.04),
+                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
             display: none;
             flex-direction: column;
             z-index: 100010 !important;
-            padding: 4px 0;
+            padding: 8px !important;
+            gap: 4px !important;
+            box-sizing: border-box;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        /* Cầu nối vô hình giúp rê chuột từ trigger xuống popover không bị mất */
+        /* Cầu nối ngược từ popover lên phía trên */
         .shopee-user-popover::before {
             content: '';
             position: absolute;
-            top: -10px;
-            left: 0;
-            width: 100%;
-            height: 10px;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            height: 20px;
+            background: transparent;
+            pointer-events: auto;
         }
-        /* Mũi tên tam giác chỉ lên đỉnh popover khớp Shopee */
         .shopee-popover-arrow {
-            position: absolute;
-            top: -7px;
-            right: 24px;
-            width: 0;
-            height: 0;
-            border-left: 7px solid transparent;
-            border-right: 7px solid transparent;
-            border-bottom: 7px solid #ffffff;
+            display: none !important;
         }
         .shopee-user-wrapper:hover .shopee-user-popover {
             display: flex;
+            animation: applePopoverFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .shopee-popover-item {
-            padding: 10px 16px;
-            color: #333333;
-            font-size: 13.5px;
-            font-weight: 500;
+            padding: 10px 14px;
+            color: #1C1917;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            display: block;
+            border-radius: 12px !important;
+            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: left;
+        }
+        .shopee-popover-item:hover {
+            background-color: rgba(140, 74, 39, 0.08) !important;
+            color: #8C4A27 !important;
+            transform: translateX(3px) !important;
+        }
+        .shopee-popover-item.logout-item:hover {
+            background-color: #fff1f2 !important;
+            color: #e11d48 !important;
+        }
+        .shopee-popover-item:active {
+            transform: scale(0.96) !important;
+        }
             text-decoration: none;
             display: block;
             transition: background-color 0.15s, color 0.15s;
@@ -573,6 +683,43 @@
             text-decoration: none;
         }
 
+        /* Nút Kho Voucher Header */
+        .btn-header-voucher {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 15px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+            color: #1C1917;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+        .btn-header-voucher:hover {
+            background-color: #ffffff;
+            border-color: #ee4d2d;
+            color: #ee4d2d;
+        }
+        .btn-header-voucher i {
+            color: #ee4d2d;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .btn-header-voucher span {
+                display: none;
+            }
+            .btn-header-voucher {
+                padding: 7px 10px;
+            }
+        }
+
         /* Giỏ hàng Shopee */
         .shopee-cart-wrap {
             position: relative !important;
@@ -661,9 +808,7 @@
     <div class="shopee-topbar">
         <div class="container-shopee topbar-content">
             <div class="topbar-nav">
-                <a th:href="@{/consignments}">Kênh Người Bán</a>
-                <span class="topbar-divider"></span>
-                <a href="javascript:void(0)" onclick="alert('Quét mã QR để tải ứng dụng Chuỗi Sách Cũ trên iOS & Android!')">Tải Ứng Dụng</a>
+                <a th:href="@{/consignments}"><i class="fa-solid fa-recycle me-1" style="color:#10b981;"></i> Ký Gửi Sách Cũ</a>
                 <span class="topbar-divider"></span>
                 <span style="display:inline-flex; align-items:center; gap:6px;">
                     Kết Nối
@@ -782,7 +927,7 @@
                         <div class="shopee-popover-arrow"></div>
                         <a th:href="@{/user/account/profile}" class="shopee-popover-item">Tài Khoản Của Tôi</a>
                         <a th:href="@{/orders}" class="shopee-popover-item">Đơn Mua</a>
-                        <a th:href="@{/logout}" class="shopee-popover-item" style="color:#c62828;">Đăng Xuất</a>
+                        <a th:href="@{/logout}" class="shopee-popover-item logout-item" style="color:#c62828;">Đăng Xuất</a>
                     </div>
                 </div>
             </div>
@@ -823,12 +968,15 @@
                 </div>
             </div>
 
-            <!-- Giỏ hàng Shopee với Live Badge Counter -->
-            <div class="shopee-cart-wrap" id="shopeeCartWrap">
-                <a th:href="@{/cart}" title="Xem giỏ hàng của bạn">
-                    <i class="fa-solid fa-cart-shopping shopee-cart-icon"></i>
-                    <span class="shopee-cart-badge" id="headerCartBadge">0</span>
-                </a>
+            <!-- Nhóm nút hành động Header: Giỏ Hàng Chuẩn Shopee -->
+            <div class="header-action-group" style="display:flex; align-items:center; gap:16px;">
+                <!-- Giỏ hàng Shopee với Live Badge Counter -->
+                <div class="shopee-cart-wrap" id="shopeeCartWrap">
+                    <a th:href="@{/cart}" aria-label="Giỏ hàng">
+                        <i class="fa-solid fa-cart-shopping shopee-cart-icon"></i>
+                        <span class="shopee-cart-badge" id="headerCartBadge">0</span>
+                    </a>
+                </div>
             </div>
         </div>
     </header>

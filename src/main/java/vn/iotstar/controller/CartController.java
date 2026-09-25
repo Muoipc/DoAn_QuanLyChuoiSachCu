@@ -78,7 +78,10 @@ public class CartController {
     }
 
     /**
-     * Thêm sách cũ vào giỏ hàng.
+     * Thêm sách cũ vào giỏ hàng hoặc Mua Ngay.
+     * Ghi chú cho Cường:
+     * - Nếu action là "buy_now" hoặc "buynow": Điều hướng thẳng đến trang /checkout kèm param buyNow=true, bookId, storeId, quantity mà không lưu vào giỏ hàng CSDL.
+     * - Nếu action là thêm vào giỏ thông thường: Gọi cartService.addToCart và quay lại trang chi tiết sách.
      * URL: POST /cart/add
      */
     @PostMapping("/add")
@@ -90,12 +93,13 @@ public class CartController {
             @RequestParam(value = "action", defaultValue = "add") String action,
             RedirectAttributes redirectAttributes) {
 
+        // Tính năng Mua Ngay (Direct Buy Now / Instant Checkout): Không lưu CSDL cart, chuyển hướng ngay đến checkout
+        if ("buy_now".equalsIgnoreCase(action) || "buynow".equalsIgnoreCase(action)) {
+            return "redirect:/checkout?buyNow=true&bookId=" + bookId + "&storeId=" + storeId + "&quantity=" + quantity;
+        }
+
         Long userId = resolveUserId(userDetails);
         cartService.addToCart(userId, bookId, storeId, quantity);
-
-        if ("buynow".equalsIgnoreCase(action)) {
-            return "redirect:/cart";
-        }
 
         redirectAttributes.addFlashAttribute("successMessage", "Đã thêm sách vào giỏ hàng thành công!");
         return "redirect:/books/" + bookId;

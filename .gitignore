@@ -39,3 +39,4 @@ Thumbs.db
 ### Application ###
 uploads/
 *.log
+graphify-out/

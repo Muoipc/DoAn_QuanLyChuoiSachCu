@@ -247,21 +247,32 @@
             color: var(--color-book-primary);
         }
 
-        /* CỘT PHẢI: KHUNG NỘI DUNG CHÍNH (MAIN PROFILE CARD) */
-        .account-main-card {
-            background: white;
-            border-radius: var(--radius-sm);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-            border: 1px solid var(--color-border);
-            padding: 30px;
+        /* CỘT PHẢI: KHUNG NỘI DUNG CHÍNH (MAIN PROFILE CARD - APPLE LIQUID GLASS) */
+        .account-main-card, .profile-content-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            border-radius: 20px;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            padding: 34px;
+        }
+        .account-sidebar-card, .profile-sidebar {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            border-radius: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
+            padding: 24px;
         }
         .main-card-header {
-            padding-bottom: 18px;
-            border-bottom: 1px solid #f2ede6;
-            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1.5px solid rgba(232, 222, 200, 0.6);
+            margin-bottom: 26px;
         }
         .main-card-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--color-text-main);
         }
@@ -294,20 +305,26 @@
             text-align: right;
             color: #78716C;
             font-size: 13.5px;
+            font-weight: 600;
         }
-        .form-input-control {
+        .form-input-control, .profile-input {
             width: 100%;
-            max-width: 360px;
-            padding: 10px 14px;
-            border: 1px solid #d5cec4;
-            border-radius: 2px;
+            max-width: 380px;
+            padding: 11px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
             font-size: 14px;
             outline: none;
             font-family: inherit;
-            transition: border-color 0.2s;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .form-input-control:focus {
+        .form-input-control:focus, .profile-input:focus {
+            background: #ffffff;
             border-color: var(--color-book-primary);
+            box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.14);
         }
         .readonly-username-txt {
             font-weight: 700;
@@ -336,22 +353,28 @@
             color: #1C1917;
         }
 
-        /* Nút Lưu Shopee */
-        .btn-shopee-save {
-            background: var(--color-book-primary);
+        /* Nút Lưu Shopee (Apple Pill) */
+        .btn-shopee-save, .btn-submit-profile {
+            background: linear-gradient(135deg, #8C4A27 0%, #6B3416 100%);
             color: white;
             font-size: 14px;
             font-weight: 800;
-            border: none;
-            border-radius: 2px;
-            padding: 12px 36px;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            border-radius: 9999px;
+            padding: 13px 38px;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(140, 74, 39, 0.25);
-            transition: background 0.15s;
+            box-shadow: 0 6px 20px rgba(140, 74, 39, 0.32), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.4);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .btn-shopee-save:hover {
-            background: var(--color-book-hover);
+        .btn-shopee-save:hover, .btn-submit-profile:hover {
+            background: linear-gradient(135deg, #733615 0%, #52270f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 26px rgba(140, 74, 39, 0.45);
+        }
+        .btn-shopee-save:active, .btn-submit-profile:active {
+            transform: scale(0.97);
         }
 
         /* CỘT PHẢI: AVATAR BOX CHUẨN SHOPEE */
@@ -361,15 +384,16 @@
             align-items: center;
             justify-content: flex-start;
             padding-left: 30px;
-            border-left: 1px solid #f2ede6;
+            border-left: 1px solid rgba(232, 222, 200, 0.6);
         }
         .large-avatar-wrap {
             width: 110px;
             height: 110px;
             border-radius: 50%;
             overflow: hidden;
-            border: 2px solid #e8dec8;
+            border: 2.5px solid rgba(255, 255, 255, 0.95);
             margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.12);
         }
         .large-avatar-img {
             width: 100%;
@@ -377,20 +401,23 @@
             object-fit: cover;
         }
         .btn-choose-avatar {
-            background: white;
-            border: 1px solid #d5cec4;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
             color: #574E45;
-            padding: 8px 18px;
-            border-radius: 2px;
+            padding: 9px 22px;
+            border-radius: 9999px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             margin-bottom: 12px;
-            transition: all 0.15s;
+            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.05);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .btn-choose-avatar:hover {
-            background: #faf8f5;
-            border-color: #78716C;
+            background: #ffffff;
+            border-color: var(--color-book-primary);
+            color: var(--color-book-primary);
+            transform: translateY(-1px);
         }
         .avatar-rules-txt {
             font-size: 12px;
@@ -401,8 +428,8 @@
 
         /* TAB ĐỊA CHỈ & ĐỔI MẬT KHẨU */
         .address-item-card {
-            border-bottom: 1px solid #f2ede6;
-            padding: 16px 0;
+            border-bottom: 1px solid rgba(232, 222, 200, 0.6);
+            padding: 18px 0;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -413,8 +440,8 @@
             color: var(--color-book-primary);
             font-size: 11px;
             font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 2px;
+            padding: 3px 10px;
+            border-radius: 9999px;
             margin-left: 8px;
         }
 
@@ -428,6 +455,8 @@
             margin-top: auto;
         }
     </style>
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 </head>
 <body>
 
@@ -452,7 +481,7 @@
     <main class="container-shopee account-portal-layout" style="flex:1;">
 
         <!-- CỘT TRÁI: SIDEBAR ĐIỀU HƯỚNG CHUẨN SHOPEE -->
-        <aside class="account-sidebar-card">
+        <aside class="account-sidebar-card profile-sidebar">
             <!-- Header User Card -->
             <div class="user-quick-profile">
                 <img th:src="${user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
@@ -504,8 +533,8 @@
                     <span>Trợ Lý AI Tư Vấn</span>
                 </a>
 
-                <!-- Group 5: Voucher & Điểm -->
-                <a href="javascript:void(0)" onclick="alert('Bạn đang có 2 mã Freeship 25k và 2.000 điểm tích lũy sách cũ!');" class="single-nav-item">
+                <!-- Group 5: Kho Voucher -->
+                <a th:href="@{/vouchers}" class="single-nav-item">
                     <i class="fa-solid fa-ticket" style="color:#ef4444;"></i>
                     <span>Kho Voucher Của Tôi</span>
                 </a>
@@ -513,7 +542,7 @@
         </aside>
 
         <!-- CỘT PHẢI: KHUNG NỘI DUNG CHÍNH -->
-        <section class="account-main-card">
+        <section class="account-main-card profile-content-card">
 
             <!-- ================= TAB 1: HỒ SƠ CỦA TÔI ================= -->
             <div th:if="${activeTab == 'profile'}">

@@ -184,45 +184,4 @@ public class OrderHistoryController {
 
         return "redirect:/orders";
     }
-
-    /**
-     * Khách hàng gửi đánh giá & nhận xét chất lượng sách cũ đã nhận.
-     * URL: POST /reviews/create
-     */
-    @PostMapping("/reviews/create")
-    public String submitReview(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestParam("orderId") Long orderId,
-            @RequestParam("bookId") Long bookId,
-            @RequestParam("rating") Integer rating,
-            @RequestParam("comment") String comment,
-            RedirectAttributes redirectAttributes) {
-
-        Long userId = resolveUserId(userDetails);
-
-        // Kiểm tra xem đã đánh giá chưa
-        if (reviewRepository.existsByUserIdAndBookIdAndOrderId(userId, bookId, orderId)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Bạn đã đánh giá cuốn sách này trong đơn hàng rồi!");
-            return "redirect:/orders";
-        }
-
-        User user = userRepository.findById(userId).orElse(null);
-        Book book = bookRepository.findById(bookId).orElse(null);
-        Order order = orderRepository.findById(orderId).orElse(null);
-
-        if (user != null && book != null && order != null) {
-            Review review = new Review();
-            review.setUser(user);
-            review.setBook(book);
-            review.setOrder(order);
-            review.setRating(Math.max(1, Math.min(5, rating)));
-            review.setComment(comment != null ? comment.trim() : "Sách đúng mô tả.");
-            review.setMediaType(Review.MediaType.NONE);
-            reviewRepository.save(review);
-
-            redirectAttributes.addFlashAttribute("successMessage", "Cảm ơn bạn đã gửi đánh giá chất lượng sách cũ! Đánh giá đã được ghi nhận.");
-        }
-
-        return "redirect:/orders";
-    }
 }

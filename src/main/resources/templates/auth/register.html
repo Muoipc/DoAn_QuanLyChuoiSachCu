@@ -64,13 +64,14 @@
         .banner-heading { font-size: 32px; font-weight: 900; line-height: 1.25; margin-bottom: 16px; }
         .banner-sub { font-size: 14px; color: #dcd3c9; line-height: 1.6; margin-bottom: 20px; }
 
-        .auth-card-glass {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(28px);
-            border-radius: 14px;
-            border: 1.5px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
-            padding: 30px;
+        .auth-card-glass, .auth-box, .auth-form-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(32px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(103%);
+            border-radius: 24px;
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 24px 60px rgba(45, 24, 15, 0.18), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: 34px;
         }
         .auth-card-title {
             font-size: 20px; font-weight: 900; color: #1C1917; margin-bottom: 8px;
@@ -84,28 +85,39 @@
         .form-group { margin-bottom: 12px; }
         .form-input-wrap {
             display: flex; align-items: center;
-            border: 1px solid #dcd7ce; border-radius: 8px;
-            background: #ffffff; padding: 0 12px; transition: 0.2s;
+            border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            padding: 0 14px; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .form-input-wrap:focus-within {
+            background: #ffffff;
             border-color: var(--color-fire);
-            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.12);
+            box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.14);
         }
         .input-icon { color: #78716C; font-size: 14px; width: 18px; }
         .auth-input {
-            width: 100%; border: none; outline: none; padding: 11px 8px;
+            width: 100%; border: none; outline: none; padding: 12px 8px;
             font-size: 13.5px; font-family: inherit; color: #1C1917; background: transparent;
+            border-radius: 12px;
         }
         .field-err { color: #dc2626; font-size: 11px; margin-top: 2px; }
 
-        .btn-submit-shopee {
-            background: var(--color-fire); color: white; border: none;
-            border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 800;
-            width: 100%; cursor: pointer; box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35);
-            transition: all 0.2s; margin-top: 8px; text-transform: uppercase;
+        .btn-submit-shopee, .btn-auth-primary {
+            background: linear-gradient(135deg, #8C4A27 0%, #6B3416 100%);
+            color: white; border: 1.5px solid rgba(255, 255, 255, 0.35);
+            border-radius: 9999px; padding: 14px; font-size: 15px; font-weight: 800;
+            width: 100%; cursor: pointer; box-shadow: 0 6px 20px rgba(140, 74, 39, 0.32), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.4);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); margin-top: 10px; text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .btn-submit-shopee:hover {
-            background: var(--color-fire-hover);
+        .btn-submit-shopee:hover, .btn-auth-primary:hover {
+            background: linear-gradient(135deg, #733615 0%, #52270f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 26px rgba(140, 74, 39, 0.45);
+        }
+        .btn-submit-shopee:active, .btn-auth-primary:active {
+            transform: scale(0.97);
         }
 
         .auth-footer {
@@ -166,6 +178,8 @@
         }
 
     </style>
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 </head>
 <body>
 
@@ -216,7 +230,7 @@
                     </div>
                 </div>
 
-                <div class="auth-card-glass">
+                <div class="auth-card-glass auth-box auth-form-card">
                     <div class="auth-card-title">ĐĂNG KÝ TÀI KHOẢN</div>
                     <p style="font-size:12.5px; color:#78716C; margin-bottom: 16px;">
                         Mã OTP xác thực sẽ được gửi tới Email của bạn.
@@ -272,7 +286,7 @@
                             <div class="field-err" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
                         </div>
 
-                        <button type="submit" class="btn-submit-shopee">
+                        <button type="submit" class="btn-submit-shopee btn-auth-primary">
                             ĐĂNG KÝ &amp; NHẬN MÃ OTP
                         </button>
                     </form>

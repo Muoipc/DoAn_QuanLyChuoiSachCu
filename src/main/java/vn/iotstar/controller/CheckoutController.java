@@ -51,6 +51,9 @@ public class CheckoutController {
     @Autowired
     private VoucherRepository voucherRepository;
 
+    @Autowired
+    private BookRepository bookRepository;
+
     private Long resolveUserId(CustomUserDetails userDetails) {
         if (userDetails != null && userDetails.getId() != null) {
             return userDetails.getId();
@@ -60,30 +63,79 @@ public class CheckoutController {
 
     /**
      * Màn hình thanh toán & chọn hình thức nhận sách.
+     * Ghi chú cho Cường:
+     * - Hỗ trợ cả 2 chế độ:
+     *   1. Thanh toán toàn bộ giỏ hàng (mặc định buyNow=false).
+     *   2. Mua Ngay trực tiếp 1 cuốn sách (buyNow=true, có bookId): Tạo CartItem transient hiển thị ngay trên UI mà không cần thêm vào giỏ DB.
      * URL: /checkout
      */
     @GetMapping
-    public String checkoutView(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+    public String checkoutView(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam(value = "buyNow", required = false, defaultValue = "false") boolean buyNow,
+            @RequestParam(value = "bookId", required = false) Long bookId,
+            @RequestParam(value = "storeId", required = false, defaultValue = "1") Long storeId,
+            @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
+            Model model) {
+
         Long userId = resolveUserId(userDetails);
-        Cart cart = cartService.getOrCreateCartForUser(userId);
-        List<CartItem> cartItems = cartService.getCartItemsWithDetails(cart.getId());
+        List<CartItem> cartItems;
+        BigDecimal subtotal;
+        BigDecimal totalSavings;
+        int totalQuantity;
 
-        if (cartItems.isEmpty()) {
-            return "redirect:/cart";
+        if (buyNow && bookId != null) {
+            // Chế độ Mua Ngay: Tìm sách từ BookRepository, tạo CartItem tạm thời (transient)
+            Optional<Book> bookOpt = bookRepository.findById(bookId);
+            if (bookOpt.isEmpty()) {
+                return "redirect:/cart";
+            }
+            Book book = bookOpt.get();
+            int directQty = (quantity != null && quantity > 0) ? quantity : 1;
+
+            Store selectedStore = storeRepository.findById(storeId).orElse(null);
+
+            CartItem directItem = new CartItem();
+            directItem.setBook(book);
+            directItem.setQuantity(directQty);
+            directItem.setStore(selectedStore);
+
+            cartItems = List.of(directItem);
+            subtotal = directItem.getItemTotal();
+            totalSavings = directItem.getSavings();
+            totalQuantity = directQty;
+
+            model.addAttribute("buyNow", true);
+            model.addAttribute("directBookId", bookId);
+            model.addAttribute("directStoreId", storeId);
+            model.addAttribute("directQuantity", directQty);
+        } else {
+            // Chế độ thanh toán từ Giỏ hàng thông thường
+            Cart cart = cartService.getOrCreateCartForUser(userId);
+            cartItems = cartService.getCartItemsWithDetails(cart.getId());
+
+            if (cartItems.isEmpty()) {
+                return "redirect:/cart";
+            }
+
+            // Tính toán tổng tiền
+            subtotal = cartItems.stream()
+                    .map(CartItem::getItemTotal)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            totalSavings = cartItems.stream()
+                    .map(CartItem::getSavings)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            totalQuantity = cartItems.stream()
+                    .mapToInt(CartItem::getQuantity)
+                    .sum();
+
+            model.addAttribute("buyNow", false);
+            model.addAttribute("directBookId", null);
+            model.addAttribute("directStoreId", null);
+            model.addAttribute("directQuantity", null);
         }
-
-        // Tính toán tổng tiền
-        BigDecimal subtotal = cartItems.stream()
-                .map(CartItem::getItemTotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal totalSavings = cartItems.stream()
-                .map(CartItem::getSavings)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        int totalQuantity = cartItems.stream()
-                .mapToInt(CartItem::getQuantity)
-                .sum();
 
         // Nạp danh sách 5 chi nhánh TP.HCM, đơn vị giao hàng, địa chỉ và voucher
         List<Store> stores = storeRepository.findByIsActiveTrue();
@@ -123,6 +175,10 @@ public class CheckoutController {
 
     /**
      * Xử lý xác nhận đặt hàng từ form thanh toán.
+     * Ghi chú cho Cường:
+     * - Nếu buyNow=true và bookId!=null: Gọi orderService.createOrderDirect tạo đơn trực tiếp cho cuốn sách đó, không đụng vào giỏ hàng.
+     * - Nếu buyNow=false: Gọi orderService.createOrderFromCart chuyển toàn bộ giỏ hàng thành đơn hàng.
+     * - Cả hai đều tích hợp VNPay Sandbox và COD.
      * URL: POST /checkout/place-order
      */
     @PostMapping("/place-order")
@@ -137,6 +193,9 @@ public class CheckoutController {
             @RequestParam("paymentMethod") String paymentMethodStr,
             @RequestParam(value = "voucherCode", required = false) String voucherCode,
             @RequestParam(value = "customerNotes", required = false) String customerNotes,
+            @RequestParam(value = "buyNow", required = false, defaultValue = "false") boolean buyNow,
+            @RequestParam(value = "bookId", required = false) Long bookId,
+            @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
 
@@ -157,18 +216,37 @@ public class CheckoutController {
         }
 
         try {
-            Order order = orderService.createOrderFromCart(
-                    userId,
-                    deliveryMethod,
-                    storeId,
-                    receiverName,
-                    receiverPhone,
-                    receiverAddress != null ? receiverAddress : "Tại chi nhánh",
-                    shippingUnitId,
-                    paymentMethod,
-                    voucherCode,
-                    customerNotes
-            );
+            Order order;
+            if (buyNow && bookId != null) {
+                int finalQty = (quantity != null && quantity > 0) ? quantity : 1;
+                order = orderService.createOrderDirect(
+                        userId,
+                        bookId,
+                        storeId,
+                        finalQty,
+                        deliveryMethod,
+                        receiverName,
+                        receiverPhone,
+                        receiverAddress != null ? receiverAddress : "Tại chi nhánh",
+                        shippingUnitId,
+                        paymentMethod,
+                        voucherCode,
+                        customerNotes
+                );
+            } else {
+                order = orderService.createOrderFromCart(
+                        userId,
+                        deliveryMethod,
+                        storeId,
+                        receiverName,
+                        receiverPhone,
+                        receiverAddress != null ? receiverAddress : "Tại chi nhánh",
+                        shippingUnitId,
+                        paymentMethod,
+                        voucherCode,
+                        customerNotes
+                );
+            }
 
             // Nếu chọn thanh toán trực tuyến qua VNPay Sandbox
             if (paymentMethod == Order.PaymentMethod.VNPAY) {
@@ -182,6 +260,9 @@ public class CheckoutController {
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Không thể tạo đơn hàng: " + e.getMessage());
+            if (buyNow && bookId != null) {
+                return "redirect:/checkout?buyNow=true&bookId=" + bookId + "&storeId=" + storeId + "&quantity=" + quantity;
+            }
             return "redirect:/checkout";
         }
     }

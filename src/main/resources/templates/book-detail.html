@@ -52,15 +52,26 @@
         .breadcrumb-active { color: #1C1917; font-weight: 700; }
 
         /* ================= 3. KHUNG CHI TIẾT SẢN PHẨM CHUẨN SHOPEE ================= */
+        .product-main-container,
+        .detail-main-card,
+        .store-stock-card,
+        .review-card,
+        .related-books-section {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            border-radius: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
         .product-main-container {
-            background: #ffffff;
-            border-radius: var(--radius-sm);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
             display: grid;
             grid-template-columns: 450px 1fr;
             gap: 35px;
-            padding: 24px;
-            margin-bottom: 20px;
+            padding: 28px;
+            margin-bottom: 24px;
         }
 
         /* CỘT TRÁI: GALLERY ẢNH & TƯƠNG TÁC */
@@ -73,22 +84,26 @@
             position: relative;
             width: 100%;
             height: 450px;
-            border-radius: var(--radius-sm);
-            background: #fbf9f6;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(248, 245, 238, 0.65) 0%, rgba(232, 222, 200, 0.35) 100%);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #f0eae1;
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            box-shadow: inset 0 1px 3px rgba(45, 24, 15, 0.04);
         }
         .main-cover-box img {
-            max-width: 100%;
-            max-height: 100%;
+            max-width: 90%;
+            max-height: 90%;
             object-fit: contain;
-            transition: transform 0.25s ease;
+            border-radius: 12px;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .main-cover-box:hover img {
-            transform: scale(1.03);
+            transform: none;
         }
 
         /* DẢI 5 THUMBNAILS (BĂNG CHUYỀN CHUẨN ẢNH SHOPEE) */
@@ -104,24 +119,28 @@
             width: 78px;
             height: 78px;
             border: 2px solid transparent;
-            border-radius: var(--radius-sm);
+            border-radius: 12px;
             cursor: pointer;
             overflow: hidden;
-            background: #fbf9f6;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04);
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.15s ease;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .gallery-thumb-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 10px;
         }
         .gallery-thumb-item.active,
         .gallery-thumb-item:hover {
-            border-color: var(--color-fire);
+            border-color: #ee4d2d;
+            transform: none;
+            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.15);
         }
 
         /* HÀNG TƯƠNG TÁC: CHIA SẺ & ĐÃ THÍCH (GIỐNG 100% ẢNH MẪU SHOPEE) */
@@ -174,16 +193,20 @@
             gap: 10px;
         }
         .tag-shopee-mall {
-            background: var(--color-fire);
-            color: white;
-            font-size: 11px;
-            font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 2px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%) !important;
+            color: #ffffff !important;
+            font-size: 11px !important;
+            font-weight: 850 !important;
+            padding: 3px 8px !important;
+            border-radius: 6px !important;
+            border: 1px solid rgba(255, 255, 255, 0.45) !important;
+            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
             flex-shrink: 0;
             margin-top: 3px;
+            cursor: default;
+            user-select: none;
         }
         .product-title-text {
             font-size: 20px;
@@ -207,14 +230,18 @@
             gap: 14px;
         }
         .stat-rating-val {
-            color: var(--color-fire);
+            color: #ee4d2d !important;
             font-weight: 800;
             text-decoration: underline;
             margin-right: 4px;
         }
         .stat-stars {
-            color: var(--color-fire);
+            color: #ee4d2d !important;
             font-size: 12px;
+            display: inline-flex;
+            gap: 2px;
+            cursor: default;
+            user-select: none;
         }
         .stat-sep-pipe {
             width: 1px;
@@ -236,12 +263,16 @@
 
         /* KHỐI HIỂN THỊ GIÁ (PRICE BANNER CHUẨN SHOPEE) */
         .price-banner-box {
-            background: #faf8f5;
-            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, rgba(255, 248, 245, 0.85) 0%, rgba(254, 239, 235, 0.6) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 14px;
+            border: 1px solid rgba(238, 77, 45, 0.15);
             padding: 16px 20px;
             display: flex;
             align-items: center;
             gap: 14px;
+            box-shadow: 0 2px 10px rgba(238, 77, 45, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
         }
         .price-original-strike {
             font-size: 15px;
@@ -249,30 +280,33 @@
             text-decoration: line-through;
         }
         .price-current-fire {
-            font-size: 30px;
-            font-weight: 900;
-            color: var(--color-fire);
+            font-size: 32px;
+            font-weight: 800;
+            color: #ee4d2d !important;
+            letter-spacing: -0.5px;
         }
         .price-discount-tag {
-            background: var(--color-fire);
+            background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%);
             color: white;
             font-size: 11px;
             font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 2px;
+            padding: 3px 7px;
+            border-radius: 8px;
             text-transform: uppercase;
+            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.25);
         }
         .price-voucher-badge {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            color: var(--color-fire);
+            color: #ee4d2d;
             font-size: 12px;
             font-weight: 700;
-            border: 1px solid var(--color-fire);
-            padding: 2px 8px;
-            border-radius: 2px;
-            background: #fff;
+            border: 1px solid rgba(238, 77, 45, 0.4);
+            padding: 3px 10px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.08);
         }
 
         /* HÀNG THUỘC TÍNH: MÃ GIẢM GIÁ / VẬN CHUYỂN / BẢO HIỂM */
@@ -407,20 +441,23 @@
 
         /* BẢNG TỒN KHO 5 CHI NHÁNH (THU GỌN MẶC ĐỊNH) */
         .stores-dropdown-panel {
-            background: #faf8f5;
-            border: 1px solid #e8e2d8;
-            border-radius: var(--radius-sm);
-            padding: 12px 16px;
-            margin-top: 8px;
+            background: rgba(250, 248, 245, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-top: 10px;
             display: none;
+            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.9);
         }
         .store-inv-line {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px dashed #e8e2d8;
-            font-size: 12.5px;
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(232, 226, 216, 0.8);
+            font-size: 13px;
         }
         .store-inv-line:last-child { border-bottom: none; }
 
@@ -428,28 +465,42 @@
         .quantity-stepper-wrap {
             display: inline-flex;
             align-items: center;
-            border: 1px solid #dcd7ce;
-            border-radius: 2px;
+            border: 1.5px solid rgba(220, 215, 206, 0.8);
+            border-radius: 10px;
             overflow: hidden;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            padding: 2px;
+            gap: 2px;
         }
-        .btn-qty-step {
+        .btn-qty-step, .qty-btn {
             width: 32px;
             height: 32px;
             border: none;
-            background: transparent;
+            background: rgba(245, 240, 235, 0.7);
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             color: #44403C;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .btn-qty-step:hover { background: #f0eae1; }
-        .input-qty-step {
+        .btn-qty-step:hover, .qty-btn:hover { 
+            background: #ede6dc; 
+            color: #ee4d2d;
+        }
+        .btn-qty-step:active, .qty-btn:active {
+            transform: scale(0.92);
+        }
+        .input-qty-step, .qty-input {
             width: 50px;
             height: 32px;
             border: none;
-            border-left: 1px solid #dcd7ce;
-            border-right: 1px solid #dcd7ce;
+            border-radius: 8px;
+            background: transparent;
             text-align: center;
             font-size: 14px;
             font-weight: 700;
@@ -457,65 +508,103 @@
             color: #1C1917;
         }
 
-        /* CỤM NÚT HÀNH ĐỘNG (THÊM GIỎ HÀNG & MUA NGAY) */
+        /* CỤM 3 NÚT HÀNH ĐỘNG ĐỒNG BỘ CHUẨN APPLE LIQUID GLASS & SHOPEE */
         .action-buttons-group {
             display: flex;
-            gap: 14px;
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid #f0eae1;
-        }
-        .btn-add-cart-shopee {
-            background: #F5ECE4;
-            color: var(--color-fire);
-            border: 1px solid var(--color-fire);
-            border-radius: 3px;
-            padding: 14px 28px;
-            font-size: 14.5px;
-            font-weight: 800;
-            cursor: pointer;
-            display: inline-flex;
             align-items: center;
-            gap: 10px;
-            transition: all 0.2s ease;
+            gap: 12px;
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(240, 234, 225, 0.85);
+            width: 100%;
         }
-        .btn-add-cart-shopee:hover {
-            background: #EBD9C8;
-            transform: translateY(-1px);
+
+        /* 1. Nút Tiện Ích Trợ Lý AI */
+        .btn-action-ai, .btn-ai-consult-mini {
+            width: 48px !important;
+            height: 48px !important;
+            min-width: 48px !important;
+            border-radius: 12px !important;
+            background: rgba(238, 77, 45, 0.08) !important;
+            border: 1.5px solid rgba(238, 77, 45, 0.35) !important;
+            color: #ee4d2d !important;
+            font-size: 19px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+            cursor: pointer !important;
+            text-decoration: none !important;
+            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.08) !important;
+            transition: background-color 0.2s ease, border-color 0.2s ease !important;
         }
-        .btn-buy-now-shopee {
-            background: var(--color-fire);
-            color: white;
-            border: none;
-            border-radius: 3px;
-            padding: 14px 44px;
-            font-size: 14.5px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35);
-            transition: all 0.2s ease;
-            text-transform: uppercase;
+        .btn-action-ai:hover, .btn-ai-consult-mini:hover {
+            background: rgba(238, 77, 45, 0.16) !important;
+            border-color: #ee4d2d !important;
+            transform: none !important;
         }
-        .btn-buy-now-shopee:hover {
-            background: var(--color-fire-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.45);
+        .btn-action-ai:active, .btn-ai-consult-mini:active {
+            transform: scale(0.96) !important;
         }
-        .btn-ai-consult-mini {
-            background: #2e180d;
-            color: #f7ede2;
-            border: none;
-            border-radius: 3px;
-            padding: 14px 20px;
-            font-size: 13.5px;
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
+
+        /* 2. Nút Thêm Vào Giỏ Hàng (Secondary CTA) */
+        .btn-action-cart, .btn-add-cart-shopee, .btn-add-cart {
+            height: 48px !important;
+            flex: 1 !important;
+            min-width: 160px;
+            background: rgba(238, 77, 45, 0.08) !important;
+            border: 1.5px solid rgba(238, 77, 45, 0.45) !important;
+            border-radius: 12px !important;
+            color: #ee4d2d !important;
+            font-size: 14.5px !important;
+            font-weight: 700 !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            white-space: nowrap !important;
+            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.08) !important;
+            transition: background-color 0.2s ease, border-color 0.2s ease !important;
         }
-        .btn-ai-consult-mini:hover { background: #442414; }
+        .btn-action-cart:hover, .btn-add-cart-shopee:hover, .btn-add-cart:hover {
+            background: rgba(238, 77, 45, 0.16) !important;
+            border-color: #ee4d2d !important;
+            transform: none !important;
+        }
+        .btn-action-cart:active, .btn-add-cart-shopee:active, .btn-add-cart:active {
+            transform: scale(0.96) !important;
+        }
+
+        /* 3. Nút Mua Ngay (Primary CTA) */
+        .btn-action-buy, .btn-buy-now-shopee, .btn-buy-now {
+            height: 48px !important;
+            flex: 1.25 !important;
+            min-width: 160px;
+            background: linear-gradient(135deg, #ff5722 0%, #ee4d2d 100%) !important;
+            border: 1.5px solid #ee4d2d !important;
+            border-radius: 12px !important;
+            color: #ffffff !important;
+            font-size: 14.5px !important;
+            font-weight: 800 !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            white-space: nowrap !important;
+            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.35) !important;
+            transition: background 0.2s ease, box-shadow 0.2s ease !important;
+            letter-spacing: 0.3px;
+        }
+        .btn-action-buy:hover, .btn-buy-now-shopee:hover, .btn-buy-now:hover {
+            background: linear-gradient(135deg, #f4511e 0%, #d73211 100%) !important;
+            border-color: #d73211 !important;
+            transform: none !important;
+            box-shadow: 0 8px 22px rgba(238, 77, 45, 0.45) !important;
+        }
+        .btn-action-buy:active, .btn-buy-now-shopee:active, .btn-buy-now:active {
+            transform: scale(0.96) !important;
+        }
 
         /* CAM KẾT SHOPEE ĐẢM BẢO FOOTER */
         .shopee-guarantee-line {
@@ -529,21 +618,27 @@
 
         /* ================= 4. CHI TIẾT SẢN PHẨM & MÔ TẢ ================= */
         .product-specs-section {
-            background: white;
-            border-radius: var(--radius-sm);
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            border-radius: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
         }
         .section-header-title {
-            background: #faf8f5;
-            padding: 12px 16px;
+            background: rgba(250, 248, 245, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            padding: 12px 18px;
             font-size: 15px;
             font-weight: 800;
             color: #1C1917;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
         .specs-table-grid {
             display: grid;
@@ -563,35 +658,212 @@
             padding: 0 16px;
         }
 
-        /* ================= 5. ĐÁNH GIÁ SÁCH ================= */
+        /* ================= 5. ĐÁNH GIÁ SÁCH CHUẨN SHOPEE ================= */
         .reviews-section {
-            background: white;
-            border-radius: var(--radius-sm);
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            border: 1px solid #e7e5e4;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
         }
         .reviews-overview-box {
             background: #fffbf8;
-            border: 1px solid #f8e8dc;
-            border-radius: var(--radius-sm);
-            padding: 24px;
+            border: 1px solid #f9ebd9;
+            border-radius: 12px;
+            padding: 24px 28px;
             display: flex;
             align-items: center;
-            gap: 30px;
-            margin-bottom: 20px;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+        .overview-score-col {
+            text-align: center;
+            min-width: 140px;
         }
         .score-large-num {
-            font-size: 32px;
-            font-weight: 900;
-            color: var(--color-fire);
+            font-size: 34px;
+            font-weight: 800;
+            color: #ee4d2d !important;
+            line-height: 1;
         }
-        .score-stars-row { color: var(--color-fire); font-size: 16px; margin-top: 4px; }
+        .score-stars-row {
+            color: #ee4d2d;
+            font-size: 15px;
+            margin-top: 6px;
+        }
+        .overview-filters-col {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .shopee-filter-chip {
+            padding: 7px 16px;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            background: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            color: #292524;
+            cursor: pointer;
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+        .shopee-filter-chip:hover {
+            border-color: #ee4d2d;
+            color: #ee4d2d;
+            background: #fffdfc;
+        }
+        .shopee-filter-chip.active {
+            border-color: #ee4d2d;
+            background: #ffffff;
+            color: #ee4d2d;
+            font-weight: 700;
+            box-shadow: 0 0 0 1px #ee4d2d inset;
+        }
+        /* Khung Viết Đánh Giá Của Bạn */
+        .write-review-card {
+            background: #fafaf9;
+            border: 1px dashed #d6d3d1;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 24px;
+        }
+        .write-review-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1c1917;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .star-picker-interactive {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 22px;
+            color: #d6d3d1;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+        .star-picker-interactive i.active {
+            color: #ee4d2d;
+        }
+        .star-picker-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ee4d2d;
+            margin-left: 8px;
+        }
+        .review-textarea {
+            width: 100%;
+            border: 1.5px solid #e7e5e4;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: #1c1917;
+            background: #ffffff;
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+            box-sizing: border-box;
+            transition: border-color 0.15s ease;
+        }
+        .review-textarea:focus {
+            border-color: #ee4d2d;
+        }
+        .btn-submit-review {
+            background: #ee4d2d;
+            color: #ffffff;
+            border: none;
+            border-radius: 9999px;
+            padding: 8px 24px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.15s ease;
+        }
+        .btn-submit-review:hover {
+            opacity: 0.92;
+        }
+        /* Danh sách từng đánh giá */
         .review-item-card {
-            border-bottom: 1px solid #f5efe6;
-            padding: 16px 0;
+            border-bottom: 1px solid rgba(245, 239, 230, 0.9);
+            padding: 18px 0;
+            display: flex;
+            gap: 16px;
         }
-        .review-user-name { font-weight: 700; font-size: 13.5px; }
+        .review-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffebe6;
+            color: #ee4d2d;
+            font-weight: 800;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid #fed7cc;
+        }
+        .review-user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .review-body-col {
+            flex: 1;
+        }
+        .review-user-name {
+            font-weight: 700;
+            font-size: 13.5px;
+            color: #1c1917;
+        }
+        .review-stars-row {
+            color: #ee4d2d;
+            font-size: 12px;
+            margin: 3px 0 5px 0;
+        }
+        .review-meta-row {
+            font-size: 12px;
+            color: #78716c;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #007a57;
+            font-weight: 600;
+            font-size: 11.5px;
+        }
+        .review-comment-content {
+            font-size: 13.5px;
+            color: #292524;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        .reviews-empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #78716c;
+            font-size: 13.5px;
+        }
 
         /* FOOTER */
         .page-footer {
@@ -653,6 +925,8 @@
         }
 
     </style>
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 </head>
 <body>
 
@@ -672,7 +946,7 @@
         </nav>
 
         <!-- MAIN PRODUCT CARD (BỐ CỤC 100% SHOPEE TỪ ẢNH MẪU) -->
-        <div class="product-main-container">
+        <div class="product-main-container detail-main-card">
 
             <!-- CỘT TRÁI: ẢNH LỚN + SLIDER 5 THUMBNAILS + CHIA SẺ & ĐÃ THÍCH -->
             <div class="product-gallery-col">
@@ -706,9 +980,11 @@
                         <div class="share-icon-circle" style="background:#000000;" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></div>
                     </div>
 
-                    <div class="like-group" onclick="toggleLike(this)">
-                        <i class="fa-solid fa-heart like-icon-heart"></i>
-                        <span>Đã thích (<strong>128</strong>)</span>
+                    <div class="like-group" th:onclick="'toggleLikeBook(' + ${book.id} + ')'" style="cursor:pointer;" id="bookLikeBtn">
+                        <i th:class="${isLiked ? 'fa-solid fa-heart like-icon-heart' : 'fa-regular fa-heart like-icon-heart'}" 
+                           th:style="${isLiked ? 'color:#ee4d2d !important;' : 'color:#78716C;'}" 
+                           id="bookLikeIcon"></i>
+                        <span id="bookLikeLabel" th:text="${isLiked ? 'Đã thích (' + likesCount + ')' : 'Thích (' + likesCount + ')'}">Đã thích (128)</span>
                     </div>
                 </div>
             </div>
@@ -842,7 +1118,7 @@
                         </div>
 
                         <!-- PANEL 5 CHI NHÁNH (THU GỌN) -->
-                        <div class="stores-dropdown-panel" id="storeDrawer">
+                        <div class="stores-dropdown-panel store-stock-card" id="storeDrawer">
                             <div th:each="inv : ${inventoryList}" class="store-inv-line">
                                 <div>
                                     <strong th:text="${inv.store.storeName}">CN 1: Thủ Đức</strong>
@@ -869,9 +1145,9 @@
                         <div class="attr-label">Số Lượng</div>
                         <div style="display:flex; align-items:center; gap:16px;">
                             <div class="quantity-stepper-wrap">
-                                <button type="button" class="btn-qty-step" onclick="changeQty(-1)">-</button>
-                                <input type="text" id="buyQty" class="input-qty-step" value="1" readonly>
-                                <button type="button" class="btn-qty-step" onclick="changeQty(1)">+</button>
+                                <button type="button" class="btn-qty-step qty-btn" onclick="changeQty(-1)">-</button>
+                                <input type="text" id="buyQty" class="input-qty-step qty-input" value="1" readonly>
+                                <button type="button" class="btn-qty-step qty-btn" onclick="changeQty(1)">+</button>
                             </div>
                             <span style="font-size:13px; color:#78716C;" th:text="${totalStock} + ' sản phẩm có sẵn tại TP.HCM'">
                                 15 sản phẩm có sẵn tại TP.HCM
@@ -879,21 +1155,20 @@
                         </div>
                     </div>
 
-                    <!-- CỤM NÚT HÀNH ĐỘNG SHOPEE -->
+                    <!-- CỤM 3 NÚT HÀNH ĐỘNG ĐỒNG BỘ CHUẨN APPLE LIQUID GLASS & SHOPEE -->
                     <div class="action-buttons-group">
-                        <button type="button" class="btn-add-cart-shopee" onclick="addToCart()">
-                            <i class="fa-solid fa-cart-plus" style="font-size:18px;"></i>
+                        <a th:href="@{/ai-assistant}" class="btn-action-ai" title="Hỏi Trợ Lý AI Tư Vấn Sách Cũ">
+                            <i class="fa-solid fa-robot"></i>
+                        </a>
+
+                        <button type="button" class="btn-action-cart btn-add-cart-shopee" onclick="addToCart()">
+                            <i class="fa-solid fa-cart-plus" style="font-size:16px;"></i>
                             <span>Thêm Vào Giỏ Hàng</span>
                         </button>
 
-                        <button type="button" class="btn-buy-now-shopee" onclick="buyNow()">
+                        <button type="button" class="btn-action-buy btn-buy-now-shopee" onclick="buyNow()">
                             Mua Ngay
                         </button>
-
-                        <a th:href="@{/ai-assistant}" class="btn-ai-consult-mini">
-                            <i class="fa-solid fa-robot text-warning"></i>
-                            <span>Hỏi Trợ Lý AI</span>
-                        </a>
                     </div>
                 </form>
 
@@ -945,14 +1220,18 @@
             </div>
         </section>
 
-        <!-- 5. ĐÁNH GIÁ SẢN PHẨM (REVIEWS) -->
-        <section class="reviews-section">
+        <!-- 5. ĐÁNH GIÁ SẢN PHẨM (REVIEWS) CHUẨN SHOPEE -->
+        <section class="reviews-section review-card" id="reviewsSection">
             <div class="section-header-title">ĐÁNH GIÁ SẢN PHẨM</div>
 
+            <!-- THANH TỔNG QUAN ĐIỂM ĐÁNH GIÁ CHUẨN SHOPEE -->
             <div class="reviews-overview-box">
-                <div>
-                    <div><span class="score-large-num" th:text="${avgRating}">4.8</span> <span style="font-size:16px; color:#78716C;">trên 5</span></div>
-                    <div class="score-stars-row">
+                <div class="overview-score-col">
+                    <div>
+                        <span class="score-large-num" id="overviewScoreText" th:text="${avgRating}">4.8</span>
+                        <span style="font-size:15px; color:#ee4d2d; font-weight:700;">trên 5</span>
+                    </div>
+                    <div class="score-stars-row" id="overviewStarsRow">
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
@@ -961,29 +1240,143 @@
                     </div>
                 </div>
 
-                <div style="font-size:13px; color:#44403C; line-height:1.6;">
-                    <div>Tất cả đánh giá đều đến từ khách hàng đã mua và nhận sách thành công tại chuỗi cửa hàng.</div>
-                    <div style="color:#78716C; margin-top:2px;">100% hình ảnh thực tế phản ánh đúng độ mới của sách.</div>
+                <!-- HÀNG NÚT LỌC THEO SAO DẠNG PILL (SHOPEE FILTER CHIPS) -->
+                <div class="overview-filters-col">
+                    <button type="button" class="shopee-filter-chip active" data-rating="0" onclick="filterByRating(0, this)">
+                        Tất Cả (<span id="chipCountAll" th:text="${reviewCount}">0</span>)
+                    </button>
+                    <button type="button" class="shopee-filter-chip" data-rating="5" onclick="filterByRating(5, this)">
+                        5 Sao (<span id="chipCount5" th:text="${count5Star}">0</span>)
+                    </button>
+                    <button type="button" class="shopee-filter-chip" data-rating="4" onclick="filterByRating(4, this)">
+                        4 Sao (<span id="chipCount4" th:text="${count4Star}">0</span>)
+                    </button>
+                    <button type="button" class="shopee-filter-chip" data-rating="3" onclick="filterByRating(3, this)">
+                        3 Sao (<span id="chipCount3" th:text="${count3Star}">0</span>)
+                    </button>
+                    <button type="button" class="shopee-filter-chip" data-rating="2" onclick="filterByRating(2, this)">
+                        2 Sao (<span id="chipCount2" th:text="${count2Star}">0</span>)
+                    </button>
+                    <button type="button" class="shopee-filter-chip" data-rating="1" onclick="filterByRating(1, this)">
+                        1 Sao (<span id="chipCount1" th:text="${count1Star}">0</span>)
+                    </button>
                 </div>
             </div>
 
-            <div th:unless="${#lists.isEmpty(reviews)}">
-                <div th:each="rv : ${reviews}" class="review-item-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="review-user-name" th:text="${rv.user.fullName != null ? rv.user.fullName : rv.user.username}">Nguyễn Văn A</span>
-                        <span style="font-size:11.5px; color:#78716C;" th:text="${#temporals.format(rv.createdAt, 'dd/MM/yyyy HH:mm')}">24/09/2026</span>
-                    </div>
-                    <div style="color:var(--color-fire); font-size:12px; margin: 4px 0;">
-                        <i class="fa-solid fa-star" th:each="i : ${#numbers.sequence(1, rv.rating)}"></i>
-                    </div>
-                    <p style="font-size:13.5px; color:#292524;" th:text="${rv.comment}">Sách giao rất nhanh, bìa phẳng và sạch sẽ y như mô tả!</p>
+            <!-- KHUNG VIẾT ĐÁNH GIÁ CỦA BẠN (KHI USER ĐÃ ĐĂNG NHẬP) -->
+            <div th:if="${isLoggedIn}" class="write-review-card">
+                <div class="write-review-title">
+                    <i class="fa-solid fa-pen-to-square" style="color: #ee4d2d;"></i>
+                    <span>Viết Đánh Giá Của Bạn</span>
+                    <span th:if="${hasPurchased}" class="verified-badge" style="margin-left: 8px;">
+                        <i class="fa-solid fa-circle-check"></i> Đã mua tại cửa hàng
+                    </span>
                 </div>
+                <form id="bookReviewForm" onsubmit="handleBookReviewSubmit(event)">
+                    <input type="hidden" name="bookId" id="reviewBookId" th:value="${book.id}">
+                    <input type="hidden" name="rating" id="reviewRatingInput" value="5">
+
+                    <div style="margin-bottom: 10px;">
+                        <div style="font-size: 13px; font-weight: 700; color: #44403c; margin-bottom: 4px;">
+                            Chọn mức độ hài lòng về tình trạng sách:
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="star-picker-interactive" id="bookStarPicker">
+                                <i class="fa-solid fa-star active" data-val="1"></i>
+                                <i class="fa-solid fa-star active" data-val="2"></i>
+                                <i class="fa-solid fa-star active" data-val="3"></i>
+                                <i class="fa-solid fa-star active" data-val="4"></i>
+                                <i class="fa-solid fa-star active" data-val="5"></i>
+                            </div>
+                            <span class="star-picker-label" id="bookRatingLabel">5 - Tuyệt vời</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <textarea name="comment" id="reviewCommentInput" class="review-textarea" rows="3"
+                                  placeholder="Chia sẻ nhận xét thực tế về cuốn sách: độ sạch trang giấy, gáy sách, mép bìa, dịch vụ đóng gói..." required></textarea>
+                    </div>
+
+                    <!-- ĐÍNH KÈM HÌNH ẢNH THỰC TẾ CHUẨN SHOPEE -->
+                    <div style="margin-bottom: 14px; display: flex; align-items: center; gap: 12px;">
+                        <input type="hidden" name="mediaUrl" id="reviewMediaUrlInput">
+                        <input type="file" id="reviewFileInput" accept="image/*" style="display:none;" onchange="handleReviewImageUpload(this)">
+                        
+                        <button type="button" class="btn-attach-img" onclick="document.getElementById('reviewFileInput').click()"
+                                style="display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 8px; border: 1.5px dashed #cbd5e1; background: rgba(255,255,255,0.85); font-size: 13px; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s;">
+                            <i class="fa-solid fa-camera" style="color: #ee4d2d; font-size: 14px;"></i>
+                            <span id="btnAttachImgText">Thêm hình ảnh thực tế</span>
+                        </button>
+                        
+                        <div id="reviewImgPreviewWrap" style="display:none; position:relative; width:52px; height:52px; border-radius:6px; border:1.5px solid #ee4d2d; overflow:hidden;">
+                            <img id="reviewImgPreview" src="" alt="Ảnh review" style="width:100%; height:100%; object-fit:cover;">
+                            <span onclick="clearReviewImage()" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.65); color:#fff; border-radius:50%; width:16px; height:16px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer;" title="Xóa ảnh">&times;</span>
+                        </div>
+                        <span id="reviewUploadStatus" style="font-size: 12px; color: #64748b;"></span>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end;">
+                        <button type="submit" id="btnSubmitReview" class="btn-submit-review">
+                            <i class="fa-solid fa-paper-plane"></i> Gửi Đánh Giá
+                        </button>
+                    </div>
+                </form>
             </div>
 
-            <div th:if="${#lists.isEmpty(reviews)}" style="text-align:center; padding:30px; color:#78716C; font-size:13.5px;">
-                Chưa có đánh giá nào cho cuốn sách này. Hãy là người đầu tiên sở hữu và đánh giá nhé!
+            <!-- NẾU CHƯA ĐĂNG NHẬP -->
+            <div th:unless="${isLoggedIn}" class="write-review-card" style="text-align: center; padding: 18px;">
+                <span style="font-size: 13.5px; color: #57534e;">Bạn muốn chia sẻ cảm nhận về cuốn sách này? </span>
+                <a th:href="@{/login(redirect='/books/' + ${book.id})}" style="color: #ee4d2d; font-weight: 700; text-decoration: underline; margin-left: 4px;">
+                    Đăng nhập để viết đánh giá
+                </a>
+            </div>
+
+            <!-- DANH SÁCH ĐÁNH GIÁ TỪNG KHÁCH HÀNG -->
+            <div id="reviewsListContainer">
+                <div th:unless="${#lists.isEmpty(reviews)}">
+                    <div th:each="rv : ${reviews}" class="review-item-card">
+                        <div class="review-user-avatar">
+                            <img th:if="${rv.user.avatar != null and !rv.user.avatar.isBlank()}" th:src="${rv.user.avatar}" alt="Avatar">
+                            <span th:unless="${rv.user.avatar != null and !rv.user.avatar.isBlank()}"
+                                  th:text="${rv.user.fullName != null and !rv.user.fullName.isBlank() ? #strings.substring(rv.user.fullName.trim(), 0, 1).toUpperCase() : #strings.substring(rv.user.username.trim(), 0, 1).toUpperCase()}">K</span>
+                        </div>
+                        <div class="review-body-col">
+                            <div class="review-user-name" th:text="${rv.user.fullName != null and !rv.user.fullName.isBlank() ? rv.user.fullName : rv.user.username}">Nguyễn Văn A</div>
+                            <div class="review-stars-row">
+                                <i class="fa-solid fa-star" th:each="i : ${#numbers.sequence(1, rv.rating)}"></i>
+                                <i class="fa-regular fa-star" th:if="${rv.rating < 5}" th:each="i : ${#numbers.sequence(rv.rating + 1, 5)}"></i>
+                            </div>
+                            <div class="review-meta-row">
+                                <span th:text="${#temporals.format(rv.createdAt, 'dd/MM/yyyy HH:mm')}">24/09/2026 14:30</span>
+                                <span th:if="${rv.order != null}" class="verified-badge">
+                                    <i class="fa-solid fa-circle-check"></i> Đã mua tại cửa hàng
+                                </span>
+                            </div>
+                            <div class="review-comment-content" th:text="${rv.comment}">Sách giao rất nhanh, bìa phẳng và sạch sẽ y như mô tả!</div>
+
+                            <!-- Ảnh đính kèm của đánh giá chuẩn Shopee -->
+                            <div th:if="${rv.mediaUrl != null and !rv.mediaUrl.isBlank()}" class="review-media-box" style="margin-top: 10px;">
+                                <img th:src="${rv.mediaUrl}" alt="Ảnh thực tế sản phẩm" onclick="openReviewImgModal(this.src)" 
+                                     style="width: 72px; height: 72px; object-fit: cover; border-radius: 6px; border: 1.5px solid #e2e8f0; cursor: pointer;" 
+                                     title="Nhấn để phóng to ảnh thực tế">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reviews-empty-state" th:if="${#lists.isEmpty(reviews)}" id="reviewsEmptyState">
+                    <i class="fa-regular fa-star" style="font-size:32px; color:#d6d3d1; margin-bottom:8px; display:block;"></i>
+                    Chưa có đánh giá nào cho cuốn sách này. Hãy là người đầu tiên sở hữu và đánh giá nhé!
+                </div>
             </div>
         </section>
+
+        <!-- MODAL PHÓNG TO ẢNH ĐÁNH GIÁ CHUẨN APPLE LIQUID GLASS -->
+        <div id="reviewImgModal" onclick="closeReviewImgModal()" 
+             style="display:none; position:fixed; inset:0; background:rgba(15,10,5,0.85); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); z-index:999999; align-items:center; justify-content:center; cursor:zoom-out; padding:20px;">
+            <img id="reviewModalImg" src="" alt="Ảnh phóng to" 
+                 style="max-width:92%; max-height:88vh; object-fit:contain; border-radius:14px; box-shadow:0 25px 60px rgba(0,0,0,0.6); border:2px solid rgba(255,255,255,0.2);">
+        </div>
 
     </main>
 
@@ -1003,13 +1396,34 @@
             thumbEl.classList.add('active');
         }
 
-        function toggleLike(el) {
-            const icon = el.querySelector('i');
-            if (icon.classList.contains('fa-solid')) {
-                icon.className = 'fa-regular fa-heart like-icon-heart';
-            } else {
-                icon.className = 'fa-solid fa-heart like-icon-heart';
-            }
+        function toggleLikeBook(bookId) {
+            fetch('/api/wishlist/toggle?bookId=' + bookId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.requireLogin) {
+                    if (confirm(data.message + '\nBạn có muốn chuyển đến trang Đăng nhập không?')) {
+                        window.location.href = '/login';
+                    }
+                    return;
+                }
+                if (data.success) {
+                    const icon = document.getElementById('bookLikeIcon');
+                    const label = document.getElementById('bookLikeLabel');
+                    if (data.liked) {
+                        icon.className = 'fa-solid fa-heart like-icon-heart';
+                        icon.style.setProperty('color', '#ee4d2d', 'important');
+                        label.innerText = 'Đã thích (' + data.likesCount + ')';
+                    } else {
+                        icon.className = 'fa-regular fa-heart like-icon-heart';
+                        icon.style.setProperty('color', '#78716C', 'important');
+                        label.innerText = 'Thích (' + data.likesCount + ')';
+                    }
+                }
+            })
+            .catch(err => console.error(err));
         }
 
         function selectVariant(el) {
@@ -1042,12 +1456,343 @@
         }
 
         function buyNow() {
-            const qty = document.getElementById('buyQty').value;
-            document.getElementById('hiddenQuantity').value = qty;
-            document.getElementById('cartAction').value = 'buy_now';
-            document.getElementById('cartForm').submit();
+            const qtyInput = document.getElementById('buyQty');
+            const qty = qtyInput ? (parseInt(qtyInput.value) || 1) : 1;
+            const bookIdInput = document.querySelector('#cartForm input[name="bookId"]');
+            const bookId = bookIdInput ? bookIdInput.value : '';
+            const storeIdInput = document.getElementById('selectedStoreId');
+            const storeId = storeIdInput ? storeIdInput.value : 1;
+
+            if (document.getElementById('hiddenQuantity')) {
+                document.getElementById('hiddenQuantity').value = qty;
+            }
+            if (document.getElementById('cartAction')) {
+                document.getElementById('cartAction').value = 'buy_now';
+            }
+
+            // Điều hướng trực tiếp đến trang checkout với các tham số buyNow
+            window.location.href = '/checkout?buyNow=true&bookId=' + encodeURIComponent(bookId) + '&storeId=' + encodeURIComponent(storeId) + '&quantity=' + encodeURIComponent(qty);
         }
+
+        /* ================= QUẢN LÝ ĐÁNH GIÁ SAO VÀ BỘ LỌC SHOPEE ================= */
+        const starLabels = {
+            1: '1 - Tệ',
+            2: '2 - Chưa tốt',
+            3: '3 - Bình thường',
+            4: '4 - Hài lòng',
+            5: '5 - Tuyệt vời'
+        };
+
+        function initStarPicker() {
+            const picker = document.getElementById('bookStarPicker');
+            if (!picker) return;
+            const stars = picker.querySelectorAll('i');
+            const ratingInput = document.getElementById('reviewRatingInput');
+            const ratingLabel = document.getElementById('bookRatingLabel');
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const val = parseInt(this.getAttribute('data-val'));
+                    if (ratingInput) ratingInput.value = val;
+                    if (ratingLabel) ratingLabel.innerText = starLabels[val] || (val + ' sao');
+
+                    stars.forEach(s => {
+                        const sVal = parseInt(s.getAttribute('data-val'));
+                        if (sVal <= val) {
+                            s.className = 'fa-solid fa-star active';
+                        } else {
+                            s.className = 'fa-regular fa-star';
+                        }
+                    });
+                });
+            });
+        }
+
+        function filterByRating(rating, chipBtn) {
+            // Cập nhật trạng thái active cho chip được chọn
+            document.querySelectorAll('.shopee-filter-chip').forEach(btn => btn.classList.remove('active'));
+            if (chipBtn) chipBtn.classList.add('active');
+
+            const bookIdEl = document.getElementById('reviewBookId');
+            const bookId = bookIdEl ? bookIdEl.value : /*[[${book.id}]]*/ '1';
+
+            const url = '/api/reviews/book/' + encodeURIComponent(bookId) + (rating > 0 ? '?rating=' + rating : '');
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        renderReviewsList(data.reviews, rating);
+                    }
+                })
+                .catch(err => {
+                    console.error('Lỗi khi lọc đánh giá:', err);
+                });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function renderReviewsList(reviews, currentFilterRating) {
+            const container = document.getElementById('reviewsListContainer');
+            if (!container) return;
+
+            if (!reviews || reviews.length === 0) {
+                const label = currentFilterRating > 0 ? (currentFilterRating + ' sao') : 'cuốn sách này';
+                container.innerHTML = `
+                    <div class="reviews-empty-state">
+                        <i class="fa-regular fa-star" style="font-size:32px; color:#d6d3d1; margin-bottom:8px; display:block;"></i>
+                        Chưa có đánh giá nào cho mức ${label}.
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            reviews.forEach(rv => {
+                let avatarHtml = '';
+                if (rv.userAvatar && rv.userAvatar.trim() !== '') {
+                    avatarHtml = `<img src="${escapeHtml(rv.userAvatar)}" alt="Avatar">`;
+                } else {
+                    avatarHtml = `<span>${escapeHtml(rv.userInitial || 'K')}</span>`;
+                }
+
+                let starsHtml = '';
+                const rating = rv.rating || 5;
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= rating) {
+                        starsHtml += '<i class="fa-solid fa-star"></i> ';
+                    } else {
+                        starsHtml += '<i class="fa-regular fa-star"></i> ';
+                    }
+                }
+
+                let verifiedBadgeHtml = '';
+                if (rv.purchased) {
+                    verifiedBadgeHtml = `
+                        <span class="verified-badge">
+                            <i class="fa-solid fa-circle-check"></i> Đã mua tại cửa hàng
+                        </span>
+                    `;
+                }
+
+                html += `
+                    <div class="review-item-card">
+                        <div class="review-user-avatar">
+                            ${avatarHtml}
+                        </div>
+                        <div class="review-body-col">
+                            <div class="review-user-name">${escapeHtml(rv.userName || 'Khách Hàng')}</div>
+                            <div class="review-stars-row">
+                                ${starsHtml}
+                            </div>
+                            <div class="review-meta-row">
+                                <span>${escapeHtml(rv.createdAt)}</span>
+                                ${verifiedBadgeHtml}
+                            </div>
+                            <div class="review-comment-content">${escapeHtml(rv.comment)}</div>
+                            ${rv.mediaUrl && rv.mediaUrl.trim() !== '' ? `
+                                <div class="review-media-box" style="margin-top: 10px;">
+                                    <img src="${escapeHtml(rv.mediaUrl)}" alt="Ảnh thực tế" onclick="openReviewImgModal(this.src)" 
+                                         style="width: 72px; height: 72px; object-fit: cover; border-radius: 6px; border: 1.5px solid #e2e8f0; cursor: pointer;" 
+                                         title="Nhấn để phóng to ảnh thực tế">
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // TẢI LÊN ẢNH THỰC TẾ CHO ĐÁNH GIÁ CHUẨN SHOPEE
+        function handleReviewImageUpload(input) {
+            if (!input.files || input.files.length === 0) return;
+            const file = input.files[0];
+            const statusEl = document.getElementById('reviewUploadStatus');
+            const previewWrap = document.getElementById('reviewImgPreviewWrap');
+            const previewImg = document.getElementById('reviewImgPreview');
+            const mediaUrlInput = document.getElementById('reviewMediaUrlInput');
+            const btnText = document.getElementById('btnAttachImgText');
+
+            if (statusEl) statusEl.innerText = 'Đang tải ảnh lên...';
+            if (btnText) btnText.innerText = 'Đang tải...';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/api/reviews/upload-image', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.imageUrl) {
+                    if (mediaUrlInput) mediaUrlInput.value = data.imageUrl;
+                    if (previewImg) previewImg.src = data.imageUrl;
+                    if (previewWrap) previewWrap.style.display = 'block';
+                    if (statusEl) statusEl.innerText = 'Đã thêm ảnh!';
+                    if (btnText) btnText.innerText = 'Đổi ảnh khác';
+                } else {
+                    if (statusEl) statusEl.innerText = data.message || 'Lỗi tải ảnh!';
+                    if (btnText) btnText.innerText = 'Thêm hình ảnh thực tế';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                if (statusEl) statusEl.innerText = 'Không thể tải ảnh lên!';
+                if (btnText) btnText.innerText = 'Thêm hình ảnh thực tế';
+            });
+        }
+
+        function clearReviewImage() {
+            const input = document.getElementById('reviewFileInput');
+            if (input) input.value = '';
+            const mediaUrlInput = document.getElementById('reviewMediaUrlInput');
+            if (mediaUrlInput) mediaUrlInput.value = '';
+            const previewWrap = document.getElementById('reviewImgPreviewWrap');
+            if (previewWrap) previewWrap.style.display = 'none';
+            const previewImg = document.getElementById('reviewImgPreview');
+            if (previewImg) previewImg.src = '';
+            const statusEl = document.getElementById('reviewUploadStatus');
+            if (statusEl) statusEl.innerText = '';
+            const btnText = document.getElementById('btnAttachImgText');
+            if (btnText) btnText.innerText = 'Thêm hình ảnh thực tế';
+        }
+
+        function openReviewImgModal(src) {
+            const modal = document.getElementById('reviewImgModal');
+            const modalImg = document.getElementById('reviewModalImg');
+            if (modal && modalImg) {
+                modalImg.src = src;
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeReviewImgModal() {
+            const modal = document.getElementById('reviewImgModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function handleBookReviewSubmit(e) {
+            e.preventDefault();
+            const bookId = document.getElementById('reviewBookId').value;
+            const rating = document.getElementById('reviewRatingInput').value;
+            const commentInput = document.getElementById('reviewCommentInput');
+            const comment = commentInput ? commentInput.value.trim() : '';
+            const mediaUrlInput = document.getElementById('reviewMediaUrlInput');
+            const mediaUrl = mediaUrlInput ? mediaUrlInput.value.trim() : '';
+
+            if (!comment) {
+                showShopeeToast('Vui lòng nhập nhận xét chất lượng sách!', true);
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitReview');
+            const originalBtnHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...';
+            }
+
+            const params = new URLSearchParams();
+            params.append('bookId', bookId);
+            params.append('rating', rating);
+            params.append('comment', comment);
+            if (mediaUrl) {
+                params.append('mediaUrl', mediaUrl);
+            }
+
+            fetch('/api/reviews/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalBtnHtml;
+                }
+
+                if (data.success) {
+                    showShopeeToast(data.message || 'Gửi đánh giá thành công!', false);
+                    if (commentInput) commentInput.value = '';
+                    clearReviewImage();
+
+                    // Cập nhật điểm trung bình
+                    if (data.avgRating) {
+                        const scoreEl = document.getElementById('overviewScoreText');
+                        if (scoreEl) scoreEl.innerText = data.avgRating;
+                    }
+
+                    // Cập nhật số lượng trên các chip
+                    if (data.counts) {
+                        if (document.getElementById('chipCountAll')) document.getElementById('chipCountAll').innerText = data.counts.all || '0';
+                        if (document.getElementById('chipCount5')) document.getElementById('chipCount5').innerText = data.counts.star5 || '0';
+                        if (document.getElementById('chipCount4')) document.getElementById('chipCount4').innerText = data.counts.star4 || '0';
+                        if (document.getElementById('chipCount3')) document.getElementById('chipCount3').innerText = data.counts.star3 || '0';
+                        if (document.getElementById('chipCount2')) document.getElementById('chipCount2').innerText = data.counts.star2 || '0';
+                        if (document.getElementById('chipCount1')) document.getElementById('chipCount1').innerText = data.counts.star1 || '0';
+                    }
+
+                    // Nạp lại danh sách đánh giá tất cả
+                    const allChip = document.querySelector('.shopee-filter-chip[data-rating="0"]');
+                    filterByRating(0, allChip);
+                } else {
+                    showShopeeToast(data.message || 'Không thể gửi đánh giá!', true);
+                }
+            })
+            .catch(err => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalBtnHtml;
+                }
+                console.error(err);
+                showShopeeToast('Đã có lỗi xảy ra khi kết nối máy chủ!', true);
+            });
+        }
+
+        function showShopeeToast(message, isError) {
+            let toast = document.getElementById('shopeeToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'shopeeToast';
+                toast.style.cssText = 'display:none; position:fixed; top:24px; right:24px; z-index:999999; background:#1c1917; color:#ffffff; padding:12px 20px; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.18); font-size:13.5px; font-weight:600; align-items:center; gap:8px;';
+                toast.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#10b981;"></i> <span id="shopeeToastText"></span>';
+                document.body.appendChild(toast);
+            }
+            const text = document.getElementById('shopeeToastText');
+            if (text) text.innerText = message;
+            const icon = toast.querySelector('i');
+            if (icon) {
+                icon.className = isError ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check';
+                icon.style.color = isError ? '#ef4444' : '#10b981';
+            }
+            toast.style.display = 'inline-flex';
+            setTimeout(function() {
+                toast.style.display = 'none';
+            }, 3500);
+        }
+
+        // Khởi tạo tương tác chọn sao khi tải trang
+        document.addEventListener('DOMContentLoaded', function() {
+            initStarPicker();
+        });
     </script>
+    <!-- TOAST THÔNG BÁO CHUẨN SHOPEE -->
+    <div id="shopeeToast" style="display:none; position:fixed; top:24px; right:24px; z-index:999999; background:#1c1917; color:#ffffff; padding:12px 20px; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.18); font-size:13.5px; font-weight:600; align-items:center; gap:8px;">
+        <i class="fa-solid fa-circle-check" style="color:#10b981;"></i>
+        <span id="shopeeToastText"></span>
+    </div>
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>
 </body>
