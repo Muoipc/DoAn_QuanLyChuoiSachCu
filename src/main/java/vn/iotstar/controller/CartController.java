@@ -138,4 +138,46 @@ public class CartController {
         int count = cartService.getCartTotalCount(userId);
         return ResponseEntity.ok(Map.of("count", count, "success", true));
     }
+
+    /**
+     * API AJAX lấy danh sách sản phẩm mới thêm vào giỏ hàng (tối đa 5 cuốn)
+     * phục vụ Shopee Cart Popover khi rê chuột vào icon giỏ hàng trên Header.
+     * URL: GET /cart/api/preview
+     */
+    @GetMapping("/api/preview")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getCartPreview(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = resolveUserId(userDetails);
+        Cart cart = cartService.getOrCreateCartForUser(userId);
+        List<CartItem> allItems = cartService.getCartItemsWithDetails(cart.getId());
+
+        int totalCount = allItems.stream().mapToInt(CartItem::getQuantity).sum();
+        int displayLimit = 5;
+        List<Map<String, Object>> itemsList = new java.util.ArrayList<>();
+
+        for (int i = 0; i < Math.min(displayLimit, allItems.size()); i++) {
+            CartItem ci = allItems.get(i);
+            Map<String, Object> map = new java.util.HashMap<>();
+            map.put("id", ci.getId());
+            map.put("bookId", ci.getBook() != null ? ci.getBook().getId() : 1);
+            map.put("title", ci.getBook() != null ? ci.getBook().getTitle() : "Sách cũ");
+            map.put("price", ci.getBook() != null && ci.getBook().getPrice() != null ? ci.getBook().getPrice() : 0);
+            map.put("quantity", ci.getQuantity());
+            map.put("imageUrl", ci.getBook() != null && ci.getBook().getPrimaryImageUrl() != null 
+                    ? ci.getBook().getPrimaryImageUrl() : "/images/books/book_1.jpg");
+            map.put("conditionPercent", ci.getBook() != null ? ci.getBook().getConditionPercent() : 90);
+            itemsList.add(map);
+        }
+
+        int displayedCount = itemsList.stream().mapToInt(m -> (int) m.get("quantity")).sum();
+        int moreCount = Math.max(0, totalCount - displayedCount);
+
+        Map<String, Object> response = new java.util.HashMap<>();
+        response.put("success", true);
+        response.put("totalCount", totalCount);
+        response.put("moreCount", moreCount);
+        response.put("items", itemsList);
+
+        return ResponseEntity.ok(response);
+    }
 }

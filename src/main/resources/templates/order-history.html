@@ -12,14 +12,14 @@
 
     <style>
         :root {
-            --color-bg-base: #f7f5f0;
+            --color-bg-base: #F8F5EE;
             --color-surface: rgba(255, 255, 255, 0.94);
             --color-surface-glass: rgba(255, 255, 255, 0.82);
             --color-border-subtle: #eae5dc;
             
-            --shopee-orange: #ee4d2d;
+            --shopee-orange: #8C4A27;
             --shopee-orange-hover: #d73211;
-            --shopee-orange-light: #fef6f5;
+            --shopee-orange-light: #F5ECE4;
 
             --color-text-primary: #1C1917;
             --color-text-secondary: #44403C;
@@ -38,66 +38,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-
-        /* TOPBAR & HEADER */
-        .shopee-topbar {
-            background: rgba(35, 18, 10, 0.22);
-            backdrop-filter: blur(28px);
-            font-size: 13px;
-            padding: 7px 0;
-            color: #1C1917;
-        }
-        .container-shopee {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 16px;
-        }
-        .topbar-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .topbar-links {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-        }
-        .topbar-links a {
-            color: #1C1917;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .order-header {
-            background: rgba(45, 24, 15, 0.28);
-            backdrop-filter: blur(36px);
-            padding: 16px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        .order-header-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .brand-box {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            text-decoration: none;
-        }
-        .brand-logo-img {
-            height: 48px;
-            width: auto;
-            object-fit: contain;
-        }
-        .header-title-badge {
-            font-size: 20px;
-            font-weight: 800;
-            color: #1C1917;
-            border-left: 2px solid #1C1917;
-            padding-left: 14px;
-            text-transform: uppercase;
         }
 
         /* SHOPEE STATUS TABS */
@@ -375,36 +315,67 @@
             font-size: 13px;
             margin-top: auto;
         }
+    
+        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        .lang-dropdown-box {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-trigger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #292524;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .lang-trigger-btn:hover {
+            color: #8C4A27;
+            background: rgba(140, 74, 39, 0.08);
+        }
+        .lang-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E8DEC8;
+            min-width: 145px;
+            display: none;
+            z-index: 1000;
+            padding: 6px 0;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu {
+            display: block;
+        }
+        .lang-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #1C1917;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .lang-item-btn:hover {
+            background: #F5ECE4;
+            color: #8C4A27;
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- TOPBAR -->
-    <div class="shopee-topbar">
-        <div class="container-shopee topbar-content">
-            <div style="font-weight: 700; color: #1C1917;">
-                <i class="fa-solid fa-shop me-1 text-danger"></i> Hệ Thống 5 Chi Nhánh Chuỗi Sách Cũ TP.HCM Sẵn Sàng Phục Vụ
-            </div>
-            <ul class="topbar-links">
-                <li><a th:href="@{/}"><i class="fa-solid fa-house"></i> Trang Chủ</a></li>
-                <li><a th:href="@{/cart}"><i class="fa-solid fa-cart-shopping"></i> Giỏ Hàng</a></li>
-                <li><span style="font-weight: 700; color: #1C1917;"><i class="fa-solid fa-circle-user text-success"></i> Nguyễn Song Hoàng Phúc</span></li>
-            </ul>
-        </div>
-    </div>
+    <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
+    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
 
-    <!-- HEADER -->
-    <header class="order-header">
-        <div class="container-shopee order-header-inner">
-            <a th:href="@{/}" class="brand-box">
-                <img th:src="@{/images/logo-books.png}" alt="Logo Books Báo Chí" class="brand-logo-img">
-                <span class="header-title-badge">Đơn Mua Của Tôi</span>
-            </a>
-            <a th:href="@{/}" class="btn-order-action btn-action-outline">
-                <i class="fa-solid fa-magnifying-glass"></i> Mua thêm sách cũ
-            </a>
-        </div>
-    </header>
 
     <!-- SHOPEE TABS BAR -->
     <div class="order-tabs-bar">
@@ -676,5 +647,7 @@
             });
         });
     </script>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/cart-popover.js"></script>
 </body>
 </html>

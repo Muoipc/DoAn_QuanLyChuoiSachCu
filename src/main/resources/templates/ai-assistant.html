@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,9 +12,9 @@
 
     <style>
         :root {
-            --color-fire: #ee4d2d;
-            --color-fire-hover: #f05d40;
-            --color-bg-body: #f7f5f0;
+            --color-fire: #8C4A27;
+            --color-fire-hover: #733615;
+            --color-bg-body: #F8F5EE;
             --color-text-main: #1C1917;
             --color-text-secondary: #44403C;
             --color-text-light: #78716C;
@@ -119,7 +119,7 @@
         }
         .ai-avatar-circle {
             width: 38px; height: 38px; border-radius: 50%;
-            background: linear-gradient(135deg, #ee4d2d, #ff7e5f);
+            background: linear-gradient(135deg, #8C4A27, #A0522D);
             display: flex; align-items: center; justify-content: center;
             color: white; font-size: 18px; box-shadow: 0 2px 8px rgba(238, 77, 45, 0.3);
         }
@@ -237,29 +237,68 @@
         .btn-send-chat:hover {
             background: var(--color-fire-hover); transform: scale(1.05);
         }
+    
+        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        .lang-dropdown-box {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-trigger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #292524;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .lang-trigger-btn:hover {
+            color: #8C4A27;
+            background: rgba(140, 74, 39, 0.08);
+        }
+        .lang-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E8DEC8;
+            min-width: 145px;
+            display: none;
+            z-index: 1000;
+            padding: 6px 0;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu {
+            display: block;
+        }
+        .lang-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #1C1917;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .lang-item-btn:hover {
+            background: #F5ECE4;
+            color: #8C4A27;
+        }
+
     </style>
 </head>
 <body>
 
     <!-- HEADER -->
-    <header class="page-header">
-        <div class="container header-inner">
-            <div class="brand-box">
-                <a th:href="@{/}">
-                    <img th:src="@{/images/logo-books.png}" alt="Logo Books" class="brand-img">
-                </a>
-                <span class="page-title">Trợ Lý AI Tư Vấn Sách Cũ</span>
-            </div>
-            <div style="display:flex; gap:12px; align-items:center;">
-                <a th:href="@{/cart}" style="font-size:13px; font-weight:700; color:#1C1917;">
-                    <i class="fa-solid fa-cart-shopping me-1"></i> Giỏ Hàng
-                </a>
-                <a th:href="@{/}" style="font-size:13px; font-weight:700; color:var(--color-fire); margin-left:8px;">
-                    <i class="fa-solid fa-arrow-left me-1"></i> Về Trang Chủ
-                </a>
-            </div>
-        </div>
-    </header>
+    <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
+    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+
 
     <main class="container chat-layout-wrap">
 
@@ -473,5 +512,7 @@
             return div.innerHTML;
         }
     </script>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/cart-popover.js"></script>
 </body>
 </html>

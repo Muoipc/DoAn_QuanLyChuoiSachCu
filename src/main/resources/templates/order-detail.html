@@ -1,224 +1,875 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle}">Chi Tiết Đơn Hàng - Chuỗi Sách Cũ TP.HCM</title>
+    <title th:text="${pageTitle} != null ? ${pageTitle} : 'Chi Tiết Đơn Hàng — Chuỗi Cửa Hàng Sách Cũ TP.HCM'">Chi Tiết Đơn Hàng — Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
         :root {
-            --color-bg-base: #f7f5f0;
-            --color-surface: rgba(255, 255, 255, 0.94);
-            --color-border-subtle: #eae5dc;
-            --shopee-orange: #ee4d2d;
-            --color-text-primary: #1C1917;
-            --color-text-secondary: #44403C;
-            --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
-            --radius-box: 14px;
+            --color-book-primary: #8C4A27;
+            --color-book-hover: #733615;
+            --color-book-light: #F5ECE4;
+            --color-bg-paper: #F8F5EE;
+            --color-card-bg: #ffffff;
+            --color-text-main: #1C1917;
+            --color-text-secondary: #574E45;
+            --color-text-light: #78716C;
+            --color-border: #E8DEC8;
+            --color-green-done: #00bfa5;
+            --radius-sm: 3px;
         }
+
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: var(--font-sans);
-            background: var(--color-bg-base);
-            color: var(--color-text-primary);
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: var(--color-bg-paper);
+            color: var(--color-text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
-        .container {
-            max-width: 1000px;
-            margin: 30px auto;
+        a { text-decoration: none; color: inherit; }
+
+        .container-shopee {
+            max-width: 1100px;
+            margin: 0 auto;
             padding: 0 16px;
-            flex: 1;
         }
-        .card-box {
-            background: white;
-            border-radius: var(--radius-box);
-            border: 1px solid var(--color-border-subtle);
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+
+        /* 1. TOPBAR VINTAGE BROWN */
+        .order-topbar {
+            background: rgba(35, 18, 10, 0.22);
+            backdrop-filter: blur(24px);
+            font-size: 13px;
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
         }
-        /* TIMELINE TRACKING */
-        .tracking-timeline {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        .topbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-left, .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .topbar-link {
+            color: #292524;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.15s;
+        }
+        .topbar-link:hover { color: var(--color-book-primary); }
+        .topbar-divider {
+            width: 1px;
+            height: 12px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        .lang-dropdown-box {
             position: relative;
-            margin: 20px 0;
+            display: inline-block;
+        }
+        .lang-trigger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #292524;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .lang-trigger-btn:hover {
+            color: #8C4A27;
+            background: rgba(140, 74, 39, 0.08);
+        }
+        .lang-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E8DEC8;
+            min-width: 145px;
+            display: none;
+            z-index: 1000;
+            padding: 6px 0;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu {
+            display: block;
+        }
+        .lang-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #1C1917;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .lang-item-btn:hover {
+            background: #F5ECE4;
+            color: #8C4A27;
+        }
+
+        /* 2. HEADER MAIN */
+        .order-header-main {
+            background: rgba(45, 24, 15, 0.28);
+            backdrop-filter: blur(36px);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .header-content-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand-badge-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .brand-logo-img {
+            height: 50px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+        }
+        .order-badge-text {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--color-book-primary);
+            border-left: 2px solid #1C1917;
+            padding-left: 14px;
+            text-transform: capitalize;
+        }
+
+        /* 3. KHỐI TRẠNG THÁI VÀ MÃ ĐƠN HÀNG (SHOPEE TOP BAR) */
+        .order-top-nav-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--color-border);
+            padding: 16px 24px;
+            margin: 24px auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .btn-back-history {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #574E45;
+            transition: color 0.15s;
+        }
+        .btn-back-history:hover { color: var(--color-book-primary); }
+        .order-meta-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13.5px;
+        }
+        .order-code-txt {
+            font-weight: 700;
+            color: #78716C;
+        }
+        .status-badge-lg {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--color-book-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* 4. STEPPER TIMELINE 5 BƯỚC CHUẨN SHOPEE */
+        .stepper-timeline-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--color-border);
+            padding: 36px 30px 24px;
+            margin-bottom: 16px;
+        }
+        .stepper-flex {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            position: relative;
+        }
+        /* Đường line kết nối */
+        .stepper-line-bg {
+            position: absolute;
+            top: 24px;
+            left: 50px;
+            right: 50px;
+            height: 4px;
+            background: #e8dec8;
+            z-index: 1;
+        }
+        .stepper-line-progress {
+            position: absolute;
+            top: 24px;
+            left: 50px;
+            height: 4px;
+            background: var(--color-green-done);
+            z-index: 2;
+            transition: width 0.4s;
+        }
+        .step-node {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 140px;
             text-align: center;
         }
-        .tracking-step {
-            position: relative;
-            z-index: 2;
-        }
-        .step-icon {
-            width: 50px;
-            height: 50px;
+        .step-circle-icon {
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            background: #ede8e1;
-            color: #78716c;
+            background: white;
+            border: 3px solid #d5cec4;
+            color: #a8a29e;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            margin: 0 auto 10px;
-            border: 4px solid white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            transition: all 0.25s;
         }
-        .tracking-step.done .step-icon {
-            background: #007a57;
+        .step-node.completed .step-circle-icon {
+            border-color: var(--color-green-done);
+            background: var(--color-green-done);
             color: white;
+            box-shadow: 0 4px 12px rgba(0, 191, 165, 0.35);
         }
-        .tracking-step.active .step-icon {
-            background: var(--shopee-orange);
+        .step-node.active .step-circle-icon {
+            border-color: var(--color-book-primary);
+            background: var(--color-book-primary);
             color: white;
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.35);
         }
-        .step-title {
+        .step-name-txt {
             font-size: 13px;
             font-weight: 700;
+            color: #1C1917;
+            margin-bottom: 4px;
         }
-        .step-time {
+        .step-time-txt {
             font-size: 11px;
-            color: #78716c;
+            color: #78716C;
+        }
+
+        /* 5. KHUNG THÔNG BÁO HOÀN THÀNH & HÀNH ĐỘNG SHOPEE */
+        .order-thankyou-banner {
+            background: #fffbf5;
+            border: 1px solid #fae6cb;
+            border-radius: var(--radius-sm);
+            padding: 18px 24px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .thankyou-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+            color: #8c5600;
+        }
+        .thankyou-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-shopee-orange {
+            background: var(--color-book-primary);
+            color: white;
+            border: none;
+            border-radius: 2px;
+            padding: 10px 24px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-transform: capitalize;
+        }
+        .btn-shopee-orange:hover { background: var(--color-book-hover); }
+        .btn-shopee-outline {
+            background: white;
+            border: 1px solid #d5cec4;
+            color: #1C1917;
+            border-radius: 2px;
+            padding: 9px 20px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-shopee-outline:hover { background: #f5f0e6; border-color: #8C4A27; }
+
+        /* 6. KHUNG ĐỊA CHỈ NHẬN HÀNG VỚI ĐƯỜNG VIỀN PHONG BÌ THƯ SHOPEE */
+        .shipping-envelope-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--color-border);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        /* VIỀN PHONG BÌ ĐẶC TRƯNG SHOPEE */
+        .shopee-envelope-strip {
+            height: 3.5px;
+            background: repeating-linear-gradient(45deg, #6fa6d6, #6fa6d6 33px, transparent 0, transparent 41px, #f18d9b 0, #f18d9b 74px, transparent 0, transparent 82px);
+        }
+        .shipping-content-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            padding: 24px;
+            gap: 32px;
+        }
+        .address-col-left {
+            border-right: 1px solid #f2ede6;
+            padding-right: 24px;
+        }
+        .shipping-col-right {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .box-title-h3 {
+            font-size: 15px;
+            font-weight: 800;
+            color: #1C1917;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* LOGISTICS LOGS */
+        .logistics-timeline {
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid #e8dec8;
+            margin-left: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .log-item {
+            position: relative;
+            font-size: 13px;
+        }
+        .log-item::before {
+            content: '';
+            position: absolute;
+            left: -27px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #d5cec4;
+        }
+        .log-item.latest::before {
+            background: var(--color-green-done);
+            box-shadow: 0 0 0 3px rgba(0, 191, 165, 0.25);
+        }
+        .log-time {
+            font-size: 11.5px;
+            color: #78716C;
             margin-top: 2px;
         }
-        .item-row {
-            display: grid;
-            grid-template-columns: 65px 1fr 120px 100px;
-            align-items: center;
-            gap: 16px;
-            padding: 14px 0;
-            border-bottom: 1px solid #f0eae1;
+
+        /* 7. BẢNG SẢN PHẨM & ĐƠN HÀNG */
+        .order-items-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--color-border);
+            margin-bottom: 16px;
         }
-        .item-row:last-child { border-bottom: none; }
-        .calc-row {
+        .shop-header-row {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            padding: 8px 0;
-            font-size: 14px;
-            color: var(--color-text-secondary);
+            padding: 16px 24px;
+            border-bottom: 1px solid #f2ede6;
         }
-        .calc-row.final {
-            border-top: 1px solid #e5ded3;
-            margin-top: 10px;
-            padding-top: 12px;
-            font-size: 18px;
+        .shop-badge-fav {
+            background: var(--color-book-primary);
+            color: white;
+            font-size: 11px;
             font-weight: 800;
-            color: var(--color-text-primary);
+            padding: 2px 6px;
+            border-radius: 2px;
         }
-        .final-price {
-            font-size: 24px;
+        .item-row-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid #f5efe6;
+            transition: background 0.15s;
+        }
+        .item-row-box:hover { background: #fffdfb; }
+        .item-left-meta {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .book-item-thumb {
+            width: 75px;
+            height: 85px;
+            object-fit: cover;
+            border-radius: 3px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        .book-title-h4 {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #1C1917;
+            margin-bottom: 4px;
+        }
+        .variant-pill-tag {
+            display: inline-block;
+            background: #faf8f5;
+            border: 1px solid #e8e2d8;
+            font-size: 11.5px;
+            color: #78716C;
+            padding: 2px 8px;
+            border-radius: 2px;
+            margin-bottom: 4px;
+        }
+        .store-pill-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11.5px;
+            color: #78716C;
+            background: #f5f0e6;
+            padding: 2px 8px;
+            border-radius: 2px;
+        }
+
+        .item-right-price {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        .price-strike-txt {
+            font-size: 12px;
+            color: #78716C;
+            text-decoration: line-through;
+        }
+        .price-final-txt {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--color-book-primary);
+        }
+
+        /* 8. BẢNG TỔNG KẾT THANH TOÁN (BREAKDOWN SUMMARY) */
+        .order-breakdown-card {
+            background: #fffdfa;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--color-border);
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        .breakdown-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 8px 0;
+            font-size: 13.5px;
+            color: #78716C;
+            gap: 30px;
+        }
+        .breakdown-val {
+            min-width: 140px;
+            text-align: right;
+            color: #1C1917;
+            font-weight: 600;
+        }
+        .breakdown-row.total-row {
+            border-top: 1px dashed #e8dec8;
+            margin-top: 10px;
+            padding-top: 16px;
+            font-size: 15px;
+            color: #1C1917;
+        }
+        .total-number-lg {
+            font-size: 26px;
             font-weight: 900;
-            color: var(--shopee-orange);
+            color: var(--color-book-primary);
+        }
+
+        /* MODAL ĐÁNH GIÁ */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        .modal-card {
+            background: white;
+            border-radius: 4px;
+            width: 520px;
+            max-width: 90%;
+            padding: 26px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        /* FOOTER */
+        .order-footer {
+            background: #25160d;
+            color: #b7b0a5;
+            padding: 28px 0;
+            font-size: 12px;
+            text-align: center;
+            margin-top: auto;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- HEADER TRANG -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-            <a th:href="@{/orders}" style="color: var(--color-text-secondary); font-weight:700; text-decoration:none;">
-                <i class="fa-solid fa-arrow-left me-1"></i> Trở về danh sách đơn mua
+
+    <!-- 1. TOPBAR VINTAGE BROWN -->
+    <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
+    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+
+
+    <main class="container-shopee" style="flex:1;">
+
+        <!-- 3. TOP NAV BAR: NÚT TRỞ LẠI & MÃ ĐƠN HÀNG (CHUẨN SHOPEE) -->
+        <div class="order-top-nav-card">
+            <a th:href="@{/orders}" class="btn-back-history">
+                <i class="fa-solid fa-chevron-left"></i> TRỞ LẠI
             </a>
-            <div style="font-size: 14px; font-weight: 700;">
-                MÃ ĐƠN HÀNG: <span style="color:var(--shopee-orange);" th:text="${order.orderCode}">ORD...</span>
+
+            <div class="order-meta-right">
+                <span class="order-code-txt">MÃ ĐƠN HÀNG: <strong th:text="${order.orderCode}">ORD259350525</strong></span>
+                <span style="color:#d5cec4;">|</span>
+                <span class="status-badge-lg" th:if="${order.orderStatus.name() == 'DELIVERED'}">
+                    <i class="fa-solid fa-circle-check text-success me-1"></i> ĐƠN HÀNG ĐÃ HOÀN THÀNH
+                </span>
+                <span class="status-badge-lg" th:if="${order.orderStatus.name() == 'SHIPPING'}">
+                    <i class="fa-solid fa-truck-fast text-primary me-1"></i> ĐANG VẬN CHUYỂN
+                </span>
+                <span class="status-badge-lg" th:if="${order.orderStatus.name() == 'CONFIRMED'}">
+                    <i class="fa-solid fa-box text-warning me-1"></i> ĐÃ XÁC NHẬN &amp; ĐÓNG GÓI
+                </span>
+                <span class="status-badge-lg" th:if="${order.orderStatus.name() == 'NEW'}">
+                    <i class="fa-solid fa-clock text-secondary me-1"></i> CHỜ XÁC NHẬN
+                </span>
+                <span class="status-badge-lg" th:if="${order.orderStatus.name() == 'CANCELLED'}" style="color:#dc2626;">
+                    <i class="fa-solid fa-ban text-danger me-1"></i> ĐÃ HỦY ĐƠN HÀNG
+                </span>
             </div>
         </div>
 
-        <!-- HÀNH TRÌNH ĐƠN HÀNG (TRACKING TIMELINE) -->
-        <div class="card-box">
-            <h3 style="font-size: 16px; font-weight:800; margin-bottom: 16px;">
-                <i class="fa-solid fa-route text-danger me-1"></i> Hành Trình & Trạng Thái Đơn Hàng
-            </h3>
+        <!-- 4. STEPPER TIMELINE 5 BƯỚC CHUẨN SHOPEE (KHI ĐƠN KHÔNG HỦY) -->
+        <div class="stepper-timeline-card" th:unless="${order.orderStatus.name() == 'CANCELLED'}">
+            <div class="stepper-flex">
+                <!-- Đường line background -->
+                <div class="stepper-line-bg"></div>
+                <!-- Đường line tiến trình -->
+                <div class="stepper-line-progress" 
+                     th:style="${order.orderStatus.name() == 'DELIVERED'} ? 'width:calc(100% - 100px);' : 
+                                (${order.orderStatus.name() == 'SHIPPING'} ? 'width:calc(75% - 75px);' : 
+                                (${order.orderStatus.name() == 'CONFIRMED'} ? 'width:calc(45% - 45px);' : 'width:20px;'))"></div>
 
-            <div class="tracking-timeline">
-                <div class="tracking-step done">
-                    <div class="step-icon"><i class="fa-solid fa-file-invoice"></i></div>
-                    <div class="step-title">Đặt Hàng Thành Công</div>
-                    <div class="step-time" th:text="${#temporals.format(order.createdAt, 'HH:mm dd/MM')}">09:15 20/09</div>
+                <!-- Bước 1: Đã Đặt -->
+                <div class="step-node completed">
+                    <div class="step-circle-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                    <div class="step-name-txt">Đơn Hàng Đã Đặt</div>
+                    <div class="step-time-txt" th:text="${#temporals.format(order.createdAt, 'HH:mm dd-MM-yyyy')}">14:30 24-09-2026</div>
                 </div>
 
-                <div class="tracking-step" th:classappend="${order.orderStatus.name() != 'NEW' and order.orderStatus.name() != 'CANCELLED'} ? 'done' : (${order.orderStatus.name() == 'NEW'} ? 'active' : '')">
-                    <div class="step-icon"><i class="fa-solid fa-box-open"></i></div>
-                    <div class="step-title">Chi Nhánh Chuẩn Bị Sách</div>
-                    <div class="step-time" th:text="${order.store != null ? order.store.storeName : 'Chi nhánh'}">Chi Nhánh 1</div>
+                <!-- Bước 2: Đã Thanh Toán / Xác Nhận -->
+                <div class="step-node" th:classappend="${order.orderStatus.name() != 'NEW' ? 'completed' : 'active'}">
+                    <div class="step-circle-icon"><i class="fa-solid fa-credit-card"></i></div>
+                    <div class="step-name-txt">Đã Xác Nhận</div>
+                    <div class="step-time-txt" th:if="${order.orderStatus.name() != 'NEW'}">14:32 24-09-2026</div>
+                    <div class="step-time-txt" th:if="${order.orderStatus.name() == 'NEW'}">Đang xử lý</div>
                 </div>
 
-                <div class="tracking-step" th:classappend="${order.orderStatus.name() == 'DELIVERED'} ? 'done' : (${order.orderStatus.name() == 'SHIPPING'} ? 'active' : '')">
-                    <div class="step-icon"><i class="fa-solid fa-truck-fast"></i></div>
-                    <div class="step-title" th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Sẵn Sàng Tại Quầy Chi Nhánh' : 'Đang Giao Hàng'}">Đang Giao</div>
-                    <div class="step-time" th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Khách ghé nhận' : 'Đơn vị vận chuyển'}">GHTK</div>
+                <!-- Bước 3: Đã Giao Cho ĐVVC -->
+                <div class="step-node" th:classappend="${order.orderStatus.name() == 'SHIPPING' or order.orderStatus.name() == 'DELIVERED' ? 'completed' : ''}">
+                    <div class="step-circle-icon"><i class="fa-solid fa-truck"></i></div>
+                    <div class="step-name-txt">Đã Giao ĐVVC</div>
+                    <div class="step-time-txt" th:if="${order.orderStatus.name() == 'SHIPPING' or order.orderStatus.name() == 'DELIVERED'}">15:00 24-09-2026</div>
                 </div>
 
-                <div class="tracking-step" th:classappend="${order.orderStatus.name() == 'DELIVERED'} ? 'done' : ''">
-                    <div class="step-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="step-title">Đã Hoàn Thành</div>
-                    <div class="step-time" th:if="${order.orderStatus.name() == 'DELIVERED'}">Giao dịch hoàn tất</div>
+                <!-- Bước 4: Đang Vận Chuyển -->
+                <div class="step-node" th:classappend="${order.orderStatus.name() == 'DELIVERED' ? 'completed' : (order.orderStatus.name() == 'SHIPPING' ? 'active' : '')}">
+                    <div class="step-circle-icon"><i class="fa-solid fa-box-open"></i></div>
+                    <div class="step-name-txt">Đang Giao Hàng</div>
+                    <div class="step-time-txt" th:if="${order.orderStatus.name() == 'SHIPPING' or order.orderStatus.name() == 'DELIVERED'}">16:30 24-09-2026</div>
+                </div>
+
+                <!-- Bước 5: Đã Giao Thành Công -->
+                <div class="step-node" th:classappend="${order.orderStatus.name() == 'DELIVERED' ? 'completed' : ''}">
+                    <div class="step-circle-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="step-name-txt">Đã Giao Hàng</div>
+                    <div class="step-time-txt" th:if="${order.orderStatus.name() == 'DELIVERED'}">17:45 24-09-2026</div>
                 </div>
             </div>
         </div>
 
-        <!-- ĐỊA CHỈ & THÔNG TIN BÀN GIAO -->
-        <div class="card-box">
-            <h3 style="font-size: 16px; font-weight:800; margin-bottom: 14px;">
-                <i class="fa-solid fa-location-dot text-danger me-1"></i> Thông Tin Nhận Sách
-            </h3>
-            <div style="font-size: 14px; line-height: 1.6;">
-                <div>Người nhận: <strong th:text="${order.receiverName} + ' - ' + ${order.receiverPhone}">Phúc</strong></div>
-                <div>Hình thức: <strong th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Đến nhận tại chi nhánh (Click & Collect)' : 'Giao hàng tận nơi'}">Nhận tại chi nhánh</strong></div>
-                <div>Chi nhánh phụ trách: <strong th:text="${order.store != null ? order.store.storeName : ''}">Chi Nhánh 1: Thủ Đức</strong></div>
-                <div>Địa chỉ: <strong th:text="${order.receiverAddress}">Số 48 Võ Văn Ngân, P. Linh Chiểu</strong></div>
-                <div th:if="${order.customerNotes != null and !order.customerNotes.isBlank()}">
-                    Ghi chú của bạn: <em th:text="${order.customerNotes}">Ghi chú</em>
-                </div>
-            </div>
-        </div>
-
-        <!-- SẢN PHẨM & THANH TOÁN -->
-        <div class="card-box">
-            <h3 style="font-size: 16px; font-weight:800; margin-bottom: 14px;">
-                <i class="fa-solid fa-book-bookmark text-danger me-1"></i> Danh Sách Sách Trong Đơn
-            </h3>
-
-            <div th:each="item : ${order.items}" class="item-row">
-                <img th:src="${item.book != null and item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
-                     alt="Ảnh bìa" style="width: 55px; height: 75px; object-fit: cover; border-radius: 6px;">
+        <!-- 5. KHUNG THÔNG BÁO HOÀN THÀNH & NÚT HÀNH ĐỘNG SHOPEE -->
+        <div class="order-thankyou-banner" th:if="${order.orderStatus.name() == 'DELIVERED'}">
+            <div class="thankyou-left">
+                <i class="fa-solid fa-circle-check text-success" style="font-size:24px;"></i>
                 <div>
-                    <strong th:text="${item.bookTitle}" style="font-size:14px;">Tên sách</strong>
-                    <div style="font-size: 12px; color: var(--color-text-secondary); margin-top: 2px;">
-                        Độ mới: <span th:text="${item.conditionPercent} + '%'">95%</span>
+                    <strong>Cảm ơn bạn đã mua sắm tại Chuỗi Cửa Hàng Sách Cũ TP.HCM!</strong>
+                    <div style="font-size:12.5px; color:#78716C; margin-top:2px;">
+                        Đơn hàng đã được đồng kiểm 100% và giao thành công. Sách được bảo hành đổi trả 7 ngày.
                     </div>
                 </div>
-                <div style="text-align: right;" th:text="'x' + ${item.quantity}">x1</div>
-                <div style="text-align: right; font-weight: 800; color: #1C1917;" th:text="'₫' + ${#numbers.formatDecimal(item.totalPrice, 0, 'POINT', 0, 'COMMA')}">₫68.000</div>
             </div>
 
-            <!-- TÍNH TOÁN TIỀN -->
-            <div style="margin-top: 20px; padding-top: 14px; border-top: 1px dashed #e5ded3;">
-                <div class="calc-row">
-                    <span>Tổng tiền hàng:</span>
-                    <strong th:text="'₫' + ${#numbers.formatDecimal(order.subtotal, 0, 'POINT', 0, 'COMMA')}">₫68.000</strong>
+            <div class="thankyou-actions">
+                <button type="button" class="btn-shopee-orange" onclick="openReviewModal()">
+                    <i class="fa-regular fa-star me-1"></i> ĐÁNH GIÁ
+                </button>
+                <a th:href="@{/cart}" class="btn-shopee-outline"><i class="fa-solid fa-cart-plus me-1"></i> Mua Lại</a>
+                <a th:href="@{/help}" class="btn-shopee-outline"><i class="fa-solid fa-rotate-left me-1"></i> Yêu Cầu Trả Hàng / Hoàn Tiền</a>
+            </div>
+        </div>
+
+        <!-- 6. KHUNG ĐỊA CHỈ NHẬN HÀNG VỚI VIỀN PHONG BÌ THƯ ĐẶC TRƯNG SHOPEE -->
+        <div class="shipping-envelope-card">
+            <!-- VIỀN PHONG BÌ ĐẶC TRƯNG SHOPEE -->
+            <div class="shopee-envelope-strip"></div>
+
+            <div class="shipping-content-grid">
+                <!-- Cột trái: Địa chỉ nhận hàng -->
+                <div class="address-col-left">
+                    <h3 class="box-title-h3"><i class="fa-solid fa-location-dot text-danger"></i> Địa Chỉ Nhận Hàng</h3>
+                    <div style="font-size:14.5px; font-weight:800; color:#1C1917;" th:text="${order.receiverName}">
+                        Nguyễn Song Hoàng Phúc
+                    </div>
+                    <div style="font-size:13px; color:#78716C; margin: 4px 0 8px;" th:text="${order.receiverPhone}">
+                        0934567890
+                    </div>
+                    <div style="font-size:13.5px; color:#44403C; line-height:1.45;" th:text="${order.receiverAddress}">
+                        48 Võ Văn Ngân, Phường Linh Chiểu, TP. Thủ Đức, TP. Hồ Chí Minh
+                    </div>
+                    <div style="margin-top:12px; font-size:12.5px; color:#78716C;" th:if="${order.deliveryMethod != null and order.deliveryMethod.name() == 'STORE_PICKUP'}">
+                        <span class="store-pill-tag">
+                            <i class="fa-solid fa-shop text-success"></i> Nhận trực tiếp tại chi nhánh
+                        </span>
+                    </div>
                 </div>
-                <div class="calc-row">
-                    <span>Phí vận chuyển:</span>
-                    <strong th:text="${order.shippingFee != null and order.shippingFee.doubleValue() > 0} ? '₫' + ${#numbers.formatDecimal(order.shippingFee, 0, 'POINT', 0, 'COMMA')} : 'MIỄN PHÍ'">MIỄN PHÍ</strong>
-                </div>
-                <div class="calc-row" th:if="${order.discountAmount != null and order.discountAmount.doubleValue() > 0}">
-                    <span>Giảm giá voucher:</span>
-                    <strong style="color: var(--shopee-orange);" th:text="'-₫' + ${#numbers.formatDecimal(order.discountAmount, 0, 'POINT', 0, 'COMMA')}">-₫20.000</strong>
-                </div>
-                <div class="calc-row final">
-                    <span>TỔNG CỘNG THANH TOÁN:</span>
-                    <span class="final-price" th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+
+                <!-- Cột phải: Thông tin vận chuyển & lịch sử lộ trình -->
+                <div class="shipping-col-right">
+                    <h3 class="box-title-h3">
+                        <i class="fa-solid fa-truck-fast text-success"></i> Thông Tin Vận Chuyển
+                        <span style="font-size:12.5px; font-weight:400; color:#78716C; margin-left:auto;">
+                            Đơn vị vận chuyển: <strong style="color:#1C1917;">Giao Hàng Nhanh (Express)</strong>
+                        </span>
+                    </h3>
+
+                    <!-- Lộ trình vận chuyển chi tiết -->
+                    <div class="logistics-timeline">
+                        <div class="log-item latest">
+                            <div style="font-weight:700; color:#007a57;">
+                                <span th:if="${order.orderStatus.name() == 'DELIVERED'}">Giao hàng thành công</span>
+                                <span th:if="${order.orderStatus.name() == 'SHIPPING'}">Đơn hàng đang trên đường giao đến bạn</span>
+                                <span th:if="${order.orderStatus.name() == 'CONFIRMED'}">Đã bàn giao kiện sách cho bưu tá vận chuyển</span>
+                                <span th:if="${order.orderStatus.name() == 'NEW'}">Đang chuẩn bị và kiểm tra sách tại kho</span>
+                            </div>
+                            <div class="log-time" th:text="${#temporals.format(order.updatedAt != null ? order.updatedAt : order.createdAt, 'HH:mm dd-MM-yyyy')}">
+                                17:45 24-09-2026
+                            </div>
+                        </div>
+
+                        <div class="log-item">
+                            <div style="color:#574E45;">Kiện sách đã được đóng gói chống sốc và dán tem kiểm định chất lượng</div>
+                            <div class="log-time">15:00 24-09-2026</div>
+                        </div>
+
+                        <div class="log-item">
+                            <div style="color:#574E45;">Đơn hàng đã được tạo thành công trên hệ thống Chuỗi Sách Cũ</div>
+                            <div class="log-time" th:text="${#temporals.format(order.createdAt, 'HH:mm dd-MM-yyyy')}">14:30 24-09-2026</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- 7. DANH SÁCH SẢN PHẨM TRONG ĐƠN HÀNG (SHOPEE STYLE) -->
+        <div class="order-items-card">
+            <!-- Thẻ Shop Header -->
+            <div class="shop-header-row">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="shop-badge-fav">Yêu Thích+</span>
+                    <strong style="font-size:14px; color:#1C1917;">Chuỗi Cửa Hàng Sách Cũ TP.HCM</strong>
+                    <a th:href="@{/ai-assistant}" style="color:var(--color-book-primary); font-size:13px; margin-left:10px;">
+                        <i class="fa-regular fa-comment-dots"></i> Chat ngay
+                    </a>
+                </div>
+                <a th:href="@{/}" style="font-size:13px; color:#78716C;">
+                    Xem Shop &gt;
+                </a>
+            </div>
+
+            <!-- Từng cuốn sách -->
+            <div th:each="item : ${order.items}" class="item-row-box">
+                <div class="item-left-meta">
+                    <img th:src="${item.book != null and item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
+                         alt="Bìa sách" class="book-item-thumb">
+                    <div>
+                        <h4 class="book-title-h4" th:text="${item.book != null ? item.book.title : 'Tên cuốn sách'}">Đắc Nhân Tâm</h4>
+                        <div>
+                            <span class="variant-pill-tag">Phân loại: <strong th:text="${item.book != null ? item.book.conditionPercent + '% Mới' : '95% Mới'}">95% Mới</strong></span>
+                        </div>
+                        <div>
+                            <span class="store-pill-tag">
+                                <i class="fa-solid fa-location-dot text-danger"></i>
+                                <span th:text="${order.store != null ? order.store.storeName : 'Kho Thủ Đức (Gần HCMUTE)'}">Kho Thủ Đức</span>
+                            </span>
+                        </div>
+                        <div style="font-size:13px; color:#78716C; margin-top:4px;">
+                            Số lượng: <span th:text="'x' + ${item.quantity}">x1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item-right-price">
+                    <span class="price-strike-txt" th:if="${item.book != null and item.book.originalPrice != null}"
+                          th:text="'₫' + ${#numbers.formatDecimal(item.book.originalPrice, 0, 'POINT', 0, 'COMMA')}">₫120.000</span>
+                    <span class="price-final-txt" th:text="'₫' + ${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. BẢNG TỔNG KẾT THANH TOÁN (BREAKDOWN SUMMARY CHUẨN SHOPEE) -->
+        <div class="order-breakdown-card">
+            <div class="breakdown-row">
+                <span>Tổng tiền hàng:</span>
+                <span class="breakdown-val" th:text="'₫' + ${#numbers.formatDecimal(order.subtotal, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+            </div>
+            <div class="breakdown-row">
+                <span>Phí vận chuyển:</span>
+                <span class="breakdown-val" th:text="'₫' + ${#numbers.formatDecimal(order.shippingFee, 0, 'POINT', 0, 'COMMA')}">₫25.000</span>
+            </div>
+            <div class="breakdown-row" th:if="${order.discountAmount != null and order.discountAmount.doubleValue() > 0}">
+                <span>Voucher giảm giá sàn:</span>
+                <span class="breakdown-val" style="color:var(--color-book-primary);" 
+                      th:text="'-₫' + ${#numbers.formatDecimal(order.discountAmount, 0, 'POINT', 0, 'COMMA')}">-₫20.000</span>
+            </div>
+            <div class="breakdown-row total-row">
+                <span style="font-weight:700;">Thành tiền:</span>
+                <span class="breakdown-val total-number-lg" 
+                      th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫73.000</span>
+            </div>
+            <div class="breakdown-row" style="margin-top:6px; font-size:12.5px;">
+                <span>Phương thức thanh toán:</span>
+                <span class="breakdown-val" style="color:var(--color-book-primary); font-weight:700;"
+                      th:text="${order.paymentMethod != null ? order.paymentMethod.name() : 'COD'}">
+                    COD (Thanh toán khi nhận hàng)
+                </span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 9. MODAL ĐÁNH GIÁ CHUẨN SHOPEE -->
+    <div class="modal-overlay" id="reviewModal" onclick="closeReviewModal(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #f2ede6; padding-bottom:10px;">
+                <h3 style="font-size:16px; font-weight:800; color:#1C1917;">Đánh Giá Chất Lượng Sách Cũ</h3>
+                <span style="font-size:20px; cursor:pointer; color:#78716C;" onclick="closeReviewModal(null)">&times;</span>
+            </div>
+            
+            <form action="/reviews/create" method="post">
+                <input type="hidden" name="orderId" th:value="${order.id}">
+                <input type="hidden" name="bookId" th:value="${order.items != null and !order.items.isEmpty() ? order.items[0].book.id : 1}">
+                
+                <div style="margin-bottom:14px;">
+                    <label style="font-size:13px; font-weight:700; color:#1C1917; display:block; margin-bottom:6px;">Chất lượng sản phẩm</label>
+                    <div style="font-size:24px; color:#f59e0b; cursor:pointer;" id="starRating">
+                        <i class="fa-solid fa-star" onclick="setRating(1)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating(2)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating(3)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating(4)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating(5)"></i>
+                    </div>
+                    <input type="hidden" name="rating" id="ratingInput" value="5">
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <label style="font-size:13px; font-weight:700; color:#1C1917; display:block; margin-bottom:6px;">Nhận xét chi tiết</label>
+                    <textarea name="comment" rows="4" style="width:100%; padding:10px; border:1px solid #d5cec4; border-radius:3px; outline:none; font-family:inherit; font-size:13.5px;"
+                              placeholder="Hãy chia sẻ trải nghiệm về tình trạng sách cũ, độ sạch của ruột sách, gáy sách..." required>Sách rất đẹp, đúng độ mới 95% cam kết, đóng gói cẩn thận và giao nhanh.</textarea>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" class="btn-shopee-outline" onclick="closeReviewModal(null)">Trở lại</button>
+                    <button type="submit" class="btn-shopee-orange">HOÀN THÀNH</button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <!-- FOOTER -->
+    <footer class="order-footer">
+        <div class="container-shopee">
+            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+            <p style="margin-top: 4px; color:#857d72;">Nguyễn Song Hoàng Phúc (24162096) &amp; Thái Duy Cường (24162013)</p>
+        </div>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+    <script>
+        function openReviewModal() {
+            document.getElementById('reviewModal').style.display = 'flex';
+        }
+        function closeReviewModal(e) {
+            if (!e || e.target === document.getElementById('reviewModal')) {
+                document.getElementById('reviewModal').style.display = 'none';
+            }
+        }
+        function setRating(val) {
+            document.getElementById('ratingInput').value = val;
+            const stars = document.getElementById('starRating').children;
+            for (let i = 0; i < stars.length; i++) {
+                if (i < val) {
+                    stars[i].className = 'fa-solid fa-star';
+                } else {
+                    stars[i].className = 'fa-regular fa-star';
+                }
+            }
+        }
+    </script>
+    <script src="/js/cart-popover.js"></script>
 </body>
 </html>

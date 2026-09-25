@@ -26,13 +26,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/ws/**", "/cart/**", "/checkout/**", "/orders/**", "/reviews/**", "/consignments/**", "/ai-assistant/**"))
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/ws/**", "/cart/**", "/checkout/**", "/orders/**", "/reviews/**", "/consignments/**", "/ai-assistant/**", "/help/**", "/user/**", "/profile/**", "/login", "/register", "/logout"))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/", "/home", "/books/**", "/stores/**", "/categories/**",
                     "/search/**", "/cart", "/cart/**", "/checkout", "/checkout/**", 
                     "/orders", "/orders/**", "/reviews/**", "/consignments", "/consignments/**",
-                    "/ai-assistant", "/ai-assistant/**",
+                    "/ai-assistant", "/ai-assistant/**", "/help", "/help/**",
+                    "/user/**", "/profile/**",
                     "/api/**", "/login", "/register/**", "/verify-otp/**",
                     "/resend-otp/**", "/forgot-password/**", "/reset-password/**",
                     "/css/**", "/js/**", "/images/**", "/webjars/**", "/error"

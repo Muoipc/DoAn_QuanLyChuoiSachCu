@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,8 +12,8 @@
 
     <style>
         :root {
-            --color-bg-base: #f7f5f0;
-            --shopee-orange: #ee4d2d;
+            --color-bg-base: #F8F5EE;
+            --shopee-orange: #8C4A27;
             --color-text-primary: #1C1917;
             --color-text-secondary: #44403C;
             --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -62,7 +62,7 @@
         }
         .order-code-badge {
             display: inline-block;
-            background: #fef6f5;
+            background: #F5ECE4;
             color: var(--shopee-orange);
             font-weight: 800;
             font-size: 16px;
@@ -109,9 +109,66 @@
             color: var(--color-text-primary);
             background: white;
         }
+    
+        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        .lang-dropdown-box {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-trigger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #292524;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .lang-trigger-btn:hover {
+            color: #8C4A27;
+            background: rgba(140, 74, 39, 0.08);
+        }
+        .lang-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E8DEC8;
+            min-width: 145px;
+            display: none;
+            z-index: 1000;
+            padding: 6px 0;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu {
+            display: block;
+        }
+        .lang-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #1C1917;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .lang-item-btn:hover {
+            background: #F5ECE4;
+            color: #8C4A27;
+        }
+
     </style>
 </head>
 <body>
+    <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
+    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+
     <div class="container">
         <div class="success-card">
             <div class="success-icon-wrap">
@@ -167,5 +224,7 @@
             </div>
         </div>
     </div>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/cart-popover.js"></script>
 </body>
 </html>

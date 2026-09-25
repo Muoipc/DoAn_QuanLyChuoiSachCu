@@ -96,6 +96,16 @@ public class CheckoutController {
                 .findFirst()
                 .orElse(addresses.isEmpty() ? null : addresses.get(0));
 
+        String formattedAddress = defaultAddress != null 
+                ? (defaultAddress.getStreetAddress() + ", " + defaultAddress.getWard() + ", " + defaultAddress.getDistrict() + ", " + defaultAddress.getProvince())
+                : "Số 48 Võ Văn Ngân, Phường Linh Chiểu, TP. Thủ Đức, TP. Hồ Chí Minh";
+        String receiverName = defaultAddress != null ? defaultAddress.getReceiverName() : "Nguyễn Song Hoàng Phúc";
+        String receiverPhone = defaultAddress != null ? defaultAddress.getPhone() : "0912345678";
+
+        model.addAttribute("formattedAddress", formattedAddress);
+        model.addAttribute("receiverName", receiverName);
+        model.addAttribute("receiverPhone", receiverPhone);
+
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("subtotal", subtotal);
         model.addAttribute("totalSavings", totalSavings);

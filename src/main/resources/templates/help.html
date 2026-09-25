@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} != null ? ${pageTitle} : 'Trung Tâm Trợ Giúp — Chuỗi Cửa Hàng Sách Cũ TP.HCM'">Trung Tâm Trợ Giúp — Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --color-book-primary: #8C4A27;
+            --color-book-hover: #733615;
+            --color-book-light: #F5ECE4;
+            --color-bg-paper: #F8F5EE;
+            --color-card-bg: #ffffff;
+            --color-text-main: #1C1917;
+            --color-text-secondary: #574E45;
+            --color-text-light: #78716C;
+            --color-border: #E8DEC8;
+            --color-border-light: rgba(0, 0, 0, 0.08);
+            --radius-sm: 4px;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: var(--color-bg-paper);
+            color: var(--color-text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        .container-help {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* TOPBAR */
+        .help-topbar {
+            background: rgba(35, 18, 10, 0.22);
+            backdrop-filter: blur(24px);
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        .topbar-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .topbar-left, .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .topbar-link {
+            color: #292524;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.15s;
+        }
+        .topbar-link:hover { color: var(--color-book-primary); }
+        .topbar-divider {
+            width: 1px;
+            height: 12px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        .lang-dropdown-box {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-trigger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #292524;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .lang-trigger-btn:hover {
+            color: #8C4A27;
+            background: rgba(140, 74, 39, 0.08);
+        }
+        .lang-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E8DEC8;
+            min-width: 145px;
+            display: none;
+            z-index: 1000;
+            padding: 6px 0;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu {
+            display: block;
+        }
+        .lang-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #1C1917;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .lang-item-btn:hover {
+            background: #F5ECE4;
+            color: #8C4A27;
+        }
+
+        /* HEADER CHÍNH */
+        .help-header-main {
+            background: rgba(45, 24, 15, 0.28);
+            backdrop-filter: blur(36px);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .header-content-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand-badge-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .brand-logo-img {
+            height: 50px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+        }
+        .help-badge-text {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--color-book-primary);
+            border-left: 2px solid #1C1917;
+            padding-left: 14px;
+            text-transform: capitalize;
+        }
+
+        /* HERO SEARCH BANNER */
+        .help-hero-banner {
+            background: linear-gradient(135deg, rgba(56, 30, 15, 0.92), rgba(35, 18, 10, 0.95)), 
+                        url('/images/hero-books-vintage.jpg') center/cover;
+            padding: 56px 20px;
+            text-align: center;
+            color: white;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .hero-title-main {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 22px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        .help-search-container {
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .help-search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .help-search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 16px 20px;
+            font-size: 15px;
+            color: #1C1917;
+            font-family: inherit;
+        }
+        .btn-help-search {
+            background: var(--color-book-primary);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-help-search:hover { background: var(--color-book-hover); }
+
+        .search-chips-row {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 12.5px;
+        }
+        .chip-tag {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: #f7ede2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .chip-tag:hover {
+            background: var(--color-book-primary);
+            color: white;
+        }
+
+        /* ANNOUNCEMENTS & SAFETY BANNER */
+        .safety-alert-bar {
+            background: #fff8e5;
+            border: 1px solid #ffe8b3;
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            margin: 24px auto 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            font-size: 13.5px;
+            color: #8c5600;
+            line-height: 1.5;
+        }
+        .safety-alert-bar strong { color: var(--color-book-primary); }
+
+        /* DANH MỤC TRỢ GIÚP (6 KHỐI CHUẨN SHOPEE) */
+        .section-heading-row {
+            margin: 36px 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .section-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--color-text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .help-categories-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+        .help-cat-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: 24px 12px;
+            text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid var(--color-border);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .help-cat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(140, 74, 39, 0.15);
+            border-color: var(--color-book-primary);
+        }
+        .cat-icon-circle {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: var(--color-book-light);
+            color: var(--color-book-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            transition: all 0.2s;
+        }
+        .help-cat-card:hover .cat-icon-circle {
+            background: var(--color-book-primary);
+            color: white;
+        }
+        .cat-card-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--color-text-main);
+            line-height: 1.35;
+        }
+
+        /* FAQ ACCORDION */
+        .faq-accordion-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid var(--color-border);
+            overflow: hidden;
+            margin-bottom: 36px;
+        }
+        .faq-item {
+            border-bottom: 1px solid #f2ede6;
+        }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-question-btn {
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            padding: 18px 24px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--color-text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+        .faq-question-btn:hover {
+            color: var(--color-book-primary);
+            background: #fffdfb;
+        }
+        .faq-answer-panel {
+            padding: 0 24px 18px;
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            display: none;
+        }
+        .faq-item.active .faq-answer-panel { display: block; }
+        .faq-item.active .faq-toggle-icon { transform: rotate(180deg); color: var(--color-book-primary); }
+        .faq-toggle-icon { transition: transform 0.2s; color: #a8a29e; }
+
+        /* CONTACT & SUPPORT GRID */
+        .support-channels-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        .support-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: 26px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid var(--color-border);
+        }
+        .channel-item-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 4px;
+            background: #FAF8F5;
+            border: 1px solid #EFEAE2;
+            margin-bottom: 14px;
+            transition: all 0.2s;
+        }
+        .channel-item-box:hover {
+            border-color: var(--color-book-primary);
+            background: #FFFDFB;
+        }
+        .channel-icon {
+            font-size: 26px;
+            color: var(--color-book-primary);
+        }
+
+        /* FORM GỬI YÊU CẦU HỖ TRỢ */
+        .form-group-field {
+            margin-bottom: 16px;
+        }
+        .form-label-custom {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-text-main);
+            margin-bottom: 6px;
+        }
+        .form-control-custom {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 3px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-control-custom:focus {
+            border-color: var(--color-book-primary);
+        }
+        .btn-submit-ticket {
+            background: var(--color-book-primary);
+            color: white;
+            font-weight: 800;
+            font-size: 14.5px;
+            border: none;
+            border-radius: 3px;
+            padding: 12px 28px;
+            cursor: pointer;
+            transition: background 0.15s;
+            width: 100%;
+        }
+        .btn-submit-ticket:hover { background: var(--color-book-hover); }
+
+        /* FOOTER */
+        .help-footer {
+            background: #25160d;
+            color: #b7b0a5;
+            padding: 28px 0;
+            font-size: 12px;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. TOPBAR VINTAGE BROWN GLASS -->
+    <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
+    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+
+
+    <!-- 3. HERO SEARCH BANNER CHUẨN SHOPEE HELP CENTER -->
+    <section class="help-hero-banner">
+        <div class="container-help">
+            <h1 class="hero-title-main">Xin chào, Chuỗi Sách Cũ có thể giúp gì cho bạn?</h1>
+            
+            <form action="/help" method="get" class="help-search-container">
+                <div class="help-search-box">
+                    <input type="text" name="q" th:value="${searchKeyword}" 
+                           class="help-search-input" 
+                           placeholder="Nhập từ khóa câu hỏi (ví dụ: đổi trả, kiểm định 95%, phí ship, nhận tại shop, ký gửi...)">
+                    <button type="submit" class="btn-help-search">
+                        <i class="fa-solid fa-magnifying-glass me-1"></i> Tìm Kiếm
+                    </button>
+                </div>
+
+                <div class="search-chips-row">
+                    <span style="color:#d5cec4;">Tìm kiếm phổ biến:</span>
+                    <span class="chip-tag" onclick="quickSearch('đổi trả 7 ngày')">Đổi trả 7 ngày</span>
+                    <span class="chip-tag" onclick="quickSearch('kiểm định 95%')">Kiểm định 95%</span>
+                    <span class="chip-tag" onclick="quickSearch('nhận sách tại shop')">Nhận sách tại shop</span>
+                    <span class="chip-tag" onclick="quickSearch('phí vận chuyển')">Phí vận chuyển</span>
+                    <span class="chip-tag" onclick="quickSearch('ký gửi sách cũ')">Ký gửi sách cũ</span>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- 4. THÔNG BÁO THÀNH CÔNG (NẾU VỪA GỬI FORM) -->
+    <div class="container-help" th:if="${successMessage}" style="margin-top:20px;">
+        <div style="background:#e8f5e9; border:1px solid #c8e6c9; color:#2e7d32; padding:14px 20px; border-radius:4px; font-size:14px; font-weight:600;">
+            <i class="fa-solid fa-circle-check me-2"></i> <span th:text="${successMessage}">Thông báo</span>
+        </div>
+    </div>
+
+    <main class="container-help" style="flex:1;">
+
+        <!-- 5. ANNOUNCEMENTS & SAFETY BANNER (CHUẨN SHOPEE) -->
+        <div class="safety-alert-bar">
+            <i class="fa-solid fa-shield-halved text-success" style="font-size:22px; margin-top:2px;"></i>
+            <div>
+                <strong>[Mua sắm an toàn &amp; Quyền lợi độc quyền]</strong>: Chuỗi Sách Cũ TP.HCM áp dụng chính sách 
+                <strong>ĐỒNG KIỂM 100% KHI NHẬN HÀNG COD</strong>. Quý khách hoàn toàn được quyền mở gói bọc kiểm tra tình trạng sách, gáy sách và trang in cùng shipper trước khi thanh toán. Cam kết đổi trả 1-1 hoặc hoàn tiền trong vòng <strong>7 ngày</strong> nếu sách không đúng độ mới thẩm định!
+            </div>
+        </div>
+
+        <!-- 6. LƯỚI 6 DANH MỤC TRỢ GIÚP CHUẨN SHOPEE HELP CENTER -->
+        <div class="section-heading-row">
+            <h2 class="section-title"><i class="fa-solid fa-shapes text-warning"></i> Danh Mục Trợ Giúp</h2>
+        </div>
+
+        <div class="help-categories-grid">
+            <!-- 1. Mua Sắm -->
+            <div class="help-cat-card" onclick="scrollToFaq()">
+                <div class="cat-icon-circle"><i class="fa-solid fa-bag-shopping"></i></div>
+                <div class="cat-card-title">Mua Sắm Cùng Chuỗi</div>
+            </div>
+
+            <!-- 2. Khuyến Mãi -->
+            <div class="help-cat-card" onclick="scrollToFaq()">
+                <div class="cat-icon-circle"><i class="fa-solid fa-ticket"></i></div>
+                <div class="cat-card-title">Khuyến Mãi &amp; Voucher</div>
+            </div>
+
+            <!-- 3. Thanh Toán -->
+            <div class="help-cat-card" onclick="scrollToFaq()">
+                <div class="cat-icon-circle"><i class="fa-solid fa-credit-card"></i></div>
+                <div class="cat-card-title">Thanh Toán &amp; VNPay</div>
+            </div>
+
+            <!-- 4. Vận Chuyển -->
+            <div class="help-cat-card" onclick="scrollToFaq()">
+                <div class="cat-icon-circle"><i class="fa-solid fa-truck-fast"></i></div>
+                <div class="cat-card-title">Đơn Hàng &amp; Giao Nhận</div>
+            </div>
+
+            <!-- 5. Đổi Trả -->
+            <div class="help-cat-card" onclick="scrollToFaq()">
+                <div class="cat-icon-circle"><i class="fa-solid fa-rotate-left"></i></div>
+                <div class="cat-card-title">Trả Hàng &amp; Hoàn Tiền</div>
+            </div>
+
+            <!-- 6. Ký Gửi -->
+            <div class="help-cat-card" onclick="scrollToFaq()">
+                <div class="cat-icon-circle"><i class="fa-solid fa-recycle"></i></div>
+                <div class="cat-card-title">Ký Gửi &amp; Thu Mua Sách</div>
+            </div>
+        </div>
+
+        <!-- 7. CÂU HỎI THƯỜNG GẶP (FAQ ACCORDION) -->
+        <div class="section-heading-row" id="faq-section">
+            <h2 class="section-title"><i class="fa-solid fa-circle-question text-danger"></i> Câu Hỏi Thường Gặp</h2>
+        </div>
+
+        <div class="faq-accordion-card">
+            <!-- FAQ 1 -->
+            <div class="faq-item active">
+                <button class="faq-question-btn" onclick="toggleFaq(this)">
+                    <span>1. Làm sao để tôi biết một cuốn sách cũ còn hàng ở chi nhánh nào trong 5 chi nhánh TP.HCM?</span>
+                    <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
+                </button>
+                <div class="faq-answer-panel">
+                    Tại trang chi tiết của mỗi cuốn sách (ví dụ: <a th:href="@{/books/1}" style="color:var(--color-book-primary); font-weight:700;">Đắc Nhân Tâm</a>), hệ thống hiển thị thanh trạng thái tồn kho thực tế. Bạn chỉ cần nhấn vào dòng <strong>"Xem chi tiết 5 chi nhánh ▾"</strong>, bảng tồn kho sẽ bung ra liệt kê chính xác số lượng cuốn có sẵn tại từng shop (Thủ Đức, Quận 1, Làng ĐHQG, Phú Nhuận, Quận 5). Ngoài ra bạn có thể hỏi nhanh <a th:href="@{/ai-assistant}" style="color:var(--color-book-primary); font-weight:700;">Trợ lý AI</a> để được tra cứu tức thì.
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="faq-item">
+                <button class="faq-question-btn" onclick="toggleFaq(this)">
+                    <span>2. Thế nào là sách cũ độ mới 95%, 90% và 85% theo tiêu chuẩn của Chuỗi?</span>
+                    <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
+                </button>
+                <div class="faq-answer-panel">
+                    Toàn bộ sách cũ trước khi lên kệ đều được nhân viên thẩm định kỹ lưỡng:
+                    <ul style="margin: 8px 0 8px 20px;">
+                        <li><strong>95% - 99% Mới (Rất đẹp / Like New):</strong> Sách như mới, bìa phẳng phiu, gáy cứng cáp, ruột sách trắng sạch, không gạch xóa, không quăn góc.</li>
+                        <li><strong>90% Mới (Tốt):</strong> Bìa có vết xước nhẹ hoặc mép hơi cũ theo thời gian, ruột sách còn rất sạch, đầy đủ 100% trang in.</li>
+                        <li><strong>80% - 85% Mới (Kinh tế):</strong> Sách giấy ngả vàng tự nhiên (đặc biệt với các bản in xưa), có thể có bút dạ đánh dấu vài dòng nhưng nội dung hoàn chỉnh, không rách rời, giá siêu rẻ dành cho sinh viên.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="faq-item">
+                <button class="faq-question-btn" onclick="toggleFaq(this)">
+                    <span>3. Tôi có được mở gói sách kiểm tra trước khi thanh toán tiền cho Shipper không?</span>
+                    <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
+                </button>
+                <div class="faq-answer-panel">
+                    <strong>HOÀN TOÀN ĐƯỢC PHÉP.</strong> Chuỗi Sách Cũ TP.HCM cam kết 100% đơn hàng giao tận nơi đều được ĐỒNG KIỂM CÙNG SHIPPER. Bạn có quyền mở hộp gói để kiểm tra bìa sách, số lượng và chất lượng sách xem có đúng như mô tả trên website hay không trước khi nhận và thanh toán.
+                </div>
+            </div>
+
+            <!-- FAQ 4 -->
+            <div class="faq-item">
+                <button class="faq-question-btn" onclick="toggleFaq(this)">
+                    <span>4. Tôi muốn đến nhận sách trực tiếp tại chi nhánh Thủ Đức (gần ĐH SPKT HCMUTE) thì làm thế nào?</span>
+                    <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
+                </button>
+                <div class="faq-answer-panel">
+                    Tại bước thanh toán (<a th:href="@{/checkout}" style="color:var(--color-book-primary); font-weight:700;">/checkout</a>), ở mục "Phương Thức Nhận Sách", bạn chỉ cần tick chọn <strong>"Nhận Tại Cửa Hàng (Click &amp; Collect)"</strong> và chọn <strong>"Chi Nhánh 1: 48 Võ Văn Ngân, TP. Thủ Đức"</strong>. Đơn hàng sẽ được nhân viên giữ sách tại quầy trong 48 giờ để bạn ghé lấy bất cứ lúc nào (miễn phí 100% phí giao nhận).
+                </div>
+            </div>
+
+            <!-- FAQ 5 -->
+            <div class="faq-item">
+                <button class="faq-question-btn" onclick="toggleFaq(this)">
+                    <span>5. Quy trình Ký gửi hoặc Bán lại sách cũ cho Chuỗi diễn ra như thế nào?</span>
+                    <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
+                </button>
+                <div class="faq-answer-panel">
+                    Bạn chỉ cần truy cập Cổng Ký Gửi (<a th:href="@{/consignments}" style="color:var(--color-book-primary); font-weight:700;">/consignments</a>), nhập tên sách, giá bìa, kéo thanh chọn độ mới %. Hệ thống có công cụ <strong>AI Định Giá Tự Động</strong> gợi ý mức giá thu mua ngay lập tức. Sau đó bạn chọn chi nhánh gần nhất để nộp sách hoặc gửi bưu điện. Khi shop thẩm định thực tế xong, tiền sẽ được thanh toán chuyển khoản ngay cho bạn.
+                </div>
+            </div>
+
+            <!-- FAQ 6 -->
+            <div class="faq-item">
+                <button class="faq-question-btn" onclick="toggleFaq(this)">
+                    <span>6. Chính sách bảo hành và đổi trả sách nếu phát hiện lỗi hoặc sai mô tả?</span>
+                    <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
+                </button>
+                <div class="faq-answer-panel">
+                    Trong vòng <strong>7 ngày</strong> kể từ khi nhận sách, nếu cuốn sách bị thiếu trang, long gáy nặng hoặc chất lượng không đúng với độ mới cam kết, bạn chỉ cần mang sách đến bất kỳ chi nhánh nào trong 5 shop hoặc liên hệ hotline để được đổi 1 cuốn tương đương hoặc hoàn tiền 100%.
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. LIÊN HỆ & GỬI PHIẾU YÊU CẦU HỖ TRỢ (SUPPORT CHANNELS) -->
+        <div class="section-heading-row">
+            <h2 class="section-title"><i class="fa-solid fa-headset text-primary"></i> Liên Hệ Nếu Bạn Cần Thêm Hỗ Trợ</h2>
+        </div>
+
+        <div class="support-channels-grid">
+            <!-- CỘT TRÁI: CÁC KÊNH KẾT NỐI NHANH -->
+            <div class="support-card">
+                <h3 style="font-size:16px; font-weight:800; color:var(--color-text-main); margin-bottom:16px;">
+                    Kênh Trực Tuyến Nhanh 24/7
+                </h3>
+
+                <!-- Kênh 1: AI Chatbot -->
+                <a th:href="@{/ai-assistant}" class="channel-item-box">
+                    <i class="fa-solid fa-robot channel-icon"></i>
+                    <div>
+                        <div style="font-weight:700; font-size:14.5px; color:#1C1917;">Trò Chuyện Với Trợ Lý AI (24/7)</div>
+                        <div style="font-size:12.5px; color:#574E45; margin-top:2px;">
+                            Giải đáp tức thì các thắc mắc về tồn kho 5 chi nhánh, tư vấn chọn sách theo ngân sách.
+                        </div>
+                        <span style="display:inline-block; margin-top:6px; color:var(--color-book-primary); font-size:12px; font-weight:700;">Bắt đầu chat &gt;</span>
+                    </div>
+                </a>
+
+                <!-- Kênh 2: Hotline -->
+                <div class="channel-item-box">
+                    <i class="fa-solid fa-phone-volume channel-icon text-success"></i>
+                    <div>
+                        <div style="font-weight:700; font-size:14.5px; color:#1C1917;">Tổng Đài Chăm Sóc Khách Hàng</div>
+                        <div style="font-size:13px; color:#574E45; margin-top:2px;">
+                            Hotline: <strong>028 3722 1223</strong> (Miễn cước cho sinh viên HCMUTE)
+                        </div>
+                        <div style="font-size:12px; color:#78716C; margin-top:2px;">Thời gian hỗ trợ: 8h00 - 21h30 (Thứ 2 - Chủ Nhật)</div>
+                    </div>
+                </div>
+
+                <!-- Kênh 3: 5 Chi nhánh -->
+                <div class="channel-item-box">
+                    <i class="fa-solid fa-shop channel-icon text-danger"></i>
+                    <div>
+                        <div style="font-weight:700; font-size:14.5px; color:#1C1917;">Mạng Lưới 5 Chi Nhánh Trực Tiếp</div>
+                        <div style="font-size:12.5px; color:#574E45; margin-top:2px;">
+                            Đến trực tiếp để xem sách, đổi trả hoặc nhận tiền ký gửi tại Thủ Đức, Q.1, Làng ĐHQG, Phú Nhuận, Q.5.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: FORM GỬI YÊU CẦU HỖ TRỢ (SUPPORT FORM CHUẨN SHOPEE) -->
+            <div class="support-card" id="contact-form">
+                <h3 style="font-size:16px; font-weight:800; color:var(--color-text-main); margin-bottom:16px;">
+                    Gửi Phiếu Yêu Cầu Hỗ Trợ Trực Tuyến
+                </h3>
+
+                <form action="/help/contact" method="post">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-group-field">
+                            <label class="form-label-custom">Họ và tên *</label>
+                            <input type="text" name="fullName" class="form-control-custom" placeholder="Nguyễn Văn A" required>
+                        </div>
+                        <div class="form-group-field">
+                            <label class="form-label-custom">Email liên hệ *</label>
+                            <input type="email" name="email" class="form-control-custom" placeholder="email@gmail.com" required>
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-group-field">
+                            <label class="form-label-custom">Số điện thoại</label>
+                            <input type="text" name="phone" class="form-control-custom" placeholder="0901234567">
+                        </div>
+                        <div class="form-group-field">
+                            <label class="form-label-custom">Mã đơn hàng (nếu có)</label>
+                            <input type="text" name="orderCode" class="form-control-custom" placeholder="ORD259350525">
+                        </div>
+                    </div>
+
+                    <div class="form-group-field">
+                        <label class="form-label-custom">Chủ đề cần hỗ trợ *</label>
+                        <select name="category" class="form-control-custom" required>
+                            <option value="Hỏi tồn kho sách chi nhánh">Hỏi tồn kho sách chi nhánh</option>
+                            <option value="Khiếu nại đổi trả / hoàn tiền">Khiếu nại đổi trả / hoàn tiền</option>
+                            <option value="Tra cứu tiến độ giao hàng">Tra cứu tiến độ giao hàng</option>
+                            <option value="Tư vấn ký gửi sách cũ">Tư vấn ký gửi sách cũ</option>
+                            <option value="Lỗi thanh toán VNPay">Lỗi thanh toán VNPay</option>
+                            <option value="Chủ đề khác">Chủ đề khác</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group-field">
+                        <label class="form-label-custom">Nội dung chi tiết *</label>
+                        <textarea name="message" rows="3" class="form-control-custom" placeholder="Mô tả cụ thể vấn đề hoặc câu hỏi của bạn..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit-ticket">
+                        <i class="fa-solid fa-paper-plane me-1"></i> GỬI YÊU CẦU HỖ TRỢ
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="help-footer">
+        <div class="container-help">
+            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+            <p style="margin-top: 4px; color:#857d72;">Nguyễn Song Hoàng Phúc (24162096) &amp; Thái Duy Cường (24162013)</p>
+        </div>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+    <script>
+        function toggleFaq(btn) {
+            const item = btn.parentElement;
+            item.classList.toggle('active');
+        }
+
+        function scrollToFaq() {
+            document.getElementById('faq-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function quickSearch(tag) {
+            const input = document.querySelector('.help-search-input');
+            if (input) {
+                input.value = tag;
+                input.form.submit();
+            }
+        }
+    </script>
+    <script src="/js/cart-popover.js"></script>
+</body>
+</html>

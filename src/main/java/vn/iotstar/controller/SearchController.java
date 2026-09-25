@@ -48,6 +48,7 @@ public class SearchController {
 
     @GetMapping
     public String searchBooks(
+            @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "q", required = false) String query,
             @RequestParam(value = "cat", required = false) Integer categoryId,
             @RequestParam(value = "cond", required = false) Integer minCondition,
@@ -57,11 +58,14 @@ public class SearchController {
             @RequestParam(value = "sort", defaultValue = "popular") String sort,
             Model model) {
 
+        // Hỗ trợ cả 2 tham số: ?keyword=... (chuẩn Shopee) và ?q=... (chuẩn tìm kiếm thông dụng)
+        String effectiveQuery = (keyword != null && !keyword.isBlank()) ? keyword : query;
+
         List<Book> allBooks = bookRepository.findAllActiveWithImages();
 
         // 1. Lọc theo từ khóa
-        if (query != null && !query.isBlank()) {
-            String qLower = query.trim().toLowerCase();
+        if (effectiveQuery != null && !effectiveQuery.isBlank()) {
+            String qLower = effectiveQuery.trim().toLowerCase();
             allBooks = allBooks.stream().filter(b ->
                     (b.getTitle() != null && b.getTitle().toLowerCase().contains(qLower)) ||
                     (b.getAuthor() != null && b.getAuthor().toLowerCase().contains(qLower)) ||
@@ -135,12 +139,21 @@ public class SearchController {
         List<Category> categories = categoryRepository.findByIsActiveTrue();
         List<Store> stores = storeRepository.findByIsActiveTrue();
 
+        // Nếu không có sách khớp từ khóa, nạp sách bán chạy nhất để gợi ý chuẩn Shopee
+        if (allBooks.isEmpty()) {
+            List<Book> recommendedBooks = bookRepository.findTopSoldWithImages(1);
+            if (recommendedBooks.isEmpty()) {
+                recommendedBooks = bookRepository.findAllActiveWithImages().stream().limit(8).collect(Collectors.toList());
+            }
+            model.addAttribute("recommendedBooks", recommendedBooks);
+        }
+
         model.addAttribute("books", allBooks);
         model.addAttribute("totalFound", allBooks.size());
         model.addAttribute("categories", categories);
         model.addAttribute("stores", stores);
 
-        model.addAttribute("selectedQuery", query);
+        model.addAttribute("selectedQuery", effectiveQuery);
         model.addAttribute("selectedCat", categoryId);
         model.addAttribute("selectedCond", minCondition);
         model.addAttribute("selectedMinPrice", minPrice);

@@ -1,62 +1,712 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+</head>
 <body>
-<header th:fragment="header" class="sticky-top bg-white border-bottom shadow-sm">
-    <div class="container py-2 d-flex justify-content-between align-items-center">
-        <a th:href="@{/}" class="d-flex align-items-center text-decoration-none text-dark">
-            <i class="fa-solid fa-book-bookmark fs-3 me-2 text-warning"></i>
-            <div>
-                <span class="fs-5 fw-bold tracking-tight">CHUỖI SÁCH CŨ</span>
-                <span class="badge bg-secondary ms-1">HCMUTE</span>
-                <div class="text-muted" style="font-size: 11px;">Hệ Thống Phân Phối & Ký Gửi Sách Cũ Đa Chi Nhánh</div>
+
+<!-- FRAGMENT SHOPEE HEADER NGUYÊN BẢN (KHÔNG CÓ THẺ WRAPPER BỌC NGOÀI, THUẦN NATIVE BROWSER STICKY SIÊU MƯỢT) -->
+<th:block th:fragment="shopeeHeader">
+
+    <style>
+        /* CONTAINER SHOPEE GOM VÔ GIỮA CHUẨN 1200PX ĐỒNG BỘ MỌI TRANG */
+        .container-shopee {
+            width: 1200px;
+            max-width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        @media (max-width: 1220px) {
+            .container-shopee {
+                width: 100%;
+                padding: 0 12px;
+            }
+        }
+
+        /* 1. SHOPEE TOPBAR VINTAGE GLASS */
+        .shopee-topbar {
+            background: rgba(35, 18, 10, 0.22);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 13px;
+            color: #1C1917;
+            padding: 7px 0;
+            position: relative;
+            z-index: 100005 !important;
+        }
+
+        .topbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .topbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .topbar-nav a {
+            color: #1C1917;
+            font-weight: 700;
+            font-size: 12.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: color 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .topbar-nav a:hover {
+            color: #8C4A27;
+        }
+
+        .topbar-divider {
+            width: 1px;
+            height: 13px;
+            background-color: rgba(28, 25, 23, 0.25);
+            flex-shrink: 0;
+            display: inline-block;
+        }
+
+        .topbar-links {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .topbar-links a {
+            color: #1C1917;
+            font-size: 12.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            transition: color 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .topbar-links a:hover {
+            color: #8C4A27;
+        }
+
+        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        .lang-dropdown-box {
+            position: relative;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .lang-trigger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #292524;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+            font-size: 12.5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .lang-trigger-btn:hover {
+            color: #8C4A27;
+            background: rgba(140, 74, 39, 0.08);
+        }
+        .lang-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E8DEC8;
+            min-width: 145px;
+            display: none;
+            z-index: 100010 !important;
+            padding: 6px 0;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu {
+            display: block;
+        }
+        .lang-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #1C1917;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .lang-item-btn:hover {
+            background: #F5ECE4;
+            color: #8C4A27;
+        }
+
+        /* SHOPEE NOTIFICATION BADGE */
+        .notification-trigger {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+        .notification-badge {
+            background: #ee4d2d;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            border-radius: 10px;
+            padding: 1px 5px;
+            line-height: 12px;
+            margin-left: 2px;
+        }
+
+        /* SHOPEE USER POPOVER (KHỚP 100% ẢNH SHOPEE IMAGE_557563.PNG) */
+        .shopee-user-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            padding: 2px 0;
+        }
+        .shopee-user-trigger {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #1C1917;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .shopee-user-avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(0,0,0,0.12);
+        }
+        .shopee-user-name {
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .shopee-user-popover {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 160px;
+            background: #ffffff;
+            border-radius: 2px;
+            box-shadow: 0 1px 12px 0 rgba(0,0,0,0.18);
+            border: 1px solid rgba(0,0,0,0.08);
+            display: none;
+            flex-direction: column;
+            z-index: 100010 !important;
+            padding: 4px 0;
+        }
+        /* Cầu nối vô hình giúp rê chuột từ trigger xuống popover không bị mất */
+        .shopee-user-popover::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+        }
+        /* Mũi tên tam giác chỉ lên đỉnh popover khớp Shopee */
+        .shopee-popover-arrow {
+            position: absolute;
+            top: -7px;
+            right: 24px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-bottom: 7px solid #ffffff;
+        }
+        .shopee-user-wrapper:hover .shopee-user-popover {
+            display: flex;
+        }
+        .shopee-popover-item {
+            padding: 10px 16px;
+            color: #333333;
+            font-size: 13.5px;
+            font-weight: 500;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.15s, color 0.15s;
+            text-align: left;
+        }
+        .shopee-popover-item:hover {
+            background-color: #fafafa;
+            color: #8C4A27;
+        }
+
+        /* 2. SHOPEE MAIN HEADER - NATIVE STICKY TOP 0 SIÊU MƯỢT */
+        .shopee-header-section {
+            background: rgba(45, 24, 15, 0.28);
+            backdrop-filter: blur(36px);
+            -webkit-backdrop-filter: blur(36px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(40, 20, 10, 0.12);
+            padding: 16px 0 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 99999 !important;
+        }
+
+        .header-main-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+        }
+
+        /* Brand Logo Báo Chí "Books" */
+        .shopee-brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .brand-logo-img {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+        }
+
+        .brand-logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-logo-text h1 {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            color: #1C1917;
+            line-height: 1.15;
+            text-transform: uppercase;
+        }
+
+        .brand-logo-text span {
+            font-size: 11px;
+            color: #292524;
+            letter-spacing: 0.3px;
+            font-weight: 700;
+        }
+
+        /* Shopee Search Container */
+        .shopee-search-container {
+            flex: 1;
+            max-width: 720px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .shopee-search-bar {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 4px 6px 4px 18px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.2s ease;
+        }
+
+        .shopee-search-bar:focus-within {
+            box-shadow: 0 4px 20px rgba(140, 74, 39, 0.25);
+            border-color: #8C4A27;
+        }
+
+        .shopee-search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1C1917;
+            background: transparent;
+        }
+
+        .shopee-search-bar input::placeholder {
+            color: #78716c;
+        }
+
+        .btn-search-shopee {
+            background: #8C4A27;
+            color: #ffffff;
+            border: none;
+            border-radius: 22px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s ease, transform 0.1s ease;
+        }
+
+        .btn-search-shopee:hover {
+            background: #733615;
+            transform: scale(1.02);
+        }
+
+        /* Từ khóa tìm kiếm hot kiểu Shopee */
+        .shopee-hot-keywords {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            padding-left: 8px;
+        }
+        .shopee-hot-keywords::-webkit-scrollbar { display: none; }
+
+        .shopee-hot-keywords a {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #574E45;
+            background: rgba(245, 236, 228, 0.85);
+            border: 1px solid #E8DEC8;
+            padding: 3px 12px;
+            border-radius: 20px;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+        .shopee-hot-keywords a:hover {
+            background: #8C4A27;
+            color: #ffffff;
+            border-color: #8C4A27;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.2);
+            text-decoration: none;
+        }
+
+        /* Giỏ hàng Shopee */
+        .shopee-cart-wrap {
+            position: relative !important;
+            cursor: pointer;
+            padding: 6px 12px;
+            flex-shrink: 0;
+            z-index: 100000 !important;
+        }
+
+        .shopee-cart-icon {
+            font-size: 26px;
+            color: #1C1917;
+            transition: color 0.15s;
+        }
+
+        .shopee-cart-wrap:hover .shopee-cart-icon {
+            color: #8C4A27;
+        }
+
+        .shopee-cart-badge {
+            position: absolute;
+            top: -2px;
+            right: 0;
+            background: #8C4A27;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 1px 7px;
+            border-radius: 12px;
+            border: 2px solid #ffffff;
+        }
+
+        /* MODAL 5 CỬA HÀNG */
+        .modal-stores-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999999;
+        }
+        .modal-stores-backdrop.open {
+            display: flex;
+        }
+        .modal-stores-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 680px;
+            width: 92%;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #78716C;
+            cursor: pointer;
+        }
+        .modal-store-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .modal-store-card {
+            border: 1px solid #E8DEC8;
+            border-radius: 8px;
+            padding: 12px 14px;
+            background: #FAF8F5;
+        }
+    </style>
+
+    <!-- 1. SHOPEE TOPBAR (TỰ NHIÊN CUỘN THEO TRANG, KHÔNG GÂY ĐƠ LAG) -->
+    <div class="shopee-topbar">
+        <div class="container-shopee topbar-content">
+            <div class="topbar-nav">
+                <a th:href="@{/consignments}">Kênh Người Bán</a>
+                <span class="topbar-divider"></span>
+                <a href="javascript:void(0)" onclick="alert('Quét mã QR để tải ứng dụng Chuỗi Sách Cũ trên iOS & Android!')">Tải Ứng Dụng</a>
+                <span class="topbar-divider"></span>
+                <span style="display:inline-flex; align-items:center; gap:6px;">
+                    Kết Nối
+                    <a href="https://facebook.com" target="_blank" style="color:inherit;" title="Facebook"><i class="fa-brands fa-facebook" style="font-size:14px;"></i></a>
+                    <a href="https://instagram.com" target="_blank" style="color:inherit;" title="Instagram"><i class="fa-brands fa-instagram" style="font-size:14px;"></i></a>
+                </span>
+                <span class="topbar-divider"></span>
+                <a href="javascript:void(0)" onclick="openStoreModal()"><i class="fa-solid fa-store me-1" style="color:#8C4A27;"></i> 5 Cửa Hàng TP.HCM</a>
             </div>
-        </a>
 
-        <form class="d-flex w-50 mx-4" th:action="@{/search}" method="get">
-            <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Tìm tên sách cũ, tác giả, nhà xuất bản...">
-                <button class="btn btn-outline-dark" type="submit">
-                    <i class="fa-solid fa-magnifying-glass"></i> Tìm
-                </button>
-            </div>
-        </form>
-
-        <div class="d-flex align-items-center gap-3">
-            <a th:href="@{/cart}" class="btn btn-outline-secondary position-relative">
-                <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng
-            </a>
-
-            <div sec:authorize="isAnonymous()">
-                <a th:href="@{/login}" class="btn btn-dark btn-sm">
-                    <i class="fa-solid fa-right-to-bracket me-1"></i> Đăng nhập
+            <div class="topbar-links">
+                <!-- THÔNG BÁO BADGE 5 CHUẨN SHOPEE -->
+                <a href="javascript:void(0)" onclick="alert('Hệ thống: Bạn có 5 thông báo mới về đơn hàng và sách ký gửi!')" class="notification-trigger">
+                    <i class="fa-regular fa-bell"></i>
+                    <span>Thông Báo</span>
+                    <span class="notification-badge">5</span>
                 </a>
-            </div>
+                <span class="topbar-divider"></span>
 
-            <div sec:authorize="isAuthenticated()" class="dropdown">
-                <button class="btn btn-light dropdown-toggle border btn-sm" type="button" data-bs-toggle="dropdown">
-                    <i class="fa-solid fa-user-circle me-1"></i>
-                    <span sec:authentication="name">Tài khoản</span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow">
-                    <li><a class="dropdown-item" th:href="@{/profile}"><i class="fa-solid fa-id-card me-2"></i>Hồ sơ & Sổ địa chỉ</a></li>
-                    <li><a class="dropdown-item" th:href="@{/orders}"><i class="fa-solid fa-clock-rotate-left me-2"></i>Lịch sử đơn hàng</a></li>
-                    <li><a class="dropdown-item" th:href="@{/consignments}"><i class="fa-solid fa-hand-holding-dollar me-2"></i>Ký gửi sách cũ</a></li>
-                    <li sec:authorize="hasRole('ADMIN')"><hr class="dropdown-divider"></li>
-                    <li sec:authorize="hasRole('ADMIN')"><a class="dropdown-item text-danger fw-bold" th:href="@{/admin}"><i class="fa-solid fa-shield-halved me-2"></i>Trang Quản Trị Admin</a></li>
-                    <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')"><a class="dropdown-item text-primary" th:href="@{/store-manager}"><i class="fa-solid fa-store me-2"></i>Quản Lý Chi Nhánh</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <form th:action="@{/logout}" method="post" class="px-2">
-                            <button type="submit" class="btn btn-sm btn-outline-danger w-100">
-                                <i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Đăng xuất
-                            </button>
-                        </form>
-                    </li>
-                </ul>
+                <!-- HỖ TRỢ CHUẨN SHOPEE -->
+                <a th:href="@{/help}"><i class="fa-regular fa-circle-question me-1"></i> Hỗ Trợ</a>
+                <span class="topbar-divider"></span>
+
+                <!-- DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE (TIẾNG VIỆT / ENGLISH) -->
+                <div class="lang-dropdown-box">
+                    <div class="lang-trigger-btn" id="currentLangLabel">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>Tiếng Việt</span>
+                        <i class="fa-solid fa-chevron-down ms-1" style="font-size:10px;"></i>
+                    </div>
+                    <div class="lang-dropdown-menu">
+                        <div class="lang-item-btn" onclick="switchLanguage('vi')">
+                            <span>🇻🇳</span> <span>Tiếng Việt</span>
+                        </div>
+                        <div class="lang-item-btn" onclick="switchLanguage('en')">
+                            <span>🇬🇧</span> <span>English</span>
+                        </div>
+                    </div>
+                </div>
+                <span class="topbar-divider"></span>
+
+                <!-- CHƯA ĐĂNG NHẬP (GUEST) -->
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/register}">Đăng Ký</a>
+                    <span class="mx-1" style="color:rgba(0,0,0,0.3);">|</span>
+                    <a th:href="@{/login}">Đăng Nhập</a>
+                </div>
+
+                <!-- ĐÃ ĐĂNG NHẬP (AUTHENTICATED - KHỚP 100% ẢNH SHOPEE IMAGE_557563.PNG) -->
+                <div sec:authorize="isAuthenticated()" class="shopee-user-wrapper">
+                    <div class="shopee-user-trigger">
+                        <img th:src="${user != null and user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
+                             alt="Avatar" class="shopee-user-avatar">
+                        <span class="shopee-user-name" sec:authentication="name">nguyensonghoangph...</span>
+                    </div>
+                    <div class="shopee-user-popover">
+                        <div class="shopee-popover-arrow"></div>
+                        <a th:href="@{/user/account/profile}" class="shopee-popover-item">Tài Khoản Của Tôi</a>
+                        <a th:href="@{/orders}" class="shopee-popover-item">Đơn Mua</a>
+                        <a th:href="@{/logout}" class="shopee-popover-item" style="color:#c62828;">Đăng Xuất</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</header>
+
+    <!-- 2. SHOPEE HEADER CHÍNH (STICKY TỰ NHIÊN Ở TOP 0) -->
+    <header class="shopee-header-section">
+        <div class="container-shopee header-main-row">
+            <!-- Brand Logo Báo Chí "Books" -->
+            <a th:href="@{/}" class="shopee-brand-logo">
+                <img th:src="@{/images/logo-books.png}" alt="BOOKS Logo" class="brand-logo-img">
+                <div class="brand-logo-text">
+                    <h1>CHUỖI SÁCH CŨ</h1>
+                    <span>Kho Sách Cũ Kiểm Định · Giá Tốt Sinh Viên</span>
+                </div>
+            </a>
+
+            <!-- Thanh tìm kiếm Shopee -->
+            <div class="shopee-search-container">
+                <form th:action="@{/search}" method="get" class="shopee-search-bar">
+                    <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm tên sách cũ, tác giả, ISBN, hoặc giáo trình HCMUTE (Mới 80% – 99%)...">
+                    <button type="submit" class="btn-search-shopee">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Tìm Kiếm</span>
+                    </button>
+                </form>
+
+                <!-- Từ khóa hot dưới thanh search -->
+                <div class="shopee-hot-keywords">
+                    <a th:href="@{/search(keyword='Yêu Những Điều Không Hoàn Hảo')}">Yêu Những Điều Không Hoàn Hảo</a>
+                    <a th:href="@{/search(keyword='Nhà Giả Kim')}">Nhà Giả Kim</a>
+                    <a th:href="@{/search(keyword='Đắc Nhân Tâm')}">Đắc Nhân Tâm</a>
+                    <a th:href="@{/search(keyword='Atomic Habits')}">Atomic Habits</a>
+                    <a th:href="@{/search(keyword='Cây Cam Ngọt Của Tôi')}">Cây Cam Ngọt Của Tôi</a>
+                    <a th:href="@{/search(keyword='Kính Vạn Hoa')}">Kính Vạn Hoa</a>
+                    <a th:href="@{/search(cond=95)}">Độ mới &ge; 95%</a>
+                </div>
+            </div>
+
+            <!-- Giỏ hàng Shopee với Live Badge Counter -->
+            <div class="shopee-cart-wrap" id="shopeeCartWrap">
+                <a th:href="@{/cart}" title="Xem giỏ hàng của bạn">
+                    <i class="fa-solid fa-cart-shopping shopee-cart-icon"></i>
+                    <span class="shopee-cart-badge" id="headerCartBadge">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MODAL 5 CHI NHÁNH TP.HCM -->
+    <div class="modal-stores-backdrop" id="storeModal" onclick="closeStoreModal(event)">
+        <div class="modal-stores-content" onclick="event.stopPropagation()">
+            <button type="button" class="modal-close-btn" onclick="closeStoreModal()"><i class="fa-solid fa-xmark"></i></button>
+
+            <h3 style="font-size: 18px; font-weight: 900; color: #1C1917; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-shop" style="color:#8C4A27;"></i>
+                <span>HỆ THỐNG 5 CHI NHÁNH CHUỖI SÁCH CŨ TẠI TP. HỒ CHÍ MINH</span>
+            </h3>
+            <p style="font-size: 13px; color: #574E45; margin-top: 4px;">
+                Quý khách có thể ghé đọc thử, nhận sách Click &amp; Collect trong 2h hoặc ký gửi trực tiếp tại quầy:
+            </p>
+
+            <div class="modal-store-grid">
+                <div class="modal-store-card">
+                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Chi Nhánh 1: TP. Thủ Đức (Gần HCMUTE)
+                    </h5>
+                    <p style="font-size: 13px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 1 Võ Văn Ngân, P. Linh Chiểu, TP. Thủ Đức
+                    </p>
+                    <p style="font-size: 12px; color: #78716C;">
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>028-38968641</strong>
+                    </p>
+                </div>
+                <div class="modal-store-card">
+                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Chi Nhánh 2: Làng Đại Học Quốc Gia TP.HCM
+                    </h5>
+                    <p style="font-size: 13px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Khu Phố 6, P. Linh Trung, TP. Thủ Đức
+                    </p>
+                    <p style="font-size: 12px; color: #78716C;">
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>028-37242160</strong>
+                    </p>
+                </div>
+                <div class="modal-store-card">
+                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Chi Nhánh 3: Quận Phú Nhuận (Trung Tâm)
+                    </h5>
+                    <p style="font-size: 13px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> 142 Phan Xích Long, P. 2, Q. Phú Nhuận
+                    </p>
+                    <p style="font-size: 12px; color: #78716C;">
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:30 - 22:00 | Hotline: <strong>028-39951234</strong>
+                    </p>
+                </div>
+                <div class="modal-store-card">
+                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Chi Nhánh 4: Quận 1 (Phố Sách Nguyễn Văn Bình)
+                    </h5>
+                    <p style="font-size: 13px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Gian hàng M08, Đường Sách Nguyễn Văn Bình, Bến Nghé, Q.1
+                    </p>
+                    <p style="font-size: 12px; color: #78716C;">
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 22:00 | Hotline: <strong>028-38225678</strong>
+                    </p>
+                </div>
+                <div class="modal-store-card">
+                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Chi Nhánh 5: Khu Học Thuật Quận 5
+                    </h5>
+                    <p style="font-size: 13px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> 280 An Dương Vương, P. 4, Q. 5
+                    </p>
+                    <p style="font-size: 12px; color: #78716C;">
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>028-38352020</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT ĐIỀU KHIỂN CHUNG CHO HEADER -->
+    <script>
+        function openStoreModal() {
+            var m = document.getElementById('storeModal');
+            if (m) m.classList.add('open');
+        }
+        function closeStoreModal(e) {
+            var m = document.getElementById('storeModal');
+            if (m) m.classList.remove('open');
+        }
+        // Tải số lượng giỏ hàng thực tế
+        (function() {
+            fetch('/cart/api/count')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    var b = document.getElementById('headerCartBadge');
+                    if (b && data && data.count !== undefined) {
+                        b.innerText = data.count;
+                    }
+                })
+                .catch(function() {});
+        })();
+    </script>
+</th:block>
+
 </body>
 </html>

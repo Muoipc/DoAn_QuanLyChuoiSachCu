@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} != null ? ${pageTitle} : 'Hồ Sơ Của Tôi — Chuỗi Cửa Hàng Sách Cũ TP.HCM'">Hồ Sơ Của Tôi — Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --color-book-primary: #8C4A27;
+            --color-book-hover: #733615;
+            --color-book-light: #F5ECE4;
+            --color-bg-paper: #F8F5EE;
+            --color-card-bg: #ffffff;
+            --color-text-main: #1C1917;
+            --color-text-secondary: #574E45;
+            --color-text-light: #78716C;
+            --color-border: #E8DEC8;
+            --radius-sm: 3px;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: var(--color-bg-paper);
+            color: var(--color-text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        .container-shopee {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* 1. TOPBAR VINTAGE BROWN */
+        .profile-topbar {
+            background: rgba(35, 18, 10, 0.22);
+            backdrop-filter: blur(24px);
+            font-size: 13px;
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        .topbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-left, .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .topbar-link {
+            color: #292524;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.15s;
+        }
+        .topbar-link:hover { color: var(--color-book-primary); }
+        .topbar-divider {
+            width: 1px;
+            height: 12px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        .lang-dropdown-box {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-trigger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #292524;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .lang-trigger-btn:hover {
+            color: #8C4A27;
+            background: rgba(140, 74, 39, 0.08);
+        }
+        .lang-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E8DEC8;
+            min-width: 145px;
+            display: none;
+            z-index: 1000;
+            padding: 6px 0;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu {
+            display: block;
+        }
+        .lang-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #1C1917;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .lang-item-btn:hover {
+            background: #F5ECE4;
+            color: #8C4A27;
+        }
+
+        /* 2. HEADER MAIN */
+        .profile-header-main {
+            background: rgba(45, 24, 15, 0.28);
+            backdrop-filter: blur(36px);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .header-content-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand-badge-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .brand-logo-img {
+            height: 52px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+        }
+        .profile-badge-text {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--color-book-primary);
+            border-left: 2px solid #1C1917;
+            padding-left: 14px;
+            text-transform: capitalize;
+        }
+
+        /* 3. BỐ CỤC 2 CỘT CHUẨN SHOPEE ACCOUNT DASHBOARD */
+        .account-portal-layout {
+            display: grid;
+            grid-template-columns: 210px 1fr;
+            gap: 28px;
+            margin: 28px auto 48px;
+        }
+
+        /* CỘT TRÁI: SIDEBAR ĐIỀU HƯỚNG */
+        .account-sidebar-card {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .user-quick-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8dec8;
+        }
+        .sidebar-avatar-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #d5cec4;
+        }
+        .sidebar-user-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--color-text-main);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .sidebar-edit-link {
+            font-size: 12px;
+            color: #78716C;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+        }
+        .sidebar-edit-link:hover { color: var(--color-book-primary); }
+
+        /* Menu Tree */
+        .sidebar-nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .nav-group-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-sub-list {
+            list-style: none;
+            padding-left: 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 13.5px;
+        }
+        .nav-sub-item a {
+            color: #574E45;
+            transition: color 0.15s;
+        }
+        .nav-sub-item a:hover, .nav-sub-item.active a {
+            color: var(--color-book-primary);
+            font-weight: 700;
+        }
+
+        .single-nav-item {
+            font-size: 14px;
+            font-weight: 700;
+            color: #574E45;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.15s;
+        }
+        .single-nav-item:hover, .single-nav-item.active {
+            color: var(--color-book-primary);
+        }
+
+        /* CỘT PHẢI: KHUNG NỘI DUNG CHÍNH (MAIN PROFILE CARD) */
+        .account-main-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid var(--color-border);
+            padding: 30px;
+        }
+        .main-card-header {
+            padding-bottom: 18px;
+            border-bottom: 1px solid #f2ede6;
+            margin-bottom: 24px;
+        }
+        .main-card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--color-text-main);
+        }
+        .main-card-sub {
+            font-size: 13.5px;
+            color: #78716C;
+            margin-top: 4px;
+        }
+
+        /* NỘI DUNG FORM HỒ SƠ CHUẨN SHOPEE (2 CỘT 65% - 35%) */
+        .profile-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 40px;
+        }
+
+        .profile-form-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .form-row-item {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+        }
+        .form-label-txt {
+            text-align: right;
+            color: #78716C;
+            font-size: 13.5px;
+        }
+        .form-input-control {
+            width: 100%;
+            max-width: 360px;
+            padding: 10px 14px;
+            border: 1px solid #d5cec4;
+            border-radius: 2px;
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .form-input-control:focus {
+            border-color: var(--color-book-primary);
+        }
+        .readonly-username-txt {
+            font-weight: 700;
+            color: #1C1917;
+        }
+
+        .btn-link-action {
+            color: #0288d1;
+            font-size: 13px;
+            text-decoration: underline;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        /* Radio giới tính */
+        .gender-options-flex {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .gender-radio-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: #1C1917;
+        }
+
+        /* Nút Lưu Shopee */
+        .btn-shopee-save {
+            background: var(--color-book-primary);
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            border: none;
+            border-radius: 2px;
+            padding: 12px 36px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(140, 74, 39, 0.25);
+            transition: background 0.15s;
+            text-transform: uppercase;
+        }
+        .btn-shopee-save:hover {
+            background: var(--color-book-hover);
+        }
+
+        /* CỘT PHẢI: AVATAR BOX CHUẨN SHOPEE */
+        .profile-avatar-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 30px;
+            border-left: 1px solid #f2ede6;
+        }
+        .large-avatar-wrap {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #e8dec8;
+            margin-bottom: 16px;
+        }
+        .large-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .btn-choose-avatar {
+            background: white;
+            border: 1px solid #d5cec4;
+            color: #574E45;
+            padding: 8px 18px;
+            border-radius: 2px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.15s;
+        }
+        .btn-choose-avatar:hover {
+            background: #faf8f5;
+            border-color: #78716C;
+        }
+        .avatar-rules-txt {
+            font-size: 12px;
+            color: #a8a29e;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* TAB ĐỊA CHỈ & ĐỔI MẬT KHẨU */
+        .address-item-card {
+            border-bottom: 1px solid #f2ede6;
+            padding: 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .address-item-card:last-child { border-bottom: none; }
+        .badge-default-addr {
+            border: 1px solid var(--color-book-primary);
+            color: var(--color-book-primary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 2px;
+            margin-left: 8px;
+        }
+
+        /* FOOTER */
+        .profile-footer {
+            background: #25160d;
+            color: #b7b0a5;
+            padding: 28px 0;
+            font-size: 12px;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. TOPBAR VINTAGE BROWN -->
+    <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
+    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+
+
+    <!-- THÔNG BÁO FLASH MESSAGE -->
+    <div class="container-shopee" style="margin-top: 18px;" th:if="${successMessage}">
+        <div style="background:#e8f5e9; border:1px solid #c8e6c9; color:#2e7d32; padding:12px 18px; border-radius:3px; font-size:13.5px; font-weight:700;">
+            <i class="fa-solid fa-circle-check me-2"></i> <span th:text="${successMessage}">Cập nhật thành công!</span>
+        </div>
+    </div>
+    <div class="container-shopee" style="margin-top: 18px;" th:if="${errorMessage}">
+        <div style="background:#ffebee; border:1px solid #ffcdd2; color:#c62828; padding:12px 18px; border-radius:3px; font-size:13.5px; font-weight:700;">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> <span th:text="${errorMessage}">Lỗi thực hiện!</span>
+        </div>
+    </div>
+
+    <!-- 3. MAIN DASHBOARD BỐ CỤC 2 CỘT CHUẨN SHOPEE -->
+    <main class="container-shopee account-portal-layout" style="flex:1;">
+
+        <!-- CỘT TRÁI: SIDEBAR ĐIỀU HƯỚNG CHUẨN SHOPEE -->
+        <aside class="account-sidebar-card">
+            <!-- Header User Card -->
+            <div class="user-quick-profile">
+                <img th:src="${user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
+                     alt="Avatar" class="sidebar-avatar-img">
+                <div style="overflow:hidden;">
+                    <div class="sidebar-user-name" th:text="${user.fullName}">Nguyễn Song Hoàng Phúc</div>
+                    <a th:href="@{/user/account/profile?tab=profile}" class="sidebar-edit-link">
+                        <i class="fa-solid fa-pen"></i> Sửa Hồ Sơ
+                    </a>
+                </div>
+            </div>
+
+            <!-- Navigation Tree -->
+            <nav class="sidebar-nav-group">
+                <!-- Group 1: Tài Khoản Của Tôi -->
+                <div>
+                    <div class="nav-group-title">
+                        <i class="fa-regular fa-user" style="color:#0288d1;"></i>
+                        <span>Tài Khoản Của Tôi</span>
+                    </div>
+                    <ul class="nav-sub-list" style="margin-top:10px;">
+                        <li class="nav-sub-item" th:classappend="${activeTab == 'profile' ? 'active' : ''}">
+                            <a th:href="@{/user/account/profile?tab=profile}">Hồ Sơ</a>
+                        </li>
+                        <li class="nav-sub-item" th:classappend="${activeTab == 'address' ? 'active' : ''}">
+                            <a th:href="@{/user/account/profile?tab=address}">Địa Chỉ</a>
+                        </li>
+                        <li class="nav-sub-item" th:classappend="${activeTab == 'password' ? 'active' : ''}">
+                            <a th:href="@{/user/account/profile?tab=password}">Đổi Mật Khẩu</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Group 2: Đơn Mua -->
+                <a th:href="@{/orders}" class="single-nav-item">
+                    <i class="fa-regular fa-clipboard" style="color:var(--color-book-primary);"></i>
+                    <span>Đơn Mua (<span th:text="${totalOrders}">2</span>)</span>
+                </a>
+
+                <!-- Group 3: Ký Gửi Sách Cũ -->
+                <a th:href="@{/consignments/my-list}" class="single-nav-item">
+                    <i class="fa-solid fa-recycle" style="color:#10b981;"></i>
+                    <span>Phiếu Ký Gửi (<span th:text="${totalConsignments}">1</span>)</span>
+                </a>
+
+                <!-- Group 4: Trợ Lý AI -->
+                <a th:href="@{/ai-assistant}" class="single-nav-item">
+                    <i class="fa-solid fa-robot" style="color:#f59e0b;"></i>
+                    <span>Trợ Lý AI Tư Vấn</span>
+                </a>
+
+                <!-- Group 5: Voucher & Điểm -->
+                <a href="javascript:void(0)" onclick="alert('Bạn đang có 2 mã Freeship 25k và 2.000 điểm tích lũy sách cũ!');" class="single-nav-item">
+                    <i class="fa-solid fa-ticket" style="color:#ef4444;"></i>
+                    <span>Kho Voucher Của Tôi</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- CỘT PHẢI: KHUNG NỘI DUNG CHÍNH -->
+        <section class="account-main-card">
+
+            <!-- ================= TAB 1: HỒ SƠ CỦA TÔI ================= -->
+            <div th:if="${activeTab == 'profile'}">
+                <div class="main-card-header">
+                    <h1 class="main-card-title">Hồ Sơ Của Tôi</h1>
+                    <p class="main-card-sub">Quản lý thông tin hồ sơ để bảo mật tài khoản chuỗi sách cũ</p>
+                </div>
+
+                <div class="profile-form-grid">
+                    <!-- Form 65% bên trái -->
+                    <form action="/user/account/profile/update" method="post" class="profile-form-left">
+                        <!-- Tên đăng nhập -->
+                        <div class="form-row-item">
+                            <label class="form-label-txt">Tên đăng nhập</label>
+                            <span class="readonly-username-txt" th:text="${user.username}">phuc_customer</span>
+                        </div>
+
+                        <!-- Tên đầy đủ -->
+                        <div class="form-row-item">
+                            <label class="form-label-txt">Tên</label>
+                            <input type="text" name="fullName" class="form-input-control" th:value="${user.fullName}" required>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-row-item">
+                            <label class="form-label-txt">Email</label>
+                            <div>
+                                <span th:text="${user.email}">phuc@student.hcmute.edu.vn</span>
+                                <span class="btn-link-action" onclick="alert('Để đổi Email sinh viên, vui lòng liên hệ Ban quản trị qua hotline!');">Thay Đổi</span>
+                            </div>
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="form-row-item">
+                            <label class="form-label-txt">Số điện thoại</label>
+                            <input type="text" name="phone" class="form-input-control" th:value="${user.phone}">
+                        </div>
+
+                        <!-- Giới tính -->
+                        <div class="form-row-item">
+                            <label class="form-label-txt">Giới tính</label>
+                            <div class="gender-options-flex">
+                                <label class="gender-radio-label">
+                                    <input type="radio" name="gender" value="male" checked> Nam
+                                </label>
+                                <label class="gender-radio-label">
+                                    <input type="radio" name="gender" value="female"> Nữ
+                                </label>
+                                <label class="gender-radio-label">
+                                    <input type="radio" name="gender" value="other"> Khác
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Ngày sinh -->
+                        <div class="form-row-item">
+                            <label class="form-label-txt">Ngày sinh</label>
+                            <div style="display:flex; gap:8px;">
+                                <select class="form-input-control" style="max-width:80px;">
+                                    <option th:each="d : ${#numbers.sequence(1, 31)}" th:value="${d}" th:text="${d}" th:selected="${d == 25}"></option>
+                                </select>
+                                <select class="form-input-control" style="max-width:110px;">
+                                    <option th:each="m : ${#numbers.sequence(1, 12)}" th:value="${m}" th:text="'Tháng ' + ${m}" th:selected="${m == 1}"></option>
+                                </select>
+                                <select class="form-input-control" style="max-width:90px;">
+                                    <option th:each="y : ${#numbers.sequence(1980, 2010)}" th:value="${y}" th:text="${y}" th:selected="${y == 2003}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="avatar" id="hiddenAvatarInput" th:value="${user.avatar}">
+
+                        <!-- Nút Lưu -->
+                        <div class="form-row-item" style="margin-top:10px;">
+                            <div></div>
+                            <div>
+                                <button type="submit" class="btn-shopee-save">LƯU</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Avatar Box 35% bên phải -->
+                    <div class="profile-avatar-right">
+                        <div class="large-avatar-wrap">
+                            <img th:src="${user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
+                                 alt="Avatar Lớn" class="large-avatar-img" id="avatarPreview">
+                        </div>
+                        <button type="button" class="btn-choose-avatar" onclick="chooseSampleAvatar()">
+                            Chọn Ảnh Mẫu
+                        </button>
+                        <div class="avatar-rules-txt">
+                            Dụng lượng file tối đa 1 MB<br>
+                            Định dạng: .JPEG, .PNG
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 2: ĐỊA CHỈ NHẬN HÀNG ================= -->
+            <div th:if="${activeTab == 'address'}">
+                <div class="main-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h1 class="main-card-title">Địa Chỉ Của Tôi</h1>
+                        <p class="main-card-sub">Quản lý địa chỉ nhận sách giao tận nơi từ 5 chi nhánh TP.HCM</p>
+                    </div>
+                    <button type="button" class="btn-shopee-save" style="padding:10px 20px; font-size:13px;" onclick="toggleAddAddressForm()">
+                        <i class="fa-solid fa-plus me-1"></i> Thêm Địa Chỉ Mới
+                    </button>
+                </div>
+
+                <!-- FORM THÊM ĐỊA CHỈ MỚI ẨN/HIỆN -->
+                <div id="addAddressBox" style="display:none; background:#faf8f5; border:1px solid #e8dec8; padding:20px; border-radius:3px; margin-bottom:24px;">
+                    <h3 style="font-size:15px; font-weight:800; margin-bottom:14px; color:#1C1917;">Thêm Địa Chỉ Giao Hàng Mới</h3>
+                    <form action="/user/account/address/add" method="post">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+                            <input type="text" name="receiverName" class="form-input-control" style="max-width:100%;" placeholder="Họ và tên người nhận" required>
+                            <input type="text" name="phone" class="form-input-control" style="max-width:100%;" placeholder="Số điện thoại" required>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:12px;">
+                            <input type="text" name="province" class="form-input-control" style="max-width:100%;" value="TP. Hồ Chí Minh" required>
+                            <input type="text" name="district" class="form-input-control" style="max-width:100%;" placeholder="Quận / Huyện (VD: TP. Thủ Đức)" required>
+                            <input type="text" name="ward" class="form-input-control" style="max-width:100%;" placeholder="Phường / Xã (VD: P. Linh Chiểu)" required>
+                        </div>
+                        <div style="margin-bottom:14px;">
+                            <input type="text" name="streetAddress" class="form-input-control" style="max-width:100%;" placeholder="Số nhà, tên đường (VD: 48 Võ Văn Ngân, Đối diện HCMUTE)" required>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <label style="font-size:13px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                                <input type="checkbox" name="isDefault" value="true"> Đặt làm địa chỉ mặc định
+                            </label>
+                            <div style="display:flex; gap:10px;">
+                                <button type="button" class="btn-choose-avatar" onclick="toggleAddAddressForm()">Trở lại</button>
+                                <button type="submit" class="btn-shopee-save" style="padding:8px 24px;">Hoàn thành</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- DANH SÁCH ĐỊA CHỈ -->
+                <div th:each="addr : ${addresses}" class="address-item-card">
+                    <div>
+                        <div style="font-size:15px; font-weight:800; color:#1C1917; display:flex; align-items:center;">
+                            <span th:text="${addr.receiverName}">Nguyễn Song Hoàng Phúc</span>
+                            <span class="topbar-divider" style="margin: 0 10px;"></span>
+                            <span style="font-weight:400; color:#78716C;" th:text="${addr.phone}">0934567890</span>
+                            <span class="badge-default-addr" th:if="${addr.isDefault}">Mặc định</span>
+                        </div>
+                        <div style="font-size:13.5px; color:#574E45; margin-top:6px;" th:text="${addr.streetAddress}">
+                            48 Võ Văn Ngân
+                        </div>
+                        <div style="font-size:13px; color:#78716C; margin-top:2px;" 
+                             th:text="${addr.ward} + ', ' + ${addr.district} + ', ' + ${addr.province}">
+                            P. Linh Chiểu, TP. Thủ Đức, TP. Hồ Chí Minh
+                        </div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+                        <span class="btn-link-action" style="font-size:13px;">Cập nhật</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 3: ĐỔI MẬT KHẨU ================= -->
+            <div th:if="${activeTab == 'password'}">
+                <div class="main-card-header">
+                    <h1 class="main-card-title">Đổi Mật Khẩu</h1>
+                    <p class="main-card-sub">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
+                </div>
+
+                <form action="/user/account/profile/change-password" method="post" style="max-width:520px; display:flex; flex-direction:column; gap:18px;">
+                    <div class="form-row-item">
+                        <label class="form-label-txt">Mật khẩu hiện tại</label>
+                        <input type="password" name="oldPassword" class="form-input-control" placeholder="Nhập mật khẩu hiện tại..." required>
+                    </div>
+
+                    <div class="form-row-item">
+                        <label class="form-label-txt">Mật khẩu mới</label>
+                        <input type="password" name="newPassword" class="form-input-control" placeholder="Tối thiểu 6 ký tự..." required>
+                    </div>
+
+                    <div class="form-row-item">
+                        <label class="form-label-txt">Xác nhận mật khẩu</label>
+                        <input type="password" name="confirmPassword" class="form-input-control" placeholder="Nhập lại mật khẩu mới..." required>
+                    </div>
+
+                    <div class="form-row-item" style="margin-top:10px;">
+                        <div></div>
+                        <div>
+                            <button type="submit" class="btn-shopee-save">XÁC NHẬN ĐỔI MẬT KHẨU</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="profile-footer">
+        <div class="container-shopee">
+            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+            <p style="margin-top: 4px; color:#857d72;">Nguyễn Song Hoàng Phúc (24162096) &amp; Thái Duy Cường (24162013)</p>
+        </div>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+    <script>
+        function toggleAddAddressForm() {
+            const box = document.getElementById('addAddressBox');
+            box.style.display = box.style.display === 'none' ? 'block' : 'none';
+        }
+
+        const sampleAvatars = [
+            'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg',
+            'https://res.cloudinary.com/demo/image/upload/v1/samples/people/smiling-man.jpg',
+            'https://res.cloudinary.com/demo/image/upload/v1/samples/people/boy-snow-hoodie.jpg'
+        ];
+        let currentIdx = 0;
+
+        function chooseSampleAvatar() {
+            currentIdx = (currentIdx + 1) % sampleAvatars.length;
+            const newUrl = sampleAvatars[currentIdx];
+            document.getElementById('avatarPreview').src = newUrl;
+            document.getElementById('hiddenAvatarInput').value = newUrl;
+        }
+    </script>
+    <script src="/js/cart-popover.js"></script>
+</body>
+</html>

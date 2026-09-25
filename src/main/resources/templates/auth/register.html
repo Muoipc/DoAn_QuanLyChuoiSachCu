@@ -12,9 +12,9 @@
 
     <style>
         :root {
-            --color-fire: #ee4d2d;
-            --color-fire-hover: #f05d40;
-            --color-bg-body: #f7f5f0;
+            --color-fire: #8C4A27;
+            --color-fire-hover: #733615;
+            --color-bg-body: #F8F5EE;
             --color-text-main: #1C1917;
             --color-text-secondary: #44403C;
             --color-text-light: #78716C;
@@ -111,6 +111,60 @@
         .auth-footer {
             background: #25160d; color: #b7b0a5; padding: 20px 0; font-size: 12px; text-align: center;
         }
+    
+        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        .lang-dropdown-box {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-trigger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #292524;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .lang-trigger-btn:hover {
+            color: #8C4A27;
+            background: rgba(140, 74, 39, 0.08);
+        }
+        .lang-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid #E8DEC8;
+            min-width: 145px;
+            display: none;
+            z-index: 1000;
+            padding: 6px 0;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu {
+            display: block;
+        }
+        .lang-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            color: #1C1917;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .lang-item-btn:hover {
+            background: #F5ECE4;
+            color: #8C4A27;
+        }
+
     </style>
 </head>
 <body>
@@ -127,7 +181,24 @@
                 Đã có tài khoản? Đăng nhập ngay &gt;
             </a>
         </div>
-    </header>
+        <div style="position:absolute; top:12px; right:30px;">
+                <div class="lang-dropdown-box">
+                    <div class="lang-trigger-btn" id="currentLangLabel">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>Tiếng Việt</span>
+                        <i class="fa-solid fa-chevron-down ms-1" style="font-size:10px;"></i>
+                    </div>
+                    <div class="lang-dropdown-menu">
+                        <div class="lang-item-btn" onclick="switchLanguage('vi')">
+                            <span>🇻🇳</span> <span>Tiếng Việt</span>
+                        </div>
+                        <div class="lang-item-btn" onclick="switchLanguage('en')">
+                            <span>🇬🇧</span> <span>English</span>
+                        </div>
+                    </div>
+                </div>
+</div>
+</header>
 
     <main class="auth-main-section">
         <div class="container">
@@ -220,5 +291,7 @@
             <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
         </div>
     </footer>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/cart-popover.js"></script>
 </body>
 </html>

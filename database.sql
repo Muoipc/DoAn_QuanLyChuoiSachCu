@@ -313,14 +313,14 @@ INSERT INTO roles (id, name, description) VALUES
 (3, 'ROLE_USER', 'Khách hàng mua sách và ký gửi'),
 (4, 'ROLE_SHIPPER', 'Nhân viên giao nhận đơn hàng');
 
--- 2. Nạp người dùng mẫu (Mật khẩu mặc định: 123456 -> băm BCrypt: $2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6)
+-- 2. Nạp người dùng mẫu (Mật khẩu mặc định: 123456 -> băm BCrypt: $2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i)
 INSERT INTO users (id, role_id, username, email, password, full_name, phone, avatar, enabled) VALUES
-(1, 1, 'admin', 'admin@oldbookstore.vn', '$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6', 'Quản Trị Viên Hệ Thống', '0901234567', 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/smiling-man.jpg', TRUE),
-(2, 2, 'manager_td', 'thu_duc@oldbookstore.vn', '$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6', 'Quản Lý CN Thủ Đức', '0912345678', 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/boy-snow-hoodie.jpg', TRUE),
-(3, 2, 'manager_q1', 'quan1@oldbookstore.vn', '$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6', 'Quản Lý CN Quận 1', '0923456789', 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/kitchen-bar.jpg', TRUE),
-(4, 3, 'phuc_customer', 'phuc@student.hcmute.edu.vn', '$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6', 'Nguyễn Song Hoàng Phúc', '0934567890', 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg', TRUE),
-(5, 3, 'cuong_customer', 'cuong@student.hcmute.edu.vn', '$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6', 'Thái Duy Cường', '0945678901', 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/musical-duo.jpg', TRUE),
-(6, 4, 'shipper_hung', 'shipper_hung@oldbookstore.vn', '$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6', 'Trần Văn Hùng (Shipper)', '0956789012', 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/bicycle.jpg', TRUE);
+(1, 1, 'admin', 'admin@oldbookstore.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Quản Trị Viên Hệ Thống', '0901234567', '/images/avatars/avatar-admin.png', TRUE),
+(2, 2, 'manager_td', 'thu_duc@oldbookstore.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Quản Lý CN Thủ Đức', '0912345678', '/images/avatars/avatar-default.png', TRUE),
+(3, 2, 'manager_q1', 'quan1@oldbookstore.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Quản Lý CN Quận 1', '0923456789', '/images/avatars/avatar-default.png', TRUE),
+(4, 3, 'phuc_customer', 'phuc@student.hcmute.edu.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Nguyễn Song Hoàng Phúc', '0934567890', '/images/avatars/avatar-phuc.png', TRUE),
+(5, 3, 'cuong_customer', 'cuong@student.hcmute.edu.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Thái Duy Cường', '0945678901', '/images/avatars/avatar-cuong.png', TRUE),
+(6, 4, 'shipper_hung', 'shipper_hung@oldbookstore.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Trần Văn Hùng (Shipper)', '0956789012', '/images/avatars/avatar-default.png', TRUE);
 
 -- 3. Nạp địa chỉ giao hàng mẫu
 INSERT INTO addresses (id, user_id, receiver_name, phone, province, district, ward, street_address, is_default) VALUES
@@ -337,12 +337,15 @@ INSERT INTO stores (id, manager_id, store_name, slug, phone, email, address, pro
 (5, NULL, 'Chi Nhánh 5: Khu Học Thuật Quận 5', 'chi-nhanh-quan-5', '02838351122', 'quan5@oldbookstore.vn', 'Số 280 An Dương Vương, Phường 4', 'TP. Hồ Chí Minh', 'Quận 5', '08:00', '21:30', 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800', TRUE);
 
 -- 5. Nạp danh mục thể loại sách
-INSERT INTO categories (id, parent_id, category_name, slug, description, icon, is_active) VALUES
-(1, NULL, 'Văn Học & Tiểu Thuyết', 'van-hoc-tieu-thuyet', 'Các tác phẩm văn học kinh điển Việt Nam và thế giới', 'fa-book-open', TRUE),
-(2, NULL, 'Công Nghệ Thông Tin & Kỹ Thuật', 'cntt-ky-thuat', 'Sách giáo trình, lập trình viên, mạng máy tính', 'fa-laptop-code', TRUE),
-(3, NULL, 'Kinh Tế & Quản Trị', 'kinh-te-quan-tri', 'Sách kinh doanh, khởi nghiệp, tài chính, đầu tư', 'fa-chart-line', TRUE),
-(4, NULL, 'Lịch Sử & Văn Hóa', 'lich-su-van-hoa', 'Sách nghiên cứu sử liệu, văn hóa cổ truyền', 'fa-landmark', TRUE),
-(5, NULL, 'Ngoại Ngữ & Từ Điển', 'ngoai-ngu-tu-dien', 'Giáo trình tiếng Anh, TOEIC, từ điển cổ xưa', 'fa-language', TRUE);
+INSERT INTO `categories` (`id`, `parent_id`, `category_name`, `slug`, `description`, `icon`, `is_active`) VALUES
+(1, NULL, 'Văn Học & Tiểu Thuyết', 'van-hoc-tieu-thuyet', 'Các tác phẩm văn học kinh điển Việt Nam và thế giới', 'fa-book-open', 1),
+(2, NULL, 'Công Nghệ Thông Tin & Kỹ Thuật', 'cntt-ky-thuat', 'Sách giáo trình, lập trình viên, mạng máy tính', 'fa-laptop-code', 1),
+(3, NULL, 'Kinh Tế & Quản Trị', 'kinh-te-quan-tri', 'Sách kinh doanh, khởi nghiệp, tài chính, đầu tư', 'fa-chart-line', 1),
+(4, NULL, 'Lịch Sử & Văn Hóa', 'lich-su-van-hoa', 'Sách nghiên cứu sử liệu, văn hóa cổ truyền', 'fa-landmark', 1),
+(5, NULL, 'Ngoại Ngữ & Từ Điển', 'ngoai-ngu-tu-dien', 'Giáo trình tiếng Anh, TOEIC, từ điển cổ xưa', 'fa-language', 1),
+(6, NULL, 'Kỹ Năng Sống & Tâm Lý', 'ky-nang-tam-ly', 'Sách phát triển bản thân, tâm lý học và tư duy', 'fa-lightbulb', 1),
+(7, NULL, 'Giáo Trình ĐH & HCMUTE', 'giao-trinh-hcmute', 'Giáo trình kỹ thuật, công nghệ và bài giảng chuyên ngành', 'fa-graduation-cap', 1),
+(8, NULL, 'Truyện Tranh & Manga Cổ', 'truyen-tranh-manga', 'Bộ truyện tranh gắn liền tuổi thơ và ấn bản sưu tầm', 'fa-palette', 1);
 
 -- 6. Nạp danh sách 20 cuốn sách cũ mẫu chuẩn bìa thật 100% (Khớp ảnh bìa thực tế)
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
