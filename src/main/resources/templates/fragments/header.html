@@ -160,13 +160,24 @@
             color: #8C4A27;
         }
 
-        /* SHOPEE NOTIFICATION BADGE */
-        .notification-trigger {
+        /* SHOPEE NOTIFICATION POPOVER (KHỚP 100% ẢNH SHOPEE IMAGE_8B39D3.PNG) */
+        .shopee-noti-wrapper {
             position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .shopee-noti-trigger {
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            color: #1C1917;
+            font-size: 12.5px;
+            font-weight: 700;
             text-decoration: none;
+            transition: color 0.15s ease;
+        }
+        .shopee-noti-trigger:hover {
+            color: #8C4A27;
         }
         .notification-badge {
             background: #ee4d2d;
@@ -177,6 +188,159 @@
             padding: 1px 5px;
             line-height: 12px;
             margin-left: 2px;
+        }
+
+        .shopee-noti-popover {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 404px;
+            background: #ffffff;
+            border-radius: 2px;
+            box-shadow: 0 1px 16px rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(0, 0, 0, 0.09);
+            display: none;
+            flex-direction: column;
+            z-index: 100010 !important;
+            cursor: default;
+            white-space: normal !important;
+        }
+        .shopee-noti-popover::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+        }
+        .shopee-noti-arrow {
+            position: absolute;
+            top: -7px;
+            right: 32px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-bottom: 7px solid #ffffff;
+        }
+        .shopee-noti-wrapper:hover .shopee-noti-popover {
+            display: flex;
+        }
+        .noti-popover-header {
+            height: 38px;
+            line-height: 38px;
+            padding: 0 14px;
+            font-size: 13.5px;
+            color: rgba(0, 0, 0, 0.4);
+            font-weight: 600;
+            background: #fafafa;
+            border-bottom: 1px solid #f0f0f0;
+            user-select: none;
+            text-align: left;
+            white-space: nowrap !important;
+        }
+        .noti-popover-list {
+            display: flex !important;
+            flex-direction: column !important;
+            max-height: 380px;
+            overflow-y: auto;
+            width: 100% !important;
+        }
+        .noti-popover-list a.noti-item {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: flex-start !important;
+            width: 100% !important;
+            padding: 10px 14px !important;
+            text-decoration: none !important;
+            background: #ffffff;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background-color 0.15s ease;
+            gap: 12px !important;
+            text-align: left !important;
+            white-space: normal !important;
+            box-sizing: border-box !important;
+        }
+        .noti-popover-list a.noti-item.unread {
+            background-color: #fff8f7 !important;
+        }
+        .noti-popover-list a.noti-item:hover {
+            background-color: #f7f7f7 !important;
+        }
+        .noti-thumb {
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0 !important;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            display: block !important;
+        }
+        .noti-body {
+            flex: 1 !important;
+            min-width: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .noti-title {
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: #1C1917 !important;
+            margin-bottom: 4px !important;
+            line-height: 18px !important;
+            white-space: normal !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-align: left !important;
+        }
+        .noti-desc {
+            font-size: 12px !important;
+            color: #666666 !important;
+            line-height: 16px !important;
+            white-space: normal !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-align: left !important;
+            font-weight: normal !important;
+        }
+        .noti-preview-grid {
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 6px !important;
+            margin-top: 6px !important;
+        }
+        .noti-preview-grid img {
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 3px !important;
+            object-fit: cover !important;
+            border: 1px solid #E8DEC8 !important;
+            display: block !important;
+            flex-shrink: 0 !important;
+        }
+        a.noti-popover-footer {
+            display: block !important;
+            width: 100% !important;
+            height: 40px !important;
+            line-height: 40px !important;
+            text-align: center !important;
+            font-size: 13.5px !important;
+            color: #1C1917 !important;
+            font-weight: 600 !important;
+            text-decoration: none !important;
+            background: #ffffff !important;
+            border-top: 1px solid #f0f0f0 !important;
+            transition: background-color 0.15s !important;
+            box-sizing: border-box !important;
+            white-space: nowrap !important;
+        }
+        a.noti-popover-footer:hover {
+            background-color: #f5f5f5 !important;
+            color: #8C4A27 !important;
         }
 
         /* SHOPEE USER POPOVER (KHỚP 100% ẢNH SHOPEE IMAGE_557563.PNG) */
@@ -511,12 +675,71 @@
             </div>
 
             <div class="topbar-links">
-                <!-- THÔNG BÁO BADGE 5 CHUẨN SHOPEE -->
-                <a href="javascript:void(0)" onclick="alert('Hệ thống: Bạn có 5 thông báo mới về đơn hàng và sách ký gửi!')" class="notification-trigger">
-                    <i class="fa-regular fa-bell"></i>
-                    <span>Thông Báo</span>
-                    <span class="notification-badge">5</span>
-                </a>
+                <!-- THÔNG BÁO BADGE 5 CHUẨN SHOPEE (KHỚP 100% ẢNH IMAGE_8B39D3.PNG) -->
+                <div class="shopee-noti-wrapper">
+                    <div class="shopee-noti-trigger">
+                        <i class="fa-regular fa-bell"></i>
+                        <span>Thông Báo</span>
+                        <span class="notification-badge">5</span>
+                    </div>
+                    <div class="shopee-noti-popover">
+                        <div class="shopee-noti-arrow"></div>
+                        <div class="noti-popover-header">Thông Báo Mới Nhận</div>
+                        <div class="noti-popover-list">
+                            <!-- Thông báo 1: Ưu đãi sách cũ -->
+                            <a th:href="@{/search}" class="noti-item unread">
+                                <img th:src="@{/images/books/book_1.jpg}" alt="Ưu đãi" class="noti-thumb">
+                                <div class="noti-body">
+                                    <h4 class="noti-title">NGÀNH HÀNG SÁCH CŨ TUNG MÃ GIẢM ĐẾN 50.000₫</h4>
+                                    <p class="noti-desc">🎉 Thêm mã trợ giá sinh viên đơn từ 120.000₫ 💯 Vô vàn giáo trình HCMUTE chỉ từ 20K đang chờ bạn!</p>
+                                </div>
+                            </a>
+
+                            <!-- Thông báo 2: Cập nhật đơn hàng -->
+                            <a th:href="@{/orders}" class="noti-item unread">
+                                <img th:src="@{/images/books/book_2.jpg}" alt="Đơn hàng" class="noti-thumb">
+                                <div class="noti-body">
+                                    <h4 class="noti-title">Đơn hàng #ORD259683735 đã được kho Thủ Đức xác nhận</h4>
+                                    <p class="noti-desc">📦 Đang chuẩn bị cuốn "Đắc Nhân Tâm (Khổ Lớn)". Đơn vị vận chuyển sẽ giao trong 1-2 ngày tới.</p>
+                                </div>
+                            </a>
+
+                            <!-- Thông báo 3: Hàng mới về kèm preview ảnh -->
+                            <a th:href="@{/search?cat=2}" class="noti-item">
+                                <img th:src="@{/images/books/book_15.jpg}" alt="Sách mới" class="noti-thumb">
+                                <div class="noti-body">
+                                    <h4 class="noti-title">"Giáo Trình Cấu Trúc Dữ Liệu & Giải Thuật" đã có lại hàng...</h4>
+                                    <p class="noti-desc">🎉 5 cuốn độ mới 90-95% vừa về kệ tại 5 chi nhánh TP.HCM 🛒 Nhấn để chọn cuốn đẹp nhất!</p>
+                                    <div class="noti-preview-grid">
+                                        <img th:src="@{/images/books/book_15.jpg}" alt="P1">
+                                        <img th:src="@{/images/books/book_16.jpg}" alt="P2">
+                                        <img th:src="@{/images/books/book_17.jpg}" alt="P3">
+                                        <img th:src="@{/images/books/book_18.jpg}" alt="P4">
+                                    </div>
+                                </div>
+                            </a>
+
+                            <!-- Thông báo 4: Ký gửi sách thẩm định thành công -->
+                            <a th:href="@{/consignments/my-list}" class="noti-item unread">
+                                <img th:src="@{/images/books/book_3.jpg}" alt="Ký gửi" class="noti-thumb">
+                                <div class="noti-body">
+                                    <h4 class="noti-title">Phiếu ký gửi #CSG259837 đã thẩm định thành công (95%)</h4>
+                                    <p class="noti-desc">✅ Sách của bạn đã được niêm yết trên hệ thống với giá bán 85.000₫ tại chi nhánh Phú Nhuận.</p>
+                                </div>
+                            </a>
+
+                            <!-- Thông báo 5: Ví tích lũy & Voucher -->
+                            <a th:href="@{/help}" class="noti-item">
+                                <img th:src="@{/images/books/book_5.jpg}" alt="Voucher" class="noti-thumb">
+                                <div class="noti-body">
+                                    <h4 class="noti-title">Tặng bạn 02 Voucher Miễn Phí Vận Chuyển tháng này</h4>
+                                    <p class="noti-desc">🚚 Áp dụng cho mọi đơn sách cũ nhận tại nhà hoặc nhận nhanh trong 2h tại 5 chi nhánh.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <a th:href="@{/orders}" class="noti-popover-footer">Xem tất cả</a>
+                    </div>
+                </div>
                 <span class="topbar-divider"></span>
 
                 <!-- HỖ TRỢ CHUẨN SHOPEE -->
