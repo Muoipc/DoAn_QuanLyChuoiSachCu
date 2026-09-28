@@ -76,10 +76,11 @@ public class AiAssistantController {
             List<Book> allBooks = bookRepository.findAllActiveWithImages();
             Book matchedBook = null;
             for (Book b : allBooks) {
-                String cleanTitle = b.getTitle().toLowerCase().replaceAll("\\(.*?\\)", "").trim();
-                String authorClean = b.getAuthor().toLowerCase();
-                if (lower.contains(cleanTitle) || cleanTitle.contains("đắc nhân tâm") && lower.contains("đắc nhân tâm")
-                    || lower.contains(authorClean)) {
+                String cleanTitle = (b.getTitle() != null) ? b.getTitle().toLowerCase().replaceAll("\\(.*?\\)", "").trim() : "";
+                String authorClean = (b.getAuthor() != null) ? b.getAuthor().toLowerCase() : "";
+                if ((!cleanTitle.isEmpty() && lower.contains(cleanTitle)) 
+                    || (cleanTitle.contains("đắc nhân tâm") && lower.contains("đắc nhân tâm"))
+                    || (!authorClean.isEmpty() && lower.contains(authorClean))) {
                     matchedBook = b;
                     break;
                 }
@@ -87,15 +88,18 @@ public class AiAssistantController {
 
             if (matchedBook != null) {
                 List<Inventory> invList = inventoryRepository.findByBookIdWithStore(matchedBook.getId());
-                reply.append("Dạ em đã kiểm tra tồn kho thời gian thực cho cuốn **\"").append(matchedBook.getTitle()).append("\"**:\n\n");
+                reply.append("Dạ em đã kiểm tra tồn kho thời gian thực cho cuốn **\"").append(matchedBook.getTitle() != null ? matchedBook.getTitle() : "Sách").append("\"**:\n\n");
                 int totalStock = 0;
                 for (Inventory inv : invList) {
-                    totalStock += inv.getQuantity();
-                    reply.append("• **").append(inv.getStore().getStoreName()).append("**: Còn **")
-                         .append(inv.getQuantity()).append(" cuốn** (").append(inv.getStore().getAddress()).append(")\n");
+                    int qty = (inv.getQuantity() != null) ? inv.getQuantity() : 0;
+                    totalStock += qty;
+                    String storeName = (inv.getStore() != null && inv.getStore().getStoreName() != null) ? inv.getStore().getStoreName() : "Chi nhánh";
+                    String storeAddr = (inv.getStore() != null && inv.getStore().getAddress() != null) ? inv.getStore().getAddress() : "TP.HCM";
+                    reply.append("• **").append(storeName).append("**: Còn **")
+                         .append(qty).append(" cuốn** (").append(storeAddr).append(")\n");
                 }
                 reply.append("\n👉 Tổng cộng hệ thống 5 chi nhánh TP.HCM hiện còn **").append(totalStock).append(" cuốn** với độ mới **")
-                     .append(matchedBook.getConditionPercent()).append("%**. Bạn có thể đặt giao tận nơi hoặc chọn lấy trực tiếp tại cửa hàng gần nhất ạ!");
+                     .append(matchedBook.getConditionPercent() != null ? matchedBook.getConditionPercent() : 90).append("%**. Bạn có thể đặt giao tận nơi hoặc chọn lấy trực tiếp tại cửa hàng gần nhất ạ!");
 
                 suggestedBooks.add(buildBookCardData(matchedBook, invList));
             } else {
@@ -145,7 +149,7 @@ public class AiAssistantController {
                  .append("Em đã lọc ra những cuốn sách bán chạy nhất có giá hạt dẻ dưới đây để bạn tham khảo nha. Đơn từ 150K còn được Freeship nội thành nữa đó ạ!");
 
             List<Book> cheapBooks = bookRepository.findAllActiveWithImages().stream()
-                    .filter(b -> b.getPrice().compareTo(BigDecimal.valueOf(70000)) <= 0)
+                    .filter(b -> b.getPrice() != null && b.getPrice().compareTo(BigDecimal.valueOf(70000)) <= 0)
                     .limit(3)
                     .toList();
             for (Book b : cheapBooks) {
@@ -199,7 +203,10 @@ public class AiAssistantController {
         if (invList != null && !invList.isEmpty()) {
             for (int i = 0; i < Math.min(invList.size(), 2); i++) {
                 if (i > 0) storesStr.append(", ");
-                storesStr.append(invList.get(i).getStore().getStoreName()).append(" (").append(invList.get(i).getQuantity()).append(")");
+                Inventory itemInv = invList.get(i);
+                String sName = (itemInv.getStore() != null && itemInv.getStore().getStoreName() != null) ? itemInv.getStore().getStoreName() : "Chi nhánh";
+                int sQty = itemInv.getQuantity() != null ? itemInv.getQuantity() : 0;
+                storesStr.append(sName).append(" (").append(sQty).append(")");
             }
             if (invList.size() > 2) {
                 storesStr.append("...");

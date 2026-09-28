@@ -19,12 +19,13 @@ import java.util.Optional;
 public interface UserVoucherRepository extends JpaRepository<UserVoucher, Long> {
 
     /**
-     * Lấy toàn bộ danh sách voucher trong ví của người dùng.
+     * Lấy toàn bộ danh sách voucher trong ví của người dùng kèm Voucher để tránh LazyInitializationException.
      *
      * @param user Thực thể người dùng
      * @return Danh sách UserVoucher thuộc về user
      */
-    List<UserVoucher> findByUser(User user);
+    @Query("SELECT uv FROM UserVoucher uv JOIN FETCH uv.voucher WHERE uv.user = :user")
+    List<UserVoucher> findByUser(@Param("user") User user);
 
     /**
      * Lấy danh sách voucher trong ví của người dùng theo ID, sắp xếp giảm dần theo thời gian lưu.
@@ -35,12 +36,13 @@ public interface UserVoucherRepository extends JpaRepository<UserVoucher, Long> 
     List<UserVoucher> findByUser_IdOrderBySavedAtDesc(Long userId);
 
     /**
-     * Lấy toàn bộ danh sách voucher trong ví của người dùng, sắp xếp giảm dần theo thời gian lưu.
+     * Lấy toàn bộ danh sách voucher trong ví của người dùng kèm Voucher, sắp xếp giảm dần theo thời gian lưu.
      *
      * @param user Thực thể người dùng
      * @return Danh sách UserVoucher
      */
-    List<UserVoucher> findByUserOrderBySavedAtDesc(User user);
+    @Query("SELECT uv FROM UserVoucher uv JOIN FETCH uv.voucher WHERE uv.user = :user ORDER BY uv.savedAt DESC")
+    List<UserVoucher> findByUserOrderBySavedAtDesc(@Param("user") User user);
 
     /**
      * Lấy danh sách voucher trong ví của người dùng theo trạng thái đã dùng hay chưa.
@@ -52,13 +54,14 @@ public interface UserVoucherRepository extends JpaRepository<UserVoucher, Long> 
     List<UserVoucher> findByUserAndIsUsed(User user, Boolean isUsed);
 
     /**
-     * Lấy danh sách voucher trong ví người dùng theo trạng thái sử dụng, sắp xếp mới nhất lên đầu.
+     * Lấy danh sách voucher trong ví người dùng theo trạng thái sử dụng kèm Voucher, sắp xếp mới nhất lên đầu.
      *
      * @param user   Thực thể người dùng
      * @param isUsed Trạng thái đã sử dụng
      * @return Danh sách UserVoucher
      */
-    List<UserVoucher> findByUserAndIsUsedOrderBySavedAtDesc(User user, Boolean isUsed);
+    @Query("SELECT uv FROM UserVoucher uv JOIN FETCH uv.voucher WHERE uv.user = :user AND uv.isUsed = :isUsed ORDER BY uv.savedAt DESC")
+    List<UserVoucher> findByUserAndIsUsedOrderBySavedAtDesc(@Param("user") User user, @Param("isUsed") Boolean isUsed);
 
     /**
      * Kiểm tra xem người dùng đã từng lưu voucher cụ thể này vào ví hay chưa.

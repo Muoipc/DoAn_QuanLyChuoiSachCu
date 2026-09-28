@@ -723,12 +723,7 @@
                 </div>
             </div>
 
-            <form action="/checkout/place-order" method="post" id="checkoutForm">
-                <!-- CÁC TRƯỜNG ẨN CHO TÍNH NĂNG MUA NGAY -->
-                <input type="hidden" name="buyNow" th:value="${buyNow}">
-                <input type="hidden" name="bookId" th:value="${directBookId}">
-                <input type="hidden" name="quantity" th:value="${directQuantity}">
-
+            <form th:action="@{/checkout/place-order}" action="/checkout/place-order" method="post" id="checkoutForm">
                 <!-- 1. KHUNG ĐỊA CHỈ NHẬN HÀNG (SHOPEE ENVELOPE CARD) -->
                 <div class="shopee-checkout-card address-box">
                     <!-- Dải viền phong bì đặc trưng Shopee -->
@@ -823,12 +818,12 @@
                     <div class="checkout-items-wrap">
                         <div th:each="item : ${cartItems}" class="checkout-item-row">
                             <div class="item-info-col">
-                                <img th:src="${item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
-                                     th:alt="${item.book.title}" class="item-thumb-book">
+                                <img th:src="${item.book != null and item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
+                                     th:alt="${item.book != null ? item.book.title : 'Sách cũ'}" class="item-thumb-book">
                                 <div class="item-title-meta">
-                                    <span class="item-title-text" th:text="${item.book.title}">Đắc Nhân Tâm</span>
+                                    <span class="item-title-text" th:text="${item.book != null ? item.book.title : 'Sách cũ'}">Đắc Nhân Tâm</span>
                                     <div class="item-tags-wrap">
-                                        <span class="tag-cond-pill" th:text="'Độ mới ' + ${item.book.conditionPercent} + '% (Kiểm định)'">Độ mới 95%</span>
+                                        <span class="tag-cond-pill" th:text="'Độ mới ' + ${item.book != null && item.book.conditionPercent != null ? item.book.conditionPercent : 90} + '% (Kiểm định)'">Độ mới 95%</span>
                                         <span class="tag-store-pill">
                                             <i class="fa-solid fa-location-dot"></i> 
                                             <span th:text="${item.store != null ? item.store.storeName : 'Kho Thủ Đức (Gần HCMUTE)'}">Kho Thủ Đức</span>
@@ -837,15 +832,15 @@
                                 </div>
                             </div>
 
-                            <div class="item-price-unit" th:text="'₫' + ${#numbers.formatDecimal(item.book.price, 0, 'POINT', 0, 'COMMA')}">
+                            <div class="item-price-unit" th:text="'₫' + ${#numbers.formatDecimal(item.book != null and item.book.price != null ? item.book.price : 0, 0, 'POINT', 0, 'COMMA')}">
                                 ₫68.000
                             </div>
 
-                            <div class="item-qty-col" th:text="'x' + ${item.quantity}">
+                            <div class="item-qty-col" th:text="'x' + ${item.quantity != null ? item.quantity : 1}">
                                 x1
                             </div>
 
-                            <div class="item-subtotal-col" th:text="'₫' + ${#numbers.formatDecimal(item.itemTotal, 0, 'POINT', 0, 'COMMA')}">
+                            <div class="item-subtotal-col" th:text="'₫' + ${#numbers.formatDecimal(item.itemTotal != null ? item.itemTotal : 0, 0, 'POINT', 0, 'COMMA')}">
                                 ₫68.000
                             </div>
                         </div>
@@ -894,7 +889,7 @@
                                 <button type="button" class="btn-select-voucher" onclick="openVoucherModal()" style="color:#0288d1; font-weight:700; cursor:pointer; font-size:13.5px; padding:6px 12px; border-radius:9999px; background:rgba(2,136,209,0.08); border:none;">
                                     <i class="fa-solid fa-ticket me-1"></i> Chọn Voucher &gt;
                                 </button>
-                                <input type="text" name="voucherCode" id="voucherCodeInput" class="voucher-code-input" placeholder="Nhập mã voucher" value="VOUCHER20K">
+                                <input type="text" name="voucherCode" id="voucherCodeInput" class="voucher-code-input" placeholder="Nhập mã voucher" th:value="${selectedVoucherCode != null ? selectedVoucherCode : 'VOUCHER20K'}">
                                 <button type="button" class="btn-apply-voucher" onclick="applyVoucher()">Áp Dụng</button>
                             </div>
                         </div>
@@ -1251,6 +1246,10 @@
 
         // Khởi tạo ban đầu
         calculateFinalTotal();
+        const initialVoucherInput = document.getElementById('voucherCodeInput');
+        if (initialVoucherInput && initialVoucherInput.value && initialVoucherInput.value.trim() !== '') {
+            applyVoucher();
+        }
     </script>
     <script src="/js/cart-popover.js"></script>
     <script src="/js/i18n.js"></script>

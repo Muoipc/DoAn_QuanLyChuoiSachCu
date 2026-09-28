@@ -527,7 +527,7 @@
                     </a>
 
                     <!-- Nút Hủy đơn nếu đơn còn Mới (NEW) -->
-                    <form th:if="${order.orderStatus.name() == 'NEW'}" th:attr="action='/orders/cancel/' + ${order.orderCode}" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này? Sách sẽ được hoàn trả lại tồn kho chi nhánh.');">
+                    <form th:if="${order.orderStatus.name() == 'NEW'}" th:action="@{'/orders/cancel/' + ${order.orderCode}}" action="/orders/cancel/" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này? Sách sẽ được hoàn trả lại tồn kho chi nhánh.');">
                         <button type="submit" class="btn-order-action btn-action-danger btn-cancel-order">
                             <i class="fa-solid fa-xmark"></i> Hủy Đơn Hàng
                         </button>

@@ -73,6 +73,11 @@ public interface IOrderService {
     Optional<Order> findByOrderCode(String orderCode);
 
     /**
+     * Lấy chi tiết đơn hàng theo ID kèm danh sách sản phẩm, chi nhánh, vận chuyển.
+     */
+    Optional<Order> findById(Long id);
+
+    /**
      * Cập nhật trạng thái đơn hàng khi thanh toán VNPay thành công.
      */
     void updatePaymentSuccess(String orderCode, String transactionId);

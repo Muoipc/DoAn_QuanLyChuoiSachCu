@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  * Lớp triển khai các dịch vụ nghiệp vụ Voucher và Kho Voucher cá nhân.
  */
 @Service
+@Transactional
 public class VoucherServiceImpl implements IVoucherService {
 
     private final VoucherRepository voucherRepository;

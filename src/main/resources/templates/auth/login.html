@@ -437,6 +437,7 @@
 
                     <!-- FORM -->
                     <form action="/login" method="post">
+                        <input type="hidden" name="redirectURL" th:value="${redirectURL != null ? redirectURL : (param.redirectURL != null ? param.redirectURL : (param.redirect != null ? param.redirect : ''))}" />
                         <div class="form-group">
                             <div class="form-input-wrap">
                                 <i class="fa-regular fa-user input-icon"></i>

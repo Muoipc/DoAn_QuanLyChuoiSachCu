@@ -33,6 +33,9 @@ public class CartController {
     @Autowired
     private ICartService cartService;
 
+    @Autowired
+    private vn.iotstar.repository.VoucherRepository voucherRepository;
+
     /**
      * Xác định userId của phiên hiện tại: ưu tiên tài khoản đã đăng nhập Spring Security.
      */
@@ -66,11 +69,14 @@ public class CartController {
                 .mapToInt(CartItem::getQuantity)
                 .sum();
 
+        List<vn.iotstar.entity.Voucher> vouchers = voucherRepository.findByIsActiveTrue();
+
         model.addAttribute("cart", cart);
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("totalSavings", totalSavings);
         model.addAttribute("totalQuantity", totalQuantity);
+        model.addAttribute("vouchers", vouchers);
         model.addAttribute("isGuestMode", userDetails == null);
         model.addAttribute("pageTitle", "Giỏ Hàng (" + totalQuantity + " cuốn sách) - Chuỗi Sách Cũ");
 
@@ -128,6 +134,19 @@ public class CartController {
     public String removeItem(@PathVariable("itemId") Long itemId, RedirectAttributes redirectAttributes) {
         cartService.removeCartItem(itemId);
         redirectAttributes.addFlashAttribute("successMessage", "Đã xóa sách khỏi giỏ hàng!");
+        return "redirect:/cart";
+    }
+
+    /**
+     * Xóa toàn bộ sản phẩm khỏi giỏ hàng.
+     * URL: GET/POST /cart/clear
+     */
+    @RequestMapping(value = "/clear", method = {RequestMethod.GET, RequestMethod.POST})
+    public String clearCart(@AuthenticationPrincipal CustomUserDetails userDetails, RedirectAttributes redirectAttributes) {
+        Long userId = resolveUserId(userDetails);
+        Cart cart = cartService.getOrCreateCartForUser(userId);
+        cartService.clearCart(cart.getId());
+        redirectAttributes.addFlashAttribute("successMessage", "Đã xóa toàn bộ sản phẩm khỏi giỏ hàng!");
         return "redirect:/cart";
     }
 

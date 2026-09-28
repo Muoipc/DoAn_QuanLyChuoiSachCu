@@ -766,7 +766,7 @@
                         <option th:each="item : ${order.items}" th:if="${item.book != null}" th:value="${item.book.id}" th:text="${item.bookTitle}"></option>
                     </select>
                 </div>
-                <input th:if="${order.items == null or order.items.size() <= 1}" type="hidden" name="bookId" id="detailModalBookId" th:value="${order.items != null and !order.items.isEmpty() ? order.items[0].book.id : 1}">
+                <input th:if="${order.items == null or order.items.size() <= 1}" type="hidden" name="bookId" id="detailModalBookId" th:value="${order.items != null and !order.items.isEmpty() and order.items[0].book != null ? order.items[0].book.id : 1}">
                 <p th:if="${order.items != null and !order.items.isEmpty() and order.items.size() == 1}" style="font-size:14px; font-weight:700; color:#ee4d2d; margin-bottom:12px;" th:text="${order.items[0].bookTitle}">Tên sách</p>
                 
                 <div style="margin-bottom:16px;">

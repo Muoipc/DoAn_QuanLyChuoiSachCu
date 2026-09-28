@@ -204,7 +204,7 @@
                 </div>
                 <div class="detail-row">
                     <span style="color:var(--color-text-secondary);">Chi nhánh phục vụ:</span>
-                    <strong th:text="${order.store.storeName}">Chi Nhánh 1: Thủ Đức</strong>
+                    <strong th:text="${order.store != null ? order.store.storeName : 'Chi nhánh TP.HCM'}">Chi Nhánh 1: Thủ Đức</strong>
                 </div>
                 <div class="detail-row">
                     <span style="color:var(--color-text-secondary);">Người nhận:</span>

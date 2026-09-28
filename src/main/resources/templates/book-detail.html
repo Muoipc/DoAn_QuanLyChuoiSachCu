@@ -1034,17 +1034,17 @@
 
                 <!-- BĂNG CHUYỀN 5 ẢNH THU NHỎ (SLIDER THUMBNAILS) -->
                 <div class="gallery-thumbs-carousel">
-                    <div class="gallery-thumb-item active" th:onclick="'changeCover(this, '' + ${book.primaryImageUrl} + '')'">
-                        <img th:src="${book.primaryImageUrl}" alt="Bìa trước">
+                    <div class="gallery-thumb-item active" th:onclick="'changeCover(this, \'' + ${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'} + '\')'">
+                        <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" alt="Bìa trước">
                     </div>
                     <th:block th:if="${book.images != null}" th:each="img, stat : ${book.images}">
-                        <div class="gallery-thumb-item" th:if="${stat.index < 5 and img.imageUrl != book.primaryImageUrl}" th:onclick="'changeCover(this, '' + ${img.imageUrl} + '')'">
-                            <img th:src="${img.imageUrl}" th:alt="${img.angleDescription != null ? img.angleDescription : 'Góc chụp'}">
+                        <div class="gallery-thumb-item" th:if="${stat.index < 5 and img.imageUrl != book.primaryImageUrl}" th:onclick="'changeCover(this, \'' + ${img.imageUrl != null ? img.imageUrl : '/images/books/book_1.jpg'} + '\')'">
+                            <img th:src="${img.imageUrl != null ? img.imageUrl : '/images/books/book_1.jpg'}" th:alt="${img.angleDescription != null ? img.angleDescription : 'Góc chụp'}">
                         </div>
                     </th:block>
                     <!-- Fallback nếu ít hơn 5 ảnh -->
-                    <div class="gallery-thumb-item" th:if="${book.images == null or book.images.size() < 2}" th:onclick="'changeCover(this, '' + ${book.primaryImageUrl} + '')'">
-                        <img th:src="${book.primaryImageUrl}" alt="Gáy sách">
+                    <div class="gallery-thumb-item" th:if="${book.images == null or book.images.size() < 2}" th:onclick="'changeCover(this, \'' + ${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'} + '\')'">
+                        <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" alt="Gáy sách">
                     </div>
                 </div>
 
@@ -1199,8 +1199,8 @@
                         <div class="stores-dropdown-panel store-stock-card" id="storeDrawer">
                             <div th:each="inv : ${inventoryList}" class="store-inv-line">
                                 <div>
-                                    <strong th:text="${inv.store.storeName}">CN 1: Thủ Đức</strong>
-                                    <span style="color:#78716C; margin-left:6px;" th:text="${inv.store.address}">Số 48 Võ Văn Ngân</span>
+                                    <strong th:text="${inv.store != null ? inv.store.storeName : 'Chi nhánh TP.HCM'}">CN 1: Thủ Đức</strong>
+                                    <span style="color:#78716C; margin-left:6px;" th:text="${inv.store != null ? inv.store.address : ''}">Số 48 Võ Văn Ngân</span>
                                 </div>
                                 <div>
                                     <span th:if="${inv.quantity > 3}" style="color:#007a57; font-weight:700;" th:text="'Còn ' + ${inv.quantity} + ' cuốn'">Còn 4 cuốn</span>
@@ -1213,11 +1213,11 @@
                 </div>
 
                 <!-- THUỘC TÍNH: SỐ LƯỢNG (SHOPEE STEPPER) -->
-                <form action="/cart/add" method="post" id="cartForm">
+                <form th:action="@{/cart/add}" action="/cart/add" method="post" id="cartForm">
                     <input type="hidden" name="bookId" th:value="${book.id}">
                     <input type="hidden" name="action" id="cartAction" value="add">
                     <input type="hidden" name="quantity" id="hiddenQuantity" value="1">
-                    <input type="hidden" name="storeId" id="selectedStoreId" th:value="${inventoryList != null and !inventoryList.isEmpty() ? inventoryList[0].store.id : 1}">
+                    <input type="hidden" name="storeId" id="selectedStoreId" th:value="${inventoryList != null and !inventoryList.isEmpty() and inventoryList[0].store != null ? inventoryList[0].store.id : 1}">
 
                     <div class="attribute-row" style="margin-top: 6px;">
                         <div class="attr-label">Số Lượng</div>
@@ -1272,7 +1272,7 @@
                         <span class="specs-breadcrumb-sep">&gt;</span>
                         <a th:href="@{/search}" class="specs-breadcrumb-link">Nhà Sách Online</a>
                         <span class="specs-breadcrumb-sep">&gt;</span>
-                        <a th:href="@{/search(category=${book.category != null ? book.category.id : 1})}" class="specs-breadcrumb-link" 
+                        <a th:href="@{/search(cat=${book.category != null ? book.category.id : 1})}" class="specs-breadcrumb-link" 
                            th:text="${book.category != null ? book.category.categoryName : 'Văn Học'}">Văn Học</a>
                         <span class="specs-breadcrumb-sep">&gt;</span>
                         <span style="color:#57534e;" th:text="${book.title}">Tên cuốn sách</span>
@@ -1281,7 +1281,7 @@
 
                 <div class="specs-row">
                     <span class="specs-label">Tác Giả</span>
-                    <span class="specs-value" th:text="${book.author}">Dale Carnegie</span>
+                    <span class="specs-value" th:text="${book.author != null && !#strings.isEmpty(book.author) ? book.author : 'Đang cập nhật'}">Dale Carnegie</span>
                 </div>
 
                 <div class="specs-row">
@@ -1506,12 +1506,12 @@
                 <div th:unless="${#lists.isEmpty(reviews)}">
                     <div th:each="rv : ${reviews}" class="review-item-card">
                         <div class="review-user-avatar">
-                            <img th:if="${rv.user.avatar != null and !rv.user.avatar.isBlank()}" th:src="${rv.user.avatar}" alt="Avatar">
-                            <span th:unless="${rv.user.avatar != null and !rv.user.avatar.isBlank()}"
-                                  th:text="${rv.user.fullName != null and !rv.user.fullName.isBlank() ? #strings.substring(rv.user.fullName.trim(), 0, 1).toUpperCase() : #strings.substring(rv.user.username.trim(), 0, 1).toUpperCase()}">K</span>
+                            <img th:if="${rv.user != null and rv.user.avatar != null and !rv.user.avatar.isBlank()}" th:src="${rv.user.avatar}" alt="Avatar">
+                            <span th:unless="${rv.user != null and rv.user.avatar != null and !rv.user.avatar.isBlank()}"
+                                  th:text="${rv.user != null and rv.user.fullName != null and !rv.user.fullName.isBlank() ? #strings.substring(rv.user.fullName.trim(), 0, 1).toUpperCase() : (rv.user != null and rv.user.username != null and !rv.user.username.isBlank() ? #strings.substring(rv.user.username.trim(), 0, 1).toUpperCase() : 'K')}">K</span>
                         </div>
                         <div class="review-body-col">
-                            <div class="review-user-name" th:text="${rv.user.fullName != null and !rv.user.fullName.isBlank() ? rv.user.fullName : rv.user.username}">Nguyễn Văn A</div>
+                            <div class="review-user-name" th:text="${rv.user != null and rv.user.fullName != null and !rv.user.fullName.isBlank() ? rv.user.fullName : (rv.user != null ? rv.user.username : 'Khách Đọc Sách')}">Nguyễn Văn A</div>
                             <div class="review-stars-row">
                                 <i class="fa-solid fa-star" th:each="i : ${#numbers.sequence(1, rv.rating)}"></i>
                                 <i class="fa-regular fa-star" th:if="${rv.rating < 5}" th:each="i : ${#numbers.sequence(rv.rating + 1, 5)}"></i>

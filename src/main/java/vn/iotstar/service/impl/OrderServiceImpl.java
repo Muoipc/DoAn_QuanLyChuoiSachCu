@@ -373,6 +373,12 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Order> findById(Long id) {
+        return orderRepository.findByIdWithDetails(id);
+    }
+
+    @Override
     public void updatePaymentSuccess(String orderCode, String transactionId) {
         Optional<Order> orderOpt = orderRepository.findByOrderCode(orderCode);
         if (orderOpt.isPresent()) {

@@ -528,6 +528,112 @@
             padding: 2.5px 8px; border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0, 122, 87, 0.25);
         }
+
+        /* ================= RESPONSIVE FLUID CHO SEARCH & BỘ LỌC ================= */
+        .btn-sidebar-quick-price {
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #574E45;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(232, 222, 200, 0.9);
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-sidebar-quick-price:hover {
+            color: #ee4d2d;
+            border-color: #ee4d2d;
+            background: #fff;
+        }
+
+        @media screen and (max-width: 992px) {
+            .search-layout {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin: 16px auto 40px;
+            }
+            .filter-sidebar {
+                border-radius: 16px;
+                padding: 14px 18px;
+            }
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+            .shopee-sort-bar {
+                height: auto;
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 12px 14px;
+            }
+            .pagination-mini {
+                margin-left: 0;
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .quick-filter-chips-list {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 4px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .quick-filter-chips-list::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .card-thumb {
+                height: 150px;
+            }
+            .book-title {
+                font-size: 12px;
+                height: 32px;
+            }
+            .price-text {
+                font-size: 14px;
+            }
+            .btn-sort-tab {
+                min-width: 76px;
+                padding: 0 10px;
+                font-size: 12.5px;
+            }
+            .select-price-box {
+                width: 150px;
+            }
+            .quick-filter-label {
+                min-width: auto;
+                font-size: 12px;
+            }
+            .quick-filter-chip {
+                padding: 5px 10px !important;
+                font-size: 11.5px !important;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .sort-label {
+                display: none;
+            }
+            .btn-sort-tab {
+                min-width: 66px;
+                padding: 0 6px;
+                font-size: 11.5px;
+            }
+            .select-price-box {
+                width: 125px;
+            }
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+        }
     </style>
     <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
     <link rel="stylesheet" href="/css/liquid-glass.css">
@@ -543,18 +649,25 @@
 
             <!-- SIDEBAR BỘ LỌC SHOPEE -->
             <aside class="filter-sidebar">
-                <div class="filter-header-title">
-                    <i class="fa-solid fa-filter text-danger"></i>
-                    <span>Bộ Lọc Tìm Kiếm</span>
+                <div class="filter-header-title" style="justify-content:space-between; cursor:pointer;" onclick="toggleMobileSidebar()">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-filter text-danger"></i>
+                        <span>Bộ Lọc Tìm Kiếm</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down" id="sidebarCollapseArrow" style="font-size:12px; color:#78716C;"></i>
                 </div>
 
-                <form th:action="@{/search}" method="get" id="filterForm">
+                <form th:action="@{/search}" method="get" id="filterForm" class="filter-collapse-content">
                     <input type="hidden" name="q" th:value="${selectedQuery}">
                     <input type="hidden" name="sort" th:value="${selectedSort}">
 
                     <!-- 1. Danh mục thể loại -->
                     <div class="filter-group">
                         <div class="filter-group-title">Danh Mục Sách</div>
+                        <label class="filter-item-label">
+                            <input type="radio" name="cat" value="" th:checked="${selectedCat == null}" onchange="this.form.submit()">
+                            <span>Tất cả thể loại</span>
+                        </label>
                         <label class="filter-item-label" th:each="cat : ${categories}">
                             <input type="radio" name="cat" th:value="${cat.id}" th:checked="${selectedCat == cat.id}" onchange="this.form.submit()">
                             <span th:text="${cat.categoryName}">Văn Học</span>
@@ -565,26 +678,30 @@
                     <div class="filter-group">
                         <div class="filter-group-title">Độ Mới Thẩm Định</div>
                         <label class="filter-item-label">
+                            <input type="radio" name="cond" value="" th:checked="${selectedCond == null}" onchange="this.form.submit()">
+                            <span>Tất cả độ mới</span>
+                        </label>
+                        <label class="filter-item-label">
                             <input type="radio" name="cond" value="95" th:checked="${selectedCond == 95}" onchange="this.form.submit()">
-                            <span>Mới &ge; 95% (Như mới)</span>
+                            <span>Mới 95% trở lên (Như mới)</span>
                         </label>
                         <label class="filter-item-label">
                             <input type="radio" name="cond" value="90" th:checked="${selectedCond == 90}" onchange="this.form.submit()">
-                            <span>Mới &ge; 90% (Rất tốt)</span>
-                        </label>
-                        <label class="filter-item-label">
-                            <input type="radio" name="cond" value="85" th:checked="${selectedCond == 85}" onchange="this.form.submit()">
-                            <span>Mới &ge; 85% (Tốt)</span>
+                            <span>Mới 90% trở lên (Rất tốt)</span>
                         </label>
                         <label class="filter-item-label">
                             <input type="radio" name="cond" value="80" th:checked="${selectedCond == 80}" onchange="this.form.submit()">
-                            <span>Mới &ge; 80% (Khá)</span>
+                            <span>Mới 80% trở lên (Khá tốt)</span>
                         </label>
                     </div>
 
                     <!-- 3. Chi nhánh kho còn hàng -->
                     <div class="filter-group">
                         <div class="filter-group-title">Chi Nhánh Sẵn Hàng</div>
+                        <label class="filter-item-label">
+                            <input type="radio" name="store" value="" th:checked="${selectedStore == null}" onchange="this.form.submit()">
+                            <span>Toàn bộ 5 chi nhánh</span>
+                        </label>
                         <label class="filter-item-label" th:each="s : ${stores}">
                             <input type="radio" name="store" th:value="${s.id}" th:checked="${selectedStore == s.id}" onchange="this.form.submit()">
                             <span th:text="${s.storeName}">CN Thủ Đức</span>
@@ -594,6 +711,13 @@
                     <!-- 4. Khoảng giá -->
                     <div class="filter-group" style="border-bottom:none;">
                         <div class="filter-group-title">Khoảng Giá (₫)</div>
+                        <!-- Nút lọc nhanh khoảng giá trong sidebar -->
+                        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
+                            <button type="button" class="btn-sidebar-quick-price" onclick="setQuickPrice('', 50000)">Dưới 50k</button>
+                            <button type="button" class="btn-sidebar-quick-price" onclick="setQuickPrice(50000, 100000)">50k - 100k</button>
+                            <button type="button" class="btn-sidebar-quick-price" onclick="setQuickPrice(100000, 200000)">100k - 200k</button>
+                            <button type="button" class="btn-sidebar-quick-price" onclick="setQuickPrice(200000, '')">Trên 200k</button>
+                        </div>
                         <div class="price-inputs-row">
                             <input type="number" name="minPrice" class="input-price filter-price-input" placeholder="₫ TỪ" th:value="${selectedMinPrice}">
                             <span>-</span>
@@ -608,6 +732,81 @@
 
             <!-- KẾT QUẢ TÌM KIẾM & SẮP XẾP -->
             <main>
+                <!-- THANH LỌC NHANH KHOẢNG GIÁ & TÌNH TRẠNG SÁCH (APPLE LIQUID GLASS QUICK FILTER BAR) -->
+                <div class="quick-filter-bar">
+                    <!-- Dòng lọc nhanh khoảng giá -->
+                    <div class="quick-filter-row">
+                        <span class="quick-filter-label">
+                            <i class="fa-solid fa-tags text-danger"></i> Khoảng Giá Nhanh:
+                        </span>
+                        <div class="quick-filter-chips-list">
+                            <!-- Tất cả giá -->
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, store=${selectedStore}, sort=${selectedSort})}" 
+                               class="quick-filter-chip"
+                               th:classappend="${selectedMinPrice == null and selectedMaxPrice == null} ? 'active' : ''">
+                                Tất Cả
+                            </a>
+                            <!-- Dưới 50k -->
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, maxPrice=50000, store=${selectedStore}, sort=${selectedSort})}" 
+                               class="quick-filter-chip"
+                               th:classappend="${(selectedMinPrice == null or selectedMinPrice.intValue() == 0) and selectedMaxPrice != null and selectedMaxPrice.intValue() == 50000} ? 'active' : ''">
+                                Dưới 50k
+                            </a>
+                            <!-- 50k - 100k -->
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=50000, maxPrice=100000, store=${selectedStore}, sort=${selectedSort})}" 
+                               class="quick-filter-chip"
+                               th:classappend="${selectedMinPrice != null and selectedMinPrice.intValue() == 50000 and selectedMaxPrice != null and selectedMaxPrice.intValue() == 100000} ? 'active' : ''">
+                                50k - 100k
+                            </a>
+                            <!-- 100k - 200k -->
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=100000, maxPrice=200000, store=${selectedStore}, sort=${selectedSort})}" 
+                               class="quick-filter-chip"
+                               th:classappend="${selectedMinPrice != null and selectedMinPrice.intValue() == 100000 and selectedMaxPrice != null and selectedMaxPrice.intValue() == 200000} ? 'active' : ''">
+                                100k - 200k
+                            </a>
+                            <!-- Trên 200k -->
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=200000, store=${selectedStore}, sort=${selectedSort})}" 
+                               class="quick-filter-chip"
+                               th:classappend="${selectedMinPrice != null and selectedMinPrice.intValue() == 200000 and selectedMaxPrice == null} ? 'active' : ''">
+                                Trên 200k
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Dòng lọc nhanh tình trạng kiểm định sách -->
+                    <div class="quick-filter-row" style="border-top:1px dashed rgba(232,222,200,0.6); padding-top:10px;">
+                        <span class="quick-filter-label">
+                            <i class="fa-solid fa-certificate text-success"></i> Tình Trạng Kiểm Định:
+                        </span>
+                        <div class="quick-filter-chips-list">
+                            <!-- Tất cả độ mới -->
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort})}" 
+                               class="quick-filter-chip"
+                               th:classappend="${selectedCond == null} ? 'active' : ''">
+                                Tất Cả
+                            </a>
+                            <!-- Mới 95% trở lên -->
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=95, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort})}" 
+                               class="quick-filter-chip"
+                               th:classappend="${selectedCond == 95} ? 'active' : ''">
+                                <i class="fa-solid fa-star text-warning" style="font-size:10px;"></i> Mới 95% trở lên
+                            </a>
+                            <!-- Mới 90% trở lên -->
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=90, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort})}" 
+                               class="quick-filter-chip"
+                               th:classappend="${selectedCond == 90} ? 'active' : ''">
+                                <i class="fa-solid fa-circle-check text-success" style="font-size:11px;"></i> Mới 90% trở lên
+                            </a>
+                            <!-- Mới 80% trở lên -->
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=80, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort})}" 
+                               class="quick-filter-chip"
+                               th:classappend="${selectedCond == 80} ? 'active' : ''">
+                                <i class="fa-solid fa-shield-halved text-primary" style="font-size:11px;"></i> Mới 80% trở lên
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- THANH SẮP XẾP VÀ PHÂN TRANG MINI CHUẨN SHOPEE (KHỚP 100% ẢNH IMAGE_BB8D8C.PNG) -->
                 <div class="shopee-sort-bar">
                     <span class="sort-label">Sắp xếp theo</span>
@@ -670,10 +869,10 @@
                         <div class="card-body">
                             <h4 class="book-title" th:text="${book.title}">Tên sách</h4>
                             <div style="font-size:11px; color:#78716C; margin-bottom: 4px;">
-                                <i class="fa-solid fa-pen-nib me-1"></i> <span th:text="${book.author}">Tác giả</span>
+                                <i class="fa-solid fa-pen-nib me-1"></i> <span th:text="${book.author != null && !#strings.isEmpty(book.author) ? book.author : 'Đang cập nhật'}">Tác giả</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:auto;">
-                                <span class="price-text" th:text="'₫' + ${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                                <span class="price-text" th:text="'₫' + ${#numbers.formatDecimal(book.price != null ? book.price : 0, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                                 <span style="font-size:11px; color:#78716C;" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
                             </div>
                             <button type="button" class="btn-card-buy-now" 
@@ -695,7 +894,7 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT XỬ LÝ MUA NGAY & POPOVER -->
+    <!-- JAVASCRIPT XỬ LÝ MUA NGAY, BỘ LỌC & POPOVER -->
     <script>
         function quickBuyNow(event, bookId) {
             if (event) {
@@ -703,6 +902,30 @@
                 event.stopPropagation();
             }
             window.location.href = '/checkout?buyNow=true&bookId=' + encodeURIComponent(bookId) + '&quantity=1';
+        }
+
+        function setQuickPrice(min, max) {
+            const minInput = document.querySelector('input[name="minPrice"]');
+            const maxInput = document.querySelector('input[name="maxPrice"]');
+            if (minInput) minInput.value = (min !== '' && min !== null) ? min : '';
+            if (maxInput) maxInput.value = (max !== '' && max !== null) ? max : '';
+            const form = document.getElementById('filterForm');
+            if (form) form.submit();
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.querySelector('.filter-sidebar');
+            const arrow = document.getElementById('sidebarCollapseArrow');
+            if (sidebar) {
+                sidebar.classList.toggle('expanded');
+                if (arrow) {
+                    if (sidebar.classList.contains('expanded')) {
+                        arrow.style.transform = 'rotate(180deg)';
+                    } else {
+                        arrow.style.transform = 'rotate(0deg)';
+                    }
+                }
+            }
         }
     </script>
     <script src="/js/i18n.js"></script>

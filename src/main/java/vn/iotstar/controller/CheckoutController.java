@@ -58,7 +58,7 @@ public class CheckoutController {
         if (userDetails != null && userDetails.getId() != null) {
             return userDetails.getId();
         }
-        return DEFAULT_GUEST_USER_ID;
+        throw new IllegalStateException("Yêu cầu đăng nhập trước khi thực hiện thao tác này!");
     }
 
     /**
@@ -76,7 +76,16 @@ public class CheckoutController {
             @RequestParam(value = "bookId", required = false) Long bookId,
             @RequestParam(value = "storeId", required = false, defaultValue = "1") Long storeId,
             @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
+            @RequestParam(value = "voucherCode", required = false) String voucherCode,
+            HttpServletRequest request,
             Model model) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            String uri = request.getRequestURI();
+            String qs = request.getQueryString();
+            String fullUrl = (qs != null && !qs.isBlank()) ? (uri + "?" + qs) : uri;
+            return "redirect:/login?redirectURL=" + java.net.URLEncoder.encode(fullUrl, java.nio.charset.StandardCharsets.UTF_8);
+        }
 
         Long userId = resolveUserId(userDetails);
         List<CartItem> cartItems;
@@ -167,6 +176,7 @@ public class CheckoutController {
         model.addAttribute("addresses", addresses);
         model.addAttribute("defaultAddress", defaultAddress);
         model.addAttribute("vouchers", vouchers);
+        model.addAttribute("selectedVoucherCode", voucherCode);
         model.addAttribute("isGuestMode", userDetails == null);
         model.addAttribute("pageTitle", "Thanh Toán Đơn Hàng - Chuỗi Sách Cũ TP.HCM");
 
@@ -198,6 +208,10 @@ public class CheckoutController {
             @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/checkout";
+        }
 
         Long userId = resolveUserId(userDetails);
 

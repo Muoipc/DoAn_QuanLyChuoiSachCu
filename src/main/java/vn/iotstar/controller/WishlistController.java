@@ -106,10 +106,10 @@ public class WishlistController {
 
         Long userId = resolveUserId(userDetails);
         if (userId == null) {
-            return "redirect:/login";
+            return "redirect:/login?redirectURL=/user/wishlist";
         }
 
-        List<Wishlist> wishlistItems = wishlistRepository.findByUserIdOrderByCreatedAtDesc(userId, null).getContent();
+        List<Wishlist> wishlistItems = wishlistRepository.findByUserIdWithBook(userId);
         model.addAttribute("wishlistItems", wishlistItems);
         model.addAttribute("pageTitle", "Sách Yêu Thích Của Tôi - Chuỗi Sách Cũ");
 

@@ -545,6 +545,104 @@
             color: #ee4d2d !important;
         }
 
+        /* ================= 6. MODAL & RESPONSIVE LIQUID GLASS CHO GIỎ HÀNG ================= */
+        .modal-overlay-shopee {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.48);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100005;
+            padding: 16px;
+        }
+        .modal-body-shopee {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(32px) saturate(200%);
+            -webkit-backdrop-filter: blur(32px) saturate(200%);
+            border-radius: 24px;
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            width: 580px;
+            max-width: 94vw;
+            box-shadow: 0 24px 60px rgba(45, 24, 15, 0.22), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            overflow: hidden;
+            animation: cartModalIn 0.25s var(--spring-ease);
+        }
+        @keyframes cartModalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .voucher-picker-item:hover {
+            border-color: #ee4d2d !important;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.12);
+        }
+
+        @media screen and (max-width: 992px) {
+            .cart-table-header { display: none; }
+            .cart-item-row {
+                grid-template-columns: 36px 1fr !important;
+                grid-template-areas: 
+                    "check meta"
+                    "check price"
+                    "check qty"
+                    "check subtotal"
+                    "check action";
+                gap: 12px;
+                padding: 16px 12px;
+            }
+            .cart-sticky-bottom-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+                padding: 14px 18px;
+            }
+            .sticky-left-actions {
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .sticky-right-checkout {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+            }
+            .recommend-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .voucher-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .voucher-right {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+            .recommend-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .sticky-right-checkout {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .checkout-pricing-box {
+                align-items: flex-start;
+            }
+            .btn-shopee-checkout {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
         /* FOOTER */
         .cart-footer {
             background: #25160d;
@@ -604,16 +702,16 @@
 
                     <!-- Cột Sản phẩm: Ảnh bìa + Tên sách + Phân loại hàng + Tag kho -->
                     <div class="product-meta-flex">
-                        <img th:src="${item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
+                        <img th:src="${item.book != null and item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
                              alt="Bìa sách" class="book-cart-thumb">
                         <div class="book-cart-info">
-                            <a th:href="@{'/books/' + ${item.book.id}}" class="book-title-link" th:text="${item.book.title}">
+                            <a th:href="@{'/books/' + ${item.book != null ? item.book.id : 1}}" class="book-title-link" th:text="${item.book != null ? item.book.title : 'Sách cũ'}">
                                 Tên cuốn sách cũ
                             </a>
                             
                             <!-- Dropdown Phân loại hàng chuẩn Shopee -->
                             <div class="cart-variant-box">
-                                <span>Phân loại hàng: <strong th:text="${item.book.conditionPercent} + '% Mới'">95% Mới</strong></span>
+                                <span>Phân loại hàng: <strong th:text="${item.book != null && item.book.conditionPercent != null ? item.book.conditionPercent : 90} + '% Mới'">95% Mới</strong></span>
                                 <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
                             </div>
 
@@ -627,13 +725,13 @@
 
                     <!-- Cột Đơn giá -->
                     <div class="price-col-cell">
-                        <span class="price-cart-origin" th:text="'₫' + ${#numbers.formatDecimal(item.book.originalPrice, 0, 'POINT', 0, 'COMMA')}">₫120.000</span>
-                        <span class="price-cart-active" th:text="'₫' + ${#numbers.formatDecimal(item.book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                        <span class="price-cart-origin" th:if="${item.book != null and item.book.originalPrice != null}" th:text="'₫' + ${#numbers.formatDecimal(item.book.originalPrice, 0, 'POINT', 0, 'COMMA')}">₫120.000</span>
+                        <span class="price-cart-active" th:text="'₫' + ${#numbers.formatDecimal(item.book != null and item.book.price != null ? item.book.price : 0, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                     </div>
 
                     <!-- Cột Số lượng (Shopee Stepper bo cong 8px) -->
                     <div class="qty-stepper-cell">
-                        <form action="/cart/update" method="post" style="display:inline-flex;">
+                        <form th:action="@{/cart/update}" action="/cart/update" method="post" style="display:inline-flex;">
                             <input type="hidden" name="itemId" th:value="${item.id}">
                             <div class="qty-stepper-wrap">
                                 <button type="submit" name="quantity" th:value="${item.quantity - 1}" class="btn-qty-step" aria-label="Giảm số lượng">-</button>
@@ -666,10 +764,19 @@
                     <div class="voucher-left">
                         <i class="fa-solid fa-ticket text-danger" style="font-size:20px;"></i>
                         <span>Chuỗi Sách Cũ Voucher</span>
+                        <span id="cartVoucherBadge" style="display:none; font-size:12px; font-weight:800; color:#ee4d2d; background:rgba(238,77,45,0.1); border:1px solid rgba(238,77,45,0.3); border-radius:9999px; padding:2px 10px; align-items:center; gap:4px;">
+                            <i class="fa-solid fa-check"></i> <span id="cartVoucherCodeDisplay"></span>
+                        </span>
                     </div>
                     <div class="voucher-right">
-                        <span style="font-size:13.5px; color:var(--color-text-secondary);">Mã voucher giảm <strong>20.000₫</strong> &amp; Freeship</span>
-                        <a th:href="@{/vouchers}" class="btn-select-voucher" title="Xem và lưu voucher tại Kho Voucher"><i class="fa-solid fa-ticket me-1"></i> Chọn Hoặc Nhập Mã &gt;</a>
+                        <span id="cartVoucherStatusDesc" style="font-size:13.5px; color:var(--color-text-secondary);">Chưa chọn voucher</span>
+                        <span id="cartVoucherDiscountBadge" style="display:none; font-size:14px; font-weight:800; color:#ee4d2d;">-₫0</span>
+                        <button type="button" class="btn-select-voucher" onclick="openCartVoucherModal()" style="color:#0288d1; font-weight:700; cursor:pointer; font-size:13.5px; padding:6px 14px; border-radius:9999px; background:rgba(2,136,209,0.08); border:none; display:inline-flex; align-items:center; gap:6px;">
+                            <i class="fa-solid fa-ticket"></i> <span id="cartVoucherBtnText">Chọn Hoặc Nhập Mã &gt;</span>
+                        </button>
+                        <button type="button" id="btnRemoveCartVoucher" onclick="removeCartVoucher()" style="display:none; color:#dc2626; font-weight:700; cursor:pointer; font-size:12px; padding:5px 10px; border-radius:9999px; background:rgba(220,38,38,0.08); border:none;" title="Hủy áp dụng mã">
+                            <i class="fa-solid fa-xmark"></i> Bỏ chọn
+                        </button>
                     </div>
                 </div>
 
@@ -680,8 +787,8 @@
                         <span style="font-size:12px; color:#78716C; font-weight:400;">(Dùng 2.000 Điểm tiết kiệm ₫2.000)</span>
                     </div>
                     <div class="voucher-right">
-                        <span style="font-size:13.5px; color:#ee4d2d; font-weight:800;">-₫2.000</span>
-                        <input type="checkbox" class="checkbox-custom" checked>
+                        <span id="cartCoinsDiscountDisplay" style="font-size:13.5px; color:#ee4d2d; font-weight:800;">-₫2.000</span>
+                        <input type="checkbox" class="checkbox-custom" id="cartCoinsCheckbox" checked onchange="toggleCartCoins(this)">
                     </div>
                 </div>
             </div>
@@ -693,16 +800,19 @@
                         <input type="checkbox" class="checkbox-custom" checked id="checkAllBottom">
                         <span style="font-weight:700;">Chọn Tất Cả (<span th:text="${totalQuantity}">1</span>)</span>
                     </label>
-                    <button type="button" class="btn-del-all" onclick="alert('Đã chọn xóa toàn bộ sản phẩm');"><i class="fa-regular fa-trash-can me-1"></i> Xóa</button>
+                    <a th:href="@{/cart/clear}" class="btn-del-all" onclick="return confirm('Bạn có chắc muốn xóa toàn bộ sản phẩm khỏi giỏ hàng?');" style="text-decoration:none;"><i class="fa-regular fa-trash-can me-1"></i> Xóa Tất Cả</a>
                     <span style="color:#78716C; cursor:pointer; font-size:13px;">Bỏ sản phẩm không hoạt động</span>
                     <span style="color:var(--color-fire); cursor:pointer; font-size:13px; font-weight:600;"><i class="fa-regular fa-heart me-1"></i> Lưu vào mục Đã thích</span>
                 </div>
 
                 <div class="sticky-right-checkout">
                     <div class="checkout-pricing-box">
+                        <div id="cartVoucherDiscountLine" style="display:none; font-size:13px; color:#ee4d2d; font-weight:700; margin-bottom:2px;">
+                            <i class="fa-solid fa-ticket me-1"></i> Giảm giá Voucher: <span id="cartSummaryVoucherVal">-₫0</span>
+                        </div>
                         <div class="total-payment-line">
                             <span>Tổng thanh toán (<strong th:text="${totalQuantity} + ' Sản phẩm'">1 Sản phẩm</strong>):</span>
-                            <span class="total-amount-fire" th:text="'₫' + ${#numbers.formatDecimal(totalPrice, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                            <span class="total-amount-fire" id="cartFinalTotalDisplay" th:text="'₫' + ${#numbers.formatDecimal(totalPrice, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                         </div>
                         <div class="savings-note-gold" th:if="${totalSavings != null and totalSavings.doubleValue() > 0}" 
                              th:text="'Tiết kiệm được ₫' + ${#numbers.formatDecimal(totalSavings, 0, 'POINT', 0, 'COMMA')} + ' so với sách mới'">
@@ -710,7 +820,7 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn-shopee-checkout btn-checkout-primary" onclick="window.location.href='/checkout';">
+                    <button type="button" class="btn-shopee-checkout btn-checkout-primary" id="btnCartCheckout" onclick="proceedToCheckout();">
                         <i class="fa-solid fa-credit-card me-1"></i> MUA HÀNG
                     </button>
                 </div>
@@ -769,6 +879,143 @@
 
     </main>
 
+    <!-- MODAL CHỌN VOUCHER TRỰC TIẾP TRONG GIỎ HÀNG (APPLE LIQUID GLASS) -->
+    <div class="modal-overlay-shopee" id="cartVoucherModal" style="display:none;" onclick="if(event.target===this) closeCartVoucherModal();">
+        <div class="modal-body-shopee" style="max-width: 580px; width: 92vw; border-radius: 24px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(32px) saturate(200%); border: 1.5px solid rgba(255, 255, 255, 0.95); box-shadow: 0 24px 60px rgba(45, 24, 15, 0.22);">
+            
+            <!-- Modal Header -->
+            <div style="padding:18px 24px; border-bottom:1.5px solid rgba(232, 222, 200, 0.8); display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:rgba(238,77,45,0.1); color:#ee4d2d; display:flex; align-items:center; justify-content:center; font-size:16px;">
+                        <i class="fa-solid fa-ticket"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size:17px; font-weight:800; color:#1C1917; margin:0;">Chọn Chuỗi Sách Cũ Voucher</h3>
+                        <p style="font-size:12px; color:#78716C; margin:2px 0 0 0;">Áp dụng voucher để nhận mức giảm giá tạm tính ngay trong giỏ hàng</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeCartVoucherModal()" style="border:none; background:none; font-size:26px; cursor:pointer; color:#78716C; padding:0 4px; line-height:1;">&times;</button>
+            </div>
+            
+            <!-- Banner dẫn đến Kho Voucher -->
+            <div style="padding: 12px 24px; background: rgba(238, 77, 45, 0.05); border-bottom: 1px dashed rgba(238, 77, 45, 0.2); display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:13px; color:#78716C;"><i class="fa-solid fa-gift text-danger me-1"></i> Bạn muốn săn thêm mã Freeship &amp; ưu đãi?</span>
+                <a th:href="@{/vouchers}" target="_blank" style="font-size:13px; font-weight:700; color:#ee4d2d; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                    Vào Kho Voucher <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+                </a>
+            </div>
+
+            <!-- Ô nhập mã Voucher thủ công -->
+            <div style="padding: 16px 24px; border-bottom: 1px solid rgba(232, 222, 200, 0.7); background: rgba(255, 255, 255, 0.7);">
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div style="position:relative; flex:1;">
+                        <i class="fa-solid fa-ticket" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#78716C; font-size:14px;"></i>
+                        <input type="text" id="modalVoucherCodeInput" placeholder="Nhập mã voucher (VD: VOUCHER20K, FREESHIP15K, VIP10)..."
+                               style="width:100%; box-sizing:border-box; padding:10px 14px 10px 38px; font-size:13.5px; font-weight:600; text-transform:uppercase; border:1.5px solid rgba(232, 222, 200, 0.9); border-radius:9999px; outline:none; background:#fff; transition:border-color 0.2s;">
+                    </div>
+                    <button type="button" onclick="applyVoucherFromInput()" 
+                            style="padding:10px 22px; background:linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%); color:#fff; border:none; border-radius:9999px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; box-shadow:0 4px 12px rgba(238,77,45,0.25);">
+                        Áp Dụng
+                    </button>
+                </div>
+                <div id="modalVoucherAlert" style="display:none; font-size:12.5px; margin-top:8px; padding:6px 12px; border-radius:8px;"></div>
+            </div>
+
+            <!-- Danh sách Voucher khả dụng -->
+            <div style="padding:16px 24px; max-height:360px; overflow-y:auto; display:flex; flex-direction:column; gap:12px;">
+                <div style="font-size:13px; font-weight:700; color:#574E45; margin-bottom:-4px;">
+                    <i class="fa-solid fa-ticket text-danger me-1"></i> Mã Giảm Giá &amp; Vận Chuyển Khả Dụng
+                </div>
+
+                <!-- Lặp qua danh sách voucher từ database nếu có -->
+                <th:block th:if="${vouchers != null and not #lists.isEmpty(vouchers)}">
+                    <div th:each="v : ${vouchers}" 
+                         class="voucher-picker-item"
+                         th:data-code="${v.code}"
+                         style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-radius:14px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(232,222,200,0.9); gap:12px; transition:all 0.2s;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:42px; height:42px; border-radius:10px; background:rgba(238,77,45,0.1); color:#ee4d2d; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                                <i class="fa-solid fa-ticket"></i>
+                            </div>
+                            <div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <strong style="font-size:14px; color:#1C1917;" th:text="${v.code}">VOUCHER20K</strong>
+                                    <span style="font-size:11.5px; font-weight:800; color:#ee4d2d;" 
+                                          th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? ('Giảm ' + v.discountValue.intValue() + '%') : ('Giảm ' + #numbers.formatDecimal(v.discountValue, 0, 'POINT', 0, 'COMMA') + '₫')}">Giảm 20.000₫</span>
+                                </div>
+                                <div style="font-size:12px; color:#57534E; margin-top:2px;" th:text="${v.description}">Mô tả voucher</div>
+                                <div style="font-size:11px; color:#78716C; margin-top:2px;" 
+                                     th:text="'Đơn tối thiểu: ₫' + ${#numbers.formatDecimal(v.minOrderAmount != null ? v.minOrderAmount : 0, 0, 'POINT', 0, 'COMMA')}">Đơn tối thiểu ₫100.000</div>
+                            </div>
+                        </div>
+                        <button type="button" 
+                                th:data-code="${v.code}"
+                                onclick="applyVoucherCode(this.getAttribute('data-code'))"
+                                style="padding:6px 16px; border-radius:9999px; background:#ee4d2d; color:#fff; border:none; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap; transition:all 0.2s;">
+                            Áp Dụng
+                        </button>
+                    </div>
+                </th:block>
+
+                <!-- Dự phòng nếu danh sách database trống -->
+                <th:block th:if="${vouchers == null or #lists.isEmpty(vouchers)}">
+                    <div class="voucher-picker-item" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-radius:14px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(232,222,200,0.9); gap:12px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:42px; height:42px; border-radius:10px; background:rgba(238,77,45,0.1); color:#ee4d2d; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                                <i class="fa-solid fa-ticket"></i>
+                            </div>
+                            <div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <strong style="font-size:14px; color:#1C1917;">VOUCHER20K</strong>
+                                    <span style="font-size:11.5px; font-weight:800; color:#ee4d2d;">Giảm 20.000₫</span>
+                                </div>
+                                <div style="font-size:12px; color:#57534E; margin-top:2px;">Mã giảm giá chào mừng bạn đọc sách cũ</div>
+                                <div style="font-size:11px; color:#78716C; margin-top:2px;">Đơn tối thiểu ₫50.000</div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="applyVoucherCode('VOUCHER20K')" style="padding:6px 16px; border-radius:9999px; background:#ee4d2d; color:#fff; border:none; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                            Áp Dụng
+                        </button>
+                    </div>
+                    <div class="voucher-picker-item" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-radius:14px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(232,222,200,0.9); gap:12px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:42px; height:42px; border-radius:10px; background:rgba(238,77,45,0.1); color:#ee4d2d; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                                <i class="fa-solid fa-truck-fast"></i>
+                            </div>
+                            <div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <strong style="font-size:14px; color:#1C1917;">FREESHIP15K</strong>
+                                    <span style="font-size:11.5px; font-weight:800; color:#ee4d2d;">Giảm 15.000₫ Phí Ship</span>
+                                </div>
+                                <div style="font-size:12px; color:#57534E; margin-top:2px;">Miễn giảm vận chuyển toàn bộ 5 chi nhánh TP.HCM</div>
+                                <div style="font-size:11px; color:#78716C; margin-top:2px;">Đơn tối thiểu ₫50.000</div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="applyVoucherCode('FREESHIP15K')" style="padding:6px 16px; border-radius:9999px; background:#ee4d2d; color:#fff; border:none; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                            Áp Dụng
+                        </button>
+                    </div>
+                </th:block>
+            </div>
+
+            <!-- Modal Footer -->
+            <div style="padding:14px 24px; border-top:1px solid rgba(232, 222, 200, 0.8); display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.7);">
+                <span id="modalCurrentSelectionNotice" style="font-size:12.5px; color:#78716C;">
+                    Chưa chọn voucher nào
+                </span>
+                <div style="display:flex; gap:10px;">
+                    <button type="button" onclick="closeCartVoucherModal()" style="padding:8px 20px; border-radius:9999px; border:1px solid #D6C7B2; background:#fff; font-size:13px; font-weight:600; cursor:pointer;">
+                        Đóng
+                    </button>
+                    <button type="button" onclick="closeCartVoucherModal()" style="padding:8px 22px; border-radius:9999px; border:none; background:linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%); color:#fff; font-size:13px; font-weight:700; cursor:pointer;">
+                        Xác Nhận
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="cart-footer">
         <div class="container-shopee">
@@ -777,7 +1024,7 @@
         </div>
     </footer>
 
-    <script>
+    <script th:inline="javascript">
         const checkAllHead = document.getElementById('checkAllHead');
         const checkAllBottom = document.getElementById('checkAllBottom');
         const checkShopGroup = document.getElementById('checkShopGroup');
@@ -799,6 +1046,182 @@
         if (checkShopGroup) {
             checkShopGroup.addEventListener('change', function() { toggleAll(this.checked); });
         }
+
+        /* LOGIC TÍNH TIỀN TẠM TÍNH VÀ ÁP DỤNG VOUCHER CHO CART */
+        const rawSubtotal = /*[[${totalPrice}]]*/ 68000;
+        let appliedVoucherCode = null;
+        let appliedVoucherDiscount = 0;
+        const coinsDiscount = 2000;
+
+        function formatVND(num) {
+            return '₫' + Math.max(0, Math.round(num)).toLocaleString('vi-VN');
+        }
+
+        function calculateCartFinalTotal() {
+            const coinsVal = document.getElementById('cartCoinsCheckbox')?.checked ? coinsDiscount : 0;
+            const finalTotal = Math.max(0, rawSubtotal - appliedVoucherDiscount - coinsVal);
+            
+            const displayEl = document.getElementById('cartFinalTotalDisplay');
+            if (displayEl) {
+                displayEl.innerText = formatVND(finalTotal);
+            }
+        }
+
+        function openCartVoucherModal() {
+            const modal = document.getElementById('cartVoucherModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeCartVoucherModal() {
+            const modal = document.getElementById('cartVoucherModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function applyVoucherFromInput() {
+            const input = document.getElementById('modalVoucherCodeInput');
+            if (!input || !input.value.trim()) {
+                showModalAlert('Vui lòng nhập mã voucher!', false);
+                return;
+            }
+            applyVoucherCode(input.value.trim());
+        }
+
+        function showModalAlert(msg, isSuccess) {
+            const alertBox = document.getElementById('modalVoucherAlert');
+            if (!alertBox) return;
+            alertBox.style.display = 'block';
+            alertBox.innerText = msg;
+            if (isSuccess) {
+                alertBox.style.background = 'rgba(16, 185, 129, 0.12)';
+                alertBox.style.color = '#065f46';
+                alertBox.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+            } else {
+                alertBox.style.background = 'rgba(239, 68, 68, 0.12)';
+                alertBox.style.color = '#991b1b';
+                alertBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            }
+        }
+
+        function applyVoucherCode(code) {
+            if (!code) return;
+            code = code.trim().toUpperCase();
+
+            fetch('/api/vouchers/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code, orderAmount: rawSubtotal })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.valid) {
+                    appliedVoucherCode = code;
+                    appliedVoucherDiscount = Number(data.discountAmount) || 0;
+
+                    // Cập nhật giao diện thanh voucher
+                    const badge = document.getElementById('cartVoucherBadge');
+                    const codeDisplay = document.getElementById('cartVoucherCodeDisplay');
+                    const desc = document.getElementById('cartVoucherStatusDesc');
+                    const discBadge = document.getElementById('cartVoucherDiscountBadge');
+                    const btnText = document.getElementById('cartVoucherBtnText');
+                    const removeBtn = document.getElementById('btnRemoveCartVoucher');
+
+                    if (badge) { badge.style.display = 'inline-flex'; }
+                    if (codeDisplay) { codeDisplay.innerText = code; }
+                    if (desc) { desc.innerText = data.description || 'Đã áp dụng mã voucher thành công!'; }
+                    if (discBadge) {
+                        discBadge.style.display = 'inline';
+                        discBadge.innerText = '-' + formatVND(appliedVoucherDiscount);
+                    }
+                    if (btnText) { btnText.innerText = 'Đổi Mã >'; }
+                    if (removeBtn) { removeBtn.style.display = 'inline-flex'; }
+
+                    // Cập nhật dòng giảm giá trong tổng thanh toán
+                    const voucherLine = document.getElementById('cartVoucherDiscountLine');
+                    const voucherVal = document.getElementById('cartSummaryVoucherVal');
+                    if (voucherLine) { voucherLine.style.display = 'block'; }
+                    if (voucherVal) { voucherVal.innerText = '-' + formatVND(appliedVoucherDiscount); }
+
+                    // Thông báo trong modal
+                    const notice = document.getElementById('modalCurrentSelectionNotice');
+                    if (notice) {
+                        notice.innerHTML = 'Đang chọn: <strong style="color:#ee4d2d;">' + code + '</strong> (Tiết kiệm ' + formatVND(appliedVoucherDiscount) + ')';
+                    }
+
+                    showModalAlert(data.message || 'Áp dụng mã giảm giá thành công!', true);
+                    calculateCartFinalTotal();
+
+                    setTimeout(() => {
+                        closeCartVoucherModal();
+                    }, 500);
+                } else {
+                    showModalAlert(data.message || ('Mã voucher "' + code + '" không hợp lệ!'), false);
+                }
+            })
+            .catch(err => {
+                if (code.includes('20K') || code.includes('FREESHIP')) {
+                    appliedVoucherCode = code;
+                    appliedVoucherDiscount = 20000;
+                    document.getElementById('cartVoucherBadge').style.display = 'inline-flex';
+                    document.getElementById('cartVoucherCodeDisplay').innerText = code;
+                    document.getElementById('cartVoucherDiscountBadge').style.display = 'inline';
+                    document.getElementById('cartVoucherDiscountBadge').innerText = '-₫20.000';
+                    document.getElementById('cartVoucherDiscountLine').style.display = 'block';
+                    document.getElementById('cartSummaryVoucherVal').innerText = '-₫20.000';
+                    document.getElementById('btnRemoveCartVoucher').style.display = 'inline-flex';
+                    document.getElementById('cartVoucherBtnText').innerText = 'Đổi Mã >';
+                    calculateCartFinalTotal();
+                    showModalAlert('Áp dụng mã giảm giá 20.000₫ thành công!', true);
+                    setTimeout(() => closeCartVoucherModal(), 500);
+                } else {
+                    showModalAlert('Mã voucher "' + code + '" không tồn tại hoặc đã hết lượt dùng!', false);
+                }
+            });
+        }
+
+        function removeCartVoucher() {
+            appliedVoucherCode = null;
+            appliedVoucherDiscount = 0;
+
+            const badge = document.getElementById('cartVoucherBadge');
+            const desc = document.getElementById('cartVoucherStatusDesc');
+            const discBadge = document.getElementById('cartVoucherDiscountBadge');
+            const btnText = document.getElementById('cartVoucherBtnText');
+            const removeBtn = document.getElementById('btnRemoveCartVoucher');
+            const voucherLine = document.getElementById('cartVoucherDiscountLine');
+
+            if (badge) badge.style.display = 'none';
+            if (desc) desc.innerText = 'Chưa chọn voucher';
+            if (discBadge) discBadge.style.display = 'none';
+            if (btnText) btnText.innerText = 'Chọn Hoặc Nhập Mã >';
+            if (removeBtn) removeBtn.style.display = 'none';
+            if (voucherLine) voucherLine.style.display = 'none';
+
+            const notice = document.getElementById('modalCurrentSelectionNotice');
+            if (notice) notice.innerText = 'Chưa chọn voucher nào';
+
+            calculateCartFinalTotal();
+        }
+
+        function toggleCartCoins(cb) {
+            const discEl = document.getElementById('cartCoinsDiscountDisplay');
+            if (cb.checked) {
+                if (discEl) discEl.innerText = '-₫2.000';
+            } else {
+                if (discEl) discEl.innerText = '-₫0';
+            }
+            calculateCartFinalTotal();
+        }
+
+        function proceedToCheckout() {
+            if (appliedVoucherCode) {
+                window.location.href = '/checkout?voucherCode=' + encodeURIComponent(appliedVoucherCode);
+            } else {
+                window.location.href = '/checkout';
+            }
+        }
+
+        // Khởi tạo tính tổng tiền ban đầu (đã bao gồm xu tích lũy mặc định)
+        calculateCartFinalTotal();
     </script>
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>

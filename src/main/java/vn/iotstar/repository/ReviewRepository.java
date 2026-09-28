@@ -64,9 +64,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     boolean existsByUserIdAndBookId(Long userId, Long bookId);
 
     /**
-     * Lấy toàn bộ đánh giá do một người dùng đã viết.
+     * Lấy toàn bộ đánh giá do một người dùng đã viết kèm Order và Book để tránh LazyInitializationException.
      */
-    List<Review> findByUserIdOrderByCreatedAtDesc(Long userId);
+    @Query("SELECT r FROM Review r JOIN FETCH r.order JOIN FETCH r.book WHERE r.user.id = :userId ORDER BY r.createdAt DESC")
+    List<Review> findByUserIdOrderByCreatedAtDesc(@Param("userId") Long userId);
 
     /**
      * Lấy danh sách đánh giá thuộc về một đơn hàng cụ thể.

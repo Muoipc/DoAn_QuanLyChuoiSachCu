@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpServletRequest;
 import vn.iotstar.entity.Address;
 import vn.iotstar.entity.User;
 import vn.iotstar.repository.AddressRepository;
@@ -18,6 +20,8 @@ import vn.iotstar.repository.OrderRepository;
 import vn.iotstar.repository.UserRepository;
 import vn.iotstar.security.CustomUserDetails;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -61,23 +65,32 @@ public class ProfileController {
         if (userDetails != null && userDetails.getId() != null) {
             return userDetails.getId();
         }
-        return 4L;
+        throw new IllegalStateException("Yêu cầu đăng nhập trước khi thực hiện thao tác này!");
     }
 
     /**
      * Hiển thị trang Hồ Sơ Của Tôi chuẩn Shopee
      */
     @GetMapping({"/profile", ""})
+    @Transactional(readOnly = true)
     public String viewProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(value = "tab", defaultValue = "profile") String tab,
+            HttpServletRequest request,
             Model model) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            String uri = request.getRequestURI();
+            String qs = request.getQueryString();
+            String fullUrl = (qs != null && !qs.isBlank()) ? (uri + "?" + qs) : uri;
+            return "redirect:/login?redirectURL=" + URLEncoder.encode(fullUrl, StandardCharsets.UTF_8);
+        }
 
         Long userId = resolveUserId(userDetails);
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/login?redirectURL=/user/account/profile";
         }
 
         // Lấy danh sách địa chỉ nhận hàng của khách
@@ -101,12 +114,17 @@ public class ProfileController {
      * Xử lý cập nhật thông tin hồ sơ
      */
     @PostMapping("/profile/update")
+    @Transactional
     public String updateProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam("fullName") String fullName,
             @RequestParam("phone") String phone,
             @RequestParam(value = "avatar", required = false) String avatar,
             RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/user/account/profile";
+        }
 
         Long userId = resolveUserId(userDetails);
         User user = userRepository.findById(userId).orElse(null);
@@ -129,6 +147,7 @@ public class ProfileController {
      * Xử lý đổi mật khẩu
      */
     @PostMapping("/profile/change-password")
+    @Transactional
     public String changePassword(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam("oldPassword") String oldPassword,
@@ -136,11 +155,15 @@ public class ProfileController {
             @RequestParam("confirmPassword") String confirmPassword,
             RedirectAttributes redirectAttributes) {
 
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/user/account/profile?tab=password";
+        }
+
         Long userId = resolveUserId(userDetails);
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/login?redirectURL=/user/account/profile?tab=password";
         }
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
@@ -169,6 +192,7 @@ public class ProfileController {
      * Xử lý thêm địa chỉ nhận hàng mới
      */
     @PostMapping("/address/add")
+    @Transactional
     public String addAddress(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam("receiverName") String receiverName,
@@ -179,6 +203,10 @@ public class ProfileController {
             @RequestParam("streetAddress") String streetAddress,
             @RequestParam(value = "isDefault", defaultValue = "false") boolean isDefault,
             RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/user/account/profile?tab=address";
+        }
 
         Long userId = resolveUserId(userDetails);
         User user = userRepository.findById(userId).orElse(null);

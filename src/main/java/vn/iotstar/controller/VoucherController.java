@@ -163,7 +163,7 @@ public class VoucherController {
 
         User user = resolveUser(userDetails);
         if (user == null) {
-            return "redirect:/login?redirect=/user/vouchers";
+            return "redirect:/login?redirectURL=/user/vouchers";
         }
 
         List<UserVoucher> allUserVouchers = voucherService.getUserSavedVouchers(user, null);
@@ -189,8 +189,9 @@ public class VoucherController {
         long countUnused = allUserVouchers.stream().filter(uv -> !Boolean.TRUE.equals(uv.getIsUsed())).count();
         long countUsed = allUserVouchers.stream().filter(uv -> Boolean.TRUE.equals(uv.getIsUsed())).count();
 
-        // Ánh xạ sang VoucherResponseDTO để template đồng bộ hiển thị
+        // Ánh xạ sang VoucherResponseDTO để template đồng bộ hiển thị (lọc null an toàn)
         List<VoucherResponseDTO> voucherDtos = filteredList.stream()
+                .filter(uv -> uv.getVoucher() != null)
                 .map(uv -> new VoucherResponseDTO(uv.getVoucher(), true, uv.getIsUsed(), uv.getId()))
                 .collect(Collectors.toList());
 

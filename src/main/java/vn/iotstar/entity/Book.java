@@ -132,13 +132,17 @@ public class Book {
     public String getPrimaryImageUrl() {
         if (images != null && !images.isEmpty()) {
             for (BookImage img : images) {
-                if (Boolean.TRUE.equals(img.getIsPrimary()) && img.getImageUrl() != null && !img.getImageUrl().isBlank()) {
+                if (img != null && Boolean.TRUE.equals(img.getIsPrimary()) && img.getImageUrl() != null && !img.getImageUrl().isBlank()) {
                     return img.getImageUrl();
                 }
             }
-            return images.get(0).getImageUrl();
+            for (BookImage img : images) {
+                if (img != null && img.getImageUrl() != null && !img.getImageUrl().isBlank()) {
+                    return img.getImageUrl();
+                }
+            }
         }
-        return "/images/books/book-" + id + ".jpg";
+        return id != null ? "/images/books/book_" + id + ".jpg" : "/images/books/book_1.jpg";
     }
 
     /**

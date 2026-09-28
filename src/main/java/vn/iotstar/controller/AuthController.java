@@ -30,10 +30,17 @@ public class AuthController {
 
     /**
      * Hiển thị trang đăng nhập.
-     * Spring Security sẽ tự động chặn các request POST /login để xác thực.
+     * Tiếp nhận tham số redirectURL để chuyển tiếp sau khi xác thực thành công.
      */
     @GetMapping("/login")
-    public String login() {
+    public String login(
+            @RequestParam(value = "redirectURL", required = false) String redirectURL,
+            @RequestParam(value = "redirect", required = false) String redirect,
+            Model model) {
+        String target = (redirectURL != null && !redirectURL.isBlank()) ? redirectURL : redirect;
+        if (target != null && !target.isBlank()) {
+            model.addAttribute("redirectURL", target);
+        }
         return "auth/login";
     }
 
