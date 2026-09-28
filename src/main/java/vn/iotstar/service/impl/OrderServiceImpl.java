@@ -51,6 +51,9 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private vn.iotstar.repository.UserVoucherRepository userVoucherRepository;
+
     @Override
     public Order createOrderFromCart(
             Long userId,
@@ -122,6 +125,15 @@ public class OrderServiceImpl implements IOrderService {
                     // Tăng số lượt đã sử dụng của voucher
                     v.setUsedCount((v.getUsedCount() != null ? v.getUsedCount() : 0) + 1);
                     voucherRepository.save(v);
+
+                    // Đánh dấu đã sử dụng trong ví voucher của người dùng nếu có lưu
+                    if (user != null) {
+                        userVoucherRepository.findByUserAndVoucher(user, v).ifPresent(uv -> {
+                            uv.setIsUsed(true);
+                            uv.setUsedAt(LocalDateTime.now());
+                            userVoucherRepository.save(uv);
+                        });
+                    }
                 }
             }
         }
@@ -283,6 +295,15 @@ public class OrderServiceImpl implements IOrderService {
                     // Tăng số lượt đã sử dụng của voucher
                     v.setUsedCount((v.getUsedCount() != null ? v.getUsedCount() : 0) + 1);
                     voucherRepository.save(v);
+
+                    // Đánh dấu đã sử dụng trong ví voucher của người dùng nếu có lưu
+                    if (user != null) {
+                        userVoucherRepository.findByUserAndVoucher(user, v).ifPresent(uv -> {
+                            uv.setIsUsed(true);
+                            uv.setUsedAt(LocalDateTime.now());
+                            userVoucherRepository.save(uv);
+                        });
+                    }
                 }
             }
         }

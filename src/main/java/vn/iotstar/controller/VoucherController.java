@@ -153,30 +153,58 @@ public class VoucherController {
 
     /**
      * GET /user/vouchers: Xem danh sách voucher trong ví cá nhân của user đang đăng nhập.
+     * Hỗ trợ lọc trạng thái voucher: status = all (tất cả) | unused (chưa dùng) | used (đã dùng).
      */
     @GetMapping("/user/vouchers")
     public String viewUserVouchers(
+            @RequestParam(value = "status", defaultValue = "all") String status,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model) {
 
         User user = resolveUser(userDetails);
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/login?redirect=/user/vouchers";
         }
 
-        List<UserVoucher> userVouchers = voucherService.getUserSavedVouchers(user, null);
+        List<UserVoucher> allUserVouchers = voucherService.getUserSavedVouchers(user, null);
         long savedCount = voucherService.countUnusedVouchers(user);
 
-        // Đồng thời ánh xạ sang VoucherResponseDTO để linh hoạt cho template
-        List<VoucherResponseDTO> voucherDtos = userVouchers.stream()
+        // Phân loại danh sách theo trạng thái
+        String normalizedStatus = (status != null) ? status.trim().toLowerCase() : "all";
+        List<UserVoucher> filteredList;
+        if ("used".equals(normalizedStatus)) {
+            filteredList = allUserVouchers.stream()
+                    .filter(uv -> Boolean.TRUE.equals(uv.getIsUsed()))
+                    .collect(Collectors.toList());
+        } else if ("unused".equals(normalizedStatus)) {
+            filteredList = allUserVouchers.stream()
+                    .filter(uv -> !Boolean.TRUE.equals(uv.getIsUsed()))
+                    .collect(Collectors.toList());
+        } else {
+            filteredList = allUserVouchers;
+            normalizedStatus = "all";
+        }
+
+        long countAll = allUserVouchers.size();
+        long countUnused = allUserVouchers.stream().filter(uv -> !Boolean.TRUE.equals(uv.getIsUsed())).count();
+        long countUsed = allUserVouchers.stream().filter(uv -> Boolean.TRUE.equals(uv.getIsUsed())).count();
+
+        // Ánh xạ sang VoucherResponseDTO để template đồng bộ hiển thị
+        List<VoucherResponseDTO> voucherDtos = filteredList.stream()
                 .map(uv -> new VoucherResponseDTO(uv.getVoucher(), true, uv.getIsUsed(), uv.getId()))
                 .collect(Collectors.toList());
 
-        model.addAttribute("userVouchers", userVouchers);
+        model.addAttribute("userVouchers", filteredList);
         model.addAttribute("vouchers", voucherDtos);
+        model.addAttribute("allVouchers", voucherDtos);
         model.addAttribute("savedCount", savedCount);
         model.addAttribute("tab", "wallet");
+        model.addAttribute("walletStatus", normalizedStatus);
+        model.addAttribute("countAll", countAll);
+        model.addAttribute("countUnused", countUnused);
+        model.addAttribute("countUsed", countUsed);
         model.addAttribute("isWallet", true);
+        model.addAttribute("isLoggedIn", true);
         model.addAttribute("user", user);
         model.addAttribute("pageTitle", "Ví Voucher Của Tôi - Chuỗi Sách Cũ TP.HCM");
 

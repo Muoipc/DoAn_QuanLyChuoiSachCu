@@ -317,6 +317,47 @@
         }
 
         /* ================= 3. LƯỚI THẺ VÉ VOUCHER (SHOPEE TICKET STUB) ================= */
+        .ticket-card-used {
+            opacity: 0.62;
+            filter: grayscale(45%);
+            background: rgba(245, 243, 240, 0.75) !important;
+        }
+        .ticket-card-expired {
+            opacity: 0.58;
+            filter: grayscale(60%);
+            background: rgba(245, 243, 240, 0.7) !important;
+        }
+        .btn-used-disabled {
+            background: #e7e5e4 !important;
+            color: #78716c !important;
+            border: 1px solid #d6d3d1 !important;
+            cursor: not-allowed !important;
+            box-shadow: none !important;
+            pointer-events: none;
+        }
+        .badge-status-pill {
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 9999px;
+        }
+        .badge-saved {
+            color: #059669;
+            background: rgba(5, 150, 105, 0.1);
+        }
+        .badge-used {
+            color: #78716c;
+            background: #f5f5f4;
+            border: 1px solid #e7e5e4;
+        }
+        .badge-expired {
+            color: #dc2626;
+            background: #fef2f2;
+            border: 1px solid #fee2e2;
+        }
         .voucher-grid-layout {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -722,26 +763,41 @@
         <nav class="voucher-breadcrumb" aria-label="Breadcrumb">
             <a th:href="@{/}"><i class="fa-solid fa-house me-1"></i> Trang Chủ</a>
             <span>&gt;</span>
-            <span style="color:#1C1917; font-weight:700;">Kho Voucher Chuỗi Sách Cũ</span>
+            <span th:if="${isWallet}">
+                <a th:href="@{/vouchers}">Kho Voucher</a>
+                <span>&gt;</span>
+                <strong style="color:#1C1917;">Ví Voucher Của Tôi</strong>
+            </span>
+            <span th:unless="${isWallet}" style="color:#1C1917; font-weight:700;">Kho Voucher Chuỗi Sách Cũ</span>
         </nav>
 
-        <!-- 2. HEADER BANNER: HỘP NHẬP MÃ VOUCHER KÈM NÚT 'LƯU MÃ' CAPSULE -->
+        <!-- 2. HEADER BANNER: HỘP NHẬP MÃ VOUCHER HOẶC BANNER VÍ -->
         <section class="voucher-banner-wrap">
             <div class="banner-left-info">
-                <div class="banner-icon-box">
-                    <i class="fa-solid fa-ticket"></i>
+                <div class="banner-icon-box" th:style="${isWallet} ? 'background:linear-gradient(135deg, #059669, #10b981); color:#fff;' : ''">
+                    <i th:if="${isWallet}" class="fa-solid fa-wallet"></i>
+                    <i th:unless="${isWallet}" class="fa-solid fa-ticket"></i>
                 </div>
                 <div>
                     <h1 class="banner-text-title">
-                        <span>Kho Voucher Chuỗi Sách Cũ</span>
-                        <span style="font-size:12px; background:#ee4d2d; color:#fff; padding:2px 8px; border-radius:9999px; font-weight:700;">Shopee x Apple Glass</span>
+                        <span th:text="${isWallet} ? 'Ví Voucher Của Tôi' : 'Kho Voucher Chuỗi Sách Cũ'">Kho Voucher Chuỗi Sách Cũ</span>
+                        <span style="font-size:12px; background:#ee4d2d; color:#fff; padding:2px 8px; border-radius:9999px; font-weight:700;" th:text="${isWallet} ? 'Ví Cá Nhân' : 'Shopee x Apple Glass'">Shopee x Apple Glass</span>
                     </h1>
-                    <p class="banner-text-sub">Săn mã Freeship &amp; Voucher giảm giá sách cũ kiểm định mỗi ngày tại 5 chi nhánh TP.HCM</p>
+                    <p class="banner-text-sub" th:if="${isWallet}">Quản lý toàn bộ voucher bạn đã lưu vào ví cá nhân. Hãy áp dụng khi đặt mua sách cũ nhé!</p>
+                    <p class="banner-text-sub" th:unless="${isWallet}">Săn mã Freeship &amp; Voucher giảm giá sách cũ kiểm định mỗi ngày tại 5 chi nhánh TP.HCM</p>
                 </div>
             </div>
 
-            <!-- Ô nhập mã voucher & nút Lưu Mã -->
-            <form id="bannerVoucherForm" class="banner-input-form" onsubmit="handleBannerSubmit(event)">
+            <!-- Nếu là Ví Cá Nhân: Hiện nút Khám Phá Kho Voucher -->
+            <div th:if="${isWallet}">
+                <a th:href="@{/vouchers}" class="btn-banner-save" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-gift"></i>
+                    <span>Săn Thêm Voucher Mới &gt;</span>
+                </a>
+            </div>
+
+            <!-- Nếu là Kho Voucher Công Khai: Ô nhập mã voucher & nút Lưu Mã -->
+            <form th:unless="${isWallet}" id="bannerVoucherForm" class="banner-input-form" onsubmit="handleBannerSubmit(event)">
                 <i class="fa-solid fa-tags" style="color:#ee4d2d; font-size:16px;"></i>
                 <input type="text" id="voucherCodeBannerInput" class="voucher-input-pill" 
                        placeholder="Nhập mã voucher (vd: FREESHIP15K, SACHCU20K)..." 
@@ -754,7 +810,7 @@
         </section>
 
         <!-- 2.1 PHÂN BIỆT TÀI KHOẢN KHÁCH VS NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP -->
-        <div class="account-status-bar">
+        <div th:unless="${isWallet}" class="account-status-bar">
             <!-- Dành cho Khách (Chưa đăng nhập) -->
             <div th:unless="${isLoggedIn}" class="account-bar-guest">
                 <div class="account-bar-guest-left">
@@ -791,8 +847,34 @@
             </div>
         </div>
 
-        <!-- 3. THANH TAB PHÂN LOẠI (TẤT CẢ, MÃ VẬN CHUYỂN, MÃ GIẢM GIÁ SÁCH CŨ, ƯU ĐÃI ĐỘC QUYỀN) -->
-        <div class="voucher-tabs-bar" role="tablist">
+        <!-- 3. THANH TAB DÀNH CHO VÍ VOUCHER CÁ NHÂN -->
+        <div th:if="${isWallet}" class="voucher-tabs-bar" role="tablist">
+            <a th:href="@{/user/vouchers(status='all')}" 
+               class="tab-btn-pill" th:classappend="${walletStatus == 'all' or walletStatus == null} ? 'active' : ''" style="text-decoration:none;">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Tất Cả Trong Ví</span>
+                <span class="tab-badge-count" th:text="${countAll}">3</span>
+            </a>
+            <a th:href="@{/user/vouchers(status='unused')}" 
+               class="tab-btn-pill" th:classappend="${walletStatus == 'unused'} ? 'active' : ''" style="text-decoration:none;">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Sẵn Sàng Dùng</span>
+                <span class="tab-badge-count" th:text="${countUnused}">2</span>
+            </a>
+            <a th:href="@{/user/vouchers(status='used')}" 
+               class="tab-btn-pill" th:classappend="${walletStatus == 'used'} ? 'active' : ''" style="text-decoration:none;">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>Đã Sử Dụng</span>
+                <span class="tab-badge-count" th:text="${countUsed}">1</span>
+            </a>
+            <a th:href="@{/vouchers}" class="tab-btn-pill" style="margin-left:auto; background:rgba(238,77,45,0.08); color:#ee4d2d; border:1px solid rgba(238,77,45,0.3); text-decoration:none;">
+                <i class="fa-solid fa-plus"></i>
+                <span>Săn Thêm Voucher Mới</span>
+            </a>
+        </div>
+
+        <!-- 3. THANH TAB DÀNH CHO KHO VOUCHER CÔNG KHAI -->
+        <div th:unless="${isWallet}" class="voucher-tabs-bar" role="tablist">
             <button type="button" class="tab-btn-pill active" data-filter="all" onclick="switchVoucherTab('all', this)">
                 <i class="fa-solid fa-layer-group"></i>
                 <span>Tất Cả</span>
@@ -813,6 +895,10 @@
                 <span>Ưu Đãi Độc Quyền</span>
                 <span class="tab-badge-count" th:text="${countExclusive != null ? countExclusive : 3}">3</span>
             </button>
+            <a th:if="${isLoggedIn}" th:href="@{/user/vouchers}" class="tab-btn-pill" style="margin-left:auto; background:rgba(5,150,105,0.1); color:#059669; border:1px solid rgba(5,150,105,0.3); text-decoration:none;">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Ví Của Tôi (<strong th:text="${savedCount}">0</strong>)</span>
+            </a>
         </div>
 
         <!-- 4. LƯỚI THẺ VOUCHER DẠNG VÉ TÀU / TICKET STUB SHOPEE -->
@@ -821,8 +907,10 @@
             <!-- Lặp danh sách Voucher -->
             <div th:each="v : ${vouchers}" 
                  class="voucher-ticket-card" 
+                 th:classappend="${v.isUsed ? 'ticket-card-used' : (v.isExpired ? 'ticket-card-expired' : '')}"
                  th:data-category="${v.categorySlug}" 
                  th:data-code="${v.code}"
+                 th:data-used="${v.isUsed}"
                  th:id="'ticket-' + ${v.code}">
 
                 <!-- Phần cuống vé trái: Màu riêng biệt theo phân loại, icon, số tiền giảm to đậm (#ee4d2d) -->
@@ -854,12 +942,19 @@
                                       th:text="${v.categoryName}">Mã Vận Chuyển</span>
                                 <span class="ticket-code-badge" th:text="${v.code}">FREESHIP15K</span>
                             </div>
-                            <span th:if="${v.isSaved}" style="font-size:11px; color:#059669; font-weight:700; display:inline-flex; align-items:center; gap:4px;">
-                                <i class="fa-solid fa-circle-check"></i> Đã trong ví
+                            <!-- Trạng thái -->
+                            <span th:if="${v.isUsed}" class="badge-status-pill badge-used">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Đã Dùng
+                            </span>
+                            <span th:if="${!v.isUsed and v.isExpired}" class="badge-status-pill badge-expired">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Hết Hạn
+                            </span>
+                            <span th:if="${!v.isUsed and !v.isExpired and v.isSaved}" class="badge-status-pill badge-saved">
+                                <i class="fa-solid fa-circle-check"></i> Sẵn Sàng Dùng
                             </span>
                         </div>
 
-                        <h3 class="ticket-title-desc" style="margin-top:6px;" th:text="${v.description}">Giảm 15.000đ phí vận chuyển cho đơn hàng sách cũ từ 99.000đ</h3>
+                        <h3 class="ticket-title-desc" style="margin-top:6px;" th:text="${v.description}">Mô tả voucher</h3>
                         
                         <div class="ticket-condition-row" style="margin-top:4px;">
                             <i class="fa-solid fa-circle-info" style="font-size:11px;"></i>
@@ -882,16 +977,30 @@
                             </div>
                         </div>
 
-                        <!-- Nút hành động: Nếu user đã lưu -> Dùng Ngay; nếu chưa lưu -> Lưu -->
+                        <!-- Nút hành động: Tự động phân loại Đã dùng, Hết hạn, Dùng ngay, Lưu -->
                         <div class="ticket-action-box">
-                            <a th:if="${v.isSaved}" 
+                            <button th:if="${v.isUsed}" 
+                                    type="button" 
+                                    class="btn-ticket-action btn-used-disabled" 
+                                    disabled>
+                                Đã Dùng
+                            </button>
+
+                            <button th:if="${!v.isUsed and v.isExpired}" 
+                                    type="button" 
+                                    class="btn-ticket-action btn-used-disabled" 
+                                    disabled>
+                                Hết Hạn
+                            </button>
+
+                            <a th:if="${!v.isUsed and !v.isExpired and v.isSaved}" 
                                th:href="@{/cart}" 
                                class="btn-ticket-action btn-use-now"
                                title="Áp dụng ngay trong giỏ hàng">
                                 Dùng Ngay
                             </a>
 
-                            <button th:unless="${v.isSaved}" 
+                            <button th:if="${!v.isUsed and !v.isExpired and !v.isSaved}" 
                                     type="button" 
                                     class="btn-ticket-action btn-save-ajax"
                                     th:data-code="${v.code}"
@@ -904,14 +1013,22 @@
 
             </div>
 
-            <!-- Empty state fallback nếu không có voucher theo bộ lọc -->
-            <div id="voucherEmptyState" class="voucher-empty-card" style="display:none;">
+            <!-- Empty state fallback nếu không có voucher -->
+            <div id="voucherEmptyState" class="voucher-empty-card" 
+                 th:style="${vouchers == null or vouchers.isEmpty()} ? 'display:flex;' : 'display:none;'">
                 <div class="empty-icon-circle">
                     <i class="fa-solid fa-ticket-simple"></i>
                 </div>
-                <h3 style="font-size:17px; font-weight:800; color:#1C1917;">Chưa có voucher nào trong danh mục này</h3>
-                <p style="font-size:13.5px; color:#78716C;">Hãy quay lại vào các đợt phát mã tiếp theo hoặc khám phá các mã giảm giá khác của Chuỗi Sách Cũ!</p>
-                <button type="button" class="btn-banner-save" style="margin-top:6px;" onclick="switchVoucherTab('all')">
+                <h3 style="font-size:17px; font-weight:800; color:#1C1917;" 
+                    th:text="${isWallet} ? 'Ví của bạn chưa có voucher trong danh mục này' : 'Chưa có voucher nào trong danh mục này'">Chưa có voucher nào</h3>
+                <p style="font-size:13.5px; color:#78716C;" 
+                   th:text="${isWallet} ? 'Hãy ghé thăm Kho Voucher để săn thêm nhiều mã ưu đãi hấp dẫn cho đơn mua sách cũ của bạn!' : 'Hãy quay lại vào các đợt phát mã tiếp theo hoặc khám phá các mã giảm giá khác của Chuỗi Sách Cũ!'">
+                   Khám phá mã giảm giá của Chuỗi Sách Cũ!
+                </p>
+                <a th:if="${isWallet}" th:href="@{/vouchers}" class="btn-banner-save" style="margin-top:6px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-gift"></i> <span>Khám Phá Kho Voucher Ngay</span>
+                </a>
+                <button th:unless="${isWallet}" type="button" class="btn-banner-save" style="margin-top:6px;" onclick="switchVoucherTab('all')">
                     Xem Tất Cả Voucher
                 </button>
             </div>

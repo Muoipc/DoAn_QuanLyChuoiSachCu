@@ -334,4 +334,8 @@ public class VoucherResponseDTO {
         if (endDate == null) return "Vô thời hạn";
         return endDate.format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
+
+    public Boolean getIsExpired() {
+        return endDate != null && LocalDateTime.now().isAfter(endDate);
+    }
 }
