@@ -221,6 +221,101 @@
             color: #78716C;
         }
 
+        /* ================= 2.1 THANH TRẠNG THÁI TÀI KHOẢN (KHÁCH VS USER) ================= */
+        .account-status-bar {
+            margin-bottom: 20px;
+        }
+        .account-bar-guest {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: #fff8f5;
+            border: 1px solid #ffdcd4;
+            border-left: 4px solid var(--color-shopee-red);
+            border-radius: 12px;
+            padding: 12px 20px;
+            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.04);
+        }
+        .account-bar-guest-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13.5px;
+            color: #44403C;
+        }
+        .account-bar-guest-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+        .btn-guest-login {
+            background: var(--color-shopee-red);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: background-color 0.15s ease;
+        }
+        .btn-guest-login:hover {
+            background-color: #d83d1e;
+            color: #ffffff;
+        }
+        .btn-guest-register {
+            background: transparent;
+            color: var(--color-shopee-red);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border: 1px solid var(--color-shopee-red);
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+        .btn-guest-register:hover {
+            background: rgba(238, 77, 45, 0.08);
+        }
+        .account-bar-user {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e7dfd5;
+            border-left: 4px solid #059669;
+            border-radius: 12px;
+            padding: 12px 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .account-bar-user-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13.5px;
+            color: #1C1917;
+        }
+        .btn-user-view-wallet {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        .btn-user-view-wallet:hover {
+            background: #059669;
+            color: #ffffff;
+        }
+
         /* ================= 3. LƯỚI THẺ VÉ VOUCHER (SHOPEE TICKET STUB) ================= */
         .voucher-grid-layout {
             display: grid;
@@ -658,6 +753,44 @@
             </form>
         </section>
 
+        <!-- 2.1 PHÂN BIỆT TÀI KHOẢN KHÁCH VS NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP -->
+        <div class="account-status-bar">
+            <!-- Dành cho Khách (Chưa đăng nhập) -->
+            <div th:unless="${isLoggedIn}" class="account-bar-guest">
+                <div class="account-bar-guest-left">
+                    <i class="fa-solid fa-circle-user" style="color:#ee4d2d; font-size:22px;"></i>
+                    <div>
+                        <strong style="color:#1C1917;">Bạn đang xem với tư cách Khách.</strong>
+                        <span style="color:#78716C; margin-left:4px;">Đăng nhập để lưu voucher vào ví cá nhân và tự động áp dụng khi đặt mua sách!</span>
+                    </div>
+                </div>
+                <div class="account-bar-guest-actions">
+                    <a th:href="@{/login(redirect='/vouchers')}" class="btn-guest-login">
+                        <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập
+                    </a>
+                    <a th:href="@{/register}" class="btn-guest-register">
+                        Đăng Ký
+                    </a>
+                </div>
+            </div>
+
+            <!-- Dành cho User (Đã đăng nhập) -->
+            <div th:if="${isLoggedIn}" class="account-bar-user">
+                <div class="account-bar-user-left">
+                    <i class="fa-solid fa-circle-check" style="color:#059669; font-size:22px;"></i>
+                    <div>
+                        <span>Xin chào, <strong th:text="${user != null ? (user.fullName != null ? user.fullName : user.username) : 'Bạn'}">Khách hàng</strong>!</span>
+                        <span style="margin-left:8px; color:#57534E;">Ví của bạn đang có <strong style="color:#ee4d2d;" th:text="${savedCount}">0</strong> voucher khả dụng.</span>
+                    </div>
+                </div>
+                <div>
+                    <a th:href="@{/user/vouchers}" class="btn-user-view-wallet">
+                        <i class="fa-solid fa-wallet"></i> Ví Voucher Của Tôi &gt;
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- 3. THANH TAB PHÂN LOẠI (TẤT CẢ, MÃ VẬN CHUYỂN, MÃ GIẢM GIÁ SÁCH CŨ, ƯU ĐÃI ĐỘC QUYỀN) -->
         <div class="voucher-tabs-bar" role="tablist">
             <button type="button" class="tab-btn-pill active" data-filter="all" onclick="switchVoucherTab('all', this)">
@@ -796,7 +929,10 @@
     </footer>
 
     <!-- JAVASCRIPT XỬ LÝ KHO VOUCHER & TOAST LIQUID GLASS -->
-    <script>
+    <script th:inline="javascript">
+        /* Kiểm tra trạng thái đăng nhập từ Spring Security / Thymeleaf */
+        const IS_LOGGED_IN = /*[[${isLoggedIn}]]*/ false;
+
         // 1. Phân loại Tab Voucher mượt mà không reload
         function switchVoucherTab(category, btnElement) {
             // Cập nhật tab active
@@ -842,6 +978,13 @@
                 return;
             }
 
+            if (!IS_LOGGED_IN) {
+                if (confirm('Vui lòng đăng nhập tài khoản để lưu mã voucher vào ví cá nhân!\n\nBạn có muốn chuyển sang trang Đăng Nhập ngay bây giờ không?')) {
+                    window.location.href = '/login?redirect=/vouchers';
+                }
+                return;
+            }
+
             const btn = document.getElementById('btnBannerSaveVoucher');
             const originalContent = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang lưu...</span>';
@@ -865,6 +1008,13 @@
         function handleSaveVoucher(btn) {
             const code = btn.getAttribute('data-code');
             if (!code) return;
+
+            if (!IS_LOGGED_IN) {
+                if (confirm('Vui lòng đăng nhập tài khoản để lưu mã voucher vào ví cá nhân!\n\nBạn có muốn chuyển sang trang Đăng Nhập ngay bây giờ không?')) {
+                    window.location.href = '/login?redirect=/vouchers';
+                }
+                return;
+            }
 
             btn.disabled = true;
             const originalText = btn.innerText;
@@ -893,6 +1043,15 @@
             })
             .then(res => res.json())
             .then(data => {
+                if (data.requireLogin) {
+                    if (confirm(data.message + '\n\nBạn có muốn chuyển sang trang Đăng Nhập ngay bây giờ không?')) {
+                        window.location.href = '/login?redirect=/vouchers';
+                    } else {
+                        showLiquidToast(data.message, 'warning');
+                    }
+                    callback(false, data.message);
+                    return;
+                }
                 callback(data.success === true, data.message);
             })
             .catch(err => {

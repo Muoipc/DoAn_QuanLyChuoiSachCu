@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 @Controller
 public class VoucherController {
 
-    private static final Long DEFAULT_GUEST_USER_ID = 4L;
-
     private final IVoucherService voucherService;
     private final UserRepository userRepository;
 
@@ -38,20 +36,22 @@ public class VoucherController {
     }
 
     /**
-     * Lấy đối tượng User từ CustomUserDetails đang đăng nhập (hoặc fallback tài khoản demo).
+     * Lấy đối tượng User từ CustomUserDetails đang đăng nhập.
+     * Trả về null nếu là khách vãng lai (Guest chưa đăng nhập) để phân biệt rõ ràng
+     * giữa tài khoản khách và tài khoản người dùng đã đăng nhập.
      */
     private User resolveUser(CustomUserDetails userDetails) {
         if (userDetails != null && userDetails.getId() != null) {
             return userRepository.findById(userDetails.getId()).orElse(null);
         }
-        return userRepository.findById(DEFAULT_GUEST_USER_ID).orElse(null);
+        return null;
     }
 
     /**
      * GET /vouchers: Trang Kho Voucher công khai.
      * Nhận param ?tab=all | freeship | book | exclusive.
      * Đưa vào Model: danh sách voucher, tab đang chọn, số lượng voucher đã lưu nếu user đã đăng nhập.
-     * Trả về view 'vouchers'.
+     * Phân biệt rõ giữa Khách (Guest) và Người Dùng (User đã đăng nhập).
      */
     @GetMapping("/vouchers")
     public String viewVouchers(
@@ -60,6 +60,7 @@ public class VoucherController {
             Model model) {
 
         User user = resolveUser(userDetails);
+        boolean isLoggedIn = (user != null);
         List<VoucherResponseDTO> allVouchers = voucherService.getAllAvailableVouchers(user);
 
         // Lọc danh sách voucher theo từng tab
@@ -67,19 +68,21 @@ public class VoucherController {
         String normalizedTab = (tab != null) ? tab.trim().toLowerCase() : "all";
 
         switch (normalizedTab) {
+            case "shipping":
             case "freeship":
                 filteredVouchers = allVouchers.stream()
-                        .filter(v -> isFreeshipVoucher(v))
+                        .filter(this::isFreeshipVoucher)
                         .collect(Collectors.toList());
+                normalizedTab = "shipping";
                 break;
             case "book":
                 filteredVouchers = allVouchers.stream()
-                        .filter(v -> isBookVoucher(v))
+                        .filter(this::isBookVoucher)
                         .collect(Collectors.toList());
                 break;
             case "exclusive":
                 filteredVouchers = allVouchers.stream()
-                        .filter(v -> isExclusiveVoucher(v))
+                        .filter(this::isExclusiveVoucher)
                         .collect(Collectors.toList());
                 break;
             case "all":
@@ -99,6 +102,7 @@ public class VoucherController {
         model.addAttribute("allVouchers", allVouchers);
         model.addAttribute("tab", normalizedTab);
         model.addAttribute("savedCount", savedCount);
+        model.addAttribute("isLoggedIn", isLoggedIn);
         model.addAttribute("countAll", countAll);
         model.addAttribute("countShipping", countShipping);
         model.addAttribute("countBook", countBook);
@@ -220,6 +224,7 @@ public class VoucherController {
         User user = resolveUser(userDetails);
         if (user == null) {
             response.put("success", false);
+            response.put("requireLogin", true);
             response.put("message", "Vui lòng đăng nhập để lưu mã giảm giá vào ví cá nhân!");
             return ResponseEntity.ok(response);
         }
