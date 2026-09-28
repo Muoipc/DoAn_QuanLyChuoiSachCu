@@ -111,13 +111,14 @@ public class ProfileController {
     }
 
     /**
-     * Xử lý cập nhật thông tin hồ sơ
+     * Xử lý cập nhật thông tin hồ sơ (Họ tên, Email, Số điện thoại, Avatar)
      */
     @PostMapping("/profile/update")
     @Transactional
     public String updateProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam("fullName") String fullName,
+            @RequestParam(value = "email", required = false) String email,
             @RequestParam("phone") String phone,
             @RequestParam(value = "avatar", required = false) String avatar,
             RedirectAttributes redirectAttributes) {
@@ -132,12 +133,72 @@ public class ProfileController {
         if (user != null) {
             user.setFullName(fullName.trim());
             user.setPhone(phone.trim());
+
+            // Cho phép người dùng tự thay đổi email từ form hồ sơ
+            if (email != null && !email.trim().isEmpty()) {
+                String cleanEmail = email.trim().toLowerCase();
+                if (!cleanEmail.equalsIgnoreCase(user.getEmail())) {
+                    if (!cleanEmail.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                        redirectAttributes.addFlashAttribute("errorMessage", "Địa chỉ email không đúng định dạng hợp lệ!");
+                        return "redirect:/user/account/profile?tab=profile";
+                    }
+                    if (userRepository.existsByEmail(cleanEmail)) {
+                        redirectAttributes.addFlashAttribute("errorMessage", "Email " + cleanEmail + " đã được sử dụng bởi một tài khoản khác!");
+                        return "redirect:/user/account/profile?tab=profile";
+                    }
+                    user.setEmail(cleanEmail);
+                }
+            }
+
             if (avatar != null && !avatar.trim().isEmpty()) {
                 user.setAvatar(avatar.trim());
             }
             userRepository.save(user);
 
             redirectAttributes.addFlashAttribute("successMessage", "Cập nhật hồ sơ cá nhân thành công!");
+        }
+
+        return "redirect:/user/account/profile?tab=profile";
+    }
+
+    /**
+     * Xử lý thay đổi Email riêng biệt từ Modal Cập Nhật Email
+     */
+    @PostMapping("/profile/change-email")
+    @Transactional
+    public String changeEmail(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam("newEmail") String newEmail,
+            RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/user/account/profile";
+        }
+
+        Long userId = resolveUserId(userDetails);
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user != null) {
+            if (newEmail == null || newEmail.trim().isEmpty()) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng nhập địa chỉ email mới!");
+                return "redirect:/user/account/profile?tab=profile";
+            }
+
+            String cleanEmail = newEmail.trim().toLowerCase();
+            if (!cleanEmail.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Địa chỉ email không đúng định dạng hợp lệ!");
+                return "redirect:/user/account/profile?tab=profile";
+            }
+
+            if (!cleanEmail.equalsIgnoreCase(user.getEmail()) && userRepository.existsByEmail(cleanEmail)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Email " + cleanEmail + " đã được sử dụng bởi tài khoản khác!");
+                return "redirect:/user/account/profile?tab=profile";
+            }
+
+            user.setEmail(cleanEmail);
+            userRepository.save(user);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật địa chỉ email mới thành công: " + cleanEmail);
         }
 
         return "redirect:/user/account/profile?tab=profile";

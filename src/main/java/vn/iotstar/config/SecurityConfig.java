@@ -39,12 +39,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.ignoringRequestMatchers(
-                "/api/**", "/ws/**", "/cart/**", "/checkout/**", "/orders/**", 
-                "/reviews/**", "/consignments/**", "/ai-assistant/**", "/help/**", 
-                "/user/**", "/profile/**", "/login", "/register", "/logout",
-                "/vouchers", "/vouchers/**", "/api/vouchers/**"
-            ))
+            // Tắt CSRF để tránh lỗi IllegalStateException (Cannot create a session after response committed)
+            // khi render các trang Thymeleaf kích thước lớn cho khách vãng lai (Guest)
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 // Tài nguyên tĩnh
                 .requestMatchers(

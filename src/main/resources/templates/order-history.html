@@ -527,8 +527,8 @@
                     </a>
 
                     <!-- Nút Hủy đơn nếu đơn còn Mới (NEW) -->
-                    <form th:if="${order.orderStatus.name() == 'NEW'}" th:action="@{'/orders/cancel/' + ${order.orderCode}}" action="/orders/cancel/" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này? Sách sẽ được hoàn trả lại tồn kho chi nhánh.');">
-                        <button type="submit" class="btn-order-action btn-action-danger btn-cancel-order">
+                    <form th:if="${order.orderStatus.name() == 'NEW'}" th:action="@{'/orders/cancel/' + ${order.orderCode}}" action="/orders/cancel/" method="post" style="display:inline;" th:id="'cancelOrderForm_' + ${order.orderCode}">
+                        <button type="button" class="btn-order-action btn-action-danger btn-cancel-order" th:data-order-code="${order.orderCode}" onclick="confirmCancelOrder(this.getAttribute('data-order-code'))">
                             <i class="fa-solid fa-xmark"></i> Hủy Đơn Hàng
                         </button>
                     </form>
@@ -541,7 +541,10 @@
                                     type="button" 
                                     class="btn-order-action btn-action-primary"
                                     th:id="'btnReview_' + ${order.id} + '_' + ${item.book.id}"
-                                    th:onclick="'openReviewModal(' + ${order.id} + ', ' + ${item.book.id} + ', \'' + ${#strings.escapeJavaScript(item.bookTitle)} + '\')'">
+                                    th:data-order-id="${order.id}"
+                                    th:data-book-id="${item.book.id}"
+                                    th:data-book-title="${item.bookTitle}"
+                                    onclick="openReviewModal(this.getAttribute('data-order-id'), this.getAttribute('data-book-id'), this.getAttribute('data-book-title'))">
                                 <i class="fa-solid fa-star"></i> Đánh Giá Sách
                             </button>
                             <!-- Nếu đã đánh giá rồi -->
@@ -750,6 +753,21 @@
                 }
                 console.error(err);
                 showShopeeToast('Đã có lỗi xảy ra khi kết nối máy chủ!', true);
+            });
+        }
+
+        // ================= HỦY ĐƠN HÀNG APPLE LIQUID GLASS =================
+        function confirmCancelOrder(orderCode) {
+            showConfirmDialog({
+                title: 'Hủy Đơn Hàng',
+                message: 'Bạn có chắc chắn muốn hủy đơn hàng "' + orderCode + '"? Sách sẽ được hoàn trả lại tồn kho của chi nhánh.',
+                type: 'danger',
+                confirmText: 'Hủy Đơn',
+                cancelText: 'Giữ Lại',
+                onConfirm: function() {
+                    var form = document.getElementById('cancelOrderForm_' + orderCode);
+                    if (form) form.submit();
+                }
             });
         }
     </script>

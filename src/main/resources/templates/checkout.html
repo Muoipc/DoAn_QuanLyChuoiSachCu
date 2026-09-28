@@ -1185,11 +1185,11 @@
                 if (data.valid) {
                     currentVoucherDiscount = data.discountAmount;
                     document.getElementById('summaryVoucherDiscount').innerText = '-₫' + Number(data.discountAmount).toLocaleString('vi-VN');
-                    alert(data.message || 'Áp dụng mã giảm giá thành công!');
+                    showLiquidToast(data.message || 'Áp dụng mã giảm giá thành công!', 'success');
                 } else {
                     currentVoucherDiscount = 0;
                     document.getElementById('summaryVoucherDiscount').innerText = '-₫0';
-                    alert(data.message || ('Mã voucher "' + code + '" không hợp lệ!'));
+                    showLiquidToast(data.message || ('Mã voucher "' + code + '" không hợp lệ!'), 'warning');
                 }
                 calculateFinalTotal();
             })
@@ -1197,11 +1197,11 @@
                 if (code.includes('20K') || code === 'FREESHIP50K') {
                     currentVoucherDiscount = 20000;
                     document.getElementById('summaryVoucherDiscount').innerText = '-₫20.000';
-                    alert('Áp dụng mã giảm giá 20.000₫ thành công!');
+                    showLiquidToast('Áp dụng mã giảm giá 20.000₫ thành công!', 'success');
                 } else {
                     currentVoucherDiscount = 0;
                     document.getElementById('summaryVoucherDiscount').innerText = '-₫0';
-                    alert('Mã voucher "' + code + '" không tồn tại hoặc đã hết lượt dùng!');
+                    showLiquidToast('Mã voucher "' + code + '" không tồn tại hoặc đã hết lượt dùng!', 'warning');
                 }
                 calculateFinalTotal();
             });

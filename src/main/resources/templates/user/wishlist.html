@@ -204,22 +204,31 @@
 
     <script>
         function removeFromWishlist(bookId) {
-            if (!confirm('Bạn có chắc muốn bỏ cuốn sách này khỏi danh sách yêu thích?')) return;
-            fetch('/api/wishlist/toggle?bookId=' + bookId, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    const card = document.getElementById('wishlist-card-' + bookId);
-                    if (card) card.remove();
-                    if (document.querySelectorAll('.wishlist-book-card').length === 0) {
-                        location.reload();
-                    }
+            showConfirmDialog({
+                title: 'Bỏ Sách Yêu Thích',
+                message: 'Bạn có chắc chắn muốn bỏ cuốn sách này khỏi danh sách yêu thích?',
+                type: 'trash',
+                confirmText: 'Bỏ Yêu Thích',
+                cancelText: 'Giữ Lại',
+                onConfirm: function() {
+                    fetch('/api/wishlist/toggle?bookId=' + bookId, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            showLiquidToast('Đã bỏ sách khỏi danh sách yêu thích!', 'info');
+                            const card = document.getElementById('wishlist-card-' + bookId);
+                            if (card) card.remove();
+                            if (document.querySelectorAll('.wishlist-book-card').length === 0) {
+                                location.reload();
+                            }
+                        }
+                    })
+                    .catch(err => console.error(err));
                 }
-            })
-            .catch(err => console.error(err));
+            });
         }
     </script>
 </body>

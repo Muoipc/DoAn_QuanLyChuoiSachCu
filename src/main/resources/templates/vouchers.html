@@ -747,6 +747,151 @@
                 font-size: 12px;
             }
         }
+
+        /* ================= MODAL XÁC NHẬN ĐĂNG NHẬP APPLE LIQUID GLASS (THAY THẾ CONFIRM DIALOG) ================= */
+        .modal-overlay-shopee {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(45, 24, 15, 0.48);
+            backdrop-filter: blur(14px) saturate(160%);
+            -webkit-backdrop-filter: blur(14px) saturate(160%);
+            z-index: 100020;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+            animation: appleOverlayFade 0.2s ease forwards;
+        }
+        @keyframes appleOverlayFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .auth-confirm-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(36px) saturate(200%) brightness(102%);
+            -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(102%);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 24px 64px -12px rgba(45, 24, 15, 0.28), 0 8px 24px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 430px;
+            padding: 36px 30px 28px;
+            text-align: center;
+            position: relative;
+            transform: scale(0.95);
+            animation: appleModalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            box-sizing: border-box;
+        }
+        @keyframes appleModalPop {
+            to { transform: scale(1); }
+        }
+        .btn-close-auth-modal {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            background: rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 20px;
+            line-height: 1;
+            color: #78716C;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+        .btn-close-auth-modal:hover {
+            background: rgba(0, 0, 0, 0.08);
+            color: #1C1917;
+        }
+        .auth-modal-icon-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, rgba(238, 77, 45, 0.12) 0%, rgba(255, 107, 74, 0.24) 100%);
+            border: 2px solid rgba(238, 77, 45, 0.28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #ee4d2d;
+            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.18);
+        }
+        .auth-modal-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: #1C1917;
+            margin: 0 0 10px;
+            letter-spacing: -0.2px;
+        }
+        .auth-modal-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #57534E;
+            margin: 0 0 26px;
+            padding: 0 8px;
+        }
+        .auth-modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-auth-cancel {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 1.5px solid #E7DFD5;
+            background: #FAF8F5;
+            color: #57534E;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-auth-cancel:hover {
+            background: #F0ECE4;
+            color: #1C1917;
+            border-color: #D6CABA;
+        }
+        .btn-auth-cancel:active {
+            transform: scale(0.97);
+        }
+        .btn-auth-confirm {
+            flex: 1.35;
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%);
+            color: #ffffff !important;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(238, 77, 45, 0.35);
+            transition: all 0.15s ease;
+        }
+        .btn-auth-confirm:hover {
+            background: linear-gradient(135deg, #d83d1e 0%, #f44336 100%);
+            box-shadow: 0 6px 20px rgba(238, 77, 45, 0.45);
+            transform: translateY(-1px);
+            color: #ffffff !important;
+            text-decoration: none;
+        }
+        .btn-auth-confirm:active {
+            transform: scale(0.97);
+        }
     </style>
 </head>
 <body>
@@ -1045,10 +1190,60 @@
         </div>
     </footer>
 
+    <!-- MODAL XÁC NHẬN ĐĂNG NHẬP APPLE LIQUID GLASS (THAY THẾ CONFIRM DIALOG MẶC ĐỊNH) -->
+    <div class="modal-overlay-shopee" id="authConfirmModal" style="display:none;" onclick="if(event.target===this) closeAuthConfirmModal();">
+        <div class="auth-confirm-card">
+            <!-- Nút đóng góc phải -->
+            <button type="button" class="btn-close-auth-modal" onclick="closeAuthConfirmModal()" aria-label="Đóng">&times;</button>
+            
+            <!-- Icon ổ khóa / voucher trung tâm -->
+            <div class="auth-modal-icon-circle">
+                <i class="fa-solid fa-lock" id="authModalIcon"></i>
+            </div>
+            
+            <!-- Tiêu đề -->
+            <h3 class="auth-modal-title" id="authModalTitle">Yêu Cầu Đăng Nhập</h3>
+            
+            <!-- Mô tả -->
+            <p class="auth-modal-desc" id="authModalDesc">
+                Vui lòng đăng nhập tài khoản để lưu mã voucher vào ví cá nhân và tự động áp dụng khi đặt mua sách cũ!
+            </p>
+            
+            <!-- Cụm nút hành động chuẩn Shopee x Apple Liquid Glass -->
+            <div class="auth-modal-actions">
+                <button type="button" class="btn-auth-cancel" onclick="closeAuthConfirmModal()">
+                    Để Sau
+                </button>
+                <a th:href="@{/login(redirectURL='/vouchers')}" id="authModalConfirmBtn" class="btn-auth-confirm">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Đăng Nhập Ngay</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT XỬ LÝ KHO VOUCHER & TOAST LIQUID GLASS -->
     <script th:inline="javascript">
         /* Kiểm tra trạng thái đăng nhập từ Spring Security / Thymeleaf */
         const IS_LOGGED_IN = /*[[${isLoggedIn}]]*/ false;
+
+        // Modal Xác Nhận Đăng Nhập Apple Liquid Glass
+        function showAuthConfirmModal(title, desc, confirmUrl) {
+            const modal = document.getElementById('authConfirmModal');
+            if (!modal) return;
+            if (title) document.getElementById('authModalTitle').innerText = title;
+            if (desc) document.getElementById('authModalDesc').innerText = desc;
+            if (confirmUrl) {
+                const btn = document.getElementById('authModalConfirmBtn');
+                btn.setAttribute('href', confirmUrl);
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeAuthConfirmModal() {
+            const modal = document.getElementById('authConfirmModal');
+            if (modal) modal.style.display = 'none';
+        }
 
         // 1. Phân loại Tab Voucher mượt mà không reload
         function switchVoucherTab(category, btnElement) {
@@ -1096,9 +1291,11 @@
             }
 
             if (!IS_LOGGED_IN) {
-                if (confirm('Vui lòng đăng nhập tài khoản để lưu mã voucher vào ví cá nhân!\n\nBạn có muốn chuyển sang trang Đăng Nhập ngay bây giờ không?')) {
-                    window.location.href = '/login?redirect=/vouchers';
-                }
+                showAuthConfirmModal(
+                    'Đăng Nhập Để Lưu Mã',
+                    'Vui lòng đăng nhập tài khoản để lưu mã voucher vào ví cá nhân và tự động áp dụng khi đặt mua sách cũ!',
+                    '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search)
+                );
                 return;
             }
 
@@ -1127,9 +1324,11 @@
             if (!code) return;
 
             if (!IS_LOGGED_IN) {
-                if (confirm('Vui lòng đăng nhập tài khoản để lưu mã voucher vào ví cá nhân!\n\nBạn có muốn chuyển sang trang Đăng Nhập ngay bây giờ không?')) {
-                    window.location.href = '/login?redirect=/vouchers';
-                }
+                showAuthConfirmModal(
+                    'Đăng Nhập Để Lưu Mã',
+                    'Vui lòng đăng nhập tài khoản để lưu mã voucher "' + code + '" vào ví cá nhân và nhận ưu đãi khi thanh toán!',
+                    '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search)
+                );
                 return;
             }
 
@@ -1161,11 +1360,11 @@
             .then(res => res.json())
             .then(data => {
                 if (data.requireLogin) {
-                    if (confirm(data.message + '\n\nBạn có muốn chuyển sang trang Đăng Nhập ngay bây giờ không?')) {
-                        window.location.href = '/login?redirect=/vouchers';
-                    } else {
-                        showLiquidToast(data.message, 'warning');
-                    }
+                    showAuthConfirmModal(
+                        'Đăng Nhập Để Tiếp Tục',
+                        data.message || 'Vui lòng đăng nhập tài khoản để lưu mã giảm giá vào ví cá nhân!',
+                        '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search)
+                    );
                     callback(false, data.message);
                     return;
                 }

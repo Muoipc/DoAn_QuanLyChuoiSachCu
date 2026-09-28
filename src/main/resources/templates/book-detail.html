@@ -56,13 +56,14 @@
         .detail-main-card,
         .store-stock-card,
         .review-card,
-        .related-books-section {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(28px) saturate(190%) brightness(103%);
-            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+        .related-books-section,
+        .product-specs-section {
+            background: rgba(255, 255, 255, 0.45) !important;
+            backdrop-filter: blur(36px) saturate(210%) brightness(102%) !important;
+            -webkit-backdrop-filter: blur(36px) saturate(210%) brightness(102%) !important;
             border-radius: 20px;
-            border: 1.5px solid rgba(255, 255, 255, 0.92);
-            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
+            border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+            box-shadow: 0 16px 40px -10px rgba(45, 24, 15, 0.05), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95);
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -167,6 +168,14 @@
             color: white;
             font-size: 12px;
             cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.15s ease;
+        }
+        .share-icon-circle:hover {
+            opacity: 0.85;
+            transform: scale(1.08);
+        }
+        .share-icon-circle:active {
+            transform: scale(0.92);
         }
         .like-group {
             display: flex;
@@ -515,7 +524,7 @@
             gap: 12px;
             margin-top: 18px;
             padding-top: 18px;
-            border-top: 1px solid rgba(240, 234, 225, 0.85);
+            border-top: 1px solid rgba(231, 223, 213, 0.45);
             width: 100%;
         }
 
@@ -525,7 +534,9 @@
             height: 48px !important;
             min-width: 48px !important;
             border-radius: 12px !important;
-            background: rgba(238, 77, 45, 0.08) !important;
+            background: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(24px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
             border: 1.5px solid rgba(238, 77, 45, 0.35) !important;
             color: #ee4d2d !important;
             font-size: 19px !important;
@@ -535,11 +546,11 @@
             flex-shrink: 0 !important;
             cursor: pointer !important;
             text-decoration: none !important;
-            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.08) !important;
+            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.75) !important;
             transition: background-color 0.2s ease, border-color 0.2s ease !important;
         }
         .btn-action-ai:hover, .btn-ai-consult-mini:hover {
-            background: rgba(238, 77, 45, 0.16) !important;
+            background: rgba(238, 77, 45, 0.1) !important;
             border-color: #ee4d2d !important;
             transform: none !important;
         }
@@ -552,8 +563,10 @@
             height: 48px !important;
             flex: 1 !important;
             min-width: 160px;
-            background: rgba(238, 77, 45, 0.08) !important;
-            border: 1.5px solid rgba(238, 77, 45, 0.45) !important;
+            background: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(24px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+            border: 1.5px solid rgba(238, 77, 45, 0.38) !important;
             border-radius: 12px !important;
             color: #ee4d2d !important;
             font-size: 14.5px !important;
@@ -564,11 +577,11 @@
             justify-content: center !important;
             gap: 8px !important;
             white-space: nowrap !important;
-            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.08) !important;
+            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.03), inset 0 1px 1.5px rgba(255, 255, 255, 0.75) !important;
             transition: background-color 0.2s ease, border-color 0.2s ease !important;
         }
         .btn-action-cart:hover, .btn-add-cart-shopee:hover, .btn-add-cart:hover {
-            background: rgba(238, 77, 45, 0.16) !important;
+            background: rgba(238, 77, 45, 0.1) !important;
             border-color: #ee4d2d !important;
             transform: none !important;
         }
@@ -581,8 +594,10 @@
             height: 48px !important;
             flex: 1.25 !important;
             min-width: 160px;
-            background: linear-gradient(135deg, #ff5722 0%, #ee4d2d 100%) !important;
-            border: 1.5px solid #ee4d2d !important;
+            background: linear-gradient(135deg, rgba(255, 87, 34, 0.82) 0%, rgba(238, 77, 45, 0.82) 100%) !important;
+            backdrop-filter: blur(24px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.35) !important;
             border-radius: 12px !important;
             color: #ffffff !important;
             font-size: 14.5px !important;
@@ -592,15 +607,15 @@
             align-items: center !important;
             justify-content: center !important;
             white-space: nowrap !important;
-            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.35) !important;
+            box-shadow: 0 6px 20px rgba(238, 77, 45, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
             transition: background 0.2s ease, box-shadow 0.2s ease !important;
             letter-spacing: 0.3px;
         }
         .btn-action-buy:hover, .btn-buy-now-shopee:hover, .btn-buy-now:hover {
-            background: linear-gradient(135deg, #f4511e 0%, #d73211 100%) !important;
+            background: linear-gradient(135deg, rgba(244, 81, 30, 0.95) 0%, rgba(215, 50, 17, 0.95) 100%) !important;
             border-color: #d73211 !important;
             transform: none !important;
-            box-shadow: 0 8px 22px rgba(238, 77, 45, 0.45) !important;
+            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.42) !important;
         }
         .btn-action-buy:active, .btn-buy-now-shopee:active, .btn-buy-now:active {
             transform: scale(0.96) !important;
@@ -628,44 +643,46 @@
         .section-header-title {
             background: rgba(0, 0, 0, 0.02);
             color: rgba(0, 0, 0, 0.87);
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 14px 18px;
+            padding: 14px 16px;
             border-radius: 4px;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
             border: none;
         }
         .specs-table-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            margin-bottom: 34px;
-            padding: 0 8px;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding: 0 16px;
         }
         .specs-row {
             display: flex;
             align-items: baseline;
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.6;
         }
         .specs-label {
-            width: 180px;
-            min-width: 180px;
-            color: rgba(0, 0, 0, 0.45);
+            width: 140px;
+            min-width: 140px;
+            color: rgba(0, 0, 0, 0.4);
             font-weight: 400;
+            font-size: 13px;
         }
         .specs-value {
             color: rgba(0, 0, 0, 0.87);
-            font-weight: 500;
+            font-weight: 400;
+            font-size: 13px;
             flex: 1;
         }
         .specs-breadcrumb-link {
             color: #05a;
+            font-size: 13px;
             text-decoration: none;
             transition: color 0.15s ease;
         }
@@ -676,64 +693,41 @@
         .specs-breadcrumb-sep {
             margin: 0 6px;
             color: rgba(0, 0, 0, 0.35);
-            font-size: 12px;
+            font-size: 11px;
         }
 
-        /* Mô tả sản phẩm phong cách Shopee */
+        /* Mô tả sản phẩm phong cách Shopee tối giản, chữ nhỏ mảnh */
         .book-description-content {
-            font-size: 14.5px;
-            line-height: 1.85;
-            color: rgba(0, 0, 0, 0.82);
-            padding: 0 8px;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.75;
+            color: rgba(0, 0, 0, 0.8);
+            padding: 0 16px;
         }
         .desc-block {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
         .desc-heading {
-            font-size: 14.5px;
-            font-weight: 700;
-            color: #1C1917;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.87);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
         }
         .desc-text {
-            margin: 0 0 10px 0;
+            margin: 0 0 12px 0;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.7;
             text-align: justify;
             color: rgba(0, 0, 0, 0.8);
         }
-        .desc-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-        .desc-list li {
-            position: relative;
-            padding-left: 20px;
+        .desc-line {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.75;
             color: rgba(0, 0, 0, 0.8);
-        }
-        .desc-list li::before {
-            content: "•";
-            position: absolute;
-            left: 6px;
-            color: #ee4d2d;
-            font-weight: 800;
-            font-size: 17px;
-            line-height: 1.2;
-        }
-        .desc-note-box {
-            background: #fffbf8;
-            border-left: 4px solid #ee4d2d;
-            padding: 14px 18px;
-            border-radius: 0 8px 8px 0;
-            margin-top: 20px;
-            color: #78716C;
-            font-size: 13.5px;
-            line-height: 1.6;
         }
 
         /* ================= 5. ĐÁNH GIÁ SÁCH CHUẨN SHOPEE ================= */
@@ -1034,16 +1028,16 @@
 
                 <!-- BĂNG CHUYỀN 5 ẢNH THU NHỎ (SLIDER THUMBNAILS) -->
                 <div class="gallery-thumbs-carousel">
-                    <div class="gallery-thumb-item active" th:onclick="'changeCover(this, \'' + ${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'} + '\')'">
+                    <div class="gallery-thumb-item active" th:data-img="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" onclick="changeCover(this, this.getAttribute('data-img'))">
                         <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" alt="Bìa trước">
                     </div>
                     <th:block th:if="${book.images != null}" th:each="img, stat : ${book.images}">
-                        <div class="gallery-thumb-item" th:if="${stat.index < 5 and img.imageUrl != book.primaryImageUrl}" th:onclick="'changeCover(this, \'' + ${img.imageUrl != null ? img.imageUrl : '/images/books/book_1.jpg'} + '\')'">
+                        <div class="gallery-thumb-item" th:if="${stat.index < 5 and img.imageUrl != book.primaryImageUrl}" th:data-img="${img.imageUrl != null ? img.imageUrl : '/images/books/book_1.jpg'}" onclick="changeCover(this, this.getAttribute('data-img'))">
                             <img th:src="${img.imageUrl != null ? img.imageUrl : '/images/books/book_1.jpg'}" th:alt="${img.angleDescription != null ? img.angleDescription : 'Góc chụp'}">
                         </div>
                     </th:block>
                     <!-- Fallback nếu ít hơn 5 ảnh -->
-                    <div class="gallery-thumb-item" th:if="${book.images == null or book.images.size() < 2}" th:onclick="'changeCover(this, \'' + ${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'} + '\')'">
+                    <div class="gallery-thumb-item" th:if="${book.images == null or book.images.size() < 2}" th:data-img="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" onclick="changeCover(this, this.getAttribute('data-img'))">
                         <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" alt="Gáy sách">
                     </div>
                 </div>
@@ -1051,11 +1045,11 @@
                 <!-- HÀNG TƯƠNG TÁC: CHIA SẺ VÀ ĐÃ THÍCH (GIỐNG ẢNH SHOPEE) -->
                 <div class="gallery-social-row">
                     <div class="share-group">
-                        <span style="color:#78716C;">Chia sẻ:</span>
-                        <div class="share-icon-circle" style="background:#0084ff;" title="Messenger"><i class="fa-brands fa-facebook-messenger"></i></div>
-                        <div class="share-icon-circle" style="background:#1877f2;" title="Facebook"><i class="fa-brands fa-facebook-f"></i></div>
-                        <div class="share-icon-circle" style="background:#e60023;" title="Pinterest"><i class="fa-brands fa-pinterest"></i></div>
-                        <div class="share-icon-circle" style="background:#000000;" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></div>
+                        <span style="color:#78716C; font-size:13px;">Chia sẻ:</span>
+                        <div class="share-icon-circle" style="background:#0084ff;" title="Chia sẻ qua Messenger" onclick="shareSocial('messenger')"><i class="fa-brands fa-facebook-messenger"></i></div>
+                        <div class="share-icon-circle" style="background:#1877f2;" title="Chia sẻ lên Facebook" onclick="shareSocial('facebook')"><i class="fa-brands fa-facebook-f"></i></div>
+                        <div class="share-icon-circle" style="background:#e60023;" title="Ghim lên Pinterest" onclick="shareSocial('pinterest')"><i class="fa-brands fa-pinterest"></i></div>
+                        <div class="share-icon-circle" style="background:#000000;" title="Chia sẻ lên X (Twitter)" onclick="shareSocial('twitter')"><i class="fa-brands fa-x-twitter"></i></div>
                     </div>
 
                     <div class="like-group" th:onclick="'toggleLikeBook(' + ${book.id} + ')'" style="cursor:pointer;" id="bookLikeBtn">
@@ -1213,7 +1207,7 @@
                 </div>
 
                 <!-- THUỘC TÍNH: SỐ LƯỢNG (SHOPEE STEPPER) -->
-                <form th:action="@{/cart/add}" action="/cart/add" method="post" id="cartForm">
+                <form action="/cart/add" method="post" id="cartForm">
                     <input type="hidden" name="bookId" th:value="${book.id}">
                     <input type="hidden" name="action" id="cartAction" value="add">
                     <input type="hidden" name="quantity" id="hiddenQuantity" value="1">
@@ -1295,36 +1289,15 @@
                 </div>
 
                 <div class="specs-row">
-                    <span class="specs-label">Mã ISBN</span>
-                    <span class="specs-value" th:text="${book.isbn != null ? book.isbn : '978-604-58-1234'}">978-604-58-1234</span>
-                </div>
-
-                <div class="specs-row">
-                    <span class="specs-label">Phiên Bản</span>
-                    <span class="specs-value">Sách Cũ Nguyên Bản (Đã làm sạch & Khử khuẩn tia UV)</span>
-                </div>
-
-                <div class="specs-row">
-                    <span class="specs-label">Loại Bìa</span>
-                    <span class="specs-value">Bìa mềm nguyên vẹn</span>
-                </div>
-
-                <div class="specs-row">
-                    <span class="specs-label">Ngôn Ngữ</span>
-                    <span class="specs-value">Tiếng Việt</span>
-                </div>
-
-                <div class="specs-row">
-                    <span class="specs-label">Tình Trạng Kiểm Định</span>
-                    <span class="specs-value" style="color:#007a57; font-weight:700;">
-                        <i class="fa-solid fa-circle-check me-1"></i>
-                        <span th:text="${book.conditionPercent} + '% Mới (Đã qua thẩm định 4 bước độc quyền)'">95% Mới (Đã qua thẩm định 4 bước)</span>
+                    <span class="specs-label">Tình Trạng Sách</span>
+                    <span class="specs-value" style="color:#007a57;" th:text="${book.conditionPercent} + '% (Nguyên bản, đủ trang)'">
+                        95% (Nguyên bản, đủ trang)
                     </span>
                 </div>
 
                 <div class="specs-row">
-                    <span class="specs-label">Kho Hàng Chuỗi</span>
-                    <span class="specs-value" th:text="${totalStock} + ' cuốn có sẵn tại hệ thống 5 chi nhánh TP.HCM'">15 cuốn có sẵn</span>
+                    <span class="specs-label">Kho Hàng</span>
+                    <span class="specs-value" th:text="${totalStock}">15</span>
                 </div>
 
                 <div class="specs-row">
@@ -1335,57 +1308,22 @@
 
             <div class="section-header-title">MÔ TẢ SẢN PHẨM</div>
             <div class="book-description-content">
+                <p class="desc-text" th:text="${book.description != null ? book.description : 'Sách cũ nguyên bản được chọn lọc kỹ càng từ nguồn bạn đọc và nhà sưu tầm, nội dung trọn vẹn.'}">
+                    Sách cũ nguyên bản...
+                </p>
+
                 <div class="desc-block">
-                    <div class="desc-heading">
-                        <i class="fa-solid fa-book-open" style="color:#ee4d2d;"></i>
-                        <span>GIỚI THIỆU &amp; TÓM TẮT TÁC PHẨM</span>
-                    </div>
-                    <p class="desc-text" th:text="${book.description != null ? book.description : 'Tác phẩm sách cũ nguyên bản, được chọn lọc kỹ càng từ nguồn bạn đọc và nhà sưu tầm. Nội dung trọn vẹn, mang lại những giá trị tri thức vượt thời gian.'}">
-                        Tác phẩm sách cũ nguyên bản...
-                    </p>
+                    <div class="desc-heading">THÔNG TIN SẢN PHẨM:</div>
+                    <div class="desc-line">- Tình trạng: Sách cũ nguyên bản, ruột sạch đẹp, không gạch xóa, đủ trang.</div>
+                    <div class="desc-line">- Đã làm sạch bụi bẩn và khử khuẩn tia UV trước khi đóng gói.</div>
                 </div>
 
                 <div class="desc-block">
-                    <div class="desc-heading">
-                        <i class="fa-solid fa-clipboard-check" style="color:#ee4d2d;"></i>
-                        <span>TIÊU CHUẨN THẨM ĐỊNH SÁCH CŨ TẠI HỆ THỐNG</span>
-                    </div>
-                    <ul class="desc-list">
-                        <li><strong>Độ mới thực tế:</strong> Cam kết đạt chuẩn từ <span th:text="${book.conditionPercent} + '%'">95%</span> trở lên, trùng khớp 100% với hình ảnh chụp thực tế tại shop.</li>
-                        <li><strong>Bìa trước &amp; bìa sau:</strong> Bìa bóng đẹp, không gãy góc nặng, không rách mép, không ố nước.</li>
-                        <li><strong>Gáy sách:</strong> Keo chỉ chắc chắn, gáy vuông vức, các trang giấy được giữ cố định nguyên vẹn.</li>
-                        <li><strong>Ruột sách:</strong> Đủ 100% số trang, giấy sạch sẽ, không quăn góc, không gạch xóa hay viết vẽ bậy.</li>
-                        <li><strong>Vệ sinh &amp; bảo quản:</strong> Sách đã được làm sạch bụi, khử khuẩn bằng công nghệ tia UV và bọc màng co nhiệt bảo vệ trước khi xuất kho.</li>
-                    </ul>
-                </div>
-
-                <div class="desc-block">
-                    <div class="desc-heading">
-                        <i class="fa-solid fa-shield-halved" style="color:#ee4d2d;"></i>
-                        <span>CHÍNH SÁCH BẢO HÀNH &amp; QUYỀN LỢI AN TÂM (SHOPEE AN TÂM)</span>
-                    </div>
-                    <ul class="desc-list">
-                        <li><strong>Cam kết sách thật:</strong> 100% sách xuất bản chính thống, hoàn tiền gấp 3 lần nếu phát hiện sách photo lậu.</li>
-                        <li><strong>Đồng kiểm khi nhận hàng:</strong> Khách hàng được quyền kiểm tra hàng cùng nhân viên giao hàng trước khi thanh toán COD.</li>
-                        <li><strong>3 ngày đổi trả miễn phí:</strong> Đổi trả hoặc hoàn tiền 100% không mất phí nếu sách không đúng như mô tả thẩm định.</li>
-                        <li><strong>Xem sách trực tiếp:</strong> Hỗ trợ giữ sách và ghé đọc thử tại 5 chi nhánh TP.HCM (Thủ Đức, Q.1, Làng ĐHQG, Phú Nhuận, Q.5).</li>
-                    </ul>
-                </div>
-
-                <div class="desc-block">
-                    <div class="desc-heading">
-                        <i class="fa-solid fa-truck-fast" style="color:#ee4d2d;"></i>
-                        <span>CHÍNH SÁCH VẬN CHUYỂN &amp; GIAO HÀNG</span>
-                    </div>
-                    <ul class="desc-list">
-                        <li><strong>Giao hàng nhanh nội thành TP.HCM:</strong> Nhận sách trong 2h hoặc trong ngày theo nhu cầu.</li>
-                        <li><strong>Giao hàng toàn quốc:</strong> 2 - 3 ngày làm việc qua đối tác vận chuyển chuyên nghiệp.</li>
-                        <li><strong>Ưu đãi Freeship:</strong> Miễn phí vận chuyển cho mọi đơn hàng từ 150.000₫ hoặc áp dụng mã Freeship từ Kho Voucher.</li>
-                    </ul>
-                </div>
-
-                <div class="desc-block desc-note-box">
-                    💡 <em><strong>Lưu ý bạn đọc:</strong> Do là sách cũ đã qua sử dụng, một số ấn bản có thể có dấu ấn thời gian nhẹ (ngả vàng tự nhiên theo năm xuất bản). Đây là nét đặc trưng mộc mạc của sách cũ nhưng trải nghiệm đọc và giá trị nội dung luôn được đảm bảo trọn vẹn nhất!</em>
+                    <div class="desc-heading">CAM KẾT CỦA SHOP:</div>
+                    <div class="desc-line">- 100% sách thật chính thống, nguồn gốc rõ ràng.</div>
+                    <div class="desc-line">- Cho phép đồng kiểm tra hàng cùng shipper trước khi nhận.</div>
+                    <div class="desc-line">- Đổi trả miễn phí trong 3 ngày nếu sách không đúng mô tả.</div>
+                    <div class="desc-line">- Có sẵn tại chuỗi 5 cửa hàng tại TP.HCM, đóng gói cẩn thận giao nhanh.</div>
                 </div>
             </div>
         </section>
@@ -1560,6 +1498,30 @@
 
     <!-- SCRIPT TƯƠNG TÁC CHUẨN SHOPEE -->
     <script>
+        function shareSocial(network) {
+            var url = window.location.href;
+            var title = document.title;
+            var imgEl = document.getElementById('mainCoverImg') || document.querySelector('.gallery-main-img img');
+            var img = imgEl ? imgEl.src : '';
+
+            if (network === 'facebook') {
+                window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), 'fbShare', 'width=640,height=480,menubar=no,toolbar=no');
+            } else if (network === 'messenger') {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url).then(function() {
+                        if (typeof showLiquidToast === 'function') {
+                            showLiquidToast('Đã sao chép liên kết sách để gửi qua Messenger!', 'success');
+                        }
+                    });
+                }
+                window.open('https://www.messenger.com/t/', '_blank');
+            } else if (network === 'pinterest') {
+                window.open('https://pinterest.com/pin/create/button/?url=' + encodeURIComponent(url) + '&description=' + encodeURIComponent(title) + '&media=' + encodeURIComponent(img), 'pinShare', 'width=750,height=600');
+            } else if (network === 'twitter') {
+                window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent('Xem cuốn sách cũ này tại Chuỗi Cửa Hàng Sách Cũ TP.HCM: ' + title), 'tweetShare', 'width=600,height=450');
+            }
+        }
+
         function changeCover(thumbEl, newSrc) {
             document.getElementById('mainCoverImg').src = newSrc;
             document.querySelectorAll('.gallery-thumb-item').forEach(el => el.classList.remove('active'));
@@ -1574,9 +1536,14 @@
             .then(res => res.json())
             .then(data => {
                 if (data.requireLogin) {
-                    if (confirm(data.message + '\nBạn có muốn chuyển đến trang Đăng nhập không?')) {
-                        window.location.href = '/login';
-                    }
+                    showConfirmDialog({
+                        title: 'Yêu Cầu Đăng Nhập',
+                        message: data.message || 'Vui lòng đăng nhập để lưu sách vào danh sách yêu thích!',
+                        type: 'auth',
+                        confirmText: 'Đăng Nhập Ngay',
+                        cancelText: 'Để Sau',
+                        confirmUrl: '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search)
+                    });
                     return;
                 }
                 if (data.success) {

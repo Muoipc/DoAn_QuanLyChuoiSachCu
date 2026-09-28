@@ -317,8 +317,8 @@
                         </form>
 
                         <!-- Nút Hủy nếu còn PENDING -->
-                        <form th:if="${c.status.name() == 'PENDING'}" th:attr="action='/consignments/' + ${c.id} + '/cancel'" method="post" onsubmit="return confirm('Bạn có chắc muốn hủy phiếu ký gửi này?');">
-                            <button type="submit" class="btn-action-sm btn-cancel-req">
+                        <form th:if="${c.status.name() == 'PENDING'}" th:action="'/consignments/' + ${c.id} + '/cancel'" method="post" th:id="'cancelConsignmentForm_' + ${c.id}">
+                            <button type="button" class="btn-action-sm btn-cancel-req" th:data-id="${c.id}" onclick="confirmCancelConsignment(this.getAttribute('data-id'))">
                                 <i class="fa-solid fa-trash-can me-1"></i> Hủy Phiếu
                             </button>
                         </form>
@@ -344,6 +344,21 @@
             <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
         </div>
     </footer>
+    <script>
+        function confirmCancelConsignment(id) {
+            showConfirmDialog({
+                title: 'Hủy Phiếu Ký Gửi',
+                message: 'Bạn có chắc chắn muốn hủy phiếu ký gửi #' + id + ' này không?',
+                type: 'danger',
+                confirmText: 'Hủy Phiếu',
+                cancelText: 'Giữ Lại',
+                onConfirm: function() {
+                    var form = document.getElementById('cancelConsignmentForm_' + id);
+                    if (form) form.submit();
+                }
+            });
+        }
+    </script>
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>
 </body>
