@@ -604,19 +604,20 @@
         .shopee-search-bar {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(24px) saturate(190%) brightness(103%);
-            -webkit-backdrop-filter: blur(24px) saturate(190%) brightness(103%);
+            background: rgba(255, 255, 255, 0.52) !important;
+            backdrop-filter: blur(28px) saturate(200%) brightness(102%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(200%) brightness(102%) !important;
             border-radius: 28px;
             padding: 4px 6px 4px 18px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
-            border: 1.5px solid rgba(255, 255, 255, 0.92);
-            transition: all 0.2s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), inset 0 1.5px 2px rgba(255, 255, 255, 0.95);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            transition: all 0.25s var(--spring-ease);
         }
 
         .shopee-search-bar:focus-within {
-            box-shadow: 0 4px 20px rgba(140, 74, 39, 0.25);
-            border-color: #8C4A27;
+            background: rgba(255, 255, 255, 0.68) !important;
+            box-shadow: 0 8px 28px rgba(140, 74, 39, 0.2), inset 0 1.5px 2px rgba(255, 255, 255, 0.98);
+            border-color: rgba(140, 74, 39, 0.45);
         }
 
         .shopee-search-bar input {
@@ -634,9 +635,11 @@
         }
 
         .btn-search-shopee {
-            background: #8C4A27;
+            background: linear-gradient(135deg, rgba(140, 74, 39, 0.75) 0%, rgba(115, 54, 21, 0.78) 100%) !important;
+            backdrop-filter: blur(20px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
             color: #ffffff;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.35) !important;
             border-radius: 22px;
             padding: 10px 24px;
             font-size: 14px;
@@ -645,12 +648,14 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: background 0.15s ease, transform 0.1s ease;
+            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+            transition: all 0.2s var(--spring-ease);
         }
 
         .btn-search-shopee:hover {
-            background: #733615;
+            background: linear-gradient(135deg, rgba(140, 74, 39, 0.88) 0%, rgba(115, 54, 21, 0.9) 100%) !important;
             transform: scale(1.02);
+            box-shadow: 0 6px 18px rgba(140, 74, 39, 0.3), inset 0 1px 1.5px rgba(255, 255, 255, 0.5) !important;
         }
 
         /* Từ khóa tìm kiếm hot kiểu Shopee - Hiệu ứng kính mờ Apple Liquid Glass */
@@ -818,12 +823,6 @@
         <div class="container-shopee topbar-content">
             <div class="topbar-nav">
                 <a th:href="@{/consignments}"><i class="fa-solid fa-recycle me-1" style="color:#10b981;"></i> Ký Gửi Sách Cũ</a>
-                <span class="topbar-divider"></span>
-                <span style="display:inline-flex; align-items:center; gap:6px;">
-                    Kết Nối
-                    <a href="https://facebook.com" target="_blank" style="color:inherit;" title="Facebook"><i class="fa-brands fa-facebook" style="font-size:14px;"></i></a>
-                    <a href="https://instagram.com" target="_blank" style="color:inherit;" title="Instagram"><i class="fa-brands fa-instagram" style="font-size:14px;"></i></a>
-                </span>
                 <span class="topbar-divider"></span>
                 <a href="javascript:void(0)" onclick="openStoreModal()"><i class="fa-solid fa-store me-1" style="color:#8C4A27;"></i> 5 Cửa Hàng TP.HCM</a>
             </div>

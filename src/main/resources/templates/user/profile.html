@@ -685,7 +685,7 @@
                 <!-- DANH SÁCH ĐỊA CHỈ -->
                 <div th:each="addr : ${addresses}" class="address-item-card">
                     <div>
-                        <div style="font-size:15px; font-weight:800; color:#1C1917; display:flex; align-items:center;">
+                        <div style="font-size:15px; font-weight:700; color:#1C1917; display:flex; align-items:center;">
                             <span th:text="${addr.receiverName}">Nguyễn Song Hoàng Phúc</span>
                             <span class="topbar-divider" style="margin: 0 10px;"></span>
                             <span style="font-weight:400; color:#78716C;" th:text="${addr.phone}">0934567890</span>
@@ -700,7 +700,36 @@
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-                        <span class="btn-link-action" style="font-size:13px;">Cập nhật</span>
+                        <div style="display:flex; gap:12px; align-items:center;">
+                            <button type="button" 
+                                    class="btn-link-action" 
+                                    style="border:none; background:none; cursor:pointer; color:#05a; font-size:13px; font-weight:500;"
+                                    th:data-id="${addr.id}"
+                                    th:data-name="${addr.receiverName}"
+                                    th:data-phone="${addr.phone}"
+                                    th:data-province="${addr.province}"
+                                    th:data-district="${addr.district}"
+                                    th:data-ward="${addr.ward}"
+                                    th:data-street="${addr.streetAddress}"
+                                    th:data-default="${addr.isDefault}"
+                                    onclick="openEditAddressModal(this)">
+                                Cập nhật
+                            </button>
+                            <form th:unless="${addr.isDefault}" th:action="@{'/user/account/address/delete/' + ${addr.id}}" method="post" style="display:inline;" th:id="'deleteAddrForm_' + ${addr.id}">
+                                <button type="button" 
+                                        style="border:none; background:none; cursor:pointer; color:#dc2626; font-size:13px; font-weight:500;"
+                                        th:data-id="${addr.id}"
+                                        onclick="confirmDeleteAddress(this.getAttribute('data-id'))">
+                                    Xóa
+                                </button>
+                            </form>
+                        </div>
+                        <form th:unless="${addr.isDefault}" th:action="@{'/user/account/address/set-default/' + ${addr.id}}" method="post">
+                            <button type="submit" 
+                                    style="padding:4px 10px; border:1px solid #d6d3d1; background:#fff; border-radius:4px; font-size:12px; color:#57534E; cursor:pointer;">
+                                Thiết lập mặc định
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -771,6 +800,65 @@
         </div>
     </div>
 
+    <!-- MODAL CẬP NHẬT ĐỊA CHỈ APPLE LIQUID GLASS -->
+    <div id="editAddressModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; background:rgba(0,0,0,0.45); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); align-items:center; justify-content:center;">
+        <div style="background:rgba(255,255,255,0.92); backdrop-filter:blur(36px) saturate(200%); -webkit-backdrop-filter:blur(36px) saturate(200%); border-radius:24px; border:1.5px solid rgba(255,255,255,0.95); box-shadow:0 24px 60px rgba(0,0,0,0.2); max-width:520px; width:90%; padding:28px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                <h3 style="font-size:18px; font-weight:700; color:#1C1917; margin:0; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-location-dot" style="color:#ee4d2d;"></i> Cập Nhật Địa Chỉ Nhận Hàng
+                </h3>
+                <button type="button" onclick="closeEditAddressModal()" style="border:none; background:none; font-size:22px; cursor:pointer; color:#78716C;">&times;</button>
+            </div>
+            <form action="/user/account/address/update" method="post" id="formEditAddress">
+                <input type="hidden" name="id" id="editAddrId">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Họ và tên</label>
+                        <input type="text" name="receiverName" id="editAddrName" class="form-input-control" style="width:100%;" required>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Số điện thoại</label>
+                        <input type="text" name="phone" id="editAddrPhone" class="form-input-control" style="width:100%;" required>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px;">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Tỉnh/Thành</label>
+                        <input type="text" name="province" id="editAddrProvince" class="form-input-control" style="width:100%;" required>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Quận/Huyện</label>
+                        <input type="text" name="district" id="editAddrDistrict" class="form-input-control" style="width:100%;" required>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Phường/Xã</label>
+                        <input type="text" name="ward" id="editAddrWard" class="form-input-control" style="width:100%;" required>
+                    </div>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Địa chỉ chi tiết (Số nhà, đường)</label>
+                    <input type="text" name="streetAddress" id="editAddrStreet" class="form-input-control" style="width:100%;" required>
+                </div>
+                <div style="margin-bottom:20px;">
+                    <label style="font-size:13px; display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" name="isDefault" id="editAddrDefault" value="true" style="accent-color:#ee4d2d; width:16px; height:16px;">
+                        <span>Đặt làm địa chỉ mặc định</span>
+                    </label>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" onclick="closeEditAddressModal()" 
+                            style="padding:10px 20px; border-radius:10px; border:1px solid #e7e5e4; background:#fff; font-size:13.5px; font-weight:600; cursor:pointer; color:#57534E;">
+                        Hủy
+                    </button>
+                    <button type="submit" 
+                            style="padding:10px 24px; border-radius:10px; border:none; background:linear-gradient(135deg, #ff5722 0%, #ee4d2d 100%); color:#fff; font-size:13.5px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(238,77,45,0.35);">
+                        Lưu Cập Nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="profile-footer">
         <div class="container-shopee">
@@ -796,6 +884,36 @@
         function closeChangeEmailModal() {
             var modal = document.getElementById('changeEmailModal');
             if (modal) modal.style.display = 'none';
+        }
+
+        function openEditAddressModal(btn) {
+            document.getElementById('editAddrId').value = btn.getAttribute('data-id');
+            document.getElementById('editAddrName').value = btn.getAttribute('data-name');
+            document.getElementById('editAddrPhone').value = btn.getAttribute('data-phone');
+            document.getElementById('editAddrProvince').value = btn.getAttribute('data-province');
+            document.getElementById('editAddrDistrict').value = btn.getAttribute('data-district');
+            document.getElementById('editAddrWard').value = btn.getAttribute('data-ward');
+            document.getElementById('editAddrStreet').value = btn.getAttribute('data-street');
+            document.getElementById('editAddrDefault').checked = btn.getAttribute('data-default') === 'true';
+            
+            document.getElementById('editAddressModal').style.display = 'flex';
+        }
+        function closeEditAddressModal() {
+            document.getElementById('editAddressModal').style.display = 'none';
+        }
+
+        function confirmDeleteAddress(id) {
+            showConfirmDialog({
+                title: 'Xóa Địa Chỉ',
+                message: 'Bạn có chắc chắn muốn xóa địa chỉ nhận hàng này không?',
+                type: 'trash',
+                confirmText: 'Xóa Ngay',
+                cancelText: 'Giữ Lại',
+                onConfirm: function() {
+                    var form = document.getElementById('deleteAddrForm_' + id);
+                    if (form) form.submit();
+                }
+            });
         }
 
         function toggleAddAddressForm() {

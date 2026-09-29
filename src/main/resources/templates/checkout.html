@@ -621,37 +621,36 @@
         }
 
         .terms-notice-text {
-            font-size: 12.5px;
+            font-size: 12px;
             color: #78716C;
             max-width: 650px;
-            line-height: 1.45;
+            line-height: 1.5;
         }
 
-        /* Nút Đặt Hàng Capsule 9999px với Spring Press scale(0.96) */
+        /* Nút Đặt Hàng chuẩn Shopee */
         .btn-shopee-place-order, .btn-place-order {
-            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%) !important;
+            background: #ee4d2d !important;
             color: #ffffff !important;
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
+            font-size: 14.5px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
             border: none;
-            border-radius: 9999px !important;
-            padding: 15px 52px;
+            border-radius: 4px !important;
+            padding: 13px 48px;
             cursor: pointer;
-            transition: all 0.25s var(--spring-ease);
-            text-transform: uppercase;
-            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.35);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.28);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
         .btn-shopee-place-order:hover, .btn-place-order:hover {
-            transform: none;
-            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.4);
+            background: #d73211 !important;
+            box-shadow: 0 4px 16px rgba(238, 77, 45, 0.35);
         }
         .btn-shopee-place-order:active, .btn-place-order:active {
-            transform: scale(0.96) !important;
+            transform: scale(0.98) !important;
         }
 
         /* MODAL THAY ĐỔI ĐỊA CHỈ NHẬN HÀNG (APPLE LIQUID GLASS) */
@@ -709,17 +708,17 @@
         <div class="container-shopee">
             
             <!-- THANH TIÊU ĐỀ THANH TOÁN & BADGE MUA NGAY -->
-            <div class="checkout-header-title-bar" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; padding: 4px 6px;">
-                <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-                    <h1 style="font-size:22px; font-weight:800; color:var(--color-text-main); margin:0; display:flex; align-items:center; gap:10px;">
-                        <i class="fa-solid fa-receipt" style="color:var(--shopee-pri);"></i> Thanh Toán Đơn Hàng
+            <div class="checkout-header-title-bar" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; padding: 4px 6px;">
+                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <h1 style="font-size:20px; font-weight:700; color:var(--color-text-main); margin:0; display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-receipt" style="color:#ee4d2d; font-size:18px;"></i> Thanh Toán
                     </h1>
-                    <span th:if="${buyNow}" class="badge-buy-now-quick" style="background:#ee4d2d; color:#ffffff; font-size:12px; font-weight:800; padding:4px 14px; border-radius:9999px; letter-spacing:0.5px; box-shadow:0 2px 8px rgba(238, 77, 45, 0.25); display:inline-flex; align-items:center; gap:6px;">
-                        <i class="fa-solid fa-bolt-lightning"></i> MUA NGAY - ĐẶT HÀNG NHANH
+                    <span th:if="${buyNow}" class="badge-buy-now-quick" style="background:#ee4d2d; color:#ffffff; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:9999px; letter-spacing:0.3px;">
+                        Mua Ngay
                     </span>
                 </div>
-                <div style="font-size:13px; color:var(--color-text-muted); font-weight:600;">
-                    <i class="fa-solid fa-shield-halved text-success me-1"></i> An tâm mua sắm &amp; Đồng kiểm tận tay
+                <div style="font-size:12.5px; color:#78716C; font-weight:500;">
+                    <i class="fa-solid fa-shield-halved text-success me-1"></i> Đồng kiểm khi nhận hàng
                 </div>
             </div>
 
@@ -731,7 +730,7 @@
 
                     <div class="address-box-body">
                         <div class="address-header-row">
-                            <i class="fa-solid fa-location-dot text-danger"></i>
+                            <i class="fa-solid fa-location-dot" style="color:#ee4d2d;"></i>
                             <span>Địa Chỉ Nhận Hàng</span>
                         </div>
 
@@ -739,7 +738,7 @@
                             <div class="address-text-group">
                                 <span class="address-recipient-name" id="displayReceiverName" 
                                       th:text="${receiverName}">Nguyễn Song Hoàng Phúc</span>
-                                <span style="font-weight:700; color:#574E45;" id="displayReceiverPhone"
+                                <span style="font-weight:600; color:#1C1917;" id="displayReceiverPhone"
                                       th:text="${receiverPhone}">0912345678</span>
                                 <span class="address-full-string" id="displayReceiverAddress"
                                       th:text="${formattedAddress}">
@@ -751,32 +750,32 @@
                             <button type="button" class="btn-change-addr" onclick="openAddressModal()">Thay Đổi</button>
                         </div>
 
-                        <!-- 2 Phương thức nhận hàng: Giao tận nơi hoặc Nhận tại 5 chi nhánh -->
+                        <!-- 2 Phương thức nhận hàng: Giao tận nơi hoặc Nhận tại cửa hàng -->
                         <div class="delivery-modes-selector">
-                            <span style="font-size:13.5px; font-weight:700; color:#574E45;">Hình thức nhận sách:</span>
+                            <span style="font-size:13px; font-weight:600; color:#574E45;">Hình thức nhận hàng:</span>
                             
                             <div class="mode-pill-btn active" id="btnModeHome" onclick="selectDeliveryMode('HOME_DELIVERY')">
                                 <i class="fa-solid fa-truck-fast text-success"></i>
-                                <span>Giao Tận Nơi (GHN / GHTK)</span>
+                                <span>Giao tận nơi</span>
                             </div>
 
                             <div class="mode-pill-btn" id="btnModeStore" onclick="selectDeliveryMode('STORE_PICKUP')">
                                 <i class="fa-solid fa-store text-danger"></i>
-                                <span>Nhận Tại 1 Trong 5 Cửa Hàng TP.HCM (Miễn Phí Ship)</span>
+                                <span>Nhận tại cửa hàng (Freeship)</span>
                             </div>
                         </div>
 
                         <!-- Danh sách chọn 1 trong 5 chi nhánh khi chọn STORE_PICKUP -->
                         <div class="store-picker-dropdown" id="storePickerDropdown">
-                            <div style="font-weight:800; font-size:13.5px; margin-bottom:12px; color:#1C1917;">
-                                <i class="fa-solid fa-building-circle-check text-success me-1"></i> Chọn chi nhánh bạn muốn ghé lấy sách:
+                            <div style="font-weight:700; font-size:13px; margin-bottom:10px; color:#1C1917;">
+                                <i class="fa-solid fa-building-circle-check text-success me-1"></i> Chọn chi nhánh ghé lấy sách:
                             </div>
-                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:12px;">
+                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:10px;">
                                 <label th:each="s, stat : ${stores}">
                                     <input type="radio" name="storeIdRadio" th:value="${s.id}" th:checked="${directStoreId != null ? (s.id == directStoreId) : (stat.index == 0)}" onchange="updateSelectedStore(this)" style="accent-color:#ee4d2d; margin-top:2px;">
                                     <div>
-                                        <div style="font-weight:800; font-size:13.5px; color:#1C1917;" th:text="${s.storeName}">Chi Nhánh 1</div>
-                                        <div style="font-size:12px; color:#78716C; margin-top:3px;" th:text="${s.address}">Địa chỉ</div>
+                                        <div style="font-weight:700; font-size:13px; color:#1C1917;" th:text="${s.storeName}">Chi Nhánh 1</div>
+                                        <div style="font-size:11.5px; color:#78716C; margin-top:2px;" th:text="${s.address}">Địa chỉ</div>
                                     </div>
                                 </label>
                             </div>
@@ -823,10 +822,10 @@
                                 <div class="item-title-meta">
                                     <span class="item-title-text" th:text="${item.book != null ? item.book.title : 'Sách cũ'}">Đắc Nhân Tâm</span>
                                     <div class="item-tags-wrap">
-                                        <span class="tag-cond-pill" th:text="'Độ mới ' + ${item.book != null && item.book.conditionPercent != null ? item.book.conditionPercent : 90} + '% (Kiểm định)'">Độ mới 95%</span>
+                                        <span class="tag-cond-pill" th:text="'Độ mới ' + ${item.book != null && item.book.conditionPercent != null ? item.book.conditionPercent : 90} + '%'">Độ mới 95%</span>
                                         <span class="tag-store-pill">
                                             <i class="fa-solid fa-location-dot"></i> 
-                                            <span th:text="${item.store != null ? item.store.storeName : 'Kho Thủ Đức (Gần HCMUTE)'}">Kho Thủ Đức</span>
+                                            <span th:text="${item.store != null ? item.store.storeName : 'Kho Thủ Đức'}">Kho Thủ Đức</span>
                                         </span>
                                     </div>
                                 </div>
@@ -850,28 +849,28 @@
                     <div class="product-bottom-services">
                         <!-- Lời nhắn -->
                         <div class="message-to-seller-box">
-                            <label for="customerNotesInput">Lời nhắn cho Người bán:</label>
-                            <input type="text" name="customerNotes" id="customerNotesInput" class="message-input" placeholder="Lưu ý đóng gói cẩn thận, bọc bìa sách cổ...">
+                            <label for="customerNotesInput">Lời nhắn:</label>
+                            <input type="text" name="customerNotes" id="customerNotesInput" class="message-input" placeholder="Lưu ý cho Người bán...">
                         </div>
 
                         <!-- Đơn vị vận chuyển -->
                         <div class="shipping-service-box">
                             <div class="shipping-header-flex">
                                 <span class="shipping-type-title">
-                                    <i class="fa-solid fa-truck-fast"></i> Đơn vị vận chuyển: Nhanh (Express)
+                                    <i class="fa-solid fa-truck-fast"></i> Phương thức vận chuyển: Nhanh
                                 </span>
                                 <span class="shipping-fee-amount" id="shippingFeeDisplay">₫0</span>
                             </div>
                             <div class="shipping-sub-notes">
-                                Được đồng kiểm khi nhận hàng. Nhận hàng dự kiến: <strong>26 Th09 - 28 Th09</strong>
+                                Đồng kiểm khi nhận hàng. Nhận hàng dự kiến: <strong>26 Th09 - 28 Th09</strong>
                             </div>
                         </div>
                     </div>
 
                     <!-- Thanh subtotal của sản phẩm -->
                     <div class="order-subtotal-summary-bar">
-                        <span style="color:#78716C; font-weight:600;">Tổng số tiền (<span th:text="${totalQuantity}">1</span> sản phẩm):</span>
-                        <span style="font-size:19px; font-weight:800; color:#ee4d2d;" 
+                        <span style="color:#78716C; font-weight:500;">Tổng số tiền (<span th:text="${totalQuantity}">1</span> sản phẩm):</span>
+                        <span style="font-size:18px; font-weight:700; color:#ee4d2d;" 
                               th:text="'₫' + ${#numbers.formatDecimal(subtotal, 0, 'POINT', 0, 'COMMA')}" id="itemsSubtotalDisplay">₫68.000</span>
                     </div>
                 </div>
@@ -882,28 +881,28 @@
                         <!-- Shopee Voucher -->
                         <div class="voucher-row-flex">
                             <div class="voucher-label-left">
-                                <i class="fa-solid fa-ticket text-danger" style="font-size:22px;"></i>
-                                <span>Chuỗi Sách Cũ Voucher</span>
+                                <i class="fa-solid fa-ticket text-danger" style="font-size:20px;"></i>
+                                <span>Shopee Voucher</span>
                             </div>
                             <div class="voucher-action-right">
-                                <button type="button" class="btn-select-voucher" onclick="openVoucherModal()" style="color:#0288d1; font-weight:700; cursor:pointer; font-size:13.5px; padding:6px 12px; border-radius:9999px; background:rgba(2,136,209,0.08); border:none;">
-                                    <i class="fa-solid fa-ticket me-1"></i> Chọn Voucher &gt;
+                                <button type="button" class="btn-select-voucher" onclick="openVoucherModal()" style="color:#0288d1; font-weight:600; cursor:pointer; font-size:13.5px; padding:6px 14px; border-radius:9999px; background:rgba(2,136,209,0.08); border:none;">
+                                    Chọn Voucher &gt;
                                 </button>
                                 <input type="text" name="voucherCode" id="voucherCodeInput" class="voucher-code-input" placeholder="Nhập mã voucher" th:value="${selectedVoucherCode != null ? selectedVoucherCode : 'VOUCHER20K'}">
                                 <button type="button" class="btn-apply-voucher" onclick="applyVoucher()">Áp Dụng</button>
                             </div>
                         </div>
 
-                        <!-- Shopee Xu / Điểm Tích LŨY Sách Cũ -->
+                        <!-- Shopee Xu / Điểm Tích Lũy -->
                         <div class="coins-row-flex" style="border-top:1px dashed rgba(232, 222, 200, 0.8); padding-top:16px;">
                             <div class="coins-label-left">
-                                <i class="fa-solid fa-coins text-warning" style="font-size:22px;"></i>
-                                <span>Dùng 2.000 Điểm Tích Lũy Sách Cũ</span>
-                                <span style="font-size:12.5px; color:#78716C; font-weight:500;">[Tiết kiệm ₫2.000]</span>
+                                <i class="fa-solid fa-coins text-warning" style="font-size:20px;"></i>
+                                <span>Shopee Xu</span>
+                                <span style="font-size:12.5px; color:#78716C; font-weight:400;">Dùng 2.000 Xu [-₫2.000]</span>
                             </div>
                             <div style="display:flex; align-items:center; gap:12px;">
-                                <span style="font-weight:800; color:#ee4d2d;" id="coinsDiscountTxt">-₫2.000</span>
-                                <input type="checkbox" id="useCoinsCheck" checked onchange="toggleCoins(this)" style="width:19px; height:19px; accent-color:#ee4d2d; cursor:pointer;">
+                                <span style="font-weight:700; color:#ee4d2d;" id="coinsDiscountTxt">-₫2.000</span>
+                                <input type="checkbox" id="useCoinsCheck" checked onchange="toggleCoins(this)" style="width:18px; height:18px; accent-color:#ee4d2d; cursor:pointer;">
                             </div>
                         </div>
                     </div>
@@ -919,19 +918,19 @@
                     <div class="payment-options-row">
                         <div class="payment-option-pill active" id="payOptCod" onclick="selectPaymentMethod('COD')">
                             <i class="fa-solid fa-money-bill-wave text-success"></i>
-                            <span>Thanh toán khi nhận hàng (COD)</span>
+                            <span>Thanh toán khi nhận hàng</span>
                         </div>
 
                         <div class="payment-option-pill" id="payOptVnpay" onclick="selectPaymentMethod('VNPAY')">
                             <i class="fa-solid fa-qrcode text-primary"></i>
-                            <span>VNPay Sandbox (QR / Thẻ ATM / Visa)</span>
+                            <span>VNPay (QR / Thẻ ATM / Visa)</span>
                         </div>
                     </div>
 
                     <!-- Mô tả phương thức -->
                     <div class="payment-desc-box" id="paymentDescBox">
                         <i class="fa-solid fa-circle-check text-success me-1"></i>
-                        <strong>Thanh toán tiền mặt khi nhận hàng (COD):</strong> Bạn được kiểm tra sách trực tiếp (mở kiện xem tình trạng giấy, gáy sách) trước khi trả tiền cho nhân viên giao hàng.
+                        <strong>Thanh toán khi nhận hàng:</strong> Thanh toán bằng tiền mặt khi nhận hàng. Được đồng kiểm tra sách trước khi thanh toán.
                     </div>
 
                     <input type="hidden" name="paymentMethod" id="inputPaymentMethod" value="COD">
@@ -952,22 +951,22 @@
                             </div>
 
                             <div class="summary-single-row" style="color:#16a34a;">
-                                <span>Giảm giá phí vận chuyển (Freeship Xtra)</span>
+                                <span>Giảm giá phí vận chuyển</span>
                                 <span>-₫0</span>
                             </div>
 
                             <div class="summary-single-row" style="color:#ee4d2d;">
-                                <span>Giảm giá Voucher Sách Cũ</span>
+                                <span>Tổng cộng Voucher giảm giá</span>
                                 <span id="summaryVoucherDiscount">-₫20.000</span>
                             </div>
 
                             <div class="summary-single-row" style="color:#ee4d2d;">
-                                <span>Dùng Điểm Tích Lũy</span>
+                                <span>Dùng Xu</span>
                                 <span id="summaryCoinsDiscount">-₫2.000</span>
                             </div>
 
                             <div class="summary-total-pay-row">
-                                <span style="font-size:15.5px; font-weight:700; color:#1C1917;">Tổng thanh toán:</span>
+                                <span style="font-size:15px; font-weight:700; color:#1C1917;">Tổng thanh toán:</span>
                                 <span class="total-pay-number" id="finalTotalPayDisplay">₫46.000</span>
                             </div>
                         </div>
@@ -977,12 +976,11 @@
                     <div class="terms-and-order-action">
                         <div class="terms-notice-text">
                             Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo 
-                            <a th:href="@{/help}" style="color:var(--shopee-pri); font-weight:700; text-decoration:underline;">Điều khoản dịch vụ</a> 
-                            và <a th:href="@{/help}" style="color:var(--shopee-pri); font-weight:700; text-decoration:underline;">Quy chế kiểm định sách cũ</a> của Chuỗi Cửa Hàng Sách Cũ TP.HCM.
+                            <a th:href="@{/help}" style="color:#ee4d2d; font-weight:600; text-decoration:none;">Điều khoản Shopee</a>.
                         </div>
 
                         <button type="submit" class="btn-shopee-place-order btn-place-order" id="btnPlaceOrder">
-                            <i class="fa-solid fa-bag-shopping me-1"></i> ĐẶT HÀNG
+                            Đặt Hàng
                         </button>
                     </div>
                 </div>
@@ -1139,12 +1137,12 @@
                 optVnpay.classList.add('active');
                 optCod.classList.remove('active');
                 inputPayment.value = 'VNPAY';
-                descBox.innerHTML = '<i class="fa-solid fa-qrcode text-primary me-1"></i> <strong>Thanh toán trực tuyến VNPay Sandbox:</strong> Bạn sẽ được chuyển hướng an toàn đến Cổng thanh toán VNPay để quét mã QR hoặc nhập thẻ ngân hàng thử nghiệm.';
+                descBox.innerHTML = '<i class="fa-solid fa-qrcode text-primary me-1"></i> <strong>VNPay:</strong> Quét mã VNPAY-QR hoặc thẻ ATM / Internet Banking / Visa.';
             } else {
                 optCod.classList.add('active');
                 optVnpay.classList.remove('active');
                 inputPayment.value = 'COD';
-                descBox.innerHTML = '<i class="fa-solid fa-circle-check text-success me-1"></i> <strong>Thanh toán tiền mặt khi nhận hàng (COD):</strong> Bạn được kiểm tra sách trực tiếp (mở kiện xem tình trạng giấy, gáy sách) trước khi trả tiền cho shipper.';
+                descBox.innerHTML = '<i class="fa-solid fa-circle-check text-success me-1"></i> <strong>Thanh toán khi nhận hàng:</strong> Thanh toán tiền mặt khi nhận hàng. Được đồng kiểm tra sách trước khi thanh toán.';
             }
         }
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -273,6 +274,16 @@ public class ProfileController {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user != null) {
+            if (isDefault) {
+                List<Address> all = addressRepository.findByUserIdOrderByIsDefaultDescCreatedAtDesc(userId);
+                for (Address a : all) {
+                    if (Boolean.TRUE.equals(a.getIsDefault())) {
+                        a.setIsDefault(false);
+                        addressRepository.save(a);
+                    }
+                }
+            }
+
             Address address = new Address();
             address.setUser(user);
             address.setReceiverName(receiverName.trim());
@@ -286,6 +297,116 @@ public class ProfileController {
             addressRepository.save(address);
 
             redirectAttributes.addFlashAttribute("successMessage", "Thêm địa chỉ giao hàng mới thành công!");
+        }
+
+        return "redirect:/user/account/profile?tab=address";
+    }
+
+    /**
+     * Xử lý cập nhật thông tin địa chỉ nhận hàng
+     */
+    @PostMapping("/address/update")
+    @Transactional
+    public String updateAddress(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam("id") Long addressId,
+            @RequestParam("receiverName") String receiverName,
+            @RequestParam("phone") String phone,
+            @RequestParam("province") String province,
+            @RequestParam("district") String district,
+            @RequestParam("ward") String ward,
+            @RequestParam("streetAddress") String streetAddress,
+            @RequestParam(value = "isDefault", defaultValue = "false") boolean isDefault,
+            RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/user/account/profile?tab=address";
+        }
+
+        Long userId = resolveUserId(userDetails);
+        Address address = addressRepository.findById(addressId).orElse(null);
+
+        if (address != null && address.getUser() != null && address.getUser().getId().equals(userId)) {
+            if (isDefault && !Boolean.TRUE.equals(address.getIsDefault())) {
+                List<Address> all = addressRepository.findByUserIdOrderByIsDefaultDescCreatedAtDesc(userId);
+                for (Address a : all) {
+                    if (Boolean.TRUE.equals(a.getIsDefault())) {
+                        a.setIsDefault(false);
+                        addressRepository.save(a);
+                    }
+                }
+            }
+
+            address.setReceiverName(receiverName.trim());
+            address.setPhone(phone.trim());
+            address.setProvince(province.trim());
+            address.setDistrict(district.trim());
+            address.setWard(ward.trim());
+            address.setStreetAddress(streetAddress.trim());
+            address.setIsDefault(isDefault);
+
+            addressRepository.save(address);
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật địa chỉ nhận hàng thành công!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy địa chỉ hợp lệ hoặc bạn không có quyền sửa!");
+        }
+
+        return "redirect:/user/account/profile?tab=address";
+    }
+
+    /**
+     * Xử lý thiết lập địa chỉ mặc định
+     */
+    @PostMapping("/address/set-default/{id}")
+    @Transactional
+    public String setDefaultAddress(
+            @PathVariable("id") Long addressId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/user/account/profile?tab=address";
+        }
+
+        Long userId = resolveUserId(userDetails);
+        Address targetAddress = addressRepository.findById(addressId).orElse(null);
+
+        if (targetAddress != null && targetAddress.getUser() != null && targetAddress.getUser().getId().equals(userId)) {
+            List<Address> all = addressRepository.findByUserIdOrderByIsDefaultDescCreatedAtDesc(userId);
+            for (Address a : all) {
+                a.setIsDefault(a.getId().equals(addressId));
+                addressRepository.save(a);
+            }
+            redirectAttributes.addFlashAttribute("successMessage", "Đã thiết lập địa chỉ mặc định thành công!");
+        }
+
+        return "redirect:/user/account/profile?tab=address";
+    }
+
+    /**
+     * Xử lý xóa địa chỉ nhận hàng
+     */
+    @PostMapping("/address/delete/{id}")
+    @Transactional
+    public String deleteAddress(
+            @PathVariable("id") Long addressId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/user/account/profile?tab=address";
+        }
+
+        Long userId = resolveUserId(userDetails);
+        Address address = addressRepository.findById(addressId).orElse(null);
+
+        if (address != null && address.getUser() != null && address.getUser().getId().equals(userId)) {
+            if (Boolean.TRUE.equals(address.getIsDefault())) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa địa chỉ đang là Mặc Định!");
+            } else {
+                addressRepository.delete(address);
+                redirectAttributes.addFlashAttribute("successMessage", "Đã xóa địa chỉ nhận hàng thành công!");
+            }
         }
 
         return "redirect:/user/account/profile?tab=address";
