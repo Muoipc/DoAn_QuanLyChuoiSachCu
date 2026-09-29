@@ -631,12 +631,16 @@
                             <img th:src="${user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
                                  alt="Avatar Lớn" class="large-avatar-img" id="avatarPreview">
                         </div>
-                        <button type="button" class="btn-choose-avatar" onclick="chooseSampleAvatar()">
-                            Chọn Ảnh Mẫu
+                        <input type="file" id="realAvatarInput" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="uploadRealAvatar(this)">
+                        <button type="button" class="btn-choose-avatar" onclick="document.getElementById('realAvatarInput').click()">
+                            <i class="fa-solid fa-cloud-arrow-up me-1"></i> Chọn Ảnh
+                        </button>
+                        <button type="button" onclick="chooseSampleAvatar()" style="background:none; border:none; color:#78716c; font-size:12px; cursor:pointer; text-decoration:underline; margin-top:4px;">
+                            Hoặc dùng ảnh mẫu
                         </button>
                         <div class="avatar-rules-txt">
-                            Dụng lượng file tối đa 1 MB<br>
-                            Định dạng: .JPEG, .PNG
+                            Dung lượng file tối đa 5 MB<br>
+                            Định dạng: .JPEG, .PNG, .WEBP
                         </div>
                     </div>
                 </div>
@@ -862,7 +866,7 @@
     <!-- FOOTER -->
     <footer class="profile-footer">
         <div class="container-shopee">
-            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+            <p>© 2026 Quản lý chuỗi cửa hàng sách cũ</p>
             <p style="margin-top: 4px; color:#857d72;">Nguyễn Song Hoàng Phúc (24162096) &amp; Thái Duy Cường (24162013)</p>
         </div>
     </footer>
@@ -933,6 +937,82 @@
             const newUrl = sampleAvatars[currentIdx];
             document.getElementById('avatarPreview').src = newUrl;
             document.getElementById('hiddenAvatarInput').value = newUrl;
+        }
+
+        // Tải ảnh đại diện thật từ máy tính lên máy chủ
+        function uploadRealAvatar(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+
+            if (file.size > 5 * 1024 * 1024) {
+                if (window.showConfirmDialog) {
+                    window.showConfirmDialog({
+                        title: 'Tệp Quá Dung Lượng',
+                        message: 'Dung lượng ảnh tối đa cho phép là 5MB!',
+                        type: 'danger',
+                        confirmText: 'Đóng',
+                        hideCancel: true
+                    });
+                }
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('avatarFile', file);
+
+            const preview = document.getElementById('avatarPreview');
+            const originalSrc = preview.src;
+            preview.style.opacity = '0.4';
+
+            fetch('/user/account/upload-avatar', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                preview.style.opacity = '1';
+                if (data.success) {
+                    preview.src = data.avatarUrl;
+                    const hiddenInput = document.getElementById('hiddenAvatarInput');
+                    if (hiddenInput) hiddenInput.value = data.avatarUrl;
+
+                    const sidebarImg = document.querySelector('.sidebar-avatar-img');
+                    if (sidebarImg) sidebarImg.src = data.avatarUrl;
+
+                    if (window.showConfirmDialog) {
+                        window.showConfirmDialog({
+                            title: 'Thành Công',
+                            message: data.message || 'Cập nhật ảnh đại diện thành công!',
+                            type: 'success',
+                            confirmText: 'Tuyệt Vời',
+                            hideCancel: true
+                        });
+                    }
+                } else {
+                    preview.src = originalSrc;
+                    if (window.showConfirmDialog) {
+                        window.showConfirmDialog({
+                            title: 'Không Thành Công',
+                            message: data.message || 'Lỗi trong quá trình tải ảnh!',
+                            type: 'danger',
+                            confirmText: 'Thử Lại',
+                            hideCancel: true
+                        });
+                    }
+                }
+            })
+            .catch(err => {
+                preview.style.opacity = '1';
+                if (window.showConfirmDialog) {
+                    window.showConfirmDialog({
+                        title: 'Lỗi Kết Nối',
+                        message: 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng!',
+                        type: 'danger',
+                        confirmText: 'Đóng',
+                        hideCancel: true
+                    });
+                }
+            });
         }
     </script>
     <script src="/js/cart-popover.js"></script>

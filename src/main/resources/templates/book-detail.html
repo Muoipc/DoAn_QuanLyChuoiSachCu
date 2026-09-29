@@ -1494,7 +1494,7 @@
     <!-- FOOTER -->
     <footer class="page-footer">
         <div class="container-shopee">
-            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+            <p>© 2026 Quản lý chuỗi cửa hàng sách cũ</p>
             <p style="margin-top: 4px; color:#857d72;">Nguyễn Song Hoàng Phúc (24162096) &amp; Thái Duy Cường (24162013)</p>
         </div>
     </footer>
@@ -1589,10 +1589,36 @@
         }
 
         function addToCart() {
-            const qty = document.getElementById('buyQty').value;
-            document.getElementById('hiddenQuantity').value = qty;
-            document.getElementById('cartAction').value = 'add';
-            document.getElementById('cartForm').submit();
+            const qty = document.getElementById('buyQty') ? (parseInt(document.getElementById('buyQty').value) || 1) : 1;
+            const bookIdInput = document.querySelector('#cartForm input[name="bookId"]');
+            const bookId = bookIdInput ? bookIdInput.value : '';
+            const storeIdInput = document.getElementById('selectedStoreId');
+            const storeId = storeIdInput ? storeIdInput.value : 1;
+            const sourceImg = document.getElementById('mainCoverImg');
+            const titleEl = document.querySelector('.detail-book-title') || document.querySelector('h1');
+            const bookTitle = titleEl ? titleEl.innerText.trim() : 'Sách';
+
+            // Gửi API thêm giỏ hàng không tải lại trang và kích hoạt hiệu ứng nhảy giỏ hàng
+            fetch('/cart/api/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    bookId: bookId,
+                    storeId: storeId,
+                    quantity: qty
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && window.triggerFlyToCart) {
+                    window.triggerFlyToCart(sourceImg, data.count, 'Đã thêm "' + bookTitle + '" vào giỏ hàng!');
+                } else {
+                    document.getElementById('cartForm').submit();
+                }
+            })
+            .catch(() => {
+                document.getElementById('cartForm').submit();
+            });
         }
 
         function buyNow() {

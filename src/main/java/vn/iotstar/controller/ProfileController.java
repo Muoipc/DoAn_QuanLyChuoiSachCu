@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 import vn.iotstar.entity.Address;
@@ -21,9 +24,15 @@ import vn.iotstar.repository.OrderRepository;
 import vn.iotstar.repository.UserRepository;
 import vn.iotstar.security.CustomUserDetails;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ============================================================================
@@ -160,6 +169,96 @@ public class ProfileController {
         }
 
         return "redirect:/user/account/profile?tab=profile";
+    }
+
+    /**
+     * POST /user/account/upload-avatar: Tải lên ảnh đại diện thật từ máy tính cá nhân
+     * Ghi chú cho Cường:
+     * - Lưu tệp vào static/images/avatars phục vụ web tức thì.
+     * - Lưu tệp vào ~/upload/avatar/ theo quy ước lưu trữ đồ án HCMUTE.
+     * - Tự động cập nhật trực tiếp vào Entity User trong CSDL.
+     */
+    @PostMapping("/account/upload-avatar")
+    @ResponseBody
+    @Transactional
+    public ResponseEntity<Map<String, Object>> uploadAvatar(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam("avatarFile") MultipartFile file) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (userDetails == null || userDetails.getId() == null) {
+            response.put("success", false);
+            response.put("message", "Vui lòng đăng nhập trước khi tải ảnh đại diện!");
+            return ResponseEntity.status(401).body(response);
+        }
+
+        if (file == null || file.isEmpty()) {
+            response.put("success", false);
+            response.put("message", "Vui lòng chọn tệp hình ảnh hợp lệ!");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // Giới hạn dung lượng tối đa 5MB
+        if (file.getSize() > 5 * 1024 * 1024) {
+            response.put("success", false);
+            response.put("message", "Dung lượng ảnh vượt quá giới hạn cho phép (Tối đa 5MB)!");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        String originalFilename = file.getOriginalFilename();
+        String ext = ".jpg";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            ext = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
+        }
+
+        if (!ext.equals(".jpg") && !ext.equals(".jpeg") && !ext.equals(".png") && !ext.equals(".webp")) {
+            response.put("success", false);
+            response.put("message", "Định dạng không hợp lệ. Vui lòng chỉ tải tệp .JPEG, .PNG, .WEBP!");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        try {
+            Long userId = resolveUserId(userDetails);
+            String filename = "avatar_" + userId + "_" + System.currentTimeMillis() + ext;
+
+            // 1. Lưu vào thư mục static/images/avatars
+            Path targetPath = Paths.get("target/classes/static/images/avatars", filename);
+            Files.createDirectories(targetPath.getParent());
+            Files.write(targetPath, file.getBytes());
+
+            try {
+                Path srcPath = Paths.get("src/main/resources/static/images/avatars", filename);
+                Files.createDirectories(srcPath.getParent());
+                Files.write(srcPath, file.getBytes());
+            } catch (Exception ignored) {}
+
+            // 2. Lưu vào ~/upload/avatar/ chuẩn môn học HCMUTE
+            try {
+                Path homePath = Paths.get(System.getProperty("user.home"), "upload", "avatar", filename);
+                Files.createDirectories(homePath.getParent());
+                Files.write(homePath, file.getBytes());
+            } catch (Exception ignored) {}
+
+            String avatarUrl = "/images/avatars/" + filename;
+
+            // 3. Cập nhật User trong CSDL
+            User user = userRepository.findById(userId).orElse(null);
+            if (user != null) {
+                user.setAvatar(avatarUrl);
+                userRepository.save(user);
+            }
+
+            response.put("success", true);
+            response.put("avatarUrl", avatarUrl);
+            response.put("message", "Cập nhật ảnh đại diện thành công!");
+            return ResponseEntity.ok(response);
+
+        } catch (IOException e) {
+            response.put("success", false);
+            response.put("message", "Lỗi trong quá trình lưu trữ hình ảnh: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
     }
 
     /**

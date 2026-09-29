@@ -84,7 +84,15 @@ public class CheckoutController {
             String uri = request.getRequestURI();
             String qs = request.getQueryString();
             String fullUrl = (qs != null && !qs.isBlank()) ? (uri + "?" + qs) : uri;
-            return "redirect:/login?redirectURL=" + java.net.URLEncoder.encode(fullUrl, java.nio.charset.StandardCharsets.UTF_8);
+            String loginUrl = "/login?redirectURL=" + java.net.URLEncoder.encode(fullUrl, java.nio.charset.StandardCharsets.UTF_8);
+
+            // Sinh mã Request ID theo định dạng chuẩn Shopee: 73dfd2af81-4744-4757-8f47-413a62b77746
+            String rawUuid = java.util.UUID.randomUUID().toString();
+            String requestId = rawUuid.substring(0, 8) + (int)(Math.random() * 90 + 10) + rawUuid.substring(8);
+
+            model.addAttribute("loginUrl", loginUrl);
+            model.addAttribute("requestId", requestId);
+            return "checkout-login-required";
         }
 
         Long userId = resolveUserId(userDetails);

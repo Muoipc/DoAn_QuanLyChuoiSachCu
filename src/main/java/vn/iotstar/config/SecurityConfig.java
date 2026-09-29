@@ -45,7 +45,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Tài nguyên tĩnh
                 .requestMatchers(
-                    "/css/**", "/js/**", "/images/**", "/webjars/**", "/error", "/favicon.ico"
+                    "/css/**", "/js/**", "/images/**", "/upload/**", "/webjars/**", "/error", "/favicon.ico"
                 ).permitAll()
                 // Xác thực & Quản lý tài khoản
                 .requestMatchers(
@@ -58,7 +58,7 @@ public class SecurityConfig {
                     "/", "/home", "/books/**", "/categories/**", "/stores/**",
                     "/search/**", "/cart", "/cart/**",
                     "/vouchers", "/vouchers/**", "/api/**",
-                    "/checkout/vnpay-return", "/checkout/success",
+                    "/checkout", "/checkout/vnpay-return", "/checkout/success",
                     "/reviews/**", "/consignments", "/consignments/**",
                     "/ai-assistant", "/ai-assistant/**", "/help", "/help/**"
                 ).permitAll()
@@ -68,7 +68,7 @@ public class SecurityConfig {
                 .requestMatchers("/shipper/**").hasAnyRole("ADMIN", "SHIPPER")
                 // Route yêu cầu người dùng phải đăng nhập (Bảo mật tài khoản & Đơn mua)
                 .requestMatchers(
-                    "/checkout", "/checkout/**",
+                    "/checkout/place-order", "/checkout/process",
                     "/orders", "/orders/**",
                     "/user/**", "/profile/**"
                 ).authenticated()

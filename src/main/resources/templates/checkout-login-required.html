@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yêu Cầu Đăng Nhập — Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
+
+    <style>
+        :root {
+            --color-fire: #ee4d2d;
+            --color-fire-hover: #d73211;
+            --color-bg-body: #f5f5f5;
+            --color-text-main: #222222;
+            --color-text-secondary: #555555;
+            --color-text-light: #888888;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: var(--color-bg-body);
+            color: var(--color-text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a { color: inherit; text-decoration: none; }
+
+        /* HEADER THANH TOÁN CHUẨN SHOPEE */
+        .checkout-header {
+            background: #ffffff;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            padding: 18px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 clamp(16px, 3vw, 24px);
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .brand-img {
+            height: 44px;
+            width: auto;
+            object-fit: contain;
+        }
+        .checkout-page-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #ee4d2d;
+            border-left: 1px solid #ee4d2d;
+            padding-left: 15px;
+            line-height: 1.2;
+        }
+        .help-link {
+            font-size: 13px;
+            color: #ee4d2d;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .help-link:hover {
+            text-decoration: underline;
+        }
+
+        /* MAIN CONTENT CENTER (LOGIN REQUIRED NỘI DUNG CHUẨN SHOPEE) */
+        .main-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(40px, 8vw, 80px) 0;
+            position: relative;
+        }
+
+        /* THẺ APPLE LIQUID GLASS CARD */
+        .login-required-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(36px) saturate(190%) brightness(102%);
+            -webkit-backdrop-filter: blur(36px) saturate(190%) brightness(102%);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 24px 60px rgba(45, 24, 15, 0.12), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: clamp(32px, 6vw, 56px) clamp(24px, 5vw, 48px);
+            width: 100%;
+            max-width: 540px;
+            margin: 0 auto;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ICON KHÓA BẢO MẬT SHOPEE */
+        .lock-icon-wrap {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(238, 77, 45, 0.12) 0%, rgba(255, 114, 86, 0.08) 100%);
+            border: 1.5px solid rgba(238, 77, 45, 0.25);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ee4d2d;
+            font-size: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.15);
+        }
+
+        .card-title {
+            font-size: clamp(22px, 3vw, 26px);
+            font-weight: 700;
+            color: #1C1917;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .card-desc {
+            font-size: clamp(14px, 1.8vw, 15px);
+            color: #574e45;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* CỤM NÚT HÀNH ĐỘNG SHOPEE */
+        .actions-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .btn-shopee-login {
+            background: linear-gradient(135deg, #ff5722 0%, #ee4d2d 100%);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 13px 34px;
+            border-radius: 9999px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 160px;
+            justify-content: center;
+        }
+        .btn-shopee-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(238, 77, 45, 0.5);
+            color: #ffffff;
+        }
+        .btn-shopee-login:active {
+            transform: scale(0.96);
+        }
+
+        .btn-shopee-home {
+            background: rgba(255, 255, 255, 0.85);
+            color: #44403C;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 13px 28px;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 160px;
+            justify-content: center;
+        }
+        .btn-shopee-home:hover {
+            background: #ffffff;
+            border-color: #78716C;
+            color: #1C1917;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        .btn-shopee-home:active {
+            transform: scale(0.96);
+        }
+
+        /* MÃ PHIÊN REQUEST ID (CHUẨN SHOPEE) */
+        .request-id-line {
+            font-size: 12px;
+            color: #9e968d;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            word-break: break-all;
+            padding-top: 16px;
+            border-top: 1px dashed rgba(0, 0, 0, 0.08);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 24px 0;
+            font-size: 12px;
+            color: #888888;
+            text-align: center;
+        }
+
+        @media (max-width: 576px) {
+            .checkout-header { padding: 12px 0; }
+            .checkout-page-title { font-size: 17px; }
+            .brand-img { height: 36px; }
+            .actions-group { flex-direction: column; width: 100%; }
+            .btn-shopee-login, .btn-shopee-home { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER THANH TOÁN CHUẨN SHOPEE -->
+    <header class="checkout-header">
+        <div class="container header-inner">
+            <div class="brand-box">
+                <a th:href="@{/}">
+                    <img th:src="@{/images/logo-books.png}" alt="Logo Books" class="brand-img">
+                </a>
+                <span class="checkout-page-title">Thanh Toán</span>
+            </div>
+            <div>
+                <a th:href="@{/help}" class="help-link">
+                    <i class="fa-regular fa-circle-question"></i>
+                    <span>Cần trợ giúp?</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- KHỐI LOGIN REQUIRED NỘI DUNG CHUẨN SHOPEE -->
+    <main class="main-section">
+        <div class="container">
+            <div class="login-required-card">
+                <div class="lock-icon-wrap">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+
+                <h1 class="card-title">Login Required</h1>
+                
+                <p class="card-desc">
+                    Looks like you’re not logged in yet. Log in to continue or head back to the homepage.
+                </p>
+
+                <div class="actions-group">
+                    <a th:href="${loginUrl}" class="btn-shopee-login">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Log In</span>
+                    </a>
+                    <a th:href="@{/}" class="btn-shopee-home">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Back to Home Page</span>
+                    </a>
+                </div>
+
+                <!-- DÒNG MÃ PHIÊN ID CHUẨN SHOPEE -->
+                <div class="request-id-line">
+                    ID: <span th:text="${requestId}">73dfd2af81-4744-4757-8f47-413a62b77746</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 Quản lý chuỗi cửa hàng sách cũ</p>
+            <p style="margin-top: 4px; color:#a8a29e;">Nguyễn Song Hoàng Phúc (24162096) & Thái Duy Cường (24162013)</p>
+        </div>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+</body>
+</html>

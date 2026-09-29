@@ -163,6 +163,23 @@ public class CartController {
     }
 
     /**
+     * API AJAX thêm sách vào giỏ hàng phục vụ hiệu ứng bay vào giỏ hàng không tải lại trang.
+     * URL: POST /cart/api/add
+     */
+    @PostMapping("/api/add")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> addToCartAjax(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam("bookId") Long bookId,
+            @RequestParam(value = "storeId", defaultValue = "1") Long storeId,
+            @RequestParam(value = "quantity", defaultValue = "1") int quantity) {
+        Long userId = resolveUserId(userDetails);
+        cartService.addToCart(userId, bookId, storeId, quantity);
+        int newTotal = cartService.getCartTotalCount(userId);
+        return ResponseEntity.ok(Map.of("count", newTotal, "success", true, "message", "Đã thêm vào giỏ hàng thành công!"));
+    }
+
+    /**
      * API AJAX lấy danh sách sản phẩm mới thêm vào giỏ hàng (tối đa 5 cuốn)
      * phục vụ Shopee Cart Popover khi rê chuột vào icon giỏ hàng trên Header.
      * URL: GET /cart/api/preview

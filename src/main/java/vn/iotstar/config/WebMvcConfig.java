@@ -58,6 +58,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     /**
+     * Cấu hình định tuyến tài nguyên tĩnh tải lên (Upload) phục vụ Avatar và Danh mục
+     * Ánh xạ URL /upload/** vào thư mục vật lý ~/upload/ trên máy chủ
+     */
+    @Override
+    public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
+        String userHome = System.getProperty("user.home");
+        java.nio.file.Path uploadDir = java.nio.file.Paths.get(userHome, "upload");
+        String uploadPath = uploadDir.toFile().getAbsolutePath();
+
+        registry.addResourceHandler("/upload/**")
+                .addResourceLocations("file:" + uploadPath + "/");
+    }
+
+    /**
      * Nạp nguồn tài nguyên đa ngôn ngữ từ thư mục i18n/messages
      */
     @Bean

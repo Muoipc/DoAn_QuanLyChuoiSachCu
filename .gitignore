@@ -40,3 +40,5 @@ Thumbs.db
 uploads/
 *.log
 graphify-out/
+*-local.properties
+.env

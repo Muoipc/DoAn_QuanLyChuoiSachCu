@@ -529,7 +529,7 @@
                     booksHtml += `
                         <div class="mini-book-card">
                             <img src="${b.imageUrl || '/images/books/book_1.jpg'}" alt="Bìa sách" class="mini-book-thumb">
-                            <div>
+                            <div style="flex:1;">
                                 <div class="mini-book-title">${escapeHtml(b.title)}</div>
                                 <div class="mini-book-meta">
                                     Độ mới: <strong style="color:#007a57;">${b.conditionPercent}%</strong> · 
@@ -537,8 +537,9 @@
                                 </div>
                                 <div class="mini-book-price">₫${priceFormatted}</div>
                             </div>
-                            <div>
-                                <a href="/books/${b.id}" class="btn-mini-view">Xem Sách</a>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <a href="${b.buyNowUrl || '/checkout?buyNow=true&bookId=' + b.id}" class="btn-mini-view" style="background:#ee4d2d; color:#fff; border-color:#ee4d2d;">Mua Ngay</a>
+                                <a href="${b.detailUrl || '/books/' + b.id}" class="btn-mini-view" style="background:transparent; color:#574e45;">Chi Tiết</a>
                             </div>
                         </div>
                     `;

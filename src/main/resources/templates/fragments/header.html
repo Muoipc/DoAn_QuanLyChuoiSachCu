@@ -157,8 +157,19 @@
             box-sizing: border-box;
             animation: applePopoverFade 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .lang-dropdown-box:hover .lang-dropdown-menu {
-            display: block;
+        .lang-dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 0;
+            right: 0;
+            height: 18px;
+            background: transparent;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu,
+        .lang-dropdown-box.active .lang-dropdown-menu,
+        .lang-dropdown-menu:hover {
+            display: block !important;
         }
         .lang-item-btn {
             display: flex;
@@ -1476,7 +1487,269 @@
                 })
                 .catch(function() {});
         })();
+
+        // ================= HIỆU ỨNG HÀNG TỰ NHẢY VÀO GIỎ TOÀN CỤC =================
+        window.triggerFlyToCart = function(sourceImg, newCount, bookTitle) {
+            var cartTarget = document.getElementById('shopeeCartWrap') || document.getElementById('headerCartBadge');
+            if (!cartTarget) return;
+
+            var cartIcon = cartTarget.querySelector('.shopee-cart-icon') || cartTarget;
+            var cartBadge = document.getElementById('headerCartBadge');
+
+            if (sourceImg) {
+                var srcRect = sourceImg.getBoundingClientRect();
+                var destRect = cartTarget.getBoundingClientRect();
+
+                // Tạo bóng sản phẩm bay hình vòng cung
+                var flyer = document.createElement('img');
+                flyer.src = sourceImg.src;
+                flyer.className = 'fly-to-cart-item';
+                flyer.style.top = srcRect.top + 'px';
+                flyer.style.left = srcRect.left + 'px';
+                flyer.style.width = srcRect.width + 'px';
+                flyer.style.height = srcRect.height + 'px';
+                flyer.style.opacity = '1';
+                flyer.style.transform = 'scale(1) rotate(0deg)';
+                document.body.appendChild(flyer);
+
+                // Bay parabol vào giỏ hàng
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        flyer.style.top = (destRect.top + 4) + 'px';
+                        flyer.style.left = (destRect.left + 4) + 'px';
+                        flyer.style.width = '24px';
+                        flyer.style.height = '32px';
+                        flyer.style.opacity = '0.2';
+                        flyer.style.transform = 'scale(0.25) rotate(360deg)';
+                    });
+                });
+
+                setTimeout(function() {
+                    if (flyer && flyer.parentNode) flyer.parentNode.removeChild(flyer);
+                    animateCartLanding(cartBadge, cartIcon, newCount);
+                }, 800);
+            } else {
+                animateCartLanding(cartBadge, cartIcon, newCount);
+            }
+
+            showFlyToast(bookTitle || 'Đã thêm sản phẩm vào giỏ hàng!');
+        };
+
+        function animateCartLanding(cartBadge, cartIcon, newCount) {
+            if (cartBadge) {
+                if (newCount !== undefined && newCount !== null) {
+                    cartBadge.innerText = newCount;
+                }
+                cartBadge.classList.remove('cart-badge-bounce');
+                void cartBadge.offsetWidth;
+                cartBadge.classList.add('cart-badge-bounce');
+            }
+            if (cartIcon) {
+                cartIcon.classList.remove('cart-icon-shake');
+                void cartIcon.offsetWidth;
+                cartIcon.classList.add('cart-icon-shake');
+            }
+        }
+
+        function showFlyToast(text) {
+            var oldToast = document.querySelector('.cart-fly-toast');
+            if (oldToast && oldToast.parentNode) oldToast.parentNode.removeChild(oldToast);
+
+            var toast = document.createElement('div');
+            toast.className = 'cart-fly-toast';
+            toast.innerHTML = '<i class="fa-solid fa-circle-check text-success" style="font-size:16px;"></i><span>' + text + '</span>';
+            document.body.appendChild(toast);
+
+            requestAnimationFrame(function() {
+                toast.classList.add('show');
+            });
+
+            setTimeout(function() {
+                toast.classList.remove('show');
+                setTimeout(function() {
+                    if (toast && toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 400);
+            }, 2500);
+        }
+
+        // ================= WIDGET TRỢ LÝ AI MINI TOÀN CỤC =================
+        function toggleAiMiniChat() {
+            var widget = document.getElementById('aiMiniChatWidget');
+            if (!widget) return;
+            if (widget.style.display === 'none' || widget.style.display === '') {
+                widget.style.display = 'flex';
+                var inp = document.getElementById('miniChatInput');
+                if (inp) inp.focus();
+                scrollMiniChatBottom();
+            } else {
+                widget.style.display = 'none';
+            }
+        }
+
+        function sendMiniChatPrompt(promptText) {
+            var inp = document.getElementById('miniChatInput');
+            if (inp) {
+                inp.value = promptText;
+                sendMiniChatMessage();
+            }
+        }
+
+        function sendMiniChatMessage() {
+            var inp = document.getElementById('miniChatInput');
+            if (!inp) return;
+            var text = inp.value.trim();
+            if (!text) return;
+
+            var body = document.getElementById('miniChatBody');
+            inp.value = '';
+
+            // User bubble
+            var userRow = document.createElement('div');
+            userRow.style.cssText = 'display:flex; justify-content:flex-end;';
+            userRow.innerHTML = '<div style="background:linear-gradient(135deg, #ff5722 0%, #ee4d2d 100%); color:#fff; padding:9px 13px; border-radius:16px; border-top-right-radius:4px; max-width:85%; line-height:1.45; word-break:break-word;">' + escapeMiniHtml(text) + '</div>';
+            body.appendChild(userRow);
+            scrollMiniChatBottom();
+
+            // Typing indicator
+            var typingRow = document.createElement('div');
+            typingRow.id = 'miniChatTyping';
+            typingRow.style.cssText = 'display:flex; gap:8px; align-items:center; color:#78716c; font-size:12px;';
+            typingRow.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#ee4d2d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px;"><i class="fa-solid fa-robot"></i></div> <span>AI đang tìm sách...</span>';
+            body.appendChild(typingRow);
+            scrollMiniChatBottom();
+
+            fetch('/ai-assistant/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                var tp = document.getElementById('miniChatTyping');
+                if (tp) tp.remove();
+
+                var aiRow = document.createElement('div');
+                aiRow.style.cssText = 'display:flex; gap:8px; align-items:flex-start;';
+
+                var replyHtml = (data.reply || '')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+
+                var cardsHtml = '';
+                if (data.suggestedBooks && data.suggestedBooks.length > 0) {
+                    cardsHtml = '<div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">';
+                    data.suggestedBooks.forEach(function(b) {
+                        var p = Number(b.price || 0).toLocaleString('vi-VN');
+                        cardsHtml += '<div style="display:flex; gap:8px; background:rgba(255,255,255,0.9); border:1px solid #e7e5e4; border-radius:12px; padding:8px; align-items:center;">' +
+                            '<img src="' + (b.imageUrl || '/images/books/book_1.jpg') + '" style="width:42px; height:58px; object-fit:cover; border-radius:6px; flex-shrink:0;">' +
+                            '<div style="flex:1; min-width:0;">' +
+                                '<div style="font-weight:700; font-size:12.5px; color:#1C1917; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + escapeMiniHtml(b.title) + '</div>' +
+                                '<div style="font-size:11px; color:#78716c; margin-top:2px;">Mới ' + (b.conditionPercent || 90) + '% · ' + escapeMiniHtml(b.availableStores || 'Kho TP.HCM') + '</div>' +
+                                '<div style="font-weight:700; color:#ee4d2d; font-size:12.5px; margin-top:2px;">₫' + p + '</div>' +
+                            '</div>' +
+                            '<div style="display:flex; flex-direction:column; gap:4px; flex-shrink:0;">' +
+                                '<a href="' + (b.buyNowUrl || '/checkout?buyNow=true&bookId=' + b.id) + '" style="padding:4px 8px; border-radius:6px; background:#ee4d2d; color:#fff; font-size:10.5px; font-weight:700; text-decoration:none; text-align:center;">Mua Ngay</a>' +
+                                '<a href="' + (b.detailUrl || '/books/' + b.id) + '" style="padding:4px 8px; border-radius:6px; background:#f5f5f4; color:#44403c; font-size:10.5px; text-decoration:none; text-align:center;">Chi Tiết</a>' +
+                            '</div>' +
+                        '</div>';
+                    });
+                    cardsHtml += '</div>';
+                }
+
+                aiRow.innerHTML = '<div style="width:28px; height:28px; border-radius:50%; background:#ee4d2d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;"><i class="fa-solid fa-robot"></i></div>' +
+                    '<div style="background:#f5f0eb; padding:10px 14px; border-radius:16px; border-top-left-radius:4px; color:#292524; line-height:1.5; max-width:85%; font-size:12.5px;">' +
+                        '<div>' + replyHtml + '</div>' +
+                        cardsHtml +
+                    '</div>';
+
+                body.appendChild(aiRow);
+                scrollMiniChatBottom();
+            })
+            .catch(function() {
+                var tp = document.getElementById('miniChatTyping');
+                if (tp) tp.remove();
+            });
+        }
+
+        function scrollMiniChatBottom() {
+            var body = document.getElementById('miniChatBody');
+            if (body) body.scrollTop = body.scrollHeight;
+        }
+
+        function escapeMiniHtml(s) {
+            if (!s) return '';
+            var d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        // Tự động ẩn Floating Button trên trang /ai-assistant để tránh trùng lặp
+        if (window.location.pathname.indexOf('/ai-assistant') !== -1) {
+            var btn = document.getElementById('aiFloatingBtn');
+            if (btn) btn.style.display = 'none';
+        }
     </script>
+
+    <!-- WIDGET TRỢ LÝ AI MINI TOÀN CỤC (GLOBAL MINI CHAT WIDGET APPLE LIQUID GLASS) -->
+    <div id="aiMiniChatWidget" style="display:none; position:fixed; bottom:96px; right:30px; width:380px; height:560px; max-height:82vh; max-width:calc(100vw - 40px); z-index:99998; border-radius:24px; background:rgba(255, 255, 255, 0.92); backdrop-filter:blur(36px) saturate(200%); -webkit-backdrop-filter:blur(36px) saturate(200%); border:1.5px solid rgba(255, 255, 255, 0.95); box-shadow:0 24px 60px rgba(45, 24, 15, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.95); flex-direction:column; overflow:hidden; transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1);">
+        <!-- Top bar của widget -->
+        <div style="padding:14px 18px; background:linear-gradient(135deg, rgba(140, 74, 39, 0.92) 0%, rgba(238, 77, 45, 0.92) 100%); color:#ffffff; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.2);">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:16px;">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <div style="font-weight:700; font-size:14px; line-height:1.2;">Trợ Lý AI Chuỗi Sách Cũ</div>
+                    <div style="font-size:11px; opacity:0.9; display:flex; align-items:center; gap:4px; margin-top:2px;">
+                        <span style="width:7px; height:7px; border-radius:50%; background:#10b981; display:inline-block;"></span> 5 chi nhánh TP.HCM
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <a th:href="@{/ai-assistant}" target="_blank" title="Mở toàn màn hình" style="color:#ffffff; font-size:13px; opacity:0.85; padding:6px; cursor:pointer;">
+                    <i class="fa-solid fa-up-right-from-square"></i>
+                </a>
+                <button type="button" onclick="toggleAiMiniChat()" style="background:none; border:none; color:#ffffff; font-size:18px; cursor:pointer; opacity:0.85; padding:2px 6px;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Khung tin nhắn -->
+        <div id="miniChatBody" style="flex:1; padding:14px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; font-size:13px;">
+            <!-- Tin nhắn chào -->
+            <div style="display:flex; gap:8px; align-items:flex-start;">
+                <div style="width:28px; height:28px; border-radius:50%; background:#ee4d2d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div style="background:#f5f0eb; padding:10px 14px; border-radius:16px; border-top-left-radius:4px; color:#292524; line-height:1.5; max-width:85%;">
+                    Chào bạn! Em là <strong>Trợ lý AI</strong> của Chuỗi Sách Cũ TP.HCM. Em có thể tư vấn sách, kiểm tra tồn kho tại 5 chi nhánh hoặc giải đáp phí ship và chính sách đồng kiểm ạ!
+                </div>
+            </div>
+
+            <!-- Gợi ý nhanh (Quick Chips) -->
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin: 4px 0 4px 36px;">
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Các chi nhánh ở đâu?')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">📍 5 Chi nhánh</button>
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Gợi ý sách chữa lành')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">🌱 Sách chữa lành</button>
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Sách sinh viên giá rẻ dưới 50k')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">💰 Sách dưới 50K</button>
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Phí vận chuyển bao nhiêu?')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">🚚 Phí ship</button>
+            </div>
+        </div>
+
+        <!-- Ô nhập tin nhắn -->
+        <div style="padding:10px 14px; background:rgba(255,255,255,0.95); border-top:1px solid rgba(0,0,0,0.06); display:flex; gap:8px; align-items:center;">
+            <input type="text" id="miniChatInput" placeholder="Hỏi AI về sách, tồn kho, giá..." style="flex:1; height:38px; border-radius:9999px; border:1px solid #e7e5e4; padding:0 14px; font-size:13px; outline:none; background:#faf8f5;" onkeydown="if(event.key==='Enter') sendMiniChatMessage()">
+            <button type="button" onclick="sendMiniChatMessage()" style="width:38px; height:38px; border-radius:50%; border:none; background:#ee4d2d; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; box-shadow:0 3px 8px rgba(238,77,45,0.3);">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- NÚT WIDGET TRỢ LÝ AI NỔI TOÀN CỤC (FLOATING FAB) -->
+    <div id="aiFloatingBtn" class="ai-floating-widget-btn" onclick="toggleAiMiniChat()" title="Trợ Lý AI Tư Vấn Sách Cũ">
+        <i class="fa-solid fa-robot"></i>
+        <span class="ai-floating-status-dot"></span>
+    </div>
 </th:block>
 
 </body>
