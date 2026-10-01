@@ -1116,12 +1116,12 @@
                     <div class="flash-thumb-box">
                         <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" 
                              th:alt="${book.title}" class="flash-thumb-img">
-                        <span class="badge-discount-percent">-43%</span>
-                        <span class="badge-condition-pill" th:text="${book.conditionPercent} + '% Mới'">95% Mới</span>
+                        <span class="badge-discount-percent" th:text="'-' + ${book.maxDiscountPercent} + '%'">-43%</span>
+                        <span class="badge-condition-pill" th:text="'Từ ' + ${book.conditionPercent} + '% Mới'">95% Mới</span>
                     </div>
                     <h4 class="flash-card-title" th:text="${book.title}">Tên sách</h4>
                     <div class="flash-price-box">
-                        <span class="flash-price-main" th:text="'₫' + ${#numbers.formatDecimal(book.price != null ? book.price : 0, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                        <span class="flash-price-main" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                     </div>
                     <div class="flash-progress-track">
                         <div class="flash-progress-fill" th:style="'width: ' + (${book.totalSold != null ? (book.totalSold * 3 + 40) : 75}) + '%;'"></div>
@@ -1171,8 +1171,8 @@
                     <div class="product-thumb-wrap">
                         <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" 
                              th:alt="${book.title}" class="product-thumb-img">
-                        <span class="card-discount-tag">-40%</span>
-                        <span class="card-condition-tag" th:text="${book.conditionPercent} + '% MỚI'">95% MỚI</span>
+                        <span class="card-discount-tag" th:text="'-' + ${book.maxDiscountPercent} + '%'">-40%</span>
+                        <span class="card-condition-tag" th:text="'TỪ ' + ${book.conditionPercent} + '% MỚI'">95% MỚI</span>
                     </div>
 
                     <div class="product-info-wrap">
@@ -1185,7 +1185,7 @@
                         </div>
 
                         <div class="product-price-row">
-                            <span class="price-current" th:text="'₫' + ${#numbers.formatDecimal(book.price != null ? book.price : 0, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                            <span class="price-current" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                             <span class="price-sold-count" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
                         </div>
 

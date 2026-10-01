@@ -33,7 +33,7 @@ public class OtpToken {
     private LocalDateTime createdAt;
 
     public enum TokenType {
-        REGISTER, FORGOT_PASSWORD
+        REGISTER, FORGOT_PASSWORD, CHANGE_PASSWORD
     }
 
     public OtpToken() {}

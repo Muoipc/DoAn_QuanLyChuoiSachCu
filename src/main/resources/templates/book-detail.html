@@ -434,6 +434,45 @@
             padding: 0 3px;
             border-top-left-radius: 4px;
         }
+        .variant-price-tag {
+            font-size: 11.5px;
+            color: var(--color-fire);
+            background: rgba(140, 74, 39, 0.08);
+            padding: 1px 7px;
+            border-radius: 4px;
+            margin-left: 2px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+        .variant-btn-item.active .variant-price-tag {
+            background: var(--color-fire);
+            color: #ffffff;
+        }
+        .condition-note-box {
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-left: 3px solid var(--color-fire);
+            border-radius: 0 10px 10px 0;
+            padding: 8px 14px;
+            font-size: 12.5px;
+            color: #57534E;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-left: 3px solid var(--color-fire);
+            transition: all 0.25s ease;
+        }
+        @keyframes pricePop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.12); color: #e11d48; }
+            100% { transform: scale(1); }
+        }
+        .price-anim-pop {
+            display: inline-block;
+            animation: pricePop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
         /* DÒNG TỒN KHO 5 CHI NHÁNH TP.HCM (TỐI GIẢN CHUẨN TGDD/FAHASA) */
         .store-stock-indicator-row {
@@ -1110,18 +1149,18 @@
 
                 <!-- KHỐI HIỂN THỊ GIÁ (SHOPEE PRICE BANNER) -->
                 <div class="price-banner-box">
-                    <span class="price-original-strike" th:if="${book.originalPrice != null}" 
+                    <span class="price-original-strike" id="originalPriceDisplay" th:if="${book.originalPrice != null}" 
                           th:text="'₫' + ${#numbers.formatDecimal(book.originalPrice, 0, 'POINT', 0, 'COMMA')}">
                         ₫120.000
                     </span>
-                    <span class="price-current-fire" th:text="'₫' + ${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')}">
-                        ₫68.000
+                    <span class="price-current-fire" id="currentPriceDisplay" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">
+                        ₫38.250
                     </span>
-                    <span class="price-discount-tag" th:if="${book.discountPercent > 0}" th:text="'-' + ${book.discountPercent} + '%'">
-                        -43%
+                    <span class="price-discount-tag" id="discountPercentTag" th:if="${book.maxDiscountPercent > 0}" th:text="'-' + ${book.maxDiscountPercent} + '%'">
+                        -52%
                     </span>
                     <span class="price-voucher-badge">
-                        <i class="fa-solid fa-ticket"></i> Giá Sau Voucher
+                        <i class="fa-solid fa-ticket"></i> Giá Theo Tình Trạng
                     </span>
                 </div>
 
@@ -1168,16 +1207,57 @@
                 <!-- THUỘC TÍNH: PHÂN LOẠI TÌNH TRẠNG SÁCH (GIỐNG MÀU SẮC/SIZE TRÊN ẢNH SHOPEE) -->
                 <div class="attribute-row">
                     <div class="attr-label">Tình Trạng Sách</div>
-                    <div class="variant-buttons-list">
-                        <div class="variant-btn-item active" onclick="selectVariant(this)">
-                            <i class="fa-solid fa-book-bookmark text-success"></i>
-                            <span th:text="'Bản Độ Mới ' + ${book.conditionPercent} + '% (Đã Thẩm Định)'">Bản Độ Mới 95% (Đã Thẩm Định)</span>
+                    <div style="flex: 1;">
+                        <div class="variant-buttons-list">
+                            <!-- 1. BẢN SÁCH CŨ TIẾT KIỆM (NGOÀI CÙNG BÊN TRÁI - GIÁ THẤP NHẤT) -->
+                            <div class="variant-btn-item active" 
+                                 data-type="budget"
+                                 th:data-price="${book.price != null ? #numbers.formatDecimal(book.price * 0.85, 0, 0) : 0}"
+                                 th:data-original="${book.originalPrice != null ? #numbers.formatDecimal(book.originalPrice, 0, 0) : #numbers.formatDecimal(book.price, 0, 0)}"
+                                 data-condition="85"
+                                 data-label="Bản Sách Cũ Tiết Kiệm (85% Mới)"
+                                 data-note="Độ mới 80% - 85%, giấy ngả màu thời gian tự nhiên, có nếp đọc nhẹ nhưng bảo đảm không mất chữ, tiết kiệm 15% chi phí cho bạn đọc."
+                                 onclick="selectVariant(this)">
+                                <i class="fa-solid fa-piggy-bank text-warning"></i>
+                                <span>Bản Sách Cũ Tiết Kiệm (85% Mới)</span>
+                                <span class="variant-price-tag" th:text="'₫' + ${book.price != null ? #numbers.formatDecimal(book.price * 0.85, 0, 'POINT', 0, 'COMMA') : ''}">₫38.250</span>
+                            </div>
+
+                            <!-- 2. BẢN TIÊU CHUẨN (ĐỘ MỚI NGUYÊN BẢN CỦA SÁCH) -->
+                            <div class="variant-btn-item" 
+                                 data-type="standard"
+                                 th:data-price="${#numbers.formatDecimal(book.price, 0, 0)}"
+                                 th:data-original="${book.originalPrice != null ? #numbers.formatDecimal(book.originalPrice, 0, 0) : #numbers.formatDecimal(book.price, 0, 0)}"
+                                 th:data-condition="${book.conditionPercent}"
+                                 th:data-label="'Bản Tiêu Chuẩn (' + ${book.conditionPercent} + '% Mới)'"
+                                 th:data-note="'Độ mới ' + ${book.conditionPercent} + '%, sách nguyên bản, gáy chắc chắn, các trang sạch đẹp và đầy đủ 100%, đúng theo biên bản kiểm định của chuỗi.'"
+                                 onclick="selectVariant(this)">
+                                <i class="fa-solid fa-book-bookmark text-success"></i>
+                                <span th:text="'Bản Độ Mới ' + ${book.conditionPercent} + '% (Đã Thẩm Định)'">Bản Độ Mới 95% (Đã Thẩm Định)</span>
+                                <span class="variant-price-tag" th:text="'₫' + ${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')}">₫45.000</span>
+                            </div>
+
+                            <!-- 3. BẢN SƯU TẦM (ĐỘ MỚI 99% + BOOKMARK) -->
+                            <div class="variant-btn-item" 
+                                 data-type="collector"
+                                 th:data-price="${book.price != null ? #numbers.formatDecimal(book.price * 1.15, 0, 0) : 0}"
+                                 th:data-original="${book.originalPrice != null ? #numbers.formatDecimal(book.originalPrice, 0, 0) : #numbers.formatDecimal(book.price, 0, 0)}"
+                                 data-condition="99"
+                                 data-label="Bản Sưu Tầm (99% Mới + Bookmark)"
+                                 data-note="Độ mới 98% - 99%, tình trạng sưu tầm xuất sắc như vừa bóc seal, tặng kèm Bookmark kim loại/gỗ khắc laser của Chuỗi Sách Cũ TP.HCM."
+                                 onclick="selectVariant(this)">
+                                <i class="fa-solid fa-award text-primary"></i>
+                                <span>Bản Sưu Tầm (99% Mới + Bookmark)</span>
+                                <span class="variant-price-tag" th:text="'₫' + ${book.price != null ? #numbers.formatDecimal(book.price * 1.15, 0, 'POINT', 0, 'COMMA') : ''}">₫51.750</span>
+                            </div>
                         </div>
-                        <div class="variant-btn-item" onclick="selectVariant(this)">
-                            <span>Bản Sách Cũ Tiết Kiệm (90% Mới)</span>
-                        </div>
-                        <div class="variant-btn-item" onclick="selectVariant(this)">
-                            <span>Bản Kèm Bookmark Nguyên Bản</span>
+
+                        <!-- DÒNG MÔ TẢ ĐẶC TÍNH CHI TIẾT TÌNH TRẠNG VỪA CHỌN -->
+                        <div class="condition-note-box" id="conditionDetailNote">
+                            <i class="fa-solid fa-circle-info text-primary me-1"></i>
+                            <span id="conditionNoteText">
+                                Độ mới 80% - 85%, giấy ngả màu thời gian tự nhiên, có nếp đọc nhẹ nhưng bảo đảm không mất chữ, tiết kiệm 15% chi phí cho bạn đọc.
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -1213,6 +1293,9 @@
                 <form action="/cart/add" method="post" id="cartForm">
                     <input type="hidden" name="bookId" th:value="${book.id}">
                     <input type="hidden" name="action" id="cartAction" value="add">
+                    <input type="hidden" name="condition" id="selectedCondition" value="budget">
+                    <input type="hidden" name="conditionPercent" id="selectedConditionPercent" value="85">
+                    <input type="hidden" name="customPrice" id="selectedCustomPrice" th:value="${book.minPrice != null ? book.minPrice : book.price}">
                     <input type="hidden" name="quantity" id="hiddenQuantity" value="1">
                     <input type="hidden" name="storeId" id="selectedStoreId" th:value="${inventoryList != null and !inventoryList.isEmpty() and inventoryList[0].store != null ? inventoryList[0].store.id : 1}">
 
@@ -1566,9 +1649,72 @@
             .catch(err => console.error(err));
         }
 
+        function parsePriceValue(val) {
+            if (!val) return 0;
+            if (typeof val === 'number') return Math.round(val);
+            const str = val.toString().trim();
+            // Nếu chuỗi chứa dấu chấm phân tách hàng nghìn (dạng "51.750" hoặc "120.000")
+            if (/^\d{1,3}(\.\d{3})+$/.test(str)) {
+                return parseInt(str.replace(/\./g, ''), 10);
+            }
+            // Nếu chuỗi chứa dấu chấm thập phân (dạng "45000.00")
+            if (/^\d+\.\d{1,2}$/.test(str)) {
+                return Math.round(parseFloat(str));
+            }
+            // Bỏ mọi ký tự không phải số
+            const clean = str.replace(/[^\d]/g, '');
+            return clean ? parseInt(clean, 10) : 0;
+        }
+
+        function formatVndCurrency(amount) {
+            const num = parsePriceValue(amount);
+            return '₫' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
         function selectVariant(el) {
             document.querySelectorAll('.variant-btn-item').forEach(btn => btn.classList.remove('active'));
             el.classList.add('active');
+
+            const price = parsePriceValue(el.getAttribute('data-price'));
+            const original = parsePriceValue(el.getAttribute('data-original')) || price;
+            const note = el.getAttribute('data-note') || '';
+            const condPercent = el.getAttribute('data-condition') || '90';
+            const condType = el.getAttribute('data-type') || 'standard';
+
+            // 1. Cập nhật giá bán hiện tại với định dạng đầy đủ (ví dụ ₫51.750)
+            const priceEl = document.getElementById('currentPriceDisplay');
+            if (priceEl && price > 0) {
+                priceEl.innerText = formatVndCurrency(price);
+                priceEl.classList.remove('price-anim-pop');
+                void priceEl.offsetWidth; // kích hoạt reflow animation
+                priceEl.classList.add('price-anim-pop');
+            }
+
+            // 2. Cập nhật thẻ % giảm giá so với giá bìa gốc
+            const discountTag = document.getElementById('discountPercentTag');
+            if (discountTag && original > 0 && price > 0) {
+                const discount = Math.round((original - price) / original * 100);
+                if (discount > 0) {
+                    discountTag.innerText = '-' + discount + '%';
+                    discountTag.style.display = 'inline-block';
+                } else {
+                    discountTag.style.display = 'none';
+                }
+            }
+
+            // 3. Cập nhật dòng mô tả chi tiết tình trạng
+            const noteText = document.getElementById('conditionNoteText');
+            if (noteText && note) {
+                noteText.innerText = note;
+            }
+
+            // 4. Cập nhật các trường ẩn trong form giỏ hàng
+            const condInput = document.getElementById('selectedCondition');
+            if (condInput) condInput.value = condType;
+            const condPercentInput = document.getElementById('selectedConditionPercent');
+            if (condPercentInput) condPercentInput.value = condPercent;
+            const customPriceInput = document.getElementById('selectedCustomPrice');
+            if (customPriceInput) customPriceInput.value = Math.round(price);
         }
 
         function toggleStoreDrawer() {
@@ -1598,6 +1744,9 @@
             const titleEl = document.querySelector('.detail-book-title') || document.querySelector('h1');
             const bookTitle = titleEl ? titleEl.innerText.trim() : 'Sách';
 
+            const condType = document.getElementById('selectedCondition') ? document.getElementById('selectedCondition').value : 'standard';
+            const condName = condType === 'budget' ? ' (Bản Tiết Kiệm)' : (condType === 'collector' ? ' (Bản Sưu Tầm)' : '');
+
             // Gửi API thêm giỏ hàng không tải lại trang và kích hoạt hiệu ứng nhảy giỏ hàng
             fetch('/cart/api/add', {
                 method: 'POST',
@@ -1611,7 +1760,7 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success && window.triggerFlyToCart) {
-                    window.triggerFlyToCart(sourceImg, data.count, 'Đã thêm "' + bookTitle + '" vào giỏ hàng!');
+                    window.triggerFlyToCart(sourceImg, data.count, 'Đã thêm "' + bookTitle + condName + '" vào giỏ hàng!');
                 } else {
                     document.getElementById('cartForm').submit();
                 }
@@ -1628,6 +1777,7 @@
             const bookId = bookIdInput ? bookIdInput.value : '';
             const storeIdInput = document.getElementById('selectedStoreId');
             const storeId = storeIdInput ? storeIdInput.value : 1;
+            const condType = document.getElementById('selectedCondition') ? document.getElementById('selectedCondition').value : 'standard';
 
             if (document.getElementById('hiddenQuantity')) {
                 document.getElementById('hiddenQuantity').value = qty;
@@ -1636,8 +1786,11 @@
                 document.getElementById('cartAction').value = 'buy_now';
             }
 
-            // Điều hướng trực tiếp đến trang checkout với các tham số buyNow
-            window.location.href = '/checkout?buyNow=true&bookId=' + encodeURIComponent(bookId) + '&storeId=' + encodeURIComponent(storeId) + '&quantity=' + encodeURIComponent(qty);
+            // Điều hướng trực tiếp đến trang checkout với các tham số buyNow và condition
+            window.location.href = '/checkout?buyNow=true&bookId=' + encodeURIComponent(bookId) 
+                    + '&storeId=' + encodeURIComponent(storeId) 
+                    + '&quantity=' + encodeURIComponent(qty)
+                    + '&condition=' + encodeURIComponent(condType);
         }
 
         /* ================= QUẢN LÝ ĐÁNH GIÁ SAO VÀ BỘ LỌC SHOPEE ================= */

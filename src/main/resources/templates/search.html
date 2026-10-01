@@ -789,7 +789,7 @@
                     <a th:each="book : ${books}" th:href="@{'/books/' + ${book.id}}" class="book-card">
                         <div class="card-thumb">
                             <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" alt="Bìa sách">
-                            <span class="tag-cond" th:text="${book.conditionPercent} + '% Mới'">95% Mới</span>
+                            <span class="tag-cond" th:text="'Từ ' + ${book.conditionPercent} + '% Mới'">95% Mới</span>
                         </div>
                         <div class="card-body">
                             <h4 class="book-title" th:text="${book.title}">Tên sách</h4>
@@ -797,7 +797,7 @@
                                 <i class="fa-solid fa-pen-nib me-1"></i> <span th:text="${book.author != null && !#strings.isEmpty(book.author) ? book.author : 'Đang cập nhật'}">Tác giả</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:auto;">
-                                <span class="price-text" th:text="'₫' + ${#numbers.formatDecimal(book.price != null ? book.price : 0, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                                <span class="price-text" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                                 <span style="font-size:11px; color:#78716C;" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
                             </div>
                             <button type="button" class="btn-card-buy-now" 

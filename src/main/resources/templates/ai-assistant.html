@@ -261,27 +261,90 @@
         .typing-dots span:nth-child(3) { animation-delay: .4s; }
         @keyframes blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
 
-        /* THANH NHẬP LIỆU ĐÁY (APPLE FLOATING PILL) */
+        /* GỢI Ý CÂU HỎI NHANH */
+        .chat-quick-suggestions {
+            display: flex;
+            gap: 8px;
+            padding: 8px 18px 6px 18px;
+            overflow-x: auto;
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.85);
+            border-top: 1px dashed rgba(140, 74, 39, 0.2);
+        }
+        .quick-chip-item {
+            background: #ffffff;
+            border: 1px solid rgba(140, 74, 39, 0.25);
+            border-radius: 9999px;
+            padding: 5px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #44403C;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            display: inline-flex;
+            align-items: center;
+        }
+        .quick-chip-item:hover {
+            border-color: var(--color-fire);
+            color: var(--color-fire);
+            background: #FDF9F5;
+            transform: translateY(-1px);
+        }
+
+        /* THANH NHẬP LIỆU ĐÁY (ĐẬM NÉT, RÕ RÀNG VÙNG NHẬP LIỆU) */
         .chat-input-bar, .input-message-bar {
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1.5px solid rgba(232, 222, 200, 0.6);
+            padding: 14px 18px;
+            background: #ffffff !important;
+            border-top: 2px solid rgba(140, 74, 39, 0.2) !important;
             display: flex; gap: 12px; align-items: center;
+            box-shadow: 0 -4px 16px rgba(45, 24, 15, 0.05);
+        }
+        .chat-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: #FAF8F5;
+            border: 2px solid rgba(140, 74, 39, 0.35);
+            border-radius: 9999px;
+            padding: 0 18px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.04);
+        }
+        .chat-input-wrapper:hover {
+            border-color: rgba(140, 74, 39, 0.6);
+            background: #ffffff;
+        }
+        .chat-input-wrapper:focus-within {
+            background: #ffffff;
+            border-color: var(--color-fire);
+            box-shadow: 0 0 0 4px rgba(140, 74, 39, 0.16), 0 4px 16px rgba(140, 74, 39, 0.1);
+        }
+        .chat-input-lead-icon {
+            color: var(--color-fire);
+            font-size: 16px;
+            margin-right: 10px;
+            flex-shrink: 0;
+            opacity: 0.85;
         }
         .input-pill-field {
-            flex: 1; border: 1.5px solid rgba(255, 255, 255, 0.9); border-radius: 9999px;
-            background: rgba(255, 255, 255, 0.92); padding: 12px 22px; font-size: 14px;
-            font-family: inherit; outline: none; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+            flex: 1; border: none !important;
+            background: transparent !important;
+            padding: 13px 4px !important;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1C1917;
+            font-weight: 600;
+            outline: none !important;
+            box-shadow: none !important;
         }
-        .input-pill-field:focus {
-            background: #ffffff; border-color: var(--color-fire);
-            box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.14);
+        .input-pill-field::placeholder {
+            color: #78716C !important;
+            font-weight: 500;
+            font-size: 13.5px;
         }
         .btn-send-chat {
-            width: 46px; height: 46px; border-radius: 50%;
+            width: 48px; height: 48px; border-radius: 50%;
             background: linear-gradient(135deg, #8C4A27, #6B3416);
             color: white; border: 1.5px solid rgba(255, 255, 255, 0.4);
             cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -453,10 +516,21 @@
                 </div>
             </div>
 
-            <!-- THANH NHẬP LIỆU -->
+            <!-- GỢI Ý CÂU HỎI NHANH (QUICK CHIPS) -->
+            <div class="chat-quick-suggestions">
+                <span class="quick-chip-item" onclick="sendQuickPrompt('Tư vấn cho mình vài cuốn sách chữa lành tâm hồn')"><i class="fa-solid fa-leaf text-success me-1"></i> Sách chữa lành</span>
+                <span class="quick-chip-item" onclick="sendQuickPrompt('Shop có cuốn sách nào dưới 50k không?')"><i class="fa-solid fa-tags text-warning me-1"></i> Sách dưới 50k</span>
+                <span class="quick-chip-item" onclick="sendQuickPrompt('Cuốn Nhà Giả Kim hiện có sẵn ở chi nhánh nào?')"><i class="fa-solid fa-location-dot text-danger me-1"></i> Tìm Nhà Giả Kim</span>
+                <span class="quick-chip-item" onclick="sendQuickPrompt('Chính sách freeship và đồng kiểm như thế nào?')"><i class="fa-solid fa-truck-fast text-primary me-1"></i> Phí ship & Đổi trả</span>
+            </div>
+
+            <!-- THANH NHẬP LIỆU NỔI BẬT DỄ THẤY -->
             <div class="chat-input-bar input-message-bar">
-                <input type="text" id="chatInput" class="input-pill-field" placeholder="Nhập câu hỏi của bạn (ví dụ: 'Tìm sách chữa lành', 'Cuốn Nhà Giả Kim còn ở đâu?')..." onkeydown="if(event.key === 'Enter') sendUserMessage()">
-                <button type="button" class="btn-send-chat" onclick="sendUserMessage()">
+                <div class="chat-input-wrapper">
+                    <i class="fa-regular fa-comment-dots chat-input-lead-icon"></i>
+                    <input type="text" id="chatInput" class="input-pill-field" placeholder="Nhập câu hỏi của bạn tại đây (ví dụ: 'Tìm sách chữa lành', 'Cuốn Nhà Giả Kim còn ở đâu?')..." onkeydown="if(event.key === 'Enter') sendUserMessage()">
+                </div>
+                <button type="button" class="btn-send-chat" onclick="sendUserMessage()" title="Gửi tin nhắn">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </div>

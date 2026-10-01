@@ -76,6 +76,7 @@ public class CheckoutController {
             @RequestParam(value = "bookId", required = false) Long bookId,
             @RequestParam(value = "storeId", required = false, defaultValue = "1") Long storeId,
             @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
+            @RequestParam(value = "condition", required = false, defaultValue = "budget") String condition,
             @RequestParam(value = "voucherCode", required = false) String voucherCode,
             HttpServletRequest request,
             Model model) {
@@ -107,8 +108,36 @@ public class CheckoutController {
             if (bookOpt.isEmpty()) {
                 return "redirect:/cart";
             }
-            Book book = bookOpt.get();
+            Book origBook = bookOpt.get();
             int directQty = (quantity != null && quantity > 0) ? quantity : 1;
+
+            // Tính đơn giá theo tình trạng sách đã chọn (Bản tiết kiệm giảm 15%, Bản sưu tầm +15%)
+            BigDecimal unitPrice = origBook.getPrice();
+            Integer conditionPercent = origBook.getConditionPercent();
+            String conditionLabel = "Bản Tiêu Chuẩn (" + conditionPercent + "% Mới)";
+
+            if ("budget".equalsIgnoreCase(condition)) {
+                unitPrice = origBook.getPrice() != null 
+                        ? origBook.getPrice().multiply(new BigDecimal("0.85")).setScale(0, java.math.RoundingMode.HALF_UP) 
+                        : BigDecimal.ZERO;
+                conditionPercent = 85;
+                conditionLabel = "Bản Sách Cũ Tiết Kiệm (85% Mới)";
+            } else if ("collector".equalsIgnoreCase(condition)) {
+                unitPrice = origBook.getPrice() != null 
+                        ? origBook.getPrice().multiply(new BigDecimal("1.15")).setScale(0, java.math.RoundingMode.HALF_UP) 
+                        : BigDecimal.ZERO;
+                conditionPercent = 99;
+                conditionLabel = "Bản Sưu Tầm (99% Mới + Bookmark)";
+            }
+
+            Book book = new Book();
+            book.setId(origBook.getId());
+            book.setTitle(origBook.getTitle() + " - " + conditionLabel);
+            book.setAuthor(origBook.getAuthor());
+            book.setPrice(unitPrice);
+            book.setOriginalPrice(origBook.getOriginalPrice());
+            book.setConditionPercent(conditionPercent);
+            book.setImages(origBook.getImages());
 
             Store selectedStore = storeRepository.findById(storeId).orElse(null);
 
@@ -126,6 +155,7 @@ public class CheckoutController {
             model.addAttribute("directBookId", bookId);
             model.addAttribute("directStoreId", storeId);
             model.addAttribute("directQuantity", directQty);
+            model.addAttribute("directCondition", condition);
         } else {
             // Chế độ thanh toán từ Giỏ hàng thông thường
             Cart cart = cartService.getOrCreateCartForUser(userId);
@@ -214,6 +244,7 @@ public class CheckoutController {
             @RequestParam(value = "buyNow", required = false, defaultValue = "false") boolean buyNow,
             @RequestParam(value = "bookId", required = false) Long bookId,
             @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
+            @RequestParam(value = "condition", required = false, defaultValue = "standard") String condition,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
 
@@ -235,6 +266,11 @@ public class CheckoutController {
             if (pickupStore != null) {
                 receiverAddress = "Nhận trực tiếp tại: " + pickupStore.getStoreName() + " (" + pickupStore.getAddress() + ")";
             }
+        }
+
+        if (buyNow && condition != null && !"standard".equalsIgnoreCase(condition)) {
+            String condNote = "budget".equalsIgnoreCase(condition) ? "[Phân loại: Bản Tiết Kiệm (85% Mới)]" : "[Phân loại: Bản Sưu Tầm (99% Mới + Bookmark)]";
+            customerNotes = (customerNotes != null && !customerNotes.isBlank()) ? (customerNotes + " " + condNote) : condNote;
         }
 
         try {

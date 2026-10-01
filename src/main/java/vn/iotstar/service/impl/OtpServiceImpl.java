@@ -48,7 +48,7 @@ public class OtpServiceImpl implements IOtpService {
         otpTokenRepository.save(otpToken);
 
         String typeLabel = tokenType == OtpToken.TokenType.FORGOT_PASSWORD 
-                ? "Đặt Lại Mật Khẩu" : "Kích Hoạt Tài Khoản";
+                ? "Đặt Lại Mật Khẩu" : (tokenType == OtpToken.TokenType.CHANGE_PASSWORD ? "Đổi Mật Khẩu Tài Khoản" : "Kích Hoạt Tài Khoản");
 
         // Gửi email qua giao thức SMTP (HTML Formatted)
         try {

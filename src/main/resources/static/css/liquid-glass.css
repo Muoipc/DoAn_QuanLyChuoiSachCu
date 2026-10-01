@@ -238,12 +238,25 @@
   user-select: none !important;
 }
 
-/* ================= 7. POPOVER & MENU CON BO CONG THANH LỊCH (16PX) ================= */
+/* ================= 7. POPOVER & MENU CON CHUẨN TINH TẾ ================= */
 .shopee-noti-popover,
 .lang-dropdown-menu {
-  border-radius: 16px !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: 0 20px 48px rgba(45, 24, 15, 0.16), 0 4px 12px rgba(0, 0, 0, 0.04), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95) !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(232, 222, 200, 0.8) !important;
+  box-shadow: 0 10px 30px rgba(45, 24, 15, 0.12) !important;
+}
+
+/* Popover giỏ hàng chuẩn Shopee tinh gọn, bo góc 4px sắc nét, có tam giác chỉ icon */
+.shopee-cart-popover {
+  border-radius: 4px !important;
+  overflow: visible !important;
+  border: 1px solid rgba(0, 0, 0, 0.09) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  background: #ffffff !important;
+}
+
+.variant-btn-item {
+  border-radius: 12px !important;
 }
 
 /* CẦU NỐI HOVER TÀNG HÌNH & CLICK-TO-TOGGLE CHO DROPDOWN NGÔN NGỮ (CHỐNG MẤT BẢNG KHI DI CHUỘT) */
@@ -384,16 +397,27 @@ body {
 
 .chat-input-bar,
 .input-message-bar {
-  border-radius: 9999px !important;
-  background: rgba(255, 255, 255, 0.88) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
-  box-shadow: 0 8px 24px rgba(45, 24, 15, 0.06), inset 0 1px 1.5px rgba(255, 255, 255, 0.95) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border-top: 1.5px solid rgba(140, 74, 39, 0.18) !important;
+  box-shadow: 0 -4px 20px rgba(45, 24, 15, 0.06) !important;
 }
 
-.input-pill-field {
+.chat-input-wrapper {
+  background: #FFFFFF !important;
+  border: 2px solid rgba(140, 74, 39, 0.35) !important;
   border-radius: 9999px !important;
+  box-shadow: 0 2px 8px rgba(45, 24, 15, 0.05), inset 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+}
+
+.chat-input-wrapper:hover {
+  border-color: rgba(140, 74, 39, 0.6) !important;
+}
+
+.chat-input-wrapper:focus-within {
+  border-color: #8C4A27 !important;
+  box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.16), 0 4px 14px rgba(140, 74, 39, 0.1) !important;
 }
 
 /* --- 9.3 HỒ SƠ & TRỢ GIÚP (PROFILE & HELP) --- */

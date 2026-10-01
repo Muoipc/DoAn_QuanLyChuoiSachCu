@@ -67,6 +67,9 @@ public class ProfileController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private vn.iotstar.service.IOtpService otpService;
+
     /**
      * Xác định userId của phiên hiện tại:
      * Ưu tiên tài khoản đăng nhập Spring Security, fallback ID 4 (Nguyễn Song Hoàng Phúc).
@@ -305,7 +308,26 @@ public class ProfileController {
     }
 
     /**
-     * Xử lý đổi mật khẩu
+     * POST /user/account/profile/send-change-password-otp: Gửi mã OTP xác nhận đổi mật khẩu về email của tài khoản
+     */
+    @PostMapping("/profile/send-change-password-otp")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> sendChangePasswordOtp(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null || userDetails.getId() == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Vui lòng đăng nhập lại!"));
+        }
+        Long userId = resolveUserId(userDetails);
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null || user.getEmail() == null || user.getEmail().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Tài khoản chưa cập nhật email!"));
+        }
+
+        otpService.generateAndSendOtp(user.getEmail(), vn.iotstar.entity.OtpToken.TokenType.CHANGE_PASSWORD);
+        return ResponseEntity.ok(Map.of("success", true, "message", "Mã OTP đã được gửi tới email " + user.getEmail() + "! Vui lòng kiểm tra hộp thư."));
+    }
+
+    /**
+     * Xử lý đổi mật khẩu có bảo mật mã OTP qua email
      */
     @PostMapping("/profile/change-password")
     @Transactional
@@ -314,6 +336,7 @@ public class ProfileController {
             @RequestParam("oldPassword") String oldPassword,
             @RequestParam("newPassword") String newPassword,
             @RequestParam("confirmPassword") String confirmPassword,
+            @RequestParam(value = "otpCode", required = false) String otpCode,
             RedirectAttributes redirectAttributes) {
 
         if (userDetails == null || userDetails.getId() == null) {
@@ -342,10 +365,22 @@ public class ProfileController {
             return "redirect:/user/account/profile?tab=password";
         }
 
+        // Kiểm tra mã OTP bảo mật
+        if (otpCode == null || otpCode.trim().length() != 6) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng nhập đúng mã OTP 6 chữ số được gửi tới email của bạn!");
+            return "redirect:/user/account/profile?tab=password";
+        }
+
+        boolean validOtp = otpService.verifyOtp(user.getEmail(), otpCode.trim(), vn.iotstar.entity.OtpToken.TokenType.CHANGE_PASSWORD);
+        if (!validOtp) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Mã OTP không chính xác hoặc đã hết hạn (5 phút). Vui lòng thử lại!");
+            return "redirect:/user/account/profile?tab=password";
+        }
+
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Đổi mật khẩu tài khoản thành công!");
+        redirectAttributes.addFlashAttribute("successMessage", "Đổi mật khẩu tài khoản thành công! Mật khẩu mới đã được cập nhật an toàn.");
         return "redirect:/user/account/profile?tab=password";
     }
 

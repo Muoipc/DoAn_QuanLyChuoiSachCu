@@ -745,7 +745,7 @@
                     <p class="main-card-sub">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
                 </div>
 
-                <form action="/user/account/profile/change-password" method="post" style="max-width:520px; display:flex; flex-direction:column; gap:18px;">
+                <form action="/user/account/profile/change-password" method="post" style="max-width:560px; display:flex; flex-direction:column; gap:18px;">
                     <div class="form-row-item">
                         <label class="form-label-txt">Mật khẩu hiện tại</label>
                         <input type="password" name="oldPassword" class="form-input-control" placeholder="Nhập mật khẩu hiện tại..." required>
@@ -759,6 +759,19 @@
                     <div class="form-row-item">
                         <label class="form-label-txt">Xác nhận mật khẩu</label>
                         <input type="password" name="confirmPassword" class="form-input-control" placeholder="Nhập lại mật khẩu mới..." required>
+                    </div>
+
+                    <div class="form-row-item">
+                        <label class="form-label-txt">Mã xác thực OTP</label>
+                        <div style="flex:1; display:flex; gap:10px; align-items:center;">
+                            <input type="text" name="otpCode" id="inputChangePasswordOtp" class="form-input-control" maxlength="6" placeholder="Nhập mã 6 số gửi về email..." required style="letter-spacing:3px; font-weight:700;">
+                            <button type="button" id="btnSendChangePassOtp" onclick="sendChangePasswordOtp()" style="white-space:nowrap; height:42px; padding:0 18px; border-radius:9999px; border:1px solid #8C4A27; background:#F5ECE4; color:#8C4A27; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
+                                <i class="fa-solid fa-paper-plane me-1"></i> GỬI MÃ OTP
+                            </button>
+                        </div>
+                    </div>
+                    <div style="margin-left: 170px; margin-top: -10px; font-size: 12px; color: #78716C;">
+                        Mã OTP sẽ được gửi trực tiếp tới email: <strong th:text="${user.email}" style="color:#1C1917;">email@domain.com</strong> (Hiệu lực trong 5 phút).
                     </div>
 
                     <div class="form-row-item" style="margin-top:10px;">
@@ -873,6 +886,45 @@
 
     <script src="/js/i18n.js"></script>
     <script>
+        function sendChangePasswordOtp() {
+            var btn = document.getElementById('btnSendChangePassOtp');
+            if (!btn || btn.disabled) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Đang gửi...';
+
+            fetch('/user/account/profile/send-change-password-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    alert('✓ ' + data.message);
+                    var count = 60;
+                    var timer = setInterval(function() {
+                        count--;
+                        if (count > 0) {
+                            btn.innerHTML = '<i class="fa-solid fa-clock me-1"></i> Gửi lại (' + count + 's)';
+                        } else {
+                            clearInterval(timer);
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i> GỬI MÃ OTP';
+                        }
+                    }, 1000);
+                } else {
+                    alert('⚠️ ' + data.message);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i> GỬI MÃ OTP';
+                }
+            })
+            .catch(function(err) {
+                alert('⚠️ Lỗi gửi mã OTP: ' + err);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i> GỬI MÃ OTP';
+            });
+        }
+
         function openChangeEmailModal() {
             var modal = document.getElementById('changeEmailModal');
             var input = document.getElementById('modalInputEmail');
