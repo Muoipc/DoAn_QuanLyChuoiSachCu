@@ -394,7 +394,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Order> findById(Long id) {
+    public Optional<Order> findOrderById(Long id) {
         return orderRepository.findByIdWithDetails(id);
     }
 

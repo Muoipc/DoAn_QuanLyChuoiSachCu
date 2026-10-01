@@ -58,8 +58,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Cấu hình định tuyến tài nguyên tĩnh tải lên (Upload) phục vụ Avatar và Danh mục
+     * Cấu hình định tuyến tài nguyên tĩnh tải lên (Upload) phục vụ Avatar, Danh mục và Quản trị
      * Ánh xạ URL /upload/** vào thư mục vật lý ~/upload/ trên máy chủ
+     * Ánh xạ URL /uploads/** vào thư mục uploads của dự án
      */
     @Override
     public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
@@ -69,6 +70,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/upload/**")
                 .addResourceLocations("file:" + uploadPath + "/");
+
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:src/main/resources/static/uploads/", "classpath:/static/uploads/");
     }
 
     /**
@@ -81,11 +85,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setFallbackToSystemLocale(false);
         return messageSource;
-    }
-
-    @Override
-    public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:src/main/resources/static/uploads/", "classpath:/static/uploads/");
     }
 }

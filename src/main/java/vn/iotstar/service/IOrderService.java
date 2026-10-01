@@ -73,9 +73,9 @@ public interface IOrderService {
     Optional<Order> findByOrderCode(String orderCode);
 
     /**
-     * Lấy chi tiết đơn hàng theo ID kèm danh sách sản phẩm, chi nhánh, vận chuyển.
+     * Lấy chi tiết đơn hàng theo ID kèm danh sách sản phẩm, chi nhánh, vận chuyển (Optional).
      */
-    Optional<Order> findById(Long id);
+    Optional<Order> findOrderById(Long id);
 
     /**
      * Cập nhật trạng thái đơn hàng khi thanh toán VNPay thành công.
@@ -86,6 +86,9 @@ public interface IOrderService {
         String keyword, Order.OrderStatus status, Long storeId, Order.DeliveryMethod deliveryMethod, org.springframework.data.domain.Pageable pageable
     );
 
+    /**
+     * Lấy chi tiết đơn hàng theo ID (Entity phục vụ Admin/Shipper).
+     */
     Order findById(Long id);
 
     void updateOrderStatus(Long orderId, Order.OrderStatus newStatus, String note);
