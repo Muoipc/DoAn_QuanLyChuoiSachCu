@@ -15,50 +15,50 @@
         </div>
     </div>
 
-    <!-- STATUS TABS / BADGE COUNTERS -->
+    <!-- STATUS TABS / BADGE COUNTERS (VINTAGE PARCHMENT TABS) -->
     <div class="card card-custom mb-4">
         <div class="card-body p-2">
-            <ul class="nav nav-pills gap-1">
+            <ul class="nav nav-pills gap-2 flex-wrap">
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus == null} ? 'active bg-dark' : 'text-dark'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus == null} ? 'background: var(--color-fire); color: #fff;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: var(--color-text-main);'" 
                        th:href="@{/admin/orders(storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
                         Tất cả đơn
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'NEW'} ? 'active bg-primary' : 'text-primary'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus != null and selectedStatus.name() == 'NEW'} ? 'background: #ee4d2d; color: #fff;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: #ee4d2d;'" 
                        th:href="@{/admin/orders(status='NEW', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Đơn mới <span class="badge bg-primary-subtle text-primary ms-1" th:text="${countNew}">0</span>
+                        Đơn mới <span class="badge ms-1" style="background: rgba(238, 77, 45, 0.15); color: #ee4d2d;" th:text="${countNew}">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'CONFIRMED'} ? 'active bg-info text-dark' : 'text-info-emphasis'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus != null and selectedStatus.name() == 'CONFIRMED'} ? 'background: #0284c7; color: #fff;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: #0284c7;'" 
                        th:href="@{/admin/orders(status='CONFIRMED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Đã xác nhận <span class="badge bg-info-subtle text-dark ms-1" th:text="${countConfirmed}">0</span>
+                        Đã xác nhận <span class="badge ms-1" style="background: rgba(2, 132, 199, 0.15); color: #0284c7;" th:text="${countConfirmed}">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'active bg-warning text-dark' : 'text-warning-emphasis'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'background: #eab308; color: #1C1917;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: var(--color-gold-text);'" 
                        th:href="@{/admin/orders(status='SHIPPING', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Đang giao <span class="badge bg-warning-subtle text-dark ms-1" th:text="${countShipping}">0</span>
+                        Đang giao <span class="badge ms-1" style="background: rgba(234, 179, 8, 0.2); color: #854d0e;" th:text="${countShipping}">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'DELIVERED'} ? 'active bg-success' : 'text-success'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus != null and selectedStatus.name() == 'DELIVERED'} ? 'background: var(--color-trust-green); color: #fff;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: var(--color-trust-green);'" 
                        th:href="@{/admin/orders(status='DELIVERED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Đã giao <span class="badge bg-success-subtle text-success ms-1" th:text="${countDelivered}">0</span>
+                        Đã giao <span class="badge ms-1" style="background: var(--color-trust-bg); color: var(--color-trust-green);" th:text="${countDelivered}">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'CANCELLED'} ? 'active bg-danger' : 'text-danger'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus != null and selectedStatus.name() == 'CANCELLED'} ? 'background: #dc2626; color: #fff;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: #dc2626;'" 
                        th:href="@{/admin/orders(status='CANCELLED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Đã hủy <span class="badge bg-danger-subtle text-danger ms-1" th:text="${countCancelled}">0</span>
+                        Đã hủy <span class="badge ms-1" style="background: #fee2e2; color: #b91c1c;" th:text="${countCancelled}">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'RETURNED'} ? 'active bg-secondary' : 'text-secondary'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus != null and selectedStatus.name() == 'RETURNED'} ? 'background: #574E45; color: #fff;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: var(--color-text-secondary);'" 
                        th:href="@{/admin/orders(status='RETURNED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Trả hàng <span class="badge bg-secondary-subtle text-secondary ms-1" th:text="${countReturned}">0</span>
+                        Trả hàng <span class="badge ms-1" style="background: #f5ece4; color: #574E45;" th:text="${countReturned}">0</span>
                     </a>
                 </li>
             </ul>

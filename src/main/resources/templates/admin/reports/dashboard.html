@@ -14,22 +14,22 @@
             <p class="text-muted small mb-0">Theo dõi doanh số chuỗi 5 chi nhánh, phân tích thị phần và xuất báo cáo kiểm toán.</p>
         </div>
         <div class="d-flex gap-2">
-            <a th:href="@{/admin/reports/export-excel}" class="btn btn-success fw-semibold">
+            <a th:href="@{/admin/reports/export-excel}" class="btn btn-theme" style="background-color: var(--color-trust-green); border: none;">
                 <i class="fa-solid fa-file-excel me-1"></i>Xuất Báo Cáo Excel (.xlsx)
             </a>
         </div>
     </div>
 
-    <!-- 4 CARDS TỔNG QUAN -->
+    <!-- 4 CARDS TỔNG QUAN (VINTAGE BOOKSTORE DESIGN SYSTEM) -->
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">
-            <div class="card card-custom p-3 border-start border-primary border-4">
+            <div class="card card-custom p-3" style="border-left: 4px solid var(--color-fire) !important;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="text-muted small fw-semibold">Tổng Doanh Thu</div>
-                        <h4 class="fw-bold text-primary mb-0 mt-1" th:text="${#numbers.formatDecimal(summary.totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</h4>
+                        <div class="small fw-bold" style="color: var(--color-text-secondary);">Tổng Doanh Thu</div>
+                        <h4 class="fw-bold mb-0 mt-1" style="color: var(--color-fire);" th:text="${#numbers.formatDecimal(summary.totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</h4>
                     </div>
-                    <div class="bg-primary-subtle p-3 rounded-circle text-primary">
+                    <div class="p-3 rounded-circle" style="background: var(--color-fire-light); color: var(--color-fire);">
                         <i class="fa-solid fa-sack-dollar fa-xl"></i>
                     </div>
                 </div>
@@ -37,13 +37,13 @@
         </div>
 
         <div class="col-sm-6 col-xl-3">
-            <div class="card card-custom p-3 border-start border-success border-4">
+            <div class="card card-custom p-3" style="border-left: 4px solid var(--color-trust-green) !important;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="text-muted small fw-semibold">Tổng Đơn Hàng</div>
-                        <h4 class="fw-bold text-success mb-0 mt-1" th:text="${summary.totalOrders}">0</h4>
+                        <div class="small fw-bold" style="color: var(--color-text-secondary);">Tổng Đơn Hàng</div>
+                        <h4 class="fw-bold mb-0 mt-1" style="color: var(--color-trust-green);" th:text="${summary.totalOrders}">0</h4>
                     </div>
-                    <div class="bg-success-subtle p-3 rounded-circle text-success">
+                    <div class="p-3 rounded-circle" style="background: var(--color-trust-bg); color: var(--color-trust-green);">
                         <i class="fa-solid fa-cart-check fa-xl"></i>
                     </div>
                 </div>
@@ -51,13 +51,13 @@
         </div>
 
         <div class="col-sm-6 col-xl-3">
-            <div class="card card-custom p-3 border-start border-warning border-4">
+            <div class="card card-custom p-3" style="border-left: 4px solid var(--color-discount-gold) !important;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="text-muted small fw-semibold">Đầu Sách Cũ Hiện Có</div>
-                        <h4 class="fw-bold text-warning mb-0 mt-1" th:text="${summary.totalBooks}">0</h4>
+                        <div class="small fw-bold" style="color: var(--color-text-secondary);">Đầu Sách Cũ Hiện Có</div>
+                        <h4 class="fw-bold mb-0 mt-1" style="color: var(--color-gold-text);" th:text="${summary.totalBooks}">0</h4>
                     </div>
-                    <div class="bg-warning-subtle p-3 rounded-circle text-warning">
+                    <div class="p-3 rounded-circle" style="background: #fef9c3; color: var(--color-gold-text);">
                         <i class="fa-solid fa-book fa-xl"></i>
                     </div>
                 </div>
@@ -65,13 +65,13 @@
         </div>
 
         <div class="col-sm-6 col-xl-3">
-            <div class="card card-custom p-3 border-start border-info border-4">
+            <div class="card card-custom p-3" style="border-left: 4px solid #292524 !important;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="text-muted small fw-semibold">Khách Hàng &amp; Thành Viên</div>
-                        <h4 class="fw-bold text-info mb-0 mt-1" th:text="${summary.totalUsers}">0</h4>
+                        <div class="small fw-bold" style="color: var(--color-text-secondary);">Khách Hàng &amp; Thành Viên</div>
+                        <h4 class="fw-bold mb-0 mt-1" style="color: #292524;" th:text="${summary.totalUsers}">0</h4>
                     </div>
-                    <div class="bg-info-subtle p-3 rounded-circle text-info">
+                    <div class="p-3 rounded-circle" style="background: #ede8df; color: #292524;">
                         <i class="fa-solid fa-users fa-xl"></i>
                     </div>
                 </div>
@@ -242,7 +242,7 @@
             labels: parsedStatusLabels,
             datasets: [{
                 data: parsedStatusData,
-                backgroundColor: ['#0d6efd', '#0dcaf0', '#ffc107', '#198754', '#dc3545', '#6c757d']
+                backgroundColor: ['#8C4A27', '#0284c7', '#ffbe00', '#007a57', '#d83a1e', '#78716C']
             }]
         },
         options: {
@@ -251,7 +251,7 @@
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: { boxWidth: 12, font: { size: 11 } }
+                    labels: { boxWidth: 12, font: { size: 11, family: 'Roboto' } }
                 }
             }
         }
@@ -266,7 +266,8 @@
             datasets: [{
                 label: 'Doanh thu (VNĐ)',
                 data: parsedStoreData,
-                backgroundColor: '#198754',
+                backgroundColor: '#8C4A27',
+                hoverBackgroundColor: '#733615',
                 borderRadius: 6
             }]
         },

@@ -76,8 +76,8 @@
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <label class="form-label fw-semibold mb-0">Mô Tả Nội Dung Sách</label>
-                                <button type="button" class="btn btn-sm btn-outline-primary py-1 px-2" id="btnAiDescription" onclick="handleAiDescription(this)" style="font-size: 12px;">
-                                    <i class="fa-solid fa-wand-magic-sparkles me-1"></i>AI Soạn Mô Tả Chuẩn Sách Cũ
+                                <button type="button" class="btn btn-sm py-1 px-3 fw-bold" id="btnAiDescription" onclick="handleAiDescription(this)" style="font-size: 11.5px; border: 1px solid var(--color-border); color: var(--color-fire); background: var(--color-fire-light); border-radius: 6px;">
+                                    <i class="fa-solid fa-wand-magic-sparkles me-1" style="color: var(--color-fire);"></i>AI Soạn Mô Tả Chuẩn Sách Cũ
                                 </button>
                             </div>
                             <textarea class="form-control" th:field="*{description}" id="bookDescription" rows="6" placeholder="Tóm tắt tác phẩm, trích dẫn hay, ý nghĩa cuốn sách..."></textarea>
@@ -147,24 +147,25 @@
             <!-- CỘT PHẢI: GIÁ CẢ, ẢNH CLOUDINARY & TRẠNG THÁI -->
             <div class="col-lg-4">
                 <!-- CARD 4: GIÁ BÁN & KHUYẾN MÃI -->
+                <!-- CARD 4: GIÁ BÁN & KHUYẾN MÃI (TÍCH HỢP AI ĐỊNH GIÁ) -->
                 <div class="card card-custom">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <div><i class="fa-solid fa-tag text-success me-2"></i>Định Giá Sách</div>
-                        <button type="button" class="btn btn-sm btn-outline-success py-1 px-2" id="btnAiValuation" onclick="handleAiValuation(this)" style="font-size: 11px;">
-                            <i class="fa-solid fa-calculator me-1"></i>AI Định Giá Nhanh
+                        <div class="fw-bold"><i class="fa-solid fa-tag text-success me-2"></i>Định Giá Sách Cũ</div>
+                        <button type="button" class="btn btn-sm btn-theme py-1 px-3" id="btnAiValuation" onclick="handleAiValuation(this)" style="font-size: 11.5px;">
+                            <i class="fa-solid fa-calculator me-1"></i>AI Gợi Ý Giá Bán
                         </button>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Giá Bán Sách Cũ (VNĐ) <span class="text-danger">*</span></label>
-                            <input type="number" min="0" step="1000" class="form-control fw-bold text-danger fs-5" th:field="*{price}" id="bookPrice" placeholder="68000" required>
+                            <label class="form-label fw-bold">Giá Bán Sách Cũ (VNĐ) <span class="text-danger">*</span></label>
+                            <input type="number" min="0" step="1000" class="form-control fw-bold fs-5" style="color: var(--color-fire-deep);" th:field="*{price}" id="bookPrice" placeholder="68000" required>
                             <div class="text-danger small mt-1" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Giá Bìa Sách Mới Gốc (VNĐ)</label>
                             <input type="number" min="0" step="1000" class="form-control" th:field="*{originalPrice}" id="bookOriginalPrice" placeholder="120000">
-                            <small class="text-muted">Dùng để AI tính mức khấu hao và phần trăm tiết kiệm.</small>
+                            <small class="text-muted">Dùng để AI tính mức khấu hao và phần trăm tiết kiệm so với sách mới.</small>
                         </div>
 
                         <div class="mb-3">
@@ -172,13 +173,11 @@
                             <input type="number" min="0" step="1000" class="form-control" th:field="*{discountPrice}" id="bookDiscountPrice" placeholder="0">
                         </div>
 
-                        <!-- KHUNG HIỂN THỊ KẾT QUẢ ĐỊNH GIÁ AI -->
-                        <div id="aiValuationResult" class="d-none alert alert-light border border-success p-2 small mt-2">
-                            <div class="fw-bold text-success mb-1"><i class="fa-solid fa-robot me-1"></i>Phân Tích Định Giá AI:</div>
-                            <div id="aiValuationRationale" class="text-secondary" style="white-space: pre-line;"></div>
+                        <!-- KHUNG HIỂN THỊ KẾT QUẢ ĐỊNH GIÁ AI PHONG CÁCH VINTAGE -->
+                        <div id="aiValuationResult" class="d-none p-3 small mt-3" style="background: #fff8f6; border: 1px dashed var(--color-fire); border-radius: 6px;">
+                            <div class="fw-bold mb-1" style="color: var(--color-fire);"><i class="fa-solid fa-robot me-1"></i>Phân Tích Định Giá AI:</div>
+                            <div id="aiValuationRationale" style="color: var(--color-text-secondary); white-space: pre-line;"></div>
                         </div>
-                    </div>
-                </div>
                     </div>
                 </div>
 

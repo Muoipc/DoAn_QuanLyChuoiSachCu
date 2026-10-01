@@ -11,13 +11,13 @@
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
             <div class="d-flex align-items-center gap-2 mb-1">
-                <h4 class="fw-bold mb-0">Đơn Hàng: <span class="text-primary" th:text="${order.orderCode}">OBS-2026-1234</span></h4>
-                <span th:if="${order.orderStatus.name() == 'NEW'}" class="badge bg-primary fs-6">Mới đặt</span>
-                <span th:if="${order.orderStatus.name() == 'CONFIRMED'}" class="badge bg-info text-dark fs-6">Đã xác nhận</span>
-                <span th:if="${order.orderStatus.name() == 'SHIPPING'}" class="badge bg-warning text-dark fs-6">Đang giao hàng</span>
-                <span th:if="${order.orderStatus.name() == 'DELIVERED'}" class="badge bg-success fs-6">Giao thành công</span>
-                <span th:if="${order.orderStatus.name() == 'CANCELLED'}" class="badge bg-danger fs-6">Đã hủy</span>
-                <span th:if="${order.orderStatus.name() == 'RETURNED'}" class="badge bg-secondary fs-6">Trả hàng / Hoàn tiền</span>
+                <h4 class="fw-bold mb-0">Đơn Hàng: <span style="color: var(--color-fire);" th:text="${order.orderCode}">OBS-2026-1234</span></h4>
+                <span th:if="${order.orderStatus.name() == 'NEW'}" class="badge fs-6" style="background: #ee4d2d; color: #fff;">Mới đặt</span>
+                <span th:if="${order.orderStatus.name() == 'CONFIRMED'}" class="badge fs-6" style="background: #0284c7; color: #fff;">Đã xác nhận</span>
+                <span th:if="${order.orderStatus.name() == 'SHIPPING'}" class="badge fs-6" style="background: #fef9c3; color: #a16207; border: 1px solid #fef08a;">Đang giao hàng</span>
+                <span th:if="${order.orderStatus.name() == 'DELIVERED'}" class="badge fs-6" style="background: var(--color-trust-bg); color: var(--color-trust-green); border: 1px solid #b7ebd6;">Giao thành công</span>
+                <span th:if="${order.orderStatus.name() == 'CANCELLED'}" class="badge fs-6" style="background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca;">Đã hủy</span>
+                <span th:if="${order.orderStatus.name() == 'RETURNED'}" class="badge fs-6" style="background: #f5ece4; color: #574E45; border: 1px solid var(--color-border);">Trả hàng / Hoàn tiền</span>
             </div>
             <div class="text-muted small">
                 <i class="fa-regular fa-clock me-1"></i>Đặt lúc: <span th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm:ss')}">29/09/2026</span>
@@ -163,7 +163,7 @@
                                 <option th:each="ship : ${shippers}" th:value="${ship.id}" th:text="${ship.fullName + ' - ' + ship.phone}" th:selected="${order.shipper != null and order.shipper.id == ship.id}"></option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-warning w-100 py-2 fw-semibold">
+                        <button type="submit" class="btn btn-theme w-100 py-2 fw-bold">
                             <i class="fa-solid fa-user-check me-1"></i>Phân Công Giao Hàng
                         </button>
                     </form>

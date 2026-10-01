@@ -27,30 +27,30 @@
         </div>
     </div>
 
-    <!-- FILTER TABS -->
+    <!-- FILTER TABS (VINTAGE PARCHMENT TABS) -->
     <div class="card card-custom mb-4">
         <div class="card-body p-2">
-            <ul class="nav nav-pills gap-1">
+            <ul class="nav nav-pills gap-2">
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus == null} ? 'active bg-dark' : 'text-dark'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus == null} ? 'background: var(--color-fire); color: #fff;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: var(--color-text-main);'" 
                        th:href="@{/shipper/orders(shipperId=${currentShipper != null ? currentShipper.id : null})}">
                         Tất cả đơn được gán
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'active bg-warning text-dark' : 'text-warning-emphasis'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'background: #eab308; color: #1C1917;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: var(--color-gold-text);'" 
                        th:href="@{/shipper/orders(status='SHIPPING', shipperId=${currentShipper != null ? currentShipper.id : null})}">
                         <i class="fa-solid fa-truck-fast me-1"></i>Đang đi giao
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'DELIVERED'} ? 'active bg-success' : 'text-success'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus != null and selectedStatus.name() == 'DELIVERED'} ? 'background: var(--color-trust-green); color: #fff;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: var(--color-trust-green);'" 
                        th:href="@{/shipper/orders(status='DELIVERED', shipperId=${currentShipper != null ? currentShipper.id : null})}">
                         <i class="fa-solid fa-circle-check me-1"></i>Đã giao thành công
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'RETURNED'} ? 'active bg-secondary' : 'text-secondary'" 
+                    <a class="nav-link small fw-bold px-3 py-2" th:style="${selectedStatus != null and selectedStatus.name() == 'RETURNED'} ? 'background: #574E45; color: #fff;' : 'background: #FAF6F0; border: 1px solid var(--color-border); color: var(--color-text-secondary);'" 
                        th:href="@{/shipper/orders(status='RETURNED', shipperId=${currentShipper != null ? currentShipper.id : null})}">
                         <i class="fa-solid fa-rotate-left me-1"></i>Giao thất bại / Trả hàng
                     </a>
@@ -62,37 +62,37 @@
     <!-- SHIPPER ORDER CARDS GRID -->
     <div class="row g-3" th:if="${!orderPage.empty}">
         <div class="col-md-6 col-lg-4" th:each="ord : ${orderPage.content}">
-            <div class="card card-custom h-100 border-top border-4" 
-                 th:classappend="${ord.orderStatus.name() == 'SHIPPING' ? 'border-warning' : (ord.orderStatus.name() == 'DELIVERED' ? 'border-success' : 'border-secondary')}">
+            <div class="card card-custom h-100" 
+                 th:style="${ord.orderStatus.name() == 'SHIPPING' ? 'border-top: 4px solid #eab308 !important;' : (ord.orderStatus.name() == 'DELIVERED' ? 'border-top: 4px solid var(--color-trust-green) !important;' : 'border-top: 4px solid #78716C !important;')}">
                 <div class="card-body p-4 d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <a th:href="@{/admin/orders/{id}(id=${ord.id})}" class="fw-bold text-primary text-decoration-none" th:text="${ord.orderCode}">OBS-2026-1234</a>
-                        <span th:if="${ord.orderStatus.name() == 'SHIPPING'}" class="badge bg-warning text-dark">Đang giao</span>
-                        <span th:if="${ord.orderStatus.name() == 'DELIVERED'}" class="badge bg-success">Đã giao</span>
-                        <span th:if="${ord.orderStatus.name() == 'RETURNED'}" class="badge bg-secondary">Trả hàng</span>
+                        <a th:href="@{/admin/orders/{id}(id=${ord.id})}" class="fw-bold text-decoration-none" style="color: var(--color-fire); font-size: 15px;" th:text="${ord.orderCode}">OBS-2026-1234</a>
+                        <span th:if="${ord.orderStatus.name() == 'SHIPPING'}" class="badge" style="background:#fef9c3; color:#a16207; border: 1px solid #fef08a;">Đang giao</span>
+                        <span th:if="${ord.orderStatus.name() == 'DELIVERED'}" class="badge" style="background:var(--color-trust-bg); color:var(--color-trust-green); border: 1px solid #b7ebd6;">Đã giao</span>
+                        <span th:if="${ord.orderStatus.name() == 'RETURNED'}" class="badge" style="background:#f5ece4; color:#574E45; border: 1px solid #E8DEC8;">Trả hàng</span>
                     </div>
 
-                    <div class="text-muted small mb-3">
-                        <i class="fa-solid fa-store me-1"></i>Xuất kho: <strong class="text-dark" th:text="${ord.store.storeName}">Thủ Đức</strong>
+                    <div class="small mb-3" style="color: var(--color-text-light);">
+                        <i class="fa-solid fa-store me-1"></i>Xuất kho: <strong style="color: var(--color-text-main);" th:text="${ord.store.storeName}">Thủ Đức</strong>
                     </div>
 
                     <!-- THÔNG TIN KHÁCH HÀNG & GIAO HÀNG -->
-                    <div class="bg-light p-3 rounded mb-3 flex-grow-1">
+                    <div class="p-3 rounded mb-3 flex-grow-1" style="background: #FAF6F0; border: 1px solid var(--color-border);">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <strong class="text-dark" th:text="${ord.receiverName}">Họ và tên</strong>
-                            <a th:href="'tel:' + ${ord.receiverPhone}" class="btn btn-sm btn-outline-success py-0 px-2" style="font-size: 11px;">
+                            <strong style="color: var(--color-text-main);" th:text="${ord.receiverName}">Họ và tên</strong>
+                            <a th:href="'tel:' + ${ord.receiverPhone}" class="btn btn-sm py-0 px-2" style="background: var(--color-trust-bg); color: var(--color-trust-green); border: 1px solid #b7ebd6; font-size: 11px; font-weight: 700;">
                                 <i class="fa-solid fa-phone me-1"></i>Gọi khách
                             </a>
                         </div>
-                        <div class="small text-muted mb-2"><i class="fa-solid fa-phone me-1"></i><span th:text="${ord.receiverPhone}">0901234567</span></div>
-                        <div class="small text-dark"><i class="fa-solid fa-location-dot text-danger me-1"></i><span th:text="${ord.receiverAddress}">Địa chỉ</span></div>
+                        <div class="small mb-2" style="color: var(--color-text-secondary);"><i class="fa-solid fa-phone me-1"></i><span th:text="${ord.receiverPhone}">0901234567</span></div>
+                        <div class="small" style="color: var(--color-text-main);"><i class="fa-solid fa-location-dot me-1" style="color: var(--color-fire-deep);"></i><span th:text="${ord.receiverAddress}">Địa chỉ</span></div>
                     </div>
 
                     <!-- THÔNG TIN TIỀN THU HỘ (COD) -->
-                    <div class="d-flex justify-content-between align-items-center mb-3 p-2 border rounded">
-                        <span class="small text-muted">Tiền thu hộ (COD):</span>
-                        <span class="fw-bold fs-5 text-danger" th:if="${ord.paymentMethod.name() == 'COD' and ord.paymentStatus.name() == 'UNPAID'}" th:text="${#numbers.formatDecimal(ord.finalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">150,000 đ</span>
-                        <span class="badge bg-success" th:if="${ord.paymentStatus.name() == 'PAID'}">Đã thanh toán Online</span>
+                    <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded" style="background: #fff8f6; border: 1px dashed var(--color-fire);">
+                        <span class="small fw-semibold" style="color: var(--color-text-secondary);">Tiền thu hộ (COD):</span>
+                        <span class="fw-bold fs-5" style="color: var(--color-fire-deep);" th:if="${ord.paymentMethod.name() == 'COD' and ord.paymentStatus.name() == 'UNPAID'}" th:text="${#numbers.formatDecimal(ord.finalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">150,000 đ</span>
+                        <span class="badge" style="background: var(--color-trust-bg); color: var(--color-trust-green); border: 1px solid #b7ebd6;" th:if="${ord.paymentStatus.name() == 'PAID'}">Đã thanh toán Online</span>
                     </div>
 
                     <!-- HÀNH ĐỘNG CẬP NHẬT TRẠNG THÁI -->
@@ -100,14 +100,14 @@
                         <form th:action="@{/shipper/orders/{id}/update(id=${ord.id})}" method="post">
                             <input type="hidden" name="status" value="DELIVERED">
                             <input type="hidden" name="shipperId" th:value="${currentShipper != null ? currentShipper.id : null}">
-                            <button type="submit" class="btn btn-success w-100 py-2 fw-semibold" onclick="return confirm('Xác nhận đã giao sách đến tận tay khách hàng thành công?');">
+                            <button type="submit" class="btn btn-theme w-100 py-2 fw-bold" style="background: var(--color-trust-green);" onclick="return confirm('Xác nhận đã giao sách đến tận tay khách hàng thành công?');">
                                 <i class="fa-solid fa-check me-1"></i>Đã Giao Thành Công
                             </button>
                         </form>
                         <form th:action="@{/shipper/orders/{id}/update(id=${ord.id})}" method="post">
                             <input type="hidden" name="status" value="RETURNED">
                             <input type="hidden" name="shipperId" th:value="${currentShipper != null ? currentShipper.id : null}">
-                            <button type="submit" class="btn btn-outline-danger btn-sm w-100" onclick="return confirm('Xác nhận khách không nhận hàng hoặc không liên lạc được để hoàn trả về kho?');">
+                            <button type="submit" class="btn btn-outline-theme btn-sm w-100" style="color: var(--color-fire-deep); border-color: #fed7aa;" onclick="return confirm('Xác nhận khách không nhận hàng hoặc không liên lạc được để hoàn trả về kho?');">
                                 <i class="fa-solid fa-rotate-left me-1"></i>Giao thất bại / Hoàn hàng
                             </button>
                         </form>
