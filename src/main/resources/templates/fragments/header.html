@@ -746,6 +746,12 @@
                 <a th:href="@{/help}"><i class="fa-regular fa-circle-question me-1"></i> Hỗ Trợ</a>
                 <span class="topbar-divider"></span>
 
+                <!-- KÊNH QUẢN TRỊ ADMIN / STORE MANAGER -->
+                <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="text-danger fw-bold">
+                    <i class="fa-solid fa-sliders me-1"></i>Kênh Quản Trị
+                </a>
+                <span sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" class="topbar-divider"></span>
+
                 <!-- DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE (TIẾNG VIỆT / ENGLISH) -->
                 <div class="lang-dropdown-box">
                     <div class="lang-trigger-btn" id="currentLangLabel">
@@ -780,6 +786,7 @@
                     </div>
                     <div class="shopee-user-popover">
                         <div class="shopee-popover-arrow"></div>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="shopee-popover-item text-danger fw-bold"><i class="fa-solid fa-gauge-high me-1 text-danger"></i>Kênh Quản Trị</a>
                         <a th:href="@{/user/account/profile}" class="shopee-popover-item">Tài Khoản Của Tôi</a>
                         <a th:href="@{/orders}" class="shopee-popover-item">Đơn Mua</a>
                         <a th:href="@{/logout}" class="shopee-popover-item" style="color:#c62828;">Đăng Xuất</a>

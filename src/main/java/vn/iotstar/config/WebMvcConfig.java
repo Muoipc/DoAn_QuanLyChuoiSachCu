@@ -68,4 +68,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         messageSource.setFallbackToSystemLocale(false);
         return messageSource;
     }
+
+    @Override
+    public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:src/main/resources/static/uploads/", "classpath:/static/uploads/");
+    }
 }

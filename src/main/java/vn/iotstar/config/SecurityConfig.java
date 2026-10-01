@@ -1,5 +1,6 @@
 package vn.iotstar.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,9 +13,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private vn.iotstar.security.JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public org.springframework.security.authentication.AuthenticationManager authenticationManager(
+            org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     /**
@@ -22,11 +32,18 @@ public class SecurityConfig {
      * - Phân quyền truy cập các URL công khai (Trang chủ, Tìm kiếm, Đăng nhập, Đăng ký, OTP)
      * - Phân quyền các phân hệ: Admin, Quản lý chi nhánh (Store Manager), Nhân viên giao hàng (Shipper)
      * - Tùy biến trang đăng nhập (/login) và đăng xuất (/logout)
+     * - Tích hợp JwtAuthenticationFilter xác thực Bearer token cho /api/**
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/ws/**", "/cart/**", "/checkout/**", "/orders/**", "/reviews/**", "/consignments/**", "/ai-assistant/**", "/help/**", "/user/**", "/profile/**", "/login", "/register", "/logout"))
+            .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
+            .csrf(csrf -> csrf.ignoringRequestMatchers(
+                "/api/**", "/ws/**", "/cart/**", "/checkout/**", "/orders/**", 
+                "/reviews/**", "/consignments/**", "/ai-assistant/**", "/help/**", 
+                "/user/**", "/profile/**", "/login", "/register", "/logout",
+                "/admin/**", "/store-manager/**", "/shipper/**"
+            ))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/", "/home", "/books/**", "/stores/**", "/categories/**",
@@ -34,11 +51,11 @@ public class SecurityConfig {
                     "/orders", "/orders/**", "/reviews/**", "/consignments", "/consignments/**",
                     "/ai-assistant", "/ai-assistant/**", "/help", "/help/**",
                     "/user/**", "/profile/**",
-                    "/api/**", "/login", "/register/**", "/verify-otp/**",
+                    "/admin/ai/**", "/api/**", "/login", "/register/**", "/verify-otp/**",
                     "/resend-otp/**", "/forgot-password/**", "/reset-password/**",
-                    "/css/**", "/js/**", "/images/**", "/webjars/**", "/error"
+                    "/css/**", "/js/**", "/images/**", "/uploads/**", "/webjars/**", "/error"
                 ).permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/store-manager/**").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/shipper/**").hasAnyRole("ADMIN", "SHIPPER")
                 .anyRequest().authenticated()

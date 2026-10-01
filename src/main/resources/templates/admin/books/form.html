@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
+<head>
+    <title th:text="${isEdit ? 'Chỉnh Sửa Sách Cũ' : 'Thêm Sách Cũ Mới'}">Quản Lý Sách Cũ</title>
+</head>
+<body>
+<div th:fragment="content">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1" th:text="${isEdit ? 'Chỉnh Sửa Sách Cũ: ' + book.title : 'Thêm Sách Cũ Vào Hệ Thống'}">Thêm Sách Cũ Mới</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a th:href="@{/admin/books}">Sách Cũ</a></li>
+                    <li class="breadcrumb-item active" th:text="${isEdit ? 'Chỉnh sửa' : 'Thêm mới'}">Thêm mới</li>
+                </ol>
+            </nav>
+        </div>
+        <a th:href="@{/admin/books}" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-1"></i>Quay lại danh sách
+        </a>
+    </div>
+
+    <!-- MAIN FORM -->
+    <form th:action="@{/admin/books/save}" th:object="${bookDto}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="row g-4">
+            <!-- CỘT TRÁI: THÔNG TIN CƠ BẢN & ĐỘ MỚI SÁCH -->
+            <div class="col-lg-8">
+                <!-- CARD 1: THÔNG TIN SÁCH -->
+                <div class="card card-custom">
+                    <div class="card-header">
+                        <i class="fa-solid fa-circle-info text-primary me-2"></i>Thông Tin Cơ Bản
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Tên Sách Cũ <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{title}" id="bookTitle" placeholder="Ví dụ: Yêu Những Điều Không Hoàn Hảo" required>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Thể Loại / Danh Mục <span class="text-danger">*</span></label>
+                                <select class="form-select" th:field="*{categoryId}" id="bookCategoryId" required>
+                                    <option value="">-- Chọn danh mục --</option>
+                                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.categoryName}"></option>
+                                </select>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tác Giả <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" th:field="*{author}" id="bookAuthor" placeholder="Tên tác giả hoặc dịch giả" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Nhà Xuất Bản</label>
+                                <input type="text" class="form-control" th:field="*{publisher}" placeholder="NXB Trẻ, NXB Kim Đồng...">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Năm Xuất Bản</label>
+                                <input type="number" class="form-control" th:field="*{publishYear}" id="bookPublishYear" placeholder="2018">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Mã ISBN</label>
+                                <input type="text" class="form-control" th:field="*{isbn}" placeholder="978-604-...">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label fw-semibold mb-0">Mô Tả Nội Dung Sách</label>
+                                <button type="button" class="btn btn-sm btn-outline-primary py-1 px-2" id="btnAiDescription" onclick="handleAiDescription(this)" style="font-size: 12px;">
+                                    <i class="fa-solid fa-wand-magic-sparkles me-1"></i>AI Soạn Mô Tả Chuẩn Sách Cũ
+                                </button>
+                            </div>
+                            <textarea class="form-control" th:field="*{description}" id="bookDescription" rows="6" placeholder="Tóm tắt tác phẩm, trích dẫn hay, ý nghĩa cuốn sách..."></textarea>
+                            <small class="text-muted">Bấm nút "AI Soạn Mô Tả" để tự động sinh bài giới thiệu, đánh giá tình trạng và cam kết chuỗi.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 2: KIỂM ĐỊNH ĐỘ MỚI SÁCH CŨ (ĐẶC THÙ ĐỒ ÁN SÁCH CŨ) -->
+                <div class="card card-custom">
+                    <div class="card-header bg-light">
+                        <i class="fa-solid fa-stamp text-warning me-2"></i>Kiểm Định Chất Lượng & Độ Mới Sách Cũ
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label fw-semibold mb-0">Độ mới thực tế (%): <span id="conditionDisplay" class="badge bg-success fs-6" th:text="*{conditionPercent} + '%'">90%</span></label>
+                                <small class="text-muted">Thang đo tiêu chuẩn: 80% (Khá) đến 99% (Như mới xuất xưởng)</small>
+                            </div>
+                            <input type="range" class="form-range" min="80" max="99" step="1" th:field="*{conditionPercent}" id="conditionRange" oninput="document.getElementById('conditionDisplay').innerText = this.value + '%'">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('conditionPercent')}" th:errors="*{conditionPercent}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Ghi Chú Thẩm Định Tình Trạng Sách</label>
+                            <textarea class="form-control" th:field="*{conditionNotes}" id="conditionNotes" rows="3" placeholder="Ví dụ: Bìa sách nguyên vẹn không rách, ruột sách sạch không gạch chân viết bút, mép giấy hơi ngả vàng nhẹ theo thời gian, có chữ ký tác giả..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 3: TỒN KHO BAN ĐẦU CHUỖI 5 CHI NHÁNH -->
+                <div class="card card-custom">
+                    <div class="card-header">
+                        <i class="fa-solid fa-warehouse text-info me-2"></i>Số Lượng Tồn Kho Tại Các Chi Nhánh
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="text-muted small mb-3">Nhập số lượng sách cũ thực tế đang có sẵn tại từng cửa hàng trong chuỗi để hệ thống đồng bộ giỏ hàng và hỗ trợ khách chọn lấy tại chi nhánh.</p>
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle">
+                                <thead class="table-light">
+                                    <tr class="small">
+                                        <th>Chi Nhánh</th>
+                                        <th>Địa Chỉ</th>
+                                        <th style="width: 160px;" class="text-center">Số Lượng Tồn</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="store : ${stores}">
+                                        <td>
+                                            <strong th:text="${store.storeName}">Chi nhánh</strong>
+                                            <div class="text-muted small" th:text="'ĐT: ' + ${store.phone}"></div>
+                                        </td>
+                                        <td class="small text-muted" th:text="${store.address} + ', ' + ${store.district}">Địa chỉ</td>
+                                        <td>
+                                            <input type="number" min="0" class="form-control text-center" 
+                                                   th:name="'storeQuantities[' + ${store.id} + ']'" 
+                                                   th:value="${bookDto.storeQuantities != null and bookDto.storeQuantities.containsKey(store.id) ? bookDto.storeQuantities.get(store.id) : 0}">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: GIÁ CẢ, ẢNH CLOUDINARY & TRẠNG THÁI -->
+            <div class="col-lg-4">
+                <!-- CARD 4: GIÁ BÁN & KHUYẾN MÃI -->
+                <div class="card card-custom">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div><i class="fa-solid fa-tag text-success me-2"></i>Định Giá Sách</div>
+                        <button type="button" class="btn btn-sm btn-outline-success py-1 px-2" id="btnAiValuation" onclick="handleAiValuation(this)" style="font-size: 11px;">
+                            <i class="fa-solid fa-calculator me-1"></i>AI Định Giá Nhanh
+                        </button>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Giá Bán Sách Cũ (VNĐ) <span class="text-danger">*</span></label>
+                            <input type="number" min="0" step="1000" class="form-control fw-bold text-danger fs-5" th:field="*{price}" id="bookPrice" placeholder="68000" required>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Giá Bìa Sách Mới Gốc (VNĐ)</label>
+                            <input type="number" min="0" step="1000" class="form-control" th:field="*{originalPrice}" id="bookOriginalPrice" placeholder="120000">
+                            <small class="text-muted">Dùng để AI tính mức khấu hao và phần trăm tiết kiệm.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Giá Ưu Đãi / Khuyến Mãi (VNĐ)</label>
+                            <input type="number" min="0" step="1000" class="form-control" th:field="*{discountPrice}" id="bookDiscountPrice" placeholder="0">
+                        </div>
+
+                        <!-- KHUNG HIỂN THỊ KẾT QUẢ ĐỊNH GIÁ AI -->
+                        <div id="aiValuationResult" class="d-none alert alert-light border border-success p-2 small mt-2">
+                            <div class="fw-bold text-success mb-1"><i class="fa-solid fa-robot me-1"></i>Phân Tích Định Giá AI:</div>
+                            <div id="aiValuationRationale" class="text-secondary" style="white-space: pre-line;"></div>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+                <!-- CARD 5: BỘ ẢNH CHỤP GÓC CẠNH (CLOUDINARY) -->
+                <div class="card card-custom">
+                    <div class="card-header">
+                        <i class="fa-solid fa-cloud-arrow-up text-primary me-2"></i>Ảnh Chụp Thật (Cloudinary)
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Ảnh bìa chính -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Ảnh Bìa Chính</label>
+                            <div th:if="${isEdit and book.primaryImageUrl != null}" class="mb-2 text-center">
+                                <img th:src="${book.primaryImageUrl}" class="rounded border shadow-sm" style="max-height: 160px; object-fit: contain;">
+                            </div>
+                            <input type="file" class="form-control" th:field="*{primaryImage}" accept="image/*">
+                            <small class="text-muted">Tự động tối ưu hóa và upload lên đám mây Cloudinary.</small>
+                        </div>
+
+                        <hr>
+
+                        <!-- Danh sách ảnh góc cạnh hiện có (nếu là sửa) -->
+                        <div th:if="${isEdit and book.images != null and !book.images.empty}" class="mb-3">
+                            <label class="form-label fw-semibold small text-uppercase text-muted">Các góc chụp đã lưu:</label>
+                            <div class="row g-2 mb-2">
+                                <div class="col-6 position-relative" th:each="img : ${book.images}" th:if="${!img.isPrimary}">
+                                    <div class="border rounded p-1 text-center bg-light">
+                                        <img th:src="${img.imageUrl}" class="rounded" style="width: 100%; height: 90px; object-fit: cover;">
+                                        <div class="small text-truncate mt-1" th:text="${img.angleDescription}">Gáy sách</div>
+                                        <form th:action="@{/admin/books/images/delete/{id}(id=${img.id})}" method="post" class="mt-1" onsubmit="return confirm('Bạn muốn xóa ảnh này?');">
+                                            <input type="hidden" name="bookId" th:value="${book.id}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 10px;">Xóa</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thêm các ảnh góc cạnh mới -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Thêm Bộ Ảnh Góc Cạnh</label>
+                            <p class="small text-muted mb-2">Chụp gáy sách, bìa sau, trang ruột để khách hàng yên tâm về tình trạng thật của sách cũ.</p>
+                            
+                            <div id="anglesContainer">
+                                <div class="border rounded p-2 mb-2 bg-light angle-item">
+                                    <input type="file" class="form-control form-control-sm mb-1" name="angleImages" accept="image/*">
+                                    <input type="text" class="form-control form-control-sm" name="angleDescriptions" placeholder="Góc chụp: Bìa sau / Gáy sách / Trang in...">
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-sm btn-outline-secondary w-100" id="btnAddAngle">
+                                <i class="fa-solid fa-plus me-1"></i>Thêm góc ảnh khác
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 6: CÀI ĐẶT TRẠNG THÁI -->
+                <div class="card card-custom">
+                    <div class="card-header">
+                        <i class="fa-solid fa-toggle-on text-secondary me-2"></i>Trạng Thái Hiển Thị
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="activeSwitch">
+                            <label class="form-check-label fw-semibold" for="activeSwitch">Hiển thị bày bán trên website</label>
+                        </div>
+                        <div class="form-check form-switch mb-4">
+                            <input class="form-check-input" type="checkbox" th:field="*{isFeatured}" id="featuredSwitch">
+                            <label class="form-check-label fw-semibold" for="featuredSwitch">Gắn nhãn Sách Nổi Bật</label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-theme py-2 fw-semibold">
+                                <i class="fa-solid fa-floppy-disk me-2"></i><span th:text="${isEdit ? 'Cập Nhật Sách' : 'Lưu Sách Cũ Vào Hệ Thống'}">Lưu</span>
+                            </button>
+                            <a th:href="@{/admin/books}" class="btn btn-light py-2">Hủy bỏ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- SCRIPT TÍNH NĂNG AI & UPLOAD ẢNH (NẰM TRONG FRAGMENT CONTENT ĐỂ THYMELEAF KHÔNG BỎ QUA) -->
+    <script>
+        console.log('[AI Book Manager] Script loaded successfully inside content fragment');
+
+        function getFieldValue(nameOrId) {
+            const el = document.getElementById(nameOrId) 
+                    || document.querySelector(`[name="${nameOrId}"]`) 
+                    || document.getElementById('book' + nameOrId.charAt(0).toUpperCase() + nameOrId.slice(1));
+            return el ? (el.value || '') : '';
+        }
+
+        function setFieldValue(nameOrId, value) {
+            const el = document.getElementById(nameOrId) 
+                    || document.querySelector(`[name="${nameOrId}"]`) 
+                    || document.getElementById('book' + nameOrId.charAt(0).toUpperCase() + nameOrId.slice(1));
+            if (el) el.value = value;
+        }
+
+        document.getElementById('btnAddAngle')?.addEventListener('click', function() {
+            var container = document.getElementById('anglesContainer');
+            var div = document.createElement('div');
+            div.className = 'border rounded p-2 mb-2 bg-light angle-item';
+            div.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small text-muted">Góc ảnh bổ sung:</span>
+                    <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="this.closest('.angle-item').remove()">Xóa</button>
+                </div>
+                <input type="file" class="form-control form-control-sm mb-1" name="angleImages" accept="image/*">
+                <input type="text" class="form-control form-control-sm" name="angleDescriptions" placeholder="Góc chụp: Bìa sau / Gáy sách / Trang in...">
+            `;
+            container.appendChild(div);
+        });
+
+        // 1. TÍNH NĂNG AI: GỢI Ý ĐỊNH GIÁ SÁCH CŨ
+        window.handleAiValuation = async function(btn) {
+            console.log('[AI Valuation] Button clicked via handleAiValuation');
+            const targetBtn = btn || document.getElementById('btnAiValuation');
+            const originalText = targetBtn ? targetBtn.innerHTML : 'AI Định Giá Nhanh';
+            
+            const title = getFieldValue('title').trim();
+            const author = getFieldValue('author').trim();
+            
+            const catSelect = document.getElementById('categoryId') || document.querySelector('[name="categoryId"]') || document.getElementById('bookCategoryId');
+            const categoryName = catSelect && catSelect.selectedIndex > 0 ? catSelect.options[catSelect.selectedIndex].text : '';
+            
+            const originalPrice = getFieldValue('originalPrice');
+            const publishYear = getFieldValue('publishYear');
+            const conditionPercent = getFieldValue('conditionPercent') || document.getElementById('conditionRange')?.value || 90;
+
+            if (!title) {
+                alert('Vui lòng nhập tên sách để AI có thể phân tích định giá chính xác!');
+                const titleEl = document.getElementById('title') || document.querySelector('[name="title"]') || document.getElementById('bookTitle');
+                if (titleEl) titleEl.focus();
+                return;
+            }
+
+            if (targetBtn) {
+                targetBtn.disabled = true;
+                targetBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Đang tính toán...';
+            }
+
+            try {
+                const res = await fetch('/admin/ai/suggest-valuation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: title,
+                        author: author,
+                        categoryName: categoryName,
+                        originalPrice: originalPrice,
+                        publishYear: publishYear,
+                        conditionPercent: conditionPercent
+                    })
+                });
+                const data = await res.json();
+                console.log('[AI Valuation] Server response:', data);
+                if (data.success && data.data) {
+                    const val = data.data;
+                    setFieldValue('price', val.suggestedPrice);
+                    const resultBox = document.getElementById('aiValuationResult');
+                    const rationaleBox = document.getElementById('aiValuationRationale');
+                    if (resultBox && rationaleBox) {
+                        rationaleBox.innerText = val.rationale;
+                        resultBox.classList.remove('d-none');
+                    }
+                } else {
+                    alert('Không thể định giá: ' + (data.message || 'Lỗi không xác định'));
+                }
+            } catch (e) {
+                console.error('[AI Valuation] Error:', e);
+                alert('Lỗi kết nối máy chủ AI: ' + e.message);
+            } finally {
+                if (targetBtn) {
+                    targetBtn.disabled = false;
+                    targetBtn.innerHTML = originalText;
+                }
+            }
+        };
+
+        // 2. TÍNH NĂNG AI: AUTO-WRITER SOẠN MÔ TẢ & CAM KẾT CHUỖI
+        window.handleAiDescription = async function(btn) {
+            console.log('[AI Auto-Writer] Button clicked via handleAiDescription');
+            const targetBtn = btn || document.getElementById('btnAiDescription');
+            const originalText = targetBtn ? targetBtn.innerHTML : 'AI Soạn Mô Tả Chuẩn Sách Cũ';
+            
+            const title = getFieldValue('title').trim();
+            const author = getFieldValue('author').trim();
+            
+            const catSelect = document.getElementById('categoryId') || document.querySelector('[name="categoryId"]') || document.getElementById('bookCategoryId');
+            const categoryName = catSelect && catSelect.selectedIndex > 0 ? catSelect.options[catSelect.selectedIndex].text : '';
+            
+            const conditionNotes = getFieldValue('conditionNotes').trim();
+            const conditionPercent = getFieldValue('conditionPercent') || document.getElementById('conditionRange')?.value || 90;
+
+            if (!title) {
+                alert('Vui lòng nhập tên sách trước khi sinh mô tả bằng AI!');
+                const titleEl = document.getElementById('title') || document.querySelector('[name="title"]') || document.getElementById('bookTitle');
+                if (titleEl) titleEl.focus();
+                return;
+            }
+
+            if (targetBtn) {
+                targetBtn.disabled = true;
+                targetBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>AI đang viết bài...';
+            }
+
+            try {
+                const res = await fetch('/admin/ai/generate-description', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: title,
+                        author: author,
+                        conditionNotes: conditionNotes,
+                        conditionPercent: conditionPercent,
+                        categoryName: categoryName
+                    })
+                });
+                const data = await res.json();
+                console.log('[AI Auto-Writer] Server response:', data);
+                if (data.success && data.data) {
+                    setFieldValue('description', data.data.description);
+                } else {
+                    alert('Không thể sinh mô tả: ' + (data.message || 'Lỗi không xác định'));
+                }
+            } catch (e) {
+                console.error('[AI Auto-Writer] Error:', e);
+                alert('Lỗi kết nối máy chủ AI: ' + e.message);
+            } finally {
+                if (targetBtn) {
+                    targetBtn.disabled = false;
+                    targetBtn.innerHTML = originalText;
+                }
+            }
+        };
+
+        // Gắn listener dự phòng
+        document.getElementById('btnAiValuation')?.addEventListener('click', function() { window.handleAiValuation(this); });
+        document.getElementById('btnAiDescription')?.addEventListener('click', function() { window.handleAiDescription(this); });
+    </script>
+</div>
+</body>
+</html>

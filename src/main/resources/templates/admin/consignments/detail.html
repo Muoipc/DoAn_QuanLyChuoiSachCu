@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
+<head>
+    <title th:text="'Thẩm Định Ký Gửi #KG-' + ${consignment.id}">Thẩm Định Ký Gửi Sách Cũ</title>
+</head>
+<body>
+<div th:fragment="content">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <h4 class="fw-bold mb-0">Phiếu Ký Gửi: <span class="text-primary" th:text="'#KG-' + ${consignment.id}">#KG-1</span></h4>
+                <span th:if="${consignment.status.name() == 'PENDING'}" class="badge bg-warning text-dark fs-6">Chờ thẩm định</span>
+                <span th:if="${consignment.status.name() == 'APPROVED'}" class="badge bg-primary fs-6">Đã duyệt giá</span>
+                <span th:if="${consignment.status.name() == 'STORED'}" class="badge bg-success fs-6">Đã nhập kho bán</span>
+                <span th:if="${consignment.status.name() == 'REJECTED'}" class="badge bg-danger fs-6">Từ chối thu mua</span>
+            </div>
+            <div class="text-muted small">
+                <i class="fa-regular fa-clock me-1"></i>Gửi lúc: <span th:text="${#temporals.format(consignment.createdAt, 'dd/MM/yyyy HH:mm')}">29/09/2026</span>
+                <span class="mx-2">•</span>
+                <i class="fa-solid fa-store me-1"></i>Chi nhánh tiếp nhận: <strong class="text-dark" th:text="${consignment.store.storeName}">Thủ Đức</strong>
+            </div>
+        </div>
+        <a th:href="@{/admin/consignments}" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-1"></i>Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- CỘT TRÁI: THÔNG TIN SÁCH & BỘ ẢNH CHỤP GÓC CẠNH CỦA KHÁCH -->
+        <div class="col-lg-7">
+            <!-- CARD 1: THÔNG TIN SÁCH KÝ GỬI -->
+            <div class="card card-custom mb-4">
+                <div class="card-header bg-light">
+                    <i class="fa-solid fa-book text-primary me-2"></i>Thông Tin Sách Cũ Cần Thẩm Định
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-dark mb-1" th:text="${consignment.bookTitle}">Tên sách</h5>
+                    <div class="text-muted mb-3">
+                        <i class="fa-solid fa-feather-pointed me-1"></i>Tác giả: <strong class="text-dark" th:text="${consignment.author}">Tác giả</strong>
+                        <span th:if="${consignment.publisher}" th:text="' • NXB: ' + ${consignment.publisher}"></span>
+                        <span th:if="${consignment.publishYear}" th:text="' • Năm: ' + ${consignment.publishYear}"></span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <div class="text-muted small">Độ mới khách tự đánh giá:</div>
+                                <span class="badge fs-6 mt-1" th:classappend="${consignment.conditionPercent >= 95 ? 'badge-cond-high' : 'badge-cond-med'}" th:text="${consignment.conditionPercent} + '%'">90%</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <div class="text-muted small">Giá khách đề xuất thu mua:</div>
+                                <div class="fw-bold fs-5 text-danger mt-1" th:text="${#numbers.formatDecimal(consignment.proposedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">50,000 đ</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-muted text-uppercase">Mô tả hiện trạng thực tế do khách cung cấp:</label>
+                        <div class="p-3 border rounded bg-white fst-italic" th:text="${consignment.conditionDescription}">
+                            Gáy sách còn nguyên, mép giấy hơi ngả vàng nhẹ, không có chữ viết gạch bút.
+                        </div>
+                    </div>
+
+                    <div th:if="${consignment.adminNotes != null and !consignment.adminNotes.isEmpty()}">
+                        <label class="form-label fw-semibold small text-muted text-uppercase">Ghi chú từ quản lý shop:</label>
+                        <div class="p-3 bg-warning-subtle text-dark border border-warning rounded" th:text="${consignment.adminNotes}">
+                            Đã kiểm tra thực tế, chất lượng đúng như mô tả.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD 2: BỘ ẢNH GÓC CẠNH KHÁCH TẢI LÊN -->
+            <div class="card card-custom">
+                <div class="card-header bg-light">
+                    <i class="fa-solid fa-camera text-primary me-2"></i>Ảnh Kiểm Định Thực Tế Khách Chụp (<span th:text="${photos.size()}">0</span> ảnh)
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3" th:if="${!photos.empty}">
+                        <div class="col-md-4 col-sm-6" th:each="p, stat : ${photos}">
+                            <div class="border rounded p-1 text-center bg-light">
+                                <a th:href="${p}" target="_blank">
+                                    <img th:src="${p}" class="rounded w-100" style="height: 160px; object-fit: cover;">
+                                </a>
+                                <div class="small text-muted mt-1" th:text="'Ảnh góc chụp #' + ${stat.index + 1}">Ảnh 1</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center text-muted py-4" th:if="${photos.empty}">
+                        <i class="fa-solid fa-image fa-2x mb-2 text-secondary"></i>
+                        <p class="small mb-0">Khách hàng chưa tải lên ảnh chụp góc cạnh.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CỘT PHẢI: KHÁCH HÀNG & CÁC THAO TÁC XÉT DUYỆT -->
+        <div class="col-lg-5">
+            <!-- CARD 3: THÔNG TIN KHÁCH HÀNG KÝ GỬI -->
+            <div class="card card-custom mb-4">
+                <div class="card-header bg-light">
+                    <i class="fa-solid fa-user text-info me-2"></i>Người Ký Gửi / Bán Sách
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img th:src="${consignment.user != null and consignment.user.avatar != null ? consignment.user.avatar : '/images/avatars/avatar-default.png'}" class="rounded-circle shadow-sm" style="width: 48px; height: 48px; object-fit: cover;">
+                        <div>
+                            <h6 class="fw-bold mb-0 text-dark" th:text="${consignment.user != null ? consignment.user.fullName : '-'}">Họ tên</h6>
+                            <small class="text-muted" th:text="${consignment.user != null ? consignment.user.email : ''}">email@domain.com</small>
+                        </div>
+                    </div>
+                    <div class="small text-muted mb-1"><i class="fa-solid fa-phone me-2 text-primary"></i>Điện thoại: <strong class="text-dark" th:text="${consignment.user != null ? consignment.user.phone : '-'}">0901234567</strong></div>
+                    <div class="small text-muted"><i class="fa-solid fa-location-dot me-2 text-danger"></i>Gửi thẩm định tại: <strong class="text-dark" th:text="${consignment.store.storeName}">Thủ Đức</strong></div>
+                </div>
+            </div>
+
+            <!-- CARD 4: DUYỆT THU MUA & THOẢ THUẬN GIÁ (KHI PENDING) -->
+            <div class="card card-custom border-top border-primary border-4 mb-4" th:if="${consignment.status.name() == 'PENDING'}">
+                <div class="card-header bg-white">
+                    <i class="fa-solid fa-handshake text-primary me-2"></i>1. Duyệt &amp; Thỏa Thuận Giá
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/consignments/{id}/approve(id=${consignment.id})}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Giá Shop Duyệt Thu Mua (VNĐ) <span class="text-danger">*</span></label>
+                            <input type="number" min="0" step="1000" name="agreedPrice" class="form-control fw-bold text-success" th:value="${consignment.proposedPrice}" required>
+                            <small class="text-muted">Mặc định bằng giá khách mong muốn. Có thể điều chỉnh nếu chất lượng sách khác thực tế.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">Ghi chú gửi khách hàng:</label>
+                            <textarea name="adminNotes" class="form-control form-control-sm" rows="2" placeholder="Ví dụ: Shop đồng ý nhận sách, mời bạn mang sách đến cửa hàng Thủ Đức trong tuần này..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                            <i class="fa-solid fa-check me-1"></i>Chấp Nhận Thu Mua &amp; Duyệt Giá
+                        </button>
+                    </form>
+
+                    <hr>
+
+                    <!-- TỪ CHỐI -->
+                    <form th:action="@{/admin/consignments/{id}/reject(id=${consignment.id})}" method="post">
+                        <div class="mb-2">
+                            <input type="text" name="adminNotes" class="form-control form-control-sm" placeholder="Lý do từ chối (Sách rách, ấn bản cấm, quá cũ...)" required>
+                        </div>
+                        <button type="submit" class="btn btn-outline-danger btn-sm w-100" onclick="return confirm('Bạn có chắc chắn muốn từ chối yêu cầu ký gửi này?');">
+                            <i class="fa-solid fa-xmark me-1"></i>Từ Chối Thu Mua
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- CARD 5: NHẬP KHO CHÍNH THỨC BÀY BÁN (KHI ĐÃ APPROVED) -->
+            <div class="card card-custom border-top border-success border-4 mb-4" th:if="${consignment.status.name() == 'APPROVED'}">
+                <div class="card-header bg-white">
+                    <i class="fa-solid fa-box-archive text-success me-2"></i>2. Nhập Kho Sách Cũ Bày Bán
+                </div>
+                <div class="card-body p-4">
+                    <p class="small text-muted">Khi khách hàng đã mang sách cũ đến chi nhánh và nhân viên đã kiểm tra thực tế đạt chuẩn, bấm nút dưới đây để hệ thống tự động tạo mã Sách mới và cộng tồn kho vào chi nhánh <strong th:text="${consignment.store.storeName}"></strong>.</p>
+                    
+                    <form th:action="@{/admin/consignments/{id}/store(id=${consignment.id})}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Chọn Thể Loại Sách <span class="text-danger">*</span></label>
+                            <select name="categoryId" class="form-select form-select-sm" required>
+                                <option value="">-- Chọn danh mục --</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.categoryName}"></option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Giá Bán Niêm Yết Trên Website (VNĐ) <span class="text-danger">*</span></label>
+                            <input type="number" min="0" step="1000" name="sellingPrice" class="form-control form-control-sm fw-bold text-danger" 
+                                   th:value="${consignment.agreedPrice != null ? consignment.agreedPrice : consignment.proposedPrice}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small">Ghi chú lưu kho:</label>
+                            <input type="text" name="adminNotes" class="form-control form-control-sm" placeholder="VD: Nhập kệ A-02 chi nhánh Thủ Đức">
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-2 fw-semibold" onclick="return confirm('Xác nhận nhập cuốn sách này vào kho và bày bán trực tiếp trên website?');">
+                            <i class="fa-solid fa-boxes-stacked me-1"></i>Xác Nhận Nhập Kho Bày Bán
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TRẠNG THÁI STORED HOẶC REJECTED -->
+            <div class="card card-custom p-4 text-center" th:if="${consignment.status.name() == 'STORED'}">
+                <i class="fa-solid fa-circle-check fa-3x text-success mb-2"></i>
+                <h5 class="fw-bold text-success">Đã Nhập Kho Thành Công</h5>
+                <p class="small text-muted mb-0">Cuốn sách đã có mặt trong cơ sở dữ liệu sách cũ và được cộng 1 cuốn vào tồn kho chi nhánh.</p>
+            </div>
+
+            <div class="card card-custom p-4 text-center" th:if="${consignment.status.name() == 'REJECTED'}">
+                <i class="fa-solid fa-circle-xmark fa-3x text-danger mb-2"></i>
+                <h5 class="fw-bold text-danger">Đã Từ Chối Thu Mua</h5>
+                <p class="small text-muted mb-0">Phiếu ký gửi này đã bị từ chối.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -39,4 +39,24 @@ public interface IOrderService {
      * Cập nhật trạng thái đơn hàng khi thanh toán VNPay thành công.
      */
     void updatePaymentSuccess(String orderCode, String transactionId);
+
+    org.springframework.data.domain.Page<Order> searchAdminOrders(
+        String keyword, Order.OrderStatus status, Long storeId, Order.DeliveryMethod deliveryMethod, org.springframework.data.domain.Pageable pageable
+    );
+
+    Order findById(Long id);
+
+    void updateOrderStatus(Long orderId, Order.OrderStatus newStatus, String note);
+
+    void assignShipper(Long orderId, Long shipperId);
+
+    org.springframework.data.domain.Page<Order> findOrdersForShipper(
+        Long shipperId, Order.OrderStatus status, org.springframework.data.domain.Pageable pageable
+    );
+
+    void shipperUpdateDelivery(Long orderId, Long shipperId, Order.OrderStatus status, String note);
+
+    long countByStatus(Order.OrderStatus status);
+
+    java.util.List<vn.iotstar.entity.User> findAllShippers();
 }

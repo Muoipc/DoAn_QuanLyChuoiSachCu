@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
+<head>
+    <title>Chuỗi Chi Nhánh - Quản Lý Chuỗi Cửa Hàng Sách Cũ</title>
+</head>
+<body>
+<div th:fragment="content">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h4 class="fw-bold mb-1"><i class="fa-solid fa-store text-warning me-2"></i>Hệ Thống Chuỗi Chi Nhánh Cửa Hàng</h4>
+            <p class="text-muted small mb-0">Quản lý mạng lưới 5 chi nhánh phục vụ Click & Collect và vận chuyển sách cũ tại TP. Hồ Chí Minh.</p>
+        </div>
+        <a th:href="@{/admin/stores/create}" class="btn btn-theme">
+            <i class="fa-solid fa-plus me-1"></i>Thêm Chi Nhánh Mới
+        </a>
+    </div>
+
+    <!-- STORES GRID -->
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4" th:each="store : ${stores}">
+            <div class="card card-custom h-100 position-relative">
+                <!-- ẢNH ĐẠI DIỆN CỬA HÀNG -->
+                <div style="height: 180px; overflow: hidden; border-radius: 12px 12px 0 0; background: #e2e8f0;">
+                    <img th:src="${store.image != null and !store.image.isEmpty() ? store.image : 'https://images.unsplash.com/photo-1507842229451-7f01be777a26?w=600'}" 
+                         class="w-100 h-100 object-fit-cover" alt="Ảnh chi nhánh">
+                </div>
+
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold text-dark mb-0" th:text="${store.storeName}">Chi nhánh Thủ Đức</h5>
+                        <span class="badge" th:classappend="${store.isActive ? 'bg-success' : 'bg-secondary'}" 
+                              th:text="${store.isActive ? 'Đang hoạt động' : 'Tạm ngưng'}">Hoạt động</span>
+                    </div>
+
+                    <div class="text-muted small mb-3">
+                        <i class="fa-solid fa-location-dot text-danger me-1"></i>
+                        <span th:text="${store.address} + ', ' + ${store.district} + ', ' + ${store.province}">Địa chỉ</span>
+                    </div>
+
+                    <ul class="list-unstyled small text-muted mb-4 flex-grow-1">
+                        <li class="mb-1"><i class="fa-solid fa-phone me-2 text-primary"></i>Hotline: <strong class="text-dark" th:text="${store.phone}">028 3722 1223</strong></li>
+                        <li class="mb-1" th:if="${store.email}"><i class="fa-solid fa-envelope me-2 text-primary"></i>Email: <span th:text="${store.email}">thuduc@oldbookstore.vn</span></li>
+                        <li class="mb-1"><i class="fa-solid fa-clock me-2 text-warning"></i>Giờ mở cửa: <span th:text="${store.openTime} + ' - ' + ${store.closeTime}">08:00 - 21:30</span></li>
+                        <li class="mb-1" th:if="${store.manager != null}"><i class="fa-solid fa-user-tie me-2 text-info"></i>Quản lý: <span class="text-dark fw-semibold" th:text="${store.manager.fullName}">Nguyễn Văn A</span></li>
+                    </ul>
+
+                    <div class="d-flex gap-2 pt-3 border-top">
+                        <a th:href="@{/admin/inventory(storeId=${store.id})}" class="btn btn-sm btn-outline-primary flex-fill">
+                            <i class="fa-solid fa-boxes-stacked me-1"></i>Xem Kho Hàng
+                        </a>
+                        <a th:href="@{/admin/stores/edit/{id}(id=${store.id})}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fa-solid fa-pen-to-square"></i> Sửa
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
