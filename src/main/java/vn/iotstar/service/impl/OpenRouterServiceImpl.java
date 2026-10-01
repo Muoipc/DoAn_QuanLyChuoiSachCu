@@ -27,7 +27,7 @@ public class OpenRouterServiceImpl implements IOpenRouterService {
     @Value("${openrouter.api-key:}")
     private String apiKey;
 
-    @Value("${openrouter.model:google/gemini-3.5-flash-lite}")
+    @Value("${openrouter.model:google/gemini-2.5-flash-lite}")
     private String modelName;
 
     @Value("${openrouter.base-url:https://openrouter.ai/api/v1/chat/completions}")
