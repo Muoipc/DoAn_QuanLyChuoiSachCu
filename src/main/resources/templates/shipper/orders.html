@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
+<head>
+    <title>Cổng Điều Phối Giao Hàng - Shipper</title>
+</head>
+<body>
+<div th:fragment="content">
+
+    <!-- SHIPPER HEADER -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h4 class="fw-bold mb-1"><i class="fa-solid fa-motorcycle text-warning me-2"></i>Cổng Giao Hàng (Shipper Portal)</h4>
+            <p class="text-muted small mb-0">
+                Đang làm việc với tài khoản Shipper: <strong class="text-dark" th:text="${currentShipper != null ? currentShipper.fullName : 'Shipper'}">Trần Văn Hùng</strong>
+                <span th:if="${currentShipper != null}" th:text="' - SĐT: ' + ${currentShipper.phone}"></span>
+            </p>
+        </div>
+        <!-- Dropdown đổi shipper nếu test bằng tài khoản Admin -->
+        <div class="d-flex align-items-center gap-2" th:if="${allShippers != null and allShippers.size() > 1}">
+            <span class="small text-muted">Đổi Shipper xem test:</span>
+            <form th:action="@{/shipper/orders}" method="get">
+                <select name="shipperId" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option th:each="s : ${allShippers}" th:value="${s.id}" th:text="${s.fullName}" th:selected="${currentShipper != null and currentShipper.id == s.id}"></option>
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div class="card card-custom mb-4">
+        <div class="card-body p-2">
+            <ul class="nav nav-pills gap-1">
+                <li class="nav-item">
+                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus == null} ? 'active bg-dark' : 'text-dark'" 
+                       th:href="@{/shipper/orders(shipperId=${currentShipper != null ? currentShipper.id : null})}">
+                        Tất cả đơn được gán
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'active bg-warning text-dark' : 'text-warning-emphasis'" 
+                       th:href="@{/shipper/orders(status='SHIPPING', shipperId=${currentShipper != null ? currentShipper.id : null})}">
+                        <i class="fa-solid fa-truck-fast me-1"></i>Đang đi giao
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'DELIVERED'} ? 'active bg-success' : 'text-success'" 
+                       th:href="@{/shipper/orders(status='DELIVERED', shipperId=${currentShipper != null ? currentShipper.id : null})}">
+                        <i class="fa-solid fa-circle-check me-1"></i>Đã giao thành công
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'RETURNED'} ? 'active bg-secondary' : 'text-secondary'" 
+                       th:href="@{/shipper/orders(status='RETURNED', shipperId=${currentShipper != null ? currentShipper.id : null})}">
+                        <i class="fa-solid fa-rotate-left me-1"></i>Giao thất bại / Trả hàng
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- SHIPPER ORDER CARDS GRID -->
+    <div class="row g-3" th:if="${!orderPage.empty}">
+        <div class="col-md-6 col-lg-4" th:each="ord : ${orderPage.content}">
+            <div class="card card-custom h-100 border-top border-4" 
+                 th:classappend="${ord.orderStatus.name() == 'SHIPPING' ? 'border-warning' : (ord.orderStatus.name() == 'DELIVERED' ? 'border-success' : 'border-secondary')}">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <a th:href="@{/admin/orders/{id}(id=${ord.id})}" class="fw-bold text-primary text-decoration-none" th:text="${ord.orderCode}">OBS-2026-1234</a>
+                        <span th:if="${ord.orderStatus.name() == 'SHIPPING'}" class="badge bg-warning text-dark">Đang giao</span>
+                        <span th:if="${ord.orderStatus.name() == 'DELIVERED'}" class="badge bg-success">Đã giao</span>
+                        <span th:if="${ord.orderStatus.name() == 'RETURNED'}" class="badge bg-secondary">Trả hàng</span>
+                    </div>
+
+                    <div class="text-muted small mb-3">
+                        <i class="fa-solid fa-store me-1"></i>Xuất kho: <strong class="text-dark" th:text="${ord.store.storeName}">Thủ Đức</strong>
+                    </div>
+
+                    <!-- THÔNG TIN KHÁCH HÀNG & GIAO HÀNG -->
+                    <div class="bg-light p-3 rounded mb-3 flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong class="text-dark" th:text="${ord.receiverName}">Họ và tên</strong>
+                            <a th:href="'tel:' + ${ord.receiverPhone}" class="btn btn-sm btn-outline-success py-0 px-2" style="font-size: 11px;">
+                                <i class="fa-solid fa-phone me-1"></i>Gọi khách
+                            </a>
+                        </div>
+                        <div class="small text-muted mb-2"><i class="fa-solid fa-phone me-1"></i><span th:text="${ord.receiverPhone}">0901234567</span></div>
+                        <div class="small text-dark"><i class="fa-solid fa-location-dot text-danger me-1"></i><span th:text="${ord.receiverAddress}">Địa chỉ</span></div>
+                    </div>
+
+                    <!-- THÔNG TIN TIỀN THU HỘ (COD) -->
+                    <div class="d-flex justify-content-between align-items-center mb-3 p-2 border rounded">
+                        <span class="small text-muted">Tiền thu hộ (COD):</span>
+                        <span class="fw-bold fs-5 text-danger" th:if="${ord.paymentMethod.name() == 'COD' and ord.paymentStatus.name() == 'UNPAID'}" th:text="${#numbers.formatDecimal(ord.finalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">150,000 đ</span>
+                        <span class="badge bg-success" th:if="${ord.paymentStatus.name() == 'PAID'}">Đã thanh toán Online</span>
+                    </div>
+
+                    <!-- HÀNH ĐỘNG CẬP NHẬT TRẠNG THÁI -->
+                    <div class="d-grid gap-2 pt-2 border-top" th:if="${ord.orderStatus.name() == 'SHIPPING'}">
+                        <form th:action="@{/shipper/orders/{id}/update(id=${ord.id})}" method="post">
+                            <input type="hidden" name="status" value="DELIVERED">
+                            <input type="hidden" name="shipperId" th:value="${currentShipper != null ? currentShipper.id : null}">
+                            <button type="submit" class="btn btn-success w-100 py-2 fw-semibold" onclick="return confirm('Xác nhận đã giao sách đến tận tay khách hàng thành công?');">
+                                <i class="fa-solid fa-check me-1"></i>Đã Giao Thành Công
+                            </button>
+                        </form>
+                        <form th:action="@{/shipper/orders/{id}/update(id=${ord.id})}" method="post">
+                            <input type="hidden" name="status" value="RETURNED">
+                            <input type="hidden" name="shipperId" th:value="${currentShipper != null ? currentShipper.id : null}">
+                            <button type="submit" class="btn btn-outline-danger btn-sm w-100" onclick="return confirm('Xác nhận khách không nhận hàng hoặc không liên lạc được để hoàn trả về kho?');">
+                                <i class="fa-solid fa-rotate-left me-1"></i>Giao thất bại / Hoàn hàng
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="text-center text-muted small py-2" th:if="${ord.orderStatus.name() != 'SHIPPING'}">
+                        <i class="fa-solid fa-lock me-1"></i>Đơn hàng đã hoàn tất hành trình.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div class="card card-custom py-5 text-center text-muted" th:if="${orderPage.empty}">
+        <i class="fa-solid fa-box-open fa-3x mb-3 text-secondary"></i>
+        <h5>Hiện không có đơn hàng nào cần giao</h5>
+        <p class="small mb-0">Khi quản lý phân công đơn hàng cho bạn, danh sách sẽ hiển thị tại đây.</p>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="mt-4" th:if="${totalPages > 1}">
+        <nav>
+            <ul class="pagination justify-content-center mb-0">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/shipper/orders(page=${currentPage - 1}, status=${selectedStatus}, shipperId=${currentShipper != null ? currentShipper.id : null})}">&laquo; Trước</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${currentPage == i} ? 'active' : ''">
+                    <a class="page-link" th:href="@{/shipper/orders(page=${i}, status=${selectedStatus}, shipperId=${currentShipper != null ? currentShipper.id : null})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/shipper/orders(page=${currentPage + 1}, status=${selectedStatus}, shipperId=${currentShipper != null ? currentShipper.id : null})}">Sau &raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+</body>
+</html>

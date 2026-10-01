@@ -19,6 +19,9 @@ import java.util.stream.Collectors;
 
 /**
  * Lớp triển khai các dịch vụ nghiệp vụ Voucher và Kho Voucher cá nhân.
+ * Hỗ trợ đồng thời:
+ * - Khách hàng: Lấy danh sách voucher hợp lệ, lưu vào ví cá nhân, kiểm tra và tính giảm giá khi checkout.
+ * - Quản trị viên (Admin): CRUD danh sách voucher, kích hoạt/hủy kích hoạt.
  */
 @Service
 @Transactional
@@ -32,6 +35,8 @@ public class VoucherServiceImpl implements IVoucherService {
         this.voucherRepository = voucherRepository;
         this.userVoucherRepository = userVoucherRepository;
     }
+
+    // ================= CLIENT METHODS =================
 
     /**
      * Lấy toàn bộ danh sách voucher còn hạn, còn lượt sử dụng và đang kích hoạt.
@@ -312,5 +317,40 @@ public class VoucherServiceImpl implements IVoucherService {
                 userVoucherRepository.save(uv);
             }
         }
+    }
+
+    // ================= ADMIN METHODS =================
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Voucher> findAll() {
+        return voucherRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Voucher findById(Long id) {
+        return voucherRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Voucher save(Voucher voucher) {
+        if (voucher.getCode() != null) {
+            voucher.setCode(voucher.getCode().trim().toUpperCase());
+        }
+        return voucherRepository.save(voucher);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        voucherRepository.deleteById(id);
+    }
+
+    @Override
+    public void toggleActive(Long id) {
+        voucherRepository.findById(id).ifPresent(v -> {
+            v.setIsActive(!Boolean.TRUE.equals(v.getIsActive()));
+            voucherRepository.save(v);
+        });
     }
 }

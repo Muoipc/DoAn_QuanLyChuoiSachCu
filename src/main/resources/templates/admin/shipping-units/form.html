@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
+<head>
+    <title th:text="${isEdit ? 'Chỉnh Sửa Đơn Vị Vận Chuyển' : 'Thêm Đơn Vị Mới'}">Đơn Vị Vận Chuyển</title>
+</head>
+<body>
+<div th:fragment="content">
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1" th:text="${isEdit ? 'Chỉnh Sửa Đơn Vị: ' + unit.name : 'Thêm Đơn Vị Vận Chuyển Mới'}">Đơn Vị Vận Chuyển</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a th:href="@{/admin/shipping-units}">Đơn vị vận chuyển</a></li>
+                    <li class="breadcrumb-item active" th:text="${isEdit ? 'Chỉnh sửa' : 'Thêm mới'}">Thêm mới</li>
+                </ol>
+            </nav>
+        </div>
+        <a th:href="@{/admin/shipping-units}" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-1"></i>Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card card-custom">
+                <div class="card-header">
+                    <i class="fa-solid fa-truck text-primary me-2"></i>Thông Tin Đối Tác Vận Chuyển
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/shipping-units/save}" th:object="${unit}" method="post">
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Tên Đối Tác <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{name}" placeholder="Ví dụ: Giao Hàng Tiết Kiệm (GHTK)" required>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Mã Định Danh Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control text-uppercase" th:field="*{code}" placeholder="VD: GHTK" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Hotline Liên Hệ</label>
+                                <input type="text" class="form-control" th:field="*{contactPhone}" placeholder="1900 6092">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Cước Phí Cơ Bản (VNĐ) <span class="text-danger">*</span></label>
+                                <input type="number" min="0" step="1000" class="form-control fw-bold text-success" th:field="*{baseFee}" placeholder="25000" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Thời Gian Dự Kiến</label>
+                                <input type="text" class="form-control" th:field="*{estimatedDays}" placeholder="2-3 ngày">
+                            </div>
+                        </div>
+
+                        <div class="form-check form-switch mb-4">
+                            <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="activeSwitch">
+                            <label class="form-check-label fw-semibold" for="activeSwitch">Đang hợp tác vận chuyển</label>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 pt-2 border-top">
+                            <a th:href="@{/admin/shipping-units}" class="btn btn-light px-4">Hủy</a>
+                            <button type="submit" class="btn btn-theme px-4">
+                                <i class="fa-solid fa-floppy-disk me-1"></i>Lưu Đơn Vị
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

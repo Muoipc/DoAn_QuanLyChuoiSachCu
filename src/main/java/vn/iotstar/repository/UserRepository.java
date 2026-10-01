@@ -24,4 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
            "LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "u.phone LIKE CONCAT('%', :keyword, '%')")
     Page<User> searchUsers(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE u.role.name = :roleName AND u.enabled = true")
+    java.util.List<User> findByRoleName(@Param("roleName") String roleName);
 }

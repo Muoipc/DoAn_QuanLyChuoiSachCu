@@ -48,6 +48,9 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired(required = false)
+    private org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -197,6 +200,23 @@ public class OrderServiceImpl implements IOrderService {
 
         // 7. Xóa sạch giỏ hàng của khách sau khi tạo đơn thành công
         cartService.clearCart(cart.getId());
+
+        // 8. Bắn thông báo WebSocket thời gian thực tới Admin & Quản lý
+        if (messagingTemplate != null) {
+            try {
+                vn.iotstar.dto.OrderNotificationDTO notif = new vn.iotstar.dto.OrderNotificationDTO(
+                        savedOrder.getOrderCode(),
+                        savedOrder.getReceiverName(),
+                        savedOrder.getFinalAmount(),
+                        savedOrder.getStore() != null ? savedOrder.getStore().getStoreName() : "Chuỗi Sách Cũ",
+                        savedOrder.getDeliveryMethod().name(),
+                        java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss dd/MM")),
+                        "NEW_ORDER",
+                        "Đơn hàng mới #" + savedOrder.getOrderCode() + " - " + savedOrder.getReceiverName()
+                );
+                messagingTemplate.convertAndSend("/topic/admin-orders", notif);
+            } catch (Exception ignored) {}
+        }
 
         return savedOrder;
     }
@@ -387,5 +407,137 @@ public class OrderServiceImpl implements IOrderService {
             order.setOrderStatus(Order.OrderStatus.CONFIRMED);
             orderRepository.save(order);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public org.springframework.data.domain.Page<Order> searchAdminOrders(
+            String keyword, Order.OrderStatus status, Long storeId, Order.DeliveryMethod deliveryMethod, org.springframework.data.domain.Pageable pageable) {
+        String kw = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
+        return orderRepository.searchAdminOrders(kw, status, storeId, deliveryMethod, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Order findById(Long id) {
+        return orderRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void updateOrderStatus(Long orderId, Order.OrderStatus newStatus, String note) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng mã #" + orderId));
+
+        Order.OrderStatus oldStatus = order.getOrderStatus();
+        if (oldStatus == newStatus) {
+            return;
+        }
+
+        // Nếu chuyển sang HỦY ĐƠN (CANCELLED) hoặc TRẢ HÀNG (RETURNED) -> Hoàn trả tồn kho cho các chi nhánh
+        if ((newStatus == Order.OrderStatus.CANCELLED || newStatus == Order.OrderStatus.RETURNED) &&
+            (oldStatus != Order.OrderStatus.CANCELLED && oldStatus != Order.OrderStatus.RETURNED)) {
+            for (OrderItem item : order.getItems()) {
+                if (item.getBook() != null) {
+                    Store targetStore = order.getStore();
+                    inventoryRepository.findByStoreIdAndBookId(targetStore.getId(), item.getBook().getId())
+                            .ifPresent(inv -> {
+                                inv.setQuantity(inv.getQuantity() + item.getQuantity());
+                                inventoryRepository.save(inv);
+                            });
+                    Book book = item.getBook();
+                    int sold = book.getTotalSold() != null ? book.getTotalSold() : 0;
+                    book.setTotalSold(Math.max(0, sold - item.getQuantity()));
+                    bookRepository.save(book);
+                }
+            }
+        }
+
+        // Nếu đơn hàng trước đó bị HỦY nhưng nay khôi phục lại
+        if ((oldStatus == Order.OrderStatus.CANCELLED || oldStatus == Order.OrderStatus.RETURNED) &&
+            (newStatus != Order.OrderStatus.CANCELLED && newStatus != Order.OrderStatus.RETURNED)) {
+            for (OrderItem item : order.getItems()) {
+                if (item.getBook() != null) {
+                    Store targetStore = order.getStore();
+                    inventoryRepository.findByStoreIdAndBookId(targetStore.getId(), item.getBook().getId())
+                            .ifPresent(inv -> {
+                                inv.setQuantity(Math.max(0, inv.getQuantity() - item.getQuantity()));
+                                inventoryRepository.save(inv);
+                            });
+                }
+            }
+        }
+
+        // Tự động cập nhật thanh toán nếu giao hàng thành công bằng COD
+        if (newStatus == Order.OrderStatus.DELIVERED && order.getPaymentMethod() == Order.PaymentMethod.COD) {
+            order.setPaymentStatus(Order.PaymentStatus.PAID);
+        }
+
+        order.setOrderStatus(newStatus);
+        Order updated = orderRepository.save(order);
+
+        // Bắn thông báo trạng thái đơn hàng thời gian thực
+        if (messagingTemplate != null) {
+            try {
+                vn.iotstar.dto.OrderNotificationDTO notif = new vn.iotstar.dto.OrderNotificationDTO(
+                        updated.getOrderCode(),
+                        updated.getReceiverName(),
+                        updated.getFinalAmount(),
+                        updated.getStore() != null ? updated.getStore().getStoreName() : "",
+                        updated.getDeliveryMethod().name(),
+                        java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss dd/MM")),
+                        "STATUS_UPDATE",
+                        "Đơn hàng #" + updated.getOrderCode() + " đã chuyển sang: " + newStatus.name()
+                );
+                messagingTemplate.convertAndSend("/topic/admin-orders", notif);
+            } catch (Exception ignored) {}
+        }
+    }
+
+    @Override
+    public void assignShipper(Long orderId, Long shipperId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng mã #" + orderId));
+        User shipper = userRepository.findById(shipperId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy nhân viên giao hàng"));
+
+        order.setShipper(shipper);
+        if (order.getOrderStatus() == Order.OrderStatus.NEW || order.getOrderStatus() == Order.OrderStatus.CONFIRMED) {
+            order.setOrderStatus(Order.OrderStatus.SHIPPING);
+        }
+        orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public org.springframework.data.domain.Page<Order> findOrdersForShipper(
+            Long shipperId, Order.OrderStatus status, org.springframework.data.domain.Pageable pageable) {
+        if (status != null) {
+            return orderRepository.findByShipperIdAndOrderStatusOrderByCreatedAtDesc(shipperId, status, pageable);
+        }
+        return orderRepository.findByShipperIdOrderByCreatedAtDesc(shipperId, pageable);
+    }
+
+    @Override
+    public void shipperUpdateDelivery(Long orderId, Long shipperId, Order.OrderStatus status, String note) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng"));
+
+        if (order.getShipper() == null || !order.getShipper().getId().equals(shipperId)) {
+            throw new IllegalArgumentException("Đơn hàng này không thuộc quyền điều phối của bạn!");
+        }
+
+        updateOrderStatus(orderId, status, note);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countByStatus(Order.OrderStatus status) {
+        return orderRepository.countByOrderStatus(status);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public java.util.List<User> findAllShippers() {
+        return userRepository.findByRoleName("ROLE_SHIPPER");
     }
 }

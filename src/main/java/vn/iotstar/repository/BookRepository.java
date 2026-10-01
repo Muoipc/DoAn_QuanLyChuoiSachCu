@@ -75,4 +75,17 @@ public interface BookRepository extends JpaRepository<Book, Long> {
         @Param("maxPrice") BigDecimal maxPrice,
         Pageable pageable
     );
+
+    @Query("SELECT b FROM Book b WHERE " +
+           "(:keyword IS NULL OR :keyword = '' OR LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(b.author) LIKE LOWER(CONCAT('%', :keyword, '%')) OR b.isbn LIKE CONCAT('%', :keyword, '%')) " +
+           "AND (:categoryId IS NULL OR b.category.id = :categoryId) " +
+           "AND (:minCondition IS NULL OR b.conditionPercent >= :minCondition) " +
+           "AND (:isActive IS NULL OR b.isActive = :isActive)")
+    Page<Book> searchAdminBooks(
+        @Param("keyword") String keyword,
+        @Param("categoryId") Integer categoryId,
+        @Param("minCondition") Integer minCondition,
+        @Param("isActive") Boolean isActive,
+        Pageable pageable
+    );
 }

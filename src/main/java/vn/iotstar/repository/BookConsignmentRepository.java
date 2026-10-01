@@ -14,7 +14,17 @@ public interface BookConsignmentRepository extends JpaRepository<BookConsignment
     List<BookConsignment> findByUserIdOrderByCreatedAtDesc(Long userId);
     List<BookConsignment> findByUserIdAndStatusOrderByCreatedAtDesc(Long userId, BookConsignment.ConsignmentStatus status);
     long countByUserIdAndStatus(Long userId, BookConsignment.ConsignmentStatus status);
-    Page<BookConsignment> findByStoreIdOrderByCreatedAtDesc(Long storeId, Pageable pageable);
-    Page<BookConsignment> findByStatusOrderByCreatedAtDesc(BookConsignment.ConsignmentStatus status, Pageable pageable);
     List<BookConsignment> findByStoreIdAndStatus(Long storeId, BookConsignment.ConsignmentStatus status);
+
+    @org.springframework.data.jpa.repository.Query("SELECT c FROM BookConsignment c WHERE " +
+           "(:status IS NULL OR c.status = :status) AND " +
+           "(:storeId IS NULL OR c.store.id = :storeId) " +
+           "ORDER BY c.createdAt DESC")
+    Page<BookConsignment> searchAdminConsignments(
+        @org.springframework.data.repository.query.Param("status") BookConsignment.ConsignmentStatus status,
+        @org.springframework.data.repository.query.Param("storeId") Long storeId,
+        Pageable pageable
+    );
+
+    long countByStatus(BookConsignment.ConsignmentStatus status);
 }

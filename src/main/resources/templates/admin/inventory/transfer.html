@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
+<head>
+    <title>Điều Chuyển Kho Sách Cũ - Chuỗi Cửa Hàng</title>
+</head>
+<body>
+<div th:fragment="content">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1"><i class="fa-solid fa-dolly text-warning me-2"></i>Điều Chuyển Sách Giữa Các Chi Nhánh</h4>
+            <p class="text-muted small mb-0">Hỗ trợ điều phối sách cũ giữa các kho trong chuỗi để cân bằng tồn kho và phục vụ đơn hàng Click & Collect.</p>
+        </div>
+        <a th:href="@{/admin/inventory}" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-1"></i>Về kho hàng
+        </a>
+    </div>
+
+    <!-- MAIN FORM -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card card-custom">
+                <div class="card-header bg-light">
+                    <i class="fa-solid fa-right-left text-primary me-2"></i>Phiếu Yêu Cầu Điều Chuyển Hàng
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/inventory/transfer}" method="post" id="transferForm">
+                        
+                        <!-- CHỌN 2 CHI NHÁNH -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-danger">
+                                    <i class="fa-solid fa-arrow-up-from-bracket me-1"></i>Chi Nhánh Xuất Hàng (Kho Nguồn) <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select border-danger" name="fromStoreId" id="fromStoreSelect" required>
+                                    <option th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${fromStoreId == st.id}"></option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-success">
+                                    <i class="fa-solid fa-arrow-down-to-bracket me-1"></i>Chi Nhánh Nhập Hàng (Kho Đích) <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select border-success" name="toStoreId" id="toStoreSelect" required>
+                                    <option value="">-- Chọn chi nhánh nhận --</option>
+                                    <option th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:disabled="${fromStoreId == st.id}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- CHỌN SÁCH CẦN CHUYỂN -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Sách Cần Chuyển Kho <span class="text-danger">*</span></label>
+                            <select class="form-select" name="bookId" id="bookSelect" required>
+                                <option value="">-- Chọn cuốn sách trong kho xuất --</option>
+                                <option th:each="inv : ${availableBooks}" 
+                                        th:value="${inv.book.id}" 
+                                        th:data-max="${inv.quantity}"
+                                        th:text="${inv.book.title + ' (Hiện có: ' + inv.quantity + ' cuốn - Độ mới: ' + inv.book.conditionPercent + '%)'}">
+                                </option>
+                            </select>
+                            <div id="stockNotice" class="form-text text-muted mt-1">Vui lòng chọn sách để xem số lượng tối đa có thể điều chuyển.</div>
+                        </div>
+
+                        <!-- SỐ LƯỢNG CHUYỂN -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Số Lượng Chuyển Kho <span class="text-danger">*</span></label>
+                            <div class="input-group" style="max-width: 250px;">
+                                <input type="number" name="quantity" id="transferQty" min="1" class="form-control text-center fw-bold" placeholder="Nhập số lượng" required>
+                                <span class="input-group-text">cuốn</span>
+                            </div>
+                        </div>
+
+                        <!-- LÝ DO / GHI CHÚ -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Lý Do Điều Chuyển / Ghi Chú</label>
+                            <textarea class="form-control" name="notes" rows="3" placeholder="Ví dụ: Bổ sung kho Làng Đại Học phục vụ sinh viên mùa thi, khách yêu cầu gom đơn..."></textarea>
+                        </div>
+
+                        <div class="alert alert-info py-2 small">
+                            <i class="fa-solid fa-circle-info me-1"></i>Hệ thống sẽ tự động trừ số lượng sách tại kho nguồn và cộng tương ứng vào kho đích một cách an toàn và đồng bộ.
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 pt-2">
+                            <a th:href="@{/admin/inventory}" class="btn btn-light px-4">Hủy bỏ</a>
+                            <button type="submit" class="btn btn-theme px-4" id="btnSubmitTransfer">
+                                <i class="fa-solid fa-paper-plane me-1"></i>Xác Nhận Chuyển Kho
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const fromStoreSelect = document.getElementById('fromStoreSelect');
+    const toStoreSelect = document.getElementById('toStoreSelect');
+    const bookSelect = document.getElementById('bookSelect');
+    const transferQty = document.getElementById('transferQty');
+    const stockNotice = document.getElementById('stockNotice');
+
+    // Disable same store in toStoreSelect
+    function syncDisabledStores() {
+        const fromId = fromStoreSelect.value;
+        Array.from(toStoreSelect.options).forEach(opt => {
+            if (opt.value === fromId) {
+                opt.disabled = true;
+                if (toStoreSelect.value === fromId) {
+                    toStoreSelect.value = '';
+                }
+            } else {
+                opt.disabled = false;
+            }
+        });
+    }
+
+    // Dynamic reload books when fromStore changes
+    fromStoreSelect.addEventListener('change', function() {
+        syncDisabledStores();
+        const storeId = this.value;
+        bookSelect.innerHTML = '<option value="">Đang tải danh sách sách...</option>';
+        stockNotice.innerText = '';
+        transferQty.value = '';
+        transferQty.removeAttribute('max');
+
+        fetch(`/admin/inventory/api/books-by-store?storeId=${storeId}`)
+            .then(res => res.json())
+            .then(data => {
+                bookSelect.innerHTML = '<option value="">-- Chọn cuốn sách trong kho xuất --</option>';
+                if (data.length === 0) {
+                    bookSelect.innerHTML = '<option value="">Kho xuất này hiện không có sách nào</option>';
+                    return;
+                }
+                data.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.bookId;
+                    opt.setAttribute('data-max', item.quantity);
+                    opt.textContent = `${item.title} (Hiện có: ${item.quantity} cuốn - Độ mới: ${item.condition}%)`;
+                    if (item.quantity <= 0) {
+                        opt.disabled = true;
+                        opt.textContent += ' - [HẾT HÀNG]';
+                    }
+                    bookSelect.appendChild(opt);
+                });
+            })
+            .catch(err => {
+                bookSelect.innerHTML = '<option value="">Lỗi nạp sách!</option>';
+            });
+    });
+
+    bookSelect.addEventListener('change', function() {
+        const selected = this.options[this.selectedIndex];
+        const max = selected.getAttribute('data-max');
+        if (max) {
+            transferQty.setAttribute('max', max);
+            stockNotice.innerHTML = `<span class="text-success fw-semibold"><i class="fa-solid fa-check me-1"></i>Kho nguồn hiện có sẵn: <strong>${max}</strong> cuốn. Số lượng chuyển tối đa: ${max}.</span>`;
+        } else {
+            transferQty.removeAttribute('max');
+            stockNotice.innerText = '';
+        }
+    });
+
+    // Form submit check
+    document.getElementById('transferForm').addEventListener('submit', function(e) {
+        const selected = bookSelect.options[bookSelect.selectedIndex];
+        const max = parseInt(selected.getAttribute('data-max') || '0', 10);
+        const qty = parseInt(transferQty.value, 10);
+        if (qty > max) {
+            e.preventDefault();
+            alert(`Số lượng chuyển (${qty}) vượt quá số lượng hiện có trong kho nguồn (${max})!`);
+        }
+    });
+
+    syncDisabledStores();
+</script>
+</body>
+</html>

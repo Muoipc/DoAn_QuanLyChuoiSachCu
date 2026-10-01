@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
+<head>
+    <title>Quản Lý Mã Giảm Giá (Vouchers)</title>
+</head>
+<body>
+<div th:fragment="content">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h4 class="fw-bold mb-1"><i class="fa-solid fa-ticket text-warning me-2"></i>Quản Lý Mã Giảm Giá (Vouchers)</h4>
+            <p class="text-muted small mb-0">Thiết lập các mã voucher khuyến mãi, giảm theo % hoặc số tiền cố định cho khách mua sách cũ.</p>
+        </div>
+        <a th:href="@{/admin/vouchers/create}" class="btn btn-theme">
+            <i class="fa-solid fa-plus me-1"></i>Tạo Voucher Mới
+        </a>
+    </div>
+
+    <!-- VOUCHERS TABLE -->
+    <div class="card card-custom">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr class="small text-muted text-uppercase">
+                            <th class="ps-4">Mã Voucher</th>
+                            <th>Mô tả</th>
+                            <th>Loại &amp; Mức giảm</th>
+                            <th>Đơn tối thiểu</th>
+                            <th>Thời hạn áp dụng</th>
+                            <th class="text-center">Lượt dùng</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-end pe-4">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${vouchers.empty}">
+                            <td colspan="8" class="text-center py-5 text-muted">Chưa có mã giảm giá nào.</td>
+                        </tr>
+                        <tr th:each="v : ${vouchers}">
+                            <td class="ps-4">
+                                <span class="badge bg-danger-subtle text-danger border border-danger fw-bold fs-6" th:text="${v.code}">GIAM10</span>
+                            </td>
+                            <td class="small" th:text="${v.description}">Mô tả</td>
+                            <td>
+                                <strong class="text-success" th:if="${v.discountType.name() == 'PERCENT'}" th:text="'-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + '%'">-10%</strong>
+                                <strong class="text-success" th:if="${v.discountType.name() == 'FIXED_AMOUNT'}" th:text="'-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + ' đ'">-20,000 đ</strong>
+                            </td>
+                            <td class="small" th:text="${#numbers.formatDecimal(v.minOrderAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">100,000 đ</td>
+                            <td class="small text-muted">
+                                <div th:text="${#temporals.format(v.startDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(v.endDate, 'dd/MM/yyyy')}"></div>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-light text-dark border" th:text="${v.usedCount} + ' / ' + ${v.usageLimit}">0 / 100</span>
+                            </td>
+                            <td class="text-center">
+                                <form th:action="@{/admin/vouchers/toggle-active/{id}(id=${v.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm" th:classappend="${v.isActive ? 'btn-success' : 'btn-outline-secondary'}" style="font-size: 11px; padding: 2px 8px;">
+                                        <span th:text="${v.isActive ? 'Khả dụng' : 'Khóa'}">Khả dụng</span>
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="d-inline-flex gap-1">
+                                    <a th:href="@{/admin/vouchers/edit/{id}(id=${v.id})}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a th:href="@{/admin/vouchers/delete/{id}(id=${v.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn muốn xóa voucher này?');"><i class="fa-solid fa-trash-can"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

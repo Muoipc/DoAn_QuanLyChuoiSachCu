@@ -51,4 +51,19 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     long countByOrderStatus(Order.OrderStatus status);
 
     long countByStoreIdAndOrderStatus(Long storeId, Order.OrderStatus status);
+
+    @Query("SELECT o FROM Order o WHERE " +
+           "(:keyword IS NULL OR :keyword = '' OR LOWER(o.orderCode) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(o.receiverName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR o.receiverPhone LIKE CONCAT('%', :keyword, '%')) " +
+           "AND (:status IS NULL OR o.orderStatus = :status) " +
+           "AND (:storeId IS NULL OR o.store.id = :storeId) " +
+           "AND (:deliveryMethod IS NULL OR o.deliveryMethod = :deliveryMethod)")
+    Page<Order> searchAdminOrders(
+        @Param("keyword") String keyword,
+        @Param("status") Order.OrderStatus status,
+        @Param("storeId") Long storeId,
+        @Param("deliveryMethod") Order.DeliveryMethod deliveryMethod,
+        Pageable pageable
+    );
+
+    Page<Order> findByShipperIdAndOrderStatusOrderByCreatedAtDesc(Long shipperId, Order.OrderStatus status, Pageable pageable);
 }

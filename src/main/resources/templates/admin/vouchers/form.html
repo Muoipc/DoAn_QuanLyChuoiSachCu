@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
+<head>
+    <title th:text="${isEdit ? 'Chỉnh Sửa Voucher' : 'Tạo Voucher Mới'}">Quản Lý Voucher</title>
+</head>
+<body>
+<div th:fragment="content">
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1" th:text="${isEdit ? 'Chỉnh Sửa Voucher: ' + voucher.code : 'Tạo Mã Giảm Giá Mới'}">Tạo Voucher</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a th:href="@{/admin/vouchers}">Vouchers</a></li>
+                    <li class="breadcrumb-item active" th:text="${isEdit ? 'Chỉnh sửa' : 'Thêm mới'}">Thêm mới</li>
+                </ol>
+            </nav>
+        </div>
+        <a th:href="@{/admin/vouchers}" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-1"></i>Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card card-custom">
+                <div class="card-header">
+                    <i class="fa-solid fa-ticket text-primary me-2"></i>Thông Tin Mã Giảm Giá
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/vouchers/save}" th:object="${voucher}" method="post">
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Mã Code Voucher <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control text-uppercase fw-bold" th:field="*{code}" placeholder="VD: SACHCU15" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Hình Thức Giảm <span class="text-danger">*</span></label>
+                                <select class="form-select" th:field="*{discountType}">
+                                    <option value="PERCENT">Giảm theo Phần Trăm (%)</option>
+                                    <option value="FIXED_AMOUNT">Giảm Số Tiền Cố Định (VNĐ)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Mô Tả Mã Giảm</label>
+                            <input type="text" class="form-control" th:field="*{description}" placeholder="VD: Giảm 15% cho sinh viên HCMUTE">
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Mức Giảm <span class="text-danger">*</span></label>
+                                <input type="number" step="any" min="1" class="form-control text-danger fw-bold" th:field="*{discountValue}" placeholder="15 (nếu %) hoặc 20000" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Đơn Tối Thiểu (VNĐ)</label>
+                                <input type="number" min="0" step="1000" class="form-control" th:field="*{minOrderAmount}" placeholder="100000">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Giảm Tối Đa (VNĐ)</label>
+                                <input type="number" min="0" step="1000" class="form-control" th:field="*{maxDiscount}" placeholder="50000">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Ngày Bắt Đầu <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" th:field="*{startDate}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Ngày Hết Hạn <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" th:field="*{endDate}" required>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Giới Hạn Lượt Dùng</label>
+                                <input type="number" min="1" class="form-control" th:field="*{usageLimit}">
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center pt-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="activeSwitch">
+                                    <label class="form-check-label fw-semibold" for="activeSwitch">Kích hoạt khả dụng ngay</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 pt-2 border-top">
+                            <a th:href="@{/admin/vouchers}" class="btn btn-light px-4">Hủy</a>
+                            <button type="submit" class="btn btn-theme px-4">
+                                <i class="fa-solid fa-floppy-disk me-1"></i>Lưu Voucher
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="adminLayout(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Admin Dashboard - Chuỗi Sách Cũ HCMUTE</title>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --admin-primary: #8C4A27;
+            --admin-primary-dark: #683418;
+            --admin-sidebar-bg: #1e293b;
+            --admin-sidebar-hover: #334155;
+            --admin-sidebar-active: #8C4A27;
+            --admin-body-bg: #f8fafc;
+            --admin-text: #334155;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--admin-body-bg);
+            color: var(--admin-text);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styling */
+        #adminSidebar {
+            width: 260px;
+            min-height: 100vh;
+            background-color: var(--admin-sidebar-bg);
+            transition: all 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1040;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #adminSidebar.collapsed {
+            margin-left: -260px;
+        }
+
+        .sidebar-brand {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .sidebar-brand img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .sidebar-brand-text h5 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-brand-text small {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .sidebar-menu {
+            padding: 16px 0;
+            list-style: none;
+            margin: 0;
+        }
+
+        .sidebar-heading {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            padding: 12px 24px 6px;
+            font-weight: 700;
+        }
+
+        .sidebar-item a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 11px 24px;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-item a i {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .sidebar-item a:hover {
+            background-color: var(--admin-sidebar-hover);
+            color: #ffffff;
+        }
+
+        .sidebar-item.active a {
+            background-color: rgba(140, 74, 39, 0.25);
+            color: #ffedd5;
+            border-left-color: #f97316;
+            font-weight: 600;
+        }
+
+        /* Main Content Wrapper */
+        #adminMain {
+            margin-left: 260px;
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #adminMain.expanded {
+            margin-left: 0;
+        }
+
+        /* Top Navbar */
+        .admin-navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+        .navbar-toggle-btn {
+            background: none;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            font-size: 16px;
+            border-radius: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .navbar-toggle-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .admin-content-body {
+            padding: 28px;
+            flex: 1;
+        }
+
+        /* Card Styles */
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            margin-bottom: 24px;
+        }
+
+        .card-custom .card-header {
+            background: #ffffff;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 18px 24px;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        /* Button theme */
+        .btn-theme {
+            background-color: var(--admin-primary);
+            color: #ffffff;
+            border: none;
+            font-weight: 500;
+        }
+
+        .btn-theme:hover {
+            background-color: var(--admin-primary-dark);
+            color: #ffffff;
+        }
+
+        .badge-cond-high {
+            background-color: #dcfce7;
+            color: #15803d;
+            font-weight: 600;
+        }
+
+        .badge-cond-med {
+            background-color: #fef9c3;
+            color: #a16207;
+            font-weight: 600;
+        }
+
+        @media (max-width: 992px) {
+            #adminSidebar {
+                margin-left: -260px;
+            }
+            #adminSidebar.show-mobile {
+                margin-left: 0;
+            }
+            #adminMain {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. SIDEBAR -->
+    <aside id="adminSidebar">
+        <a th:href="@{/admin/books}" class="sidebar-brand">
+            <i class="fa-solid fa-book-bookmark text-warning fa-2x"></i>
+            <div class="sidebar-brand-text">
+                <h5>CHUỖI SÁCH CŨ</h5>
+                <small>Admin & Manager Portal</small>
+            </div>
+        </a>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-heading">Quản Lý Chuỗi Kho & Sách</li>
+            
+            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/books')} ? 'active' : ''">
+                <a th:href="@{/admin/books}">
+                    <i class="fa-solid fa-book"></i>
+                    <span>Quản Lý Sách Cũ</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory'} ? 'active' : ''">
+                <a th:href="@{/admin/inventory}">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span>Tồn Kho Chi Nhánh</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory/transfer'} ? 'active' : ''">
+                <a th:href="@{/admin/inventory/transfer}">
+                    <i class="fa-solid fa-dolly"></i>
+                    <span>Điều Chuyển Kho</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/stores')} ? 'active' : ''">
+                <a th:href="@{/admin/stores}">
+                    <i class="fa-solid fa-store"></i>
+                    <span>Chuỗi Chi Nhánh</span>
+                </a>
+            </li>
+
+            <li class="sidebar-heading">Đơn Hàng & Ký Gửi</li>
+
+            <li class="sidebar-item">
+                <a th:href="@{/admin/orders}">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <span>Xử Lý Đơn Hàng</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a th:href="@{/admin/consignments}">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                    <span>Thẩm Định Ký Gửi</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a th:href="@{/shipper/orders}">
+                    <i class="fa-solid fa-motorcycle"></i>
+                    <span>Phân Hệ Shipper</span>
+                </a>
+            </li>
+
+            <li class="sidebar-heading">Hệ Thống & Báo Cáo</li>
+
+            <li class="sidebar-item">
+                <a th:href="@{/admin/users}">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span>Người Dùng & Phân Quyền</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a th:href="@{/admin/vouchers}">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span>Mã Giảm Giá</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a th:href="@{/admin/shipping-units}">
+                    <i class="fa-solid fa-truck"></i>
+                    <span>Đơn Vị Vận Chuyển</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a th:href="@{/admin/reports}">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Thống Kê Báo Cáo</span>
+                </a>
+            </li>
+
+            <li class="sidebar-heading">Lối Tắt</li>
+
+            <li class="sidebar-item">
+                <a th:href="@{/}" target="_blank">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    <span>Xem Trang Khách Hàng</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- 2. MAIN CONTENT -->
+    <div id="adminMain">
+        <!-- TOP NAVBAR -->
+        <header class="admin-navbar">
+            <div class="d-flex align-items-center gap-3">
+                <button type="button" class="navbar-toggle-btn" id="toggleSidebarBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <span class="fw-semibold text-secondary d-none d-sm-inline">
+                    <i class="fa-solid fa-circle-check text-success me-1"></i>Hệ Thống Chuỗi 5 Chi Nhánh TP.HCM
+                </span>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <!-- Chuông thông báo WebSocket -->
+                <div class="dropdown">
+                    <button class="btn btn-light position-relative rounded-pill px-3" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-bell text-secondary"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" id="notifIndicator" style="display:none;"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 p-2" aria-labelledby="notifDropdown" style="width: 300px;">
+                        <li class="dropdown-header fw-bold text-dark">Thông báo thời gian thực</li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li id="emptyNotifMsg" class="text-center text-muted py-2 small">Chưa có thông báo mới</li>
+                        <ul id="notifList" class="list-unstyled mb-0 small"></ul>
+                    </ul>
+                </div>
+
+                <!-- User Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-light d-flex align-items-center gap-2 rounded-pill px-3 py-1" type="button" id="userMenuBtn" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-user-shield text-primary"></i>
+                        <span class="fw-semibold small" sec:authentication="name">cuong_admin</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                        <li><a class="dropdown-item small" th:href="@{/user/account/profile}"><i class="fa-solid fa-id-badge me-2 text-muted"></i>Tài khoản</a></li>
+                        <li><a class="dropdown-item small" th:href="@{/}"><i class="fa-solid fa-globe me-2 text-muted"></i>Về Website</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item small text-danger" th:href="@{/logout}"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Đăng xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <!-- BODY CONTENT -->
+        <main class="admin-content-body">
+            <!-- Thông báo thành công hoặc lỗi -->
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i><span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-exclamation me-2"></i><span th:text="${errorMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- NỘI DUNG TỪNG TRANG -->
+            <div th:replace="${content}"></div>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="bg-white py-3 px-4 border-top text-center text-muted small">
+            <span>&copy; 2026 Đề tài 14 - Quản Lý Chuỗi Cửa Hàng Sách Cũ HCMUTE. SVTH: Thái Duy Cường & Nguyễn Song Hoàng Phúc.</span>
+        </footer>
+    </div>
+
+    <!-- TOAST CONTAINER CHO THÔNG BÁO WEBSOCKET THỜI GIAN THỰC -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1090;" id="wsToastContainer"></div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SockJS & STOMP.js for WebSocket Real-time -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script>
+        // Toggle Sidebar Script
+        document.getElementById('toggleSidebarBtn').addEventListener('click', function() {
+            var sidebar = document.getElementById('adminSidebar');
+            var main = document.getElementById('adminMain');
+            if (window.innerWidth <= 992) {
+                sidebar.classList.toggle('show-mobile');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                main.classList.toggle('expanded');
+            }
+        });
+
+        // =====================================================================
+        // WEBSOCKET STOMP REAL-TIME NOTIFICATIONS (THÔNG BÁO THỜI GIAN THỰC)
+        // =====================================================================
+        let stompClient = null;
+        function connectWebSocket() {
+            try {
+                const socket = new SockJS('/ws');
+                stompClient = Stomp.over(socket);
+                stompClient.debug = null; // Tắt debug console
+                stompClient.connect({}, function (frame) {
+                    console.log('WebSocket STOMP connected to /ws');
+                    stompClient.subscribe('/topic/admin-orders', function (messageOutput) {
+                        try {
+                            const notif = JSON.parse(messageOutput.body);
+                            showOrderNotification(notif);
+                        } catch (e) {
+                            console.error('Error parsing notification', e);
+                        }
+                    });
+                }, function (error) {
+                    setTimeout(connectWebSocket, 5000);
+                });
+            } catch (err) {
+                console.warn('WebSocket init warning', err);
+            }
+        }
+
+        function showOrderNotification(notif) {
+            // 1. Bật chấm đỏ chuông thông báo
+            const indicator = document.getElementById('notifIndicator');
+            if (indicator) indicator.style.display = 'block';
+
+            // 2. Thêm vào dropdown list
+            const emptyMsg = document.getElementById('emptyNotifMsg');
+            if (emptyMsg) emptyMsg.style.display = 'none';
+
+            const list = document.getElementById('notifList');
+            if (list) {
+                const li = document.createElement('li');
+                li.className = 'border-bottom py-2 px-2';
+                li.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <strong class="text-primary">${notif.orderCode || 'Đơn hàng'}</strong>
+                        <span class="badge ${notif.type === 'NEW_ORDER' ? 'bg-danger' : 'bg-info text-dark'}" style="font-size:9px;">${notif.type === 'NEW_ORDER' ? 'MỚI' : 'CẬP NHẬT'}</span>
+                    </div>
+                    <div class="text-dark small">${notif.message}</div>
+                    <div class="text-muted" style="font-size:10px;">${notif.createdAt || ''} • ${notif.storeName || ''}</div>
+                `;
+                list.insertBefore(li, list.firstChild);
+            }
+
+            // 3. Hiển thị Toast nổi góc màn hình
+            const container = document.getElementById('wsToastContainer');
+            if (container) {
+                const toastDiv = document.createElement('div');
+                toastDiv.className = 'toast show shadow border-0 mb-2';
+                toastDiv.setAttribute('role', 'alert');
+                toastDiv.innerHTML = `
+                    <div class="toast-header bg-dark text-white">
+                        <i class="fa-solid fa-bell text-warning me-2"></i>
+                        <strong class="me-auto">Thông Báo Chuỗi Sách Cũ</strong>
+                        <small class="text-light">${notif.createdAt || 'Vừa xong'}</small>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body bg-white text-dark">
+                        <div class="fw-bold mb-1">${notif.message}</div>
+                        <div class="small text-muted mb-2">Chi nhánh: ${notif.storeName}</div>
+                        <a href="/admin/orders" class="btn btn-sm btn-outline-primary py-0 px-2" style="font-size:11px;">Xem đơn hàng</a>
+                    </div>
+                `;
+                container.appendChild(toastDiv);
+                setTimeout(() => {
+                    toastDiv.classList.remove('show');
+                    setTimeout(() => toastDiv.remove(), 500);
+                }, 8000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', connectWebSocket);
+    </script>
+</body>
+</html>
