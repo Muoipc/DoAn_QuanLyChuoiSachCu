@@ -2,199 +2,860 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
 <head>
-    <title>Thẩm Định & Duyệt Ký Gửi Sách Cũ</title>
+    <title>Thẩm Định &amp; Duyệt Ký Gửi Sách Cũ - Chuỗi Cửa Hàng Sách Cũ</title>
 </head>
 <body>
 <div th:fragment="content">
 
-    <!-- PAGE HEADER -->
+    <style>
+        /* Apple Liquid Glass Design System */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.72);
+            --glass-bg-hover: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.85);
+            --glass-blur: blur(28px) saturate(190%) brightness(102%);
+            --wood-primary: #8C4A27;
+            --wood-dark: #683418;
+            --orange-burnt: #EE4D2D;
+            --ink-dark: #1E293B;
+            --ink-muted: #64748B;
+        }
+
+        /* Card Liquid Glass */
+        .card-liquid-glass {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 22px;
+            box-shadow: 
+                0 16px 38px -6px rgba(45, 24, 15, 0.07),
+                0 4px 14px -2px rgba(0, 0, 0, 0.03),
+                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 1px 0 rgba(0, 0, 0, 0.02);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card-liquid-glass:hover {
+            box-shadow: 
+                0 20px 48px -6px rgba(45, 24, 15, 0.11),
+                0 6px 18px -2px rgba(0, 0, 0, 0.04),
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1);
+        }
+
+        .card-liquid-header {
+            background: rgba(255, 255, 255, 0.55);
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.7);
+            padding: 18px 24px;
+            border-radius: 22px 22px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Stat Counter Cards */
+        .stat-glass-card {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 28px rgba(45, 24, 15, 0.05), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-glass-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.88);
+        }
+
+        .stat-icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Filter Tabs Dock */
+        .filter-tab-pill {
+            padding: 7px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1.5px solid transparent;
+        }
+
+        .filter-tab-pill.default {
+            color: var(--ink-dark);
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(226, 232, 240, 0.85);
+        }
+
+        .filter-tab-pill.default:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .filter-tab-pill.active {
+            background: #1E293B !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.25);
+        }
+
+        .filter-tab-pill.active-warning {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .filter-tab-pill.active-primary {
+            background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+
+        .filter-tab-pill.active-success {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .filter-tab-pill.active-danger {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Badges Màu Sắc Trang Nhã Chuẩn Apple */
+        .badge-status-pending {
+            background: rgba(245, 158, 11, 0.12);
+            color: #B45309;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 9999px;
+            padding: 4px 12px;
+            font-weight: 600;
+            font-size: 11.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 1px 2px rgba(245, 158, 11, 0.08);
+        }
+
+        .badge-status-approved {
+            background: rgba(14, 165, 233, 0.12);
+            color: #0369A1;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 9999px;
+            padding: 4px 12px;
+            font-weight: 600;
+            font-size: 11.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 1px 2px rgba(14, 165, 233, 0.08);
+        }
+
+        .badge-status-stored {
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 9999px;
+            padding: 4px 12px;
+            font-weight: 600;
+            font-size: 11.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 1px 2px rgba(16, 185, 129, 0.08);
+        }
+
+        .badge-status-rejected {
+            background: rgba(239, 68, 68, 0.12);
+            color: #B91C1C;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 9999px;
+            padding: 4px 12px;
+            font-weight: 600;
+            font-size: 11.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 1px 2px rgba(239, 68, 68, 0.08);
+        }
+
+        /* Tags 4px bo góc thanh lịch */
+        .tag-condition-high {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            border-radius: 4px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #065F46;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .tag-condition-med {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            border-radius: 4px;
+            background: rgba(245, 158, 11, 0.12);
+            color: #92400E;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        /* Table Liquid */
+        .table-liquid {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .table-liquid thead th {
+            background: rgba(248, 250, 252, 0.7);
+            border-bottom: 1.5px solid rgba(226, 232, 240, 0.8);
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #64748B;
+            padding: 14px 16px;
+            white-space: nowrap;
+        }
+
+        .table-liquid tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .table-liquid tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+
+        .table-liquid tbody td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(241, 245, 249, 0.8);
+            vertical-align: middle;
+        }
+
+        /* Action Buttons */
+        .btn-view-photos {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1.5px solid rgba(226, 232, 240, 0.9);
+            color: #334155;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 9999px;
+            padding: 5px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-view-photos:hover {
+            background: #ffffff;
+            color: var(--wood-primary);
+            border-color: var(--wood-primary);
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .btn-appraise {
+            background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+            color: #ffffff !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 9999px;
+            padding: 5px 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-appraise:hover {
+            background: #000000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* ========================================================
+           APPLE LIQUID GLASS MODAL PREVIEW ẢNH TÌNH TRẠNG SÁCH
+           ======================================================== */
+        .modal-liquid-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(45, 24, 15, 0.45);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            z-index: 100050;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            animation: modalFadeIn 0.2s ease forwards;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-liquid-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(36px) saturate(200%) brightness(102%);
+            -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(102%);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 
+                0 24px 64px -12px rgba(45, 24, 15, 0.28),
+                0 8px 24px rgba(0, 0, 0, 0.08),
+                inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.96);
+            animation: modalZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            padding: 28px;
+            box-sizing: border-box;
+        }
+
+        @keyframes modalZoomIn {
+            to { transform: scale(1); }
+        }
+
+        .btn-modal-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            color: #64748B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #DC2626;
+            transform: scale(1.08);
+        }
+
+        .modal-main-photo-frame {
+            width: 100%;
+            height: 320px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #F8FAFC;
+            border: 1.5px solid rgba(226, 232, 240, 0.9);
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .modal-main-photo-frame img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .modal-thumb-strip {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .modal-thumb-item {
+            width: 68px;
+            height: 68px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+            background: #F1F5F9;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .modal-thumb-item:hover, .modal-thumb-item.active {
+            border-color: #8C4A27;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(140, 74, 39, 0.25);
+        }
+
+        .modal-thumb-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+
+    <!-- 1. PAGE HEADER -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-hand-holding-dollar text-warning me-2"></i>Thẩm Định &amp; Duyệt Ký Gửi Sách Cũ</h4>
-            <p class="text-muted small mb-0">Tiếp nhận yêu cầu bán lại / ký gửi từ khách hàng, thẩm định tình trạng thực tế và nhập kho bày bán.</p>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <div class="p-2 rounded-3 text-white" style="background: linear-gradient(135deg, #8C4A27, #EE4D2D); box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);">
+                    <i class="fa-solid fa-hand-holding-dollar fs-5"></i>
+                </div>
+                <h4 class="fw-bold mb-0 text-dark">Thẩm Định &amp; Duyệt Ký Gửi Sách Cũ</h4>
+                <span class="badge rounded-pill bg-light text-secondary border px-3 py-1 ms-2" style="font-size: 12px;">
+                    <i class="fa-solid fa-shield-halved text-success me-1"></i>Hệ thống kiểm duyệt đa kênh
+                </span>
+            </div>
+            <p class="text-muted small mb-0 ms-1">Tiếp nhận yêu cầu bán lại / ký gửi từ độc giả, kiểm tra ảnh chụp góc cạnh thực tế, định giá và tiếp nhận nhập kho.</p>
         </div>
     </div>
 
-    <!-- SUMMARY COUNTERS -->
+    <!-- 2. THỐNG KÊ TRẠNG THÁI LIQUID GLASS -->
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="card card-custom p-3 border-start border-warning border-4">
+        <!-- Chờ Duyệt -->
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-glass-card" style="border-left: 4px solid #F59E0B;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="text-muted small fw-semibold">Chờ Duyệt (PENDING)</div>
-                        <h3 class="fw-bold text-warning mb-0" th:text="${countPending}">0</h3>
+                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Chờ Duyệt (PENDING)</div>
+                        <h3 class="fw-bold text-warning mb-0 mt-1" th:text="${countPending}">0</h3>
                     </div>
-                    <div class="bg-warning-subtle p-3 rounded-circle text-warning">
-                        <i class="fa-solid fa-hourglass-half fa-lg"></i>
+                    <div class="stat-icon-circle bg-warning-subtle text-warning">
+                        <i class="fa-solid fa-hourglass-half"></i>
                     </div>
                 </div>
+                <div class="small text-muted mt-2" style="font-size: 11.5px;">Khách mới gửi yêu cầu thẩm định</div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card card-custom p-3 border-start border-primary border-4">
+
+        <!-- Đã Duyệt Giá -->
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-glass-card" style="border-left: 4px solid #0284C7;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="text-muted small fw-semibold">Đã Duyệt Giá (APPROVED)</div>
-                        <h3 class="fw-bold text-primary mb-0" th:text="${countApproved}">0</h3>
+                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Đã Duyệt Giá (APPROVED)</div>
+                        <h3 class="fw-bold text-primary mb-0 mt-1" th:text="${countApproved}">0</h3>
                     </div>
-                    <div class="bg-primary-subtle p-3 rounded-circle text-primary">
-                        <i class="fa-solid fa-circle-check fa-lg"></i>
+                    <div class="stat-icon-circle bg-primary-subtle text-primary">
+                        <i class="fa-solid fa-circle-check"></i>
                     </div>
                 </div>
+                <div class="small text-muted mt-2" style="font-size: 11.5px;">Đang đợi khách mang sách đến kho</div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card card-custom p-3 border-start border-success border-4">
+
+        <!-- Đã Nhập Kho -->
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-glass-card" style="border-left: 4px solid #10B981;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="text-muted small fw-semibold">Đã Nhập Kho Bán (STORED)</div>
-                        <h3 class="fw-bold text-success mb-0" th:text="${countStored}">0</h3>
+                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Đã Nhập Kho (STORED)</div>
+                        <h3 class="fw-bold text-success mb-0 mt-1" th:text="${countStored}">0</h3>
                     </div>
-                    <div class="bg-success-subtle p-3 rounded-circle text-success">
-                        <i class="fa-solid fa-boxes-stacked fa-lg"></i>
+                    <div class="stat-icon-circle bg-success-subtle text-success">
+                        <i class="fa-solid fa-boxes-stacked"></i>
                     </div>
                 </div>
+                <div class="small text-muted mt-2" style="font-size: 11.5px;">Sách đã sẵn sàng bày bán trong chuỗi</div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card card-custom p-3 border-start border-danger border-4">
+
+        <!-- Từ Chối -->
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-glass-card" style="border-left: 4px solid #EF4444;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="text-muted small fw-semibold">Từ Chối (REJECTED)</div>
-                        <h3 class="fw-bold text-danger mb-0" th:text="${countRejected}">0</h3>
+                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Từ Chối (REJECTED)</div>
+                        <h3 class="fw-bold text-danger mb-0 mt-1" th:text="${countRejected}">0</h3>
                     </div>
-                    <div class="bg-danger-subtle p-3 rounded-circle text-danger">
-                        <i class="fa-solid fa-circle-xmark fa-lg"></i>
+                    <div class="stat-icon-circle bg-danger-subtle text-danger">
+                        <i class="fa-solid fa-circle-xmark"></i>
                     </div>
                 </div>
+                <div class="small text-muted mt-2" style="font-size: 11.5px;">Sách không đạt chuẩn kiểm định chuỗi</div>
             </div>
         </div>
     </div>
 
-    <!-- FILTER TABS & STORE FILTER -->
-    <div class="card card-custom mb-4">
-        <div class="card-body p-3">
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                <ul class="nav nav-pills gap-1">
-                    <li class="nav-item">
-                        <a class="nav-link small fw-semibold" th:classappend="${selectedStatus == null} ? 'active bg-dark' : 'text-dark'" 
-                           th:href="@{/admin/consignments(storeId=${selectedStoreId})}">Tất cả</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'PENDING'} ? 'active bg-warning text-dark' : 'text-warning-emphasis'" 
-                           th:href="@{/admin/consignments(status='PENDING', storeId=${selectedStoreId})}">Chờ duyệt</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'APPROVED'} ? 'active bg-primary' : 'text-primary'" 
-                           th:href="@{/admin/consignments(status='APPROVED', storeId=${selectedStoreId})}">Đã chấp nhận</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'STORED'} ? 'active bg-success' : 'text-success'" 
-                           th:href="@{/admin/consignments(status='STORED', storeId=${selectedStoreId})}">Đã vào kho bán</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'REJECTED'} ? 'active bg-danger' : 'text-danger'" 
-                           th:href="@{/admin/consignments(status='REJECTED', storeId=${selectedStoreId})}">Từ chối</a>
-                    </li>
-                </ul>
+    <!-- 3. FILTER TABS & STORE SELECT -->
+    <div class="card-liquid-glass mb-4 p-3">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="d-flex flex-wrap gap-2">
+                <a class="filter-tab-pill default" 
+                   th:classappend="${selectedStatus == null} ? 'active' : ''" 
+                   th:href="@{/admin/consignments(storeId=${selectedStoreId})}">
+                    <i class="fa-solid fa-list-check"></i> Tất cả
+                </a>
+                <a class="filter-tab-pill default" 
+                   th:classappend="${selectedStatus != null and selectedStatus.name() == 'PENDING'} ? 'active-warning' : ''" 
+                   th:href="@{/admin/consignments(status='PENDING', storeId=${selectedStoreId})}">
+                    <i class="fa-solid fa-hourglass-half"></i> Chờ duyệt
+                </a>
+                <a class="filter-tab-pill default" 
+                   th:classappend="${selectedStatus != null and selectedStatus.name() == 'APPROVED'} ? 'active-primary' : ''" 
+                   th:href="@{/admin/consignments(status='APPROVED', storeId=${selectedStoreId})}">
+                    <i class="fa-solid fa-circle-check"></i> Đã chấp nhận
+                </a>
+                <a class="filter-tab-pill default" 
+                   th:classappend="${selectedStatus != null and selectedStatus.name() == 'STORED'} ? 'active-success' : ''" 
+                   th:href="@{/admin/consignments(status='STORED', storeId=${selectedStoreId})}">
+                    <i class="fa-solid fa-boxes-packing"></i> Đã vào kho bán
+                </a>
+                <a class="filter-tab-pill default" 
+                   th:classappend="${selectedStatus != null and selectedStatus.name() == 'REJECTED'} ? 'active-danger' : ''" 
+                   th:href="@{/admin/consignments(status='REJECTED', storeId=${selectedStoreId})}">
+                    <i class="fa-solid fa-ban"></i> Từ chối
+                </a>
+            </div>
 
-                <form th:action="@{/admin/consignments}" method="get" class="d-flex gap-2">
-                    <input type="hidden" name="status" th:if="${selectedStatus != null}" th:value="${selectedStatus}">
-                    <select name="storeId" class="form-select form-select-sm" onchange="this.form.submit()">
-                        <option value="">-- Mọi chi nhánh --</option>
+            <form th:action="@{/admin/consignments}" method="get" class="d-flex align-items-center gap-2">
+                <input type="hidden" name="status" th:if="${selectedStatus != null}" th:value="${selectedStatus}">
+                <div class="input-group input-group-sm" style="min-width: 240px;">
+                    <span class="input-group-text bg-white border-end-0 rounded-start-pill text-muted">
+                        <i class="fa-solid fa-store"></i>
+                    </span>
+                    <select name="storeId" class="form-select form-select-sm border-start-0 rounded-end-pill" onchange="this.form.submit()">
+                        <option value="">-- Mọi chi nhánh tiếp nhận --</option>
                         <option th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStoreId == st.id}"></option>
                     </select>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- CONSIGNMENTS TABLE -->
-    <div class="card card-custom">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <span class="fw-semibold">Danh sách yêu cầu (<span th:text="${totalElements}">0</span> phiếu)</span>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr class="small text-muted text-uppercase">
-                            <th class="ps-4">Mã / Ngày gửi</th>
-                            <th>Tên sách ký gửi</th>
-                            <th>Khách hàng</th>
-                            <th class="text-center">Độ mới</th>
-                            <th class="text-end">Giá khách mong muốn</th>
-                            <th class="text-end">Giá shop duyệt</th>
-                            <th>Chi nhánh tiếp nhận</th>
-                            <th class="text-center">Trạng thái</th>
-                            <th class="text-end pe-4">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:if="${consignmentPage.empty}">
-                            <td colspan="9" class="text-center py-5 text-muted">
-                                <i class="fa-solid fa-box-open fa-3x mb-3 text-secondary"></i>
-                                <p class="mb-0">Không có yêu cầu ký gửi nào phù hợp.</p>
-                            </td>
-                        </tr>
-                        <tr th:each="c : ${consignmentPage.content}">
-                            <td class="ps-4">
-                                <strong class="text-dark" th:text="'#KG-' + ${c.id}">#KG-1</strong>
-                                <div class="text-muted" style="font-size: 11px;" th:text="${#temporals.format(c.createdAt, 'dd/MM/yyyy HH:mm')}">29/09/2026</div>
-                            </td>
-                            <td>
-                                <strong class="text-dark" th:text="${c.bookTitle}">Tên sách</strong>
-                                <div class="text-muted small" th:text="'Tác giả: ' + ${c.author}">Tác giả</div>
-                            </td>
-                            <td>
-                                <div class="fw-semibold" th:text="${c.user != null ? c.user.fullName : '-'}">Khách hàng</div>
-                                <div class="text-muted small" th:text="${c.user != null ? c.user.phone : ''}">SĐT</div>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge" th:classappend="${c.conditionPercent >= 95 ? 'badge-cond-high' : 'badge-cond-med'}" th:text="${c.conditionPercent} + '%'">90%</span>
-                            </td>
-                            <td class="text-end text-muted">
-                                <span th:text="${#numbers.formatDecimal(c.proposedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">50,000 đ</span>
-                            </td>
-                            <td class="text-end fw-bold text-danger">
-                                <span th:if="${c.agreedPrice != null}" th:text="${#numbers.formatDecimal(c.agreedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">45,000 đ</span>
-                                <span th:if="${c.agreedPrice == null}" class="text-muted fst-italic">Chưa duyệt</span>
-                            </td>
-                            <td class="small" th:text="${c.store != null ? c.store.storeName : '-'}">Thủ Đức</td>
-                            <td class="text-center">
-                                <span th:if="${c.status.name() == 'PENDING'}" class="badge bg-warning text-dark">Chờ duyệt</span>
-                                <span th:if="${c.status.name() == 'APPROVED'}" class="badge bg-primary">Đã duyệt giá</span>
-                                <span th:if="${c.status.name() == 'STORED'}" class="badge bg-success">Đã nhập kho</span>
-                                <span th:if="${c.status.name() == 'REJECTED'}" class="badge bg-danger">Từ chối</span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <a th:href="@{/admin/consignments/{id}(id=${c.id})}" class="btn btn-sm btn-outline-dark">
-                                    <i class="fa-solid fa-stamp me-1"></i>Thẩm định
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <!-- 4. CONSIGNMENTS TABLE LIQUID GLASS -->
+    <div class="card-liquid-glass overflow-hidden mb-4">
+        <div class="card-liquid-header">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-clipboard-check text-warning"></i>
+                <span class="fw-bold text-dark">Danh Sách Phiếu Ký Gửi &amp; Thẩm Định Sách Cũ</span>
             </div>
+            <span class="badge rounded-pill bg-white text-secondary border px-3 py-1 shadow-sm" style="font-size: 12px;">
+                Tổng cộng <span class="fw-bold text-dark" th:text="${totalElements}">0</span> yêu cầu
+            </span>
         </div>
 
-        <!-- PAGINATION -->
-        <div class="card-footer bg-white border-0 py-3" th:if="${totalPages > 1}">
-            <nav>
-                <ul class="pagination justify-content-center mb-0">
+        <div class="table-responsive">
+            <table class="table-liquid align-middle">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Mã / Ngày gửi</th>
+                        <th>Sách ký gửi &amp; Tác giả</th>
+                        <th>Khách hàng</th>
+                        <th class="text-center">Độ mới</th>
+                        <th class="text-end">Giá khách mong muốn</th>
+                        <th class="text-end">Giá shop duyệt</th>
+                        <th>Chi nhánh tiếp nhận</th>
+                        <th class="text-center">Trạng thái</th>
+                        <th class="text-end pe-4">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Trống -->
+                    <tr th:if="${consignmentPage.empty}">
+                        <td colspan="9" class="text-center py-5 text-muted">
+                            <div class="py-4">
+                                <i class="fa-solid fa-inbox fa-3x text-secondary opacity-50 mb-3"></i>
+                                <h6 class="fw-bold text-dark">Không có yêu cầu ký gửi nào phù hợp</h6>
+                                <p class="small text-muted mb-0">Khi khách hàng gửi yêu cầu thẩm định bán sách cũ, dữ liệu sẽ hiển thị tại đây.</p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Từng dòng ký gửi -->
+                    <tr th:each="c : ${consignmentPage.content}">
+                        <td class="ps-4">
+                            <strong class="text-dark d-block" th:text="'#KG-' + ${c.id}">#KG-1</strong>
+                            <div class="text-muted" style="font-size: 11px;">
+                                <i class="fa-regular fa-clock me-1"></i>
+                                <span th:text="${#temporals.format(c.createdAt, 'dd/MM/yyyy HH:mm')}">29/09/2026</span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <strong class="text-dark d-block" style="font-size: 14px;" th:text="${c.bookTitle}">Tên sách</strong>
+                            <div class="text-muted small">
+                                <i class="fa-solid fa-feather-pointed me-1" style="font-size: 10px;"></i>
+                                <span th:text="'Tác giả: ' + ${c.author}">Tác giả</span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="fw-semibold text-dark" th:text="${c.user != null ? c.user.fullName : '-'}">Khách hàng</div>
+                            <div class="text-muted small" style="font-size: 11px;">
+                                <i class="fa-solid fa-phone me-1" style="font-size: 10px;"></i>
+                                <span th:text="${c.user != null ? c.user.phone : ''}">090...</span>
+                            </div>
+                        </td>
+
+                        <!-- Độ mới: Tag bo góc 4px thanh lịch -->
+                        <td class="text-center">
+                            <span th:if="${c.conditionPercent >= 95}" class="tag-condition-high">
+                                <i class="fa-solid fa-circle-check" style="font-size: 10px;"></i>
+                                <span th:text="${c.conditionPercent} + '%'">95%</span>
+                            </span>
+                            <span th:if="${c.conditionPercent < 95}" class="tag-condition-med">
+                                <i class="fa-solid fa-shield-halved" style="font-size: 10px;"></i>
+                                <span th:text="${c.conditionPercent} + '%'">90%</span>
+                            </span>
+                        </td>
+
+                        <!-- Giá đề xuất -->
+                        <td class="text-end text-secondary fw-semibold">
+                            <span th:text="${#numbers.formatDecimal(c.proposedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">50,000 đ</span>
+                        </td>
+
+                        <!-- Giá shop duyệt -->
+                        <td class="text-end">
+                            <div th:if="${c.agreedPrice != null}" class="fw-bold" style="color: #C2410C;" 
+                                 th:text="${#numbers.formatDecimal(c.agreedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">45,000 đ</div>
+                            <span th:if="${c.agreedPrice == null}" class="text-muted fst-italic small">Chưa định giá</span>
+                        </td>
+
+                        <!-- Chi nhánh tiếp nhận -->
+                        <td class="small">
+                            <span class="badge bg-light text-secondary border px-2 py-1" th:text="${c.store != null ? c.store.storeName : '-'}">
+                                Thủ Đức
+                            </span>
+                        </td>
+
+                        <!-- Trạng thái: Badge màu sắc trang nhã -->
+                        <td class="text-center">
+                            <span th:if="${c.status.name() == 'PENDING'}" class="badge-status-pending">
+                                <i class="fa-solid fa-hourglass-half"></i> Chờ duyệt
+                            </span>
+                            <span th:if="${c.status.name() == 'APPROVED'}" class="badge-status-approved">
+                                <i class="fa-solid fa-circle-check"></i> Đã định giá
+                            </span>
+                            <span th:if="${c.status.name() == 'STORED'}" class="badge-status-stored">
+                                <i class="fa-solid fa-boxes-packing"></i> Đã nhập kho
+                            </span>
+                            <span th:if="${c.status.name() == 'REJECTED'}" class="badge-status-rejected">
+                                <i class="fa-solid fa-ban"></i> Từ chối
+                            </span>
+                        </td>
+
+                        <!-- Thao tác: Xem ảnh popup & Thẩm định -->
+                        <td class="text-end pe-4">
+                            <div class="d-inline-flex gap-2 align-items-center">
+                                <!-- Nút mở modal xem ảnh tình trạng thực tế do khách gửi -->
+                                <button type="button" class="btn-view-photos" 
+                                        th:data-id="${c.id}"
+                                        th:data-title="${c.bookTitle}"
+                                        th:data-author="${c.author}"
+                                        th:data-condition="${c.conditionPercent}"
+                                        th:data-desc="${c.conditionDescription}"
+                                        th:data-photos="${c.photosJson}"
+                                        title="Xem ảnh chụp góc cạnh do khách gửi"
+                                        onclick="openPhotoModal(this)">
+                                    <i class="fa-solid fa-camera text-primary"></i>
+                                    <span>Xem ảnh</span>
+                                </button>
+
+                                <!-- Nút thẩm định chi tiết -->
+                                <a th:href="@{/admin/consignments/{id}(id=${c.id})}" class="btn-appraise" title="Trang thẩm định">
+                                    <i class="fa-solid fa-stamp"></i>
+                                    <span>Thẩm định</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 5. PAGINATION LIQUID GLASS -->
+        <div class="card-liquid-header border-top border-bottom-0 py-3" th:if="${totalPages > 1}">
+            <div class="text-muted small">
+                Hiển thị trang <strong class="text-dark" th:text="${currentPage + 1}">1</strong> / <strong class="text-dark" th:text="${totalPages}">1</strong>
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-glass mb-0">
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
-                        <a class="page-link" th:href="@{/admin/consignments(page=${currentPage - 1}, status=${selectedStatus}, storeId=${selectedStoreId})}">&laquo; Trước</a>
+                        <a class="page-link" th:href="@{/admin/consignments(page=${currentPage - 1}, status=${selectedStatus}, storeId=${selectedStoreId})}">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
                     </li>
                     <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${currentPage == i} ? 'active' : ''">
                         <a class="page-link" th:href="@{/admin/consignments(page=${i}, status=${selectedStatus}, storeId=${selectedStoreId})}" th:text="${i + 1}">1</a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
-                        <a class="page-link" th:href="@{/admin/consignments(page=${currentPage + 1}, status=${selectedStatus}, storeId=${selectedStoreId})}">Sau &raquo;</a>
+                        <a class="page-link" th:href="@{/admin/consignments(page=${currentPage + 1}, status=${selectedStatus}, storeId=${selectedStoreId})}">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
                     </li>
                 </ul>
             </nav>
         </div>
     </div>
+
+    <!-- ========================================================
+         6. POPUP / MODAL XEM ẢNH TÌNH TRẠNG SÁCH DO KHÁCH GỬI (APPLE LIQUID GLASS)
+         ======================================================== -->
+    <div class="modal-liquid-backdrop" id="consignmentPhotoModal" onclick="closePhotoModal(event)">
+        <div class="modal-liquid-card" onclick="event.stopPropagation()">
+            <!-- Nút đóng tròn mờ -->
+            <button type="button" class="btn-modal-close" onclick="closePhotoModalDirect()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Tiêu đề modal -->
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge rounded-pill bg-light text-secondary border px-2 py-1" id="modalConsignmentId">#KG-1</span>
+                <span class="tag-condition-high" id="modalConditionPercent">90%</span>
+            </div>
+            <h5 class="fw-bold text-dark mb-1" id="modalBookTitle">Tên Sách Ký Gửi</h5>
+            <div class="text-muted small mb-3">
+                <i class="fa-solid fa-feather-pointed me-1"></i>Tác giả: <strong class="text-dark" id="modalAuthor">Tác giả</strong>
+            </div>
+
+            <!-- Khung ảnh chính lớn -->
+            <div class="modal-main-photo-frame" id="modalMainFrame">
+                <img id="modalMainPhoto" src="" alt="Ảnh kiểm định tình trạng">
+            </div>
+
+            <!-- Dải thumbnail ảnh góc chụp -->
+            <div class="modal-thumb-strip mb-3" id="modalThumbStrip"></div>
+
+            <!-- Mô tả hiện trạng do khách hàng cung cấp -->
+            <div class="p-3 rounded-3 bg-light border border-secondary border-opacity-10 mb-4">
+                <div class="small fw-bold text-secondary text-uppercase mb-1" style="font-size: 11px;">
+                    <i class="fa-solid fa-clipboard-list me-1"></i>Mô tả hiện trạng thực tế do khách gửi:
+                </div>
+                <div class="small text-dark fst-italic" id="modalConditionDesc">Không có ghi chú thêm.</div>
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="d-flex align-items-center justify-content-end gap-2">
+                <button type="button" class="btn btn-light rounded-pill px-4 py-2 small fw-semibold" onclick="closePhotoModalDirect()">
+                    Đóng lại
+                </button>
+                <a id="modalDetailLink" href="#" class="btn btn-dark rounded-pill px-4 py-2 small fw-semibold" style="background: linear-gradient(135deg, #8C4A27, #EE4D2D); border: none;">
+                    <i class="fa-solid fa-stamp me-1"></i>Đi đến trang thẩm định
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT XỬ LÝ POPUP ẢNH LIQUID GLASS -->
+    <script>
+        function openPhotoModal(btn) {
+            const id = btn.getAttribute('data-id') || '';
+            const title = btn.getAttribute('data-title') || 'Sách Ký Gửi';
+            const author = btn.getAttribute('data-author') || '-';
+            const condition = btn.getAttribute('data-condition') || '90';
+            const desc = btn.getAttribute('data-desc') || 'Khách hàng không đính kèm mô tả chi tiết.';
+            const rawPhotos = btn.getAttribute('data-photos') || '';
+
+            document.getElementById('modalConsignmentId').innerText = '#KG-' + id;
+            document.getElementById('modalBookTitle').innerText = title;
+            document.getElementById('modalAuthor').innerText = author;
+            document.getElementById('modalConditionPercent').innerText = condition + '% Mới';
+            document.getElementById('modalConditionDesc').innerText = desc;
+            document.getElementById('modalDetailLink').href = '/admin/consignments/' + id;
+
+            // Parse danh sách ảnh
+            let photos = [];
+            if (rawPhotos && rawPhotos.trim() !== '') {
+                try {
+                    photos = JSON.parse(rawPhotos);
+                } catch (e) {
+                    const cleaned = rawPhotos.replace(/[\[\]"]/g, '').split(',');
+                    for (let p of cleaned) {
+                        if (p.trim()) photos.push(p.trim());
+                    }
+                }
+            }
+
+            const mainImg = document.getElementById('modalMainPhoto');
+            const mainFrame = document.getElementById('modalMainFrame');
+            const thumbStrip = document.getElementById('modalThumbStrip');
+            thumbStrip.innerHTML = '';
+
+            if (photos && photos.length > 0) {
+                mainImg.src = photos[0];
+                mainImg.style.display = 'block';
+
+                photos.forEach((url, idx) => {
+                    const thumb = document.createElement('div');
+                    thumb.className = 'modal-thumb-item' + (idx === 0 ? ' active' : '');
+                    thumb.innerHTML = `<img src="${url}" alt="Góc chụp #${idx + 1}" onerror="this.src='/images/books/book-1.jpg';">`;
+                    thumb.onclick = function() {
+                        mainImg.src = url;
+                        document.querySelectorAll('.modal-thumb-item').forEach(el => el.classList.remove('active'));
+                        thumb.classList.add('active');
+                    };
+                    thumbStrip.appendChild(thumb);
+                });
+            } else {
+                mainImg.style.display = 'none';
+                mainFrame.innerHTML = `
+                    <div class="text-center text-muted p-4">
+                        <i class="fa-solid fa-camera-slash fa-3x text-secondary opacity-50 mb-2"></i>
+                        <p class="small mb-0">Khách hàng không đính kèm ảnh chụp góc cạnh cho yêu cầu này.</p>
+                    </div>
+                `;
+            }
+
+            const modal = document.getElementById('consignmentPhotoModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePhotoModal(event) {
+            if (event.target.id === 'consignmentPhotoModal') {
+                closePhotoModalDirect();
+            }
+        }
+
+        function closePhotoModalDirect() {
+            const modal = document.getElementById('consignmentPhotoModal');
+            if (modal) modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Đóng khi bấm phím ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePhotoModalDirect();
+            }
+        });
+    </script>
 
 </div>
 </body>

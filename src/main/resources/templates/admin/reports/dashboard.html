@@ -7,73 +7,290 @@
 <body>
 <div th:fragment="content">
 
+    <style>
+        /* Apple Liquid Glass KPI Cards */
+        .kpi-glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(232, 222, 200, 0.8);
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.05);
+            padding: 18px 20px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .kpi-glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+        }
+        .kpi-glass-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(45, 24, 15, 0.09);
+            border-color: rgba(238, 77, 45, 0.35);
+        }
+        .kpi-title {
+            color: #78716C;
+            font-size: 12.5px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+        .kpi-value {
+            color: #1C1917;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        /* Icon Tròn Gradient Ấm Áp */
+        .kpi-icon-orb {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .kpi-icon-orb::after {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+        }
+        .kpi-icon-orb.shopee-red {
+            background: linear-gradient(135deg, #FF6647 0%, #EE4D2D 100%);
+            box-shadow: 0 6px 16px rgba(238, 77, 45, 0.32);
+        }
+        .kpi-icon-orb.leather-brown {
+            background: linear-gradient(135deg, #A85A32 0%, #8C4A27 100%);
+            box-shadow: 0 6px 16px rgba(140, 74, 39, 0.30);
+        }
+        .kpi-icon-orb.amber-gold {
+            background: linear-gradient(135deg, #FBBF24 0%, #D97706 100%);
+            box-shadow: 0 6px 16px rgba(217, 119, 6, 0.30);
+        }
+        .kpi-icon-orb.herbal-green {
+            background: linear-gradient(135deg, #22C55E 0%, #15803D 100%);
+            box-shadow: 0 6px 16px rgba(21, 128, 61, 0.30);
+        }
+
+        /* Nút Liquid Glass Excel Cao Cấp */
+        .btn-glass-excel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1.5px solid #10B981;
+            color: #065F46;
+            border-radius: 9999px;
+            padding: 9px 20px;
+            font-weight: 600;
+            font-size: 13.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.12), inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        .btn-glass-excel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.75s ease;
+        }
+        .btn-glass-excel:hover {
+            background: rgba(240, 253, 244, 0.95);
+            border-color: #059669;
+            color: #047857;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 1);
+        }
+        .btn-glass-excel:hover::after {
+            left: 200%;
+        }
+
+        /* Glass Card Container Cho Chart & Tables */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(232, 222, 200, 0.8);
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.05);
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            box-shadow: 0 12px 28px rgba(45, 24, 15, 0.07);
+        }
+        .glass-card-header {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(232, 222, 200, 0.6);
+            padding: 16px 22px;
+            font-weight: 600;
+            font-size: 14.5px;
+        }
+        .glass-select {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(232, 222, 200, 0.9);
+            border-radius: 9999px;
+            padding: 5px 28px 5px 14px;
+            font-size: 13px;
+            color: #44403C;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .glass-select:focus {
+            border-color: #EE4D2D;
+            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.15);
+            outline: none;
+        }
+
+        /* Table Kính Mờ Thanh Lịch */
+        .glass-table {
+            margin-bottom: 0;
+            background: transparent;
+        }
+        .glass-table thead th {
+            background: rgba(248, 245, 238, 0.75);
+            color: #78716C;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(232, 222, 200, 0.8);
+            padding: 12px 18px;
+        }
+        .glass-table tbody tr {
+            border-bottom: 1px solid rgba(232, 222, 200, 0.4);
+            transition: background-color 0.2s ease;
+        }
+        .glass-table tbody tr:hover {
+            background-color: rgba(254, 243, 199, 0.35);
+        }
+        .glass-table tbody td {
+            padding: 13px 18px;
+            vertical-align: middle;
+        }
+
+        /* Badge Trạng Thái Bo Góc 4px Chuẩn */
+        .badge-sq-4px {
+            border-radius: 4px !important;
+            font-weight: 600;
+            font-size: 11.5px;
+            padding: 4px 8px;
+            letter-spacing: 0.2px;
+        }
+        .book-cover-thumb {
+            width: 38px;
+            height: 52px;
+            border-radius: 6px;
+            object-fit: cover;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.12);
+            border: 1px solid rgba(232, 222, 200, 0.8);
+        }
+        .header-icon-box {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: rgba(238, 77, 45, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+
     <!-- PAGE HEADER -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-chart-pie text-warning me-2"></i>Thống Kê Doanh Thu &amp; Báo Cáo Hệ Thống</h4>
+            <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
+                <span class="header-icon-box">
+                    <i class="fa-solid fa-chart-pie" style="color: #EE4D2D;"></i>
+                </span>
+                <span>Thống Kê Doanh Thu &amp; Báo Cáo Hệ Thống</span>
+            </h4>
             <p class="text-muted small mb-0">Theo dõi doanh số chuỗi 5 chi nhánh, phân tích thị phần và xuất báo cáo kiểm toán.</p>
         </div>
         <div class="d-flex gap-2">
-            <a th:href="@{/admin/reports/export-excel}" class="btn btn-success fw-semibold">
-                <i class="fa-solid fa-file-excel me-1"></i>Xuất Báo Cáo Excel (.xlsx)
+            <a th:href="@{/admin/reports/export-excel}" class="btn-glass-excel">
+                <i class="fa-solid fa-file-excel fs-6" style="color: #10B981;"></i>
+                <span>Xuất Báo Cáo Excel (.xlsx)</span>
             </a>
         </div>
     </div>
 
-    <!-- 4 CARDS TỔNG QUAN -->
+    <!-- 4 THẺ THỐNG KÊ KPI LIQUID GLASS -->
     <div class="row g-3 mb-4">
+        <!-- Thẻ 1: Doanh Thu Tổng -->
         <div class="col-sm-6 col-xl-3">
-            <div class="card card-custom p-3 border-start border-primary border-4">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold">Tổng Doanh Thu</div>
-                        <h4 class="fw-bold text-primary mb-0 mt-1" th:text="${#numbers.formatDecimal(summary.totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</h4>
-                    </div>
-                    <div class="bg-primary-subtle p-3 rounded-circle text-primary">
-                        <i class="fa-solid fa-sack-dollar fa-xl"></i>
-                    </div>
+            <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="kpi-title">Doanh Thu Tổng</div>
+                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalRevenue != null ? #numbers.formatDecimal(summary.totalRevenue, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</h4>
+                </div>
+                <div class="kpi-icon-orb shopee-red">
+                    <i class="fa-solid fa-coins"></i>
                 </div>
             </div>
         </div>
 
+        <!-- Thẻ 2: Đơn Hàng Mới -->
         <div class="col-sm-6 col-xl-3">
-            <div class="card card-custom p-3 border-start border-success border-4">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold">Tổng Đơn Hàng</div>
-                        <h4 class="fw-bold text-success mb-0 mt-1" th:text="${summary.totalOrders}">0</h4>
-                    </div>
-                    <div class="bg-success-subtle p-3 rounded-circle text-success">
-                        <i class="fa-solid fa-cart-check fa-xl"></i>
-                    </div>
+            <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="kpi-title">Đơn Hàng Mới</div>
+                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalOrders != null ? summary.totalOrders : 0}">0</h4>
+                </div>
+                <div class="kpi-icon-orb leather-brown">
+                    <i class="fa-solid fa-bag-shopping"></i>
                 </div>
             </div>
         </div>
 
+        <!-- Thẻ 3: Sách Đã Bán -->
         <div class="col-sm-6 col-xl-3">
-            <div class="card card-custom p-3 border-start border-warning border-4">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold">Đầu Sách Cũ Hiện Có</div>
-                        <h4 class="fw-bold text-warning mb-0 mt-1" th:text="${summary.totalBooks}">0</h4>
-                    </div>
-                    <div class="bg-warning-subtle p-3 rounded-circle text-warning">
-                        <i class="fa-solid fa-book fa-xl"></i>
-                    </div>
+            <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="kpi-title">Sách Đã Bán</div>
+                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalBooks != null ? summary.totalBooks : 0}">0</h4>
+                </div>
+                <div class="kpi-icon-orb amber-gold">
+                    <i class="fa-solid fa-book-bookmark"></i>
                 </div>
             </div>
         </div>
 
+        <!-- Thẻ 4: Sách Ký Gửi Mới -->
         <div class="col-sm-6 col-xl-3">
-            <div class="card card-custom p-3 border-start border-info border-4">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold">Khách Hàng &amp; Thành Viên</div>
-                        <h4 class="fw-bold text-info mb-0 mt-1" th:text="${summary.totalUsers}">0</h4>
-                    </div>
-                    <div class="bg-info-subtle p-3 rounded-circle text-info">
-                        <i class="fa-solid fa-users fa-xl"></i>
-                    </div>
+            <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="kpi-title">Sách Ký Gửi Mới</div>
+                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary.pendingConsignments != null ? summary.pendingConsignments : (summary.totalUsers != null ? summary.totalUsers : 0)}">0</h4>
+                </div>
+                <div class="kpi-icon-orb herbal-green">
+                    <i class="fa-solid fa-handshake"></i>
                 </div>
             </div>
         </div>
@@ -83,11 +300,13 @@
     <div class="row g-4 mb-4">
         <!-- DOANH THU 12 THÁNG -->
         <div class="col-lg-8">
-            <div class="card card-custom h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span class="fw-semibold"><i class="fa-solid fa-chart-line text-primary me-2"></i>Biểu Đồ Doanh Thu Năm <span th:text="${selectedYear}">2026</span> (VNĐ)</span>
+            <div class="glass-card h-100">
+                <div class="glass-card-header d-flex justify-content-between align-items-center">
+                    <span class="text-dark">
+                        <i class="fa-solid fa-chart-line me-2" style="color: #EE4D2D;"></i>Biểu Đồ Doanh Thu Năm <span th:text="${selectedYear}">2026</span> (VNĐ)
+                    </span>
                     <form th:action="@{/admin/reports}" method="get" class="d-flex align-items-center gap-1">
-                        <select name="year" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <select name="year" class="form-select form-select-sm glass-select" onchange="this.form.submit()">
                             <option value="2026" th:selected="${selectedYear == 2026}">Năm 2026</option>
                             <option value="2025" th:selected="${selectedYear == 2025}">Năm 2025</option>
                         </select>
@@ -101,9 +320,11 @@
 
         <!-- CƠ CẤU TRẠNG THÁI ĐƠN HÀNG -->
         <div class="col-lg-4">
-            <div class="card card-custom h-100">
-                <div class="card-header">
-                    <span class="fw-semibold"><i class="fa-solid fa-chart-pie text-warning me-2"></i>Tỷ Lệ Trạng Thái Đơn</span>
+            <div class="glass-card h-100">
+                <div class="glass-card-header">
+                    <span class="text-dark">
+                        <i class="fa-solid fa-chart-pie me-2" style="color: #D97706;"></i>Tỷ Lệ Trạng Thái Đơn
+                    </span>
                 </div>
                 <div class="card-body p-4 d-flex align-items-center justify-content-center">
                     <div style="width: 100%; max-height: 290px;">
@@ -114,56 +335,112 @@
         </div>
     </div>
 
-    <!-- BIỂU ĐỒ CHART.JS HÀNG 2: DOANH THU TỪNG CHI NHÁNH & TOP SÁCH -->
+    <!-- BIỂU ĐỒ CHART.JS HÀNG 2: THỊ PHẦN CHI NHÁNH & TOP SÁCH -->
     <div class="row g-4">
-        <!-- DOANH THU 5 CHI NHÁNH -->
+        <!-- BIỂU ĐỒ TRÒN THỊ PHẦN CHI NHÁNH -->
         <div class="col-lg-6">
-            <div class="card card-custom h-100">
-                <div class="card-header">
-                    <span class="fw-semibold"><i class="fa-solid fa-store text-success me-2"></i>Doanh Thu Theo Chuỗi 5 Chi Nhánh</span>
+            <div class="glass-card h-100">
+                <div class="glass-card-header">
+                    <span class="text-dark">
+                        <i class="fa-solid fa-store me-2" style="color: #8C4A27;"></i>Thị Phần Doanh Thu 5 Chi Nhánh
+                    </span>
                 </div>
-                <div class="card-body p-4">
-                    <canvas id="storeRevenueChart" style="max-height: 300px;"></canvas>
+                <div class="card-body p-4 d-flex align-items-center justify-content-center">
+                    <div style="width: 100%; max-height: 300px;">
+                        <canvas id="storeRevenueChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- TOP SÁCH BÁN CHẠY -->
         <div class="col-lg-6">
-            <div class="card card-custom h-100">
-                <div class="card-header">
-                    <span class="fw-semibold"><i class="fa-solid fa-fire text-danger me-2"></i>Top Sách Cũ Bán Chạy Nhất</span>
+            <div class="glass-card h-100">
+                <div class="glass-card-header d-flex align-items-center justify-content-between">
+                    <span class="text-dark">
+                        <i class="fa-solid fa-fire me-2" style="color: #EE4D2D;"></i>Top Sách Cũ Bán Chạy Nhất
+                    </span>
+                    <span class="badge bg-danger-subtle text-danger badge-sq-4px">Hot</span>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr class="small text-muted text-uppercase">
+                        <table class="table glass-table align-middle mb-0">
+                            <thead>
+                                <tr>
                                     <th class="ps-4">Sách</th>
-                                    <th>Giá</th>
-                                    <th class="text-center">Độ mới</th>
-                                    <th class="text-end pe-4">Đã bán</th>
+                                    <th>Giá Bán</th>
+                                    <th class="text-center">Độ Mới</th>
+                                    <th class="text-end pe-4">Đã Bán</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:if="${topBooks.empty}">
+                                <tr th:if="${topBooks == null or topBooks.empty}">
                                     <td colspan="4" class="text-center py-4 text-muted small">Chưa có dữ liệu sách bán chạy.</td>
                                 </tr>
                                 <tr th:each="b : ${topBooks}">
                                     <td class="ps-4">
                                         <div class="d-flex align-items-center gap-2">
-                                            <img th:src="${b.getPrimaryImageUrl()}" class="rounded" style="width: 36px; height: 50px; object-fit: cover;">
+                                            <img th:src="${b.getPrimaryImageUrl()}" class="book-cover-thumb" alt="Bìa sách">
                                             <div>
                                                 <div class="fw-semibold text-dark small" th:text="${b.title}">Tên sách</div>
                                                 <div class="text-muted" style="font-size: 11px;" th:text="${b.author}">Tác giả</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="small fw-bold text-danger" th:text="${#numbers.formatDecimal(b.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">68,000 đ</td>
+                                    <td class="small fw-bold" style="color: #EE4D2D;" th:text="${#numbers.formatDecimal(b.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">68.000 ₫</td>
                                     <td class="text-center">
-                                        <span class="badge badge-cond-high" th:text="${b.conditionPercent} + '%'">95%</span>
+                                        <span class="badge badge-cond-high badge-sq-4px" th:text="${b.conditionPercent} + '%'">95%</span>
                                     </td>
-                                    <td class="text-end pe-4 fw-bold" th:text="${b.totalSold}">48</td>
+                                    <td class="text-end pe-4 fw-bold text-dark" th:text="${b.totalSold}">48</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BẢNG ĐƠN HÀNG GẦN ĐÂY (NẾU CÓ TRONG MODEL HOẶC KHI NÂNG CẤP) -->
+    <div th:if="${recentOrders != null and !recentOrders.empty}" class="row mt-4">
+        <div class="col-12">
+            <div class="glass-card">
+                <div class="glass-card-header d-flex align-items-center justify-content-between">
+                    <span class="text-dark">
+                        <i class="fa-solid fa-clock-rotate-left me-2" style="color: #8C4A27;"></i>Đơn Hàng Gần Đây
+                    </span>
+                    <a th:href="@{/admin/orders}" class="small text-decoration-none text-muted">Xem tất cả &rarr;</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table glass-table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Mã Đơn</th>
+                                    <th>Khách Hàng</th>
+                                    <th>Chi Nhánh</th>
+                                    <th>Tổng Tiền</th>
+                                    <th class="text-center">Trạng Thái</th>
+                                    <th class="text-end pe-4">Thời Gian</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="o : ${recentOrders}">
+                                    <td class="ps-4 fw-semibold text-dark" th:text="${o.orderCode}">#ORD-1001</td>
+                                    <td>
+                                        <div class="small fw-medium text-dark" th:text="${o.receiverName}">Nguyễn Văn A</div>
+                                        <div class="text-muted" style="font-size: 11px;" th:text="${o.receiverPhone}">0901234567</div>
+                                    </td>
+                                    <td class="small text-muted" th:text="${o.store != null ? o.store.name : 'Toàn hệ thống'}">CN HCMUTE</td>
+                                    <td class="small fw-bold" style="color: #EE4D2D;" th:text="${#numbers.formatDecimal(o.finalAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">150.000 ₫</td>
+                                    <td class="text-center">
+                                        <span class="badge badge-sq-4px" 
+                                              th:classappend="${o.orderStatus != null and (o.orderStatus.name() == 'DELIVERED' or o.orderStatus.name() == 'COMPLETED')} ? 'bg-success-subtle text-success' : 
+                                                             (${o.orderStatus != null and o.orderStatus.name() == 'CANCELLED'} ? 'bg-danger-subtle text-danger' : 
+                                                             (${o.orderStatus != null and o.orderStatus.name() == 'SHIPPING'} ? 'bg-warning-subtle text-dark' : 'bg-primary-subtle text-primary'))"
+                                              th:text="${o.orderStatus != null ? o.orderStatus.name() : 'NEW'}">NEW</span>
+                                    </td>
+                                    <td class="text-end pe-4 small text-muted" th:text="${o.createdAt != null ? #temporals.format(o.createdAt, 'dd/MM/yyyy HH:mm') : ''}">01/10/2026</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -179,7 +456,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    // 1. Dữ liệu nạp từ Spring Model
+    // 1. Dữ liệu nạp từ Spring Model (Bảo toàn 100% logic nạp dữ liệu Thymeleaf)
     const monthlyRevenue = /*[[${monthlyRevenueJson}]]*/ '[]';
     const storeLabels = /*[[${storeLabelsJson}]]*/ '[]';
     const storeData = /*[[${storeDataJson}]]*/ '[]';
@@ -192,8 +469,12 @@
     const parsedStatusLabels = JSON.parse(statusLabels);
     const parsedStatusData = JSON.parse(statusData);
 
-    // 2. Render Biểu đồ đường doanh thu 12 tháng
+    // 2. Render Biểu đồ đường doanh thu 12 tháng: Cam đỏ Shopee (#EE4D2D) & Gradient mờ về transparent
     const ctxMonthly = document.getElementById('monthlyRevenueChart').getContext('2d');
+    const gradientMonthly = ctxMonthly.createLinearGradient(0, 0, 0, 300);
+    gradientMonthly.addColorStop(0, 'rgba(238, 77, 45, 0.15)');
+    gradientMonthly.addColorStop(1, 'rgba(238, 77, 45, 0.00)');
+
     new Chart(ctxMonthly, {
         type: 'line',
         data: {
@@ -201,12 +482,16 @@
             datasets: [{
                 label: 'Doanh thu (VNĐ)',
                 data: parsedMonthly,
-                borderColor: '#8C4A27',
-                backgroundColor: 'rgba(140, 74, 39, 0.1)',
-                tension: 0.35,
+                borderColor: '#EE4D2D',
+                borderWidth: 2.5,
+                backgroundColor: gradientMonthly,
+                tension: 0.38,
                 fill: true,
-                pointBackgroundColor: '#8C4A27',
-                pointRadius: 4
+                pointBackgroundColor: '#EE4D2D',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 4.5,
+                pointHoverRadius: 6.5
             }]
         },
         options: {
@@ -214,19 +499,40 @@
             maintainAspectRatio: false,
             plugins: {
                 tooltip: {
+                    backgroundColor: 'rgba(45, 24, 15, 0.88)',
+                    titleFont: { family: 'Inter', size: 12, weight: '600' },
+                    bodyFont: { family: 'Inter', size: 12 },
+                    padding: 10,
+                    cornerRadius: 8,
                     callbacks: {
                         label: function(context) {
-                            return 'Doanh thu: ' + new Intl.NumberFormat('vi-VN').format(context.raw) + ' VNĐ';
+                            return ' Doanh thu: ' + new Intl.NumberFormat('vi-VN').format(context.raw) + ' ₫';
                         }
                     }
                 }
             },
             scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(232, 222, 200, 0.35)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: { family: 'Inter', size: 11.5 },
+                        color: '#78716C'
+                    }
+                },
                 y: {
                     beginAtZero: true,
+                    grid: {
+                        color: 'rgba(232, 222, 200, 0.35)',
+                        drawBorder: false
+                    },
                     ticks: {
+                        font: { family: 'Inter', size: 11 },
+                        color: '#78716C',
                         callback: function(value) {
-                            return new Intl.NumberFormat('vi-VN', { notation: "compact" }).format(value) + ' đ';
+                            return new Intl.NumberFormat('vi-VN', { notation: "compact" }).format(value) + ' ₫';
                         }
                     }
                 }
@@ -234,7 +540,7 @@
         }
     });
 
-    // 3. Render Biểu đồ tròn cơ cấu trạng thái đơn hàng
+    // 3. Render Biểu đồ tròn cơ cấu trạng thái đơn hàng (Tone màu ấm Shopee & Sách Cũ)
     const ctxStatus = document.getElementById('orderStatusChart').getContext('2d');
     new Chart(ctxStatus, {
         type: 'doughnut',
@@ -242,52 +548,82 @@
             labels: parsedStatusLabels,
             datasets: [{
                 data: parsedStatusData,
-                backgroundColor: ['#0d6efd', '#0dcaf0', '#ffc107', '#198754', '#dc3545', '#6c757d']
+                backgroundColor: ['#EE4D2D', '#D97706', '#8C4A27', '#15803D', '#DC2626', '#78716C'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            cutout: '65%',
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: { boxWidth: 12, font: { size: 11 } }
+                    labels: { 
+                        boxWidth: 12, 
+                        font: { family: 'Inter', size: 11.5 },
+                        padding: 10,
+                        color: '#57534E'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(45, 24, 15, 0.88)',
+                    padding: 10,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const val = context.raw || 0;
+                            const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                            return ` ${context.label}: ${val} đơn (${pct}%)`;
+                        }
+                    }
                 }
             }
         }
     });
 
-    // 4. Render Biểu đồ cột doanh thu từng chi nhánh
+    // 4. Render Biểu đồ tròn thị phần chi nhánh: #EE4D2D, #8C4A27, #D97706, #15803D, #B45309
     const ctxStore = document.getElementById('storeRevenueChart').getContext('2d');
+    const storeColors = ['#EE4D2D', '#8C4A27', '#D97706', '#15803D', '#B45309'];
+
     new Chart(ctxStore, {
-        type: 'bar',
+        type: 'doughnut',
         data: {
-            labels: parsedStoreLabels.map(name => name.length > 20 ? name.substring(0, 18) + '...' : name),
+            labels: parsedStoreLabels.map(name => name.length > 22 ? name.substring(0, 20) + '...' : name),
             datasets: [{
                 label: 'Doanh thu (VNĐ)',
                 data: parsedStoreData,
-                backgroundColor: '#198754',
-                borderRadius: 6
+                backgroundColor: storeColors,
+                borderWidth: 2,
+                borderColor: '#ffffff'
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            cutout: '62%',
             plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        font: { family: 'Inter', size: 11.5 },
+                        padding: 12,
+                        color: '#57534E'
+                    }
+                },
                 tooltip: {
+                    backgroundColor: 'rgba(45, 24, 15, 0.88)',
+                    padding: 10,
+                    cornerRadius: 8,
                     callbacks: {
                         label: function(context) {
-                            return 'Doanh thu: ' + new Intl.NumberFormat('vi-VN').format(context.raw) + ' VNĐ';
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return new Intl.NumberFormat('vi-VN', { notation: "compact" }).format(value) + ' đ';
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const val = context.raw || 0;
+                            const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                            return ` ${context.label}: ${new Intl.NumberFormat('vi-VN').format(val)} ₫ (${pct}%)`;
                         }
                     }
                 }

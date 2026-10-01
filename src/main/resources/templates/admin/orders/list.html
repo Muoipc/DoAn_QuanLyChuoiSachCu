@@ -7,110 +7,433 @@
 <body>
 <div th:fragment="content">
 
-    <!-- PAGE HEADER -->
+    <style>
+        /* Ambient Canvas Lighting for Apple Liquid Glass */
+        body {
+            background: 
+                radial-gradient(circle at 8% 12%, rgba(232, 222, 200, 0.5) 0%, transparent 45%), 
+                radial-gradient(circle at 92% 18%, rgba(238, 77, 45, 0.08) 0%, transparent 45%), 
+                radial-gradient(circle at 50% 80%, rgba(140, 74, 39, 0.06) 0%, transparent 50%),
+                #f8fafc !important;
+            background-attachment: fixed !important;
+        }
+
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.78);
+            --glass-bg-hover: rgba(255, 255, 255, 0.94);
+            --glass-border: rgba(255, 255, 255, 0.88);
+            --glass-blur: blur(28px) saturate(190%) brightness(102%);
+            --glass-shadow: 0 16px 38px -4px rgba(45, 24, 15, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            --glass-rim: inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98), inset 0 -1px 1px 0 rgba(45, 24, 15, 0.03);
+            --shopee-orange: #ee4d2d;
+            --leather-terracotta: #8C4A27;
+            --spring-bounce: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Glass Surface Containers */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--glass-shadow), var(--glass-rim);
+            transition: all 0.35s var(--spring-bounce);
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .glass-card-header {
+            padding: 18px 26px;
+            border-bottom: 1.5px solid rgba(242, 237, 230, 0.8);
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* iOS-Style Pill Segmented Control / Tabs */
+        .ios-status-dock {
+            background: rgba(240, 237, 230, 0.65);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border-radius: 9999px;
+            padding: 5px;
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(45, 24, 15, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .ios-status-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #57534e;
+            text-decoration: none;
+            transition: all 0.25s var(--spring-bounce);
+            border: 1px solid transparent;
+        }
+
+        .ios-status-tab:hover {
+            color: #1c1917;
+            background: rgba(255, 255, 255, 0.65);
+            transform: translateY(-1px);
+        }
+
+        .ios-status-tab.active {
+            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%);
+            color: #ffffff !important;
+            font-weight: 700;
+            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+            transform: scale(1.02);
+        }
+
+        .tab-counter {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 9999px;
+            background: rgba(0, 0, 0, 0.06);
+            color: inherit;
+        }
+        .ios-status-tab.active .tab-counter {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        /* Apple Pill Inputs & Selects */
+        .apple-pill-input {
+            border-radius: 9999px !important;
+            background: rgba(255, 255, 255, 0.8) !important;
+            border: 1.5px solid rgba(226, 218, 206, 0.9) !important;
+            padding: 9px 18px !important;
+            font-size: 13.5px !important;
+            transition: all 0.25s var(--spring-bounce) !important;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02) !important;
+        }
+        .apple-pill-input:focus {
+            background: #ffffff !important;
+            border-color: var(--shopee-orange) !important;
+            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.15) !important;
+            outline: none !important;
+        }
+
+        .apple-pill-select {
+            border-radius: 9999px !important;
+            background: rgba(255, 255, 255, 0.8) !important;
+            border: 1.5px solid rgba(226, 218, 206, 0.9) !important;
+            padding: 9px 36px 9px 18px !important;
+            font-size: 13.5px !important;
+            font-weight: 500 !important;
+            transition: all 0.25s var(--spring-bounce) !important;
+        }
+        .apple-pill-select:focus {
+            background: #ffffff !important;
+            border-color: var(--shopee-orange) !important;
+            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.15) !important;
+            outline: none !important;
+        }
+
+        /* Action & Filter Buttons */
+        .btn-filter-pill {
+            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%) !important;
+            color: #ffffff !important;
+            border-radius: 9999px !important;
+            padding: 9px 24px !important;
+            font-size: 13.5px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3) !important;
+            transition: all 0.25s var(--spring-bounce) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 6px !important;
+        }
+        .btn-filter-pill:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.4) !important;
+        }
+        .btn-filter-pill:active {
+            transform: scale(0.96);
+        }
+
+        /* Liquid Glass Table Styling */
+        .glass-table {
+            width: 100%;
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .glass-table thead tr th {
+            background: rgba(248, 245, 238, 0.6) !important;
+            color: #78716c;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 16px 20px;
+            border-bottom: 1.5px solid rgba(232, 222, 200, 0.7);
+        }
+        .glass-table tbody tr {
+            transition: all 0.2s var(--spring-bounce);
+        }
+        .glass-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: 0 4px 16px rgba(45, 24, 15, 0.04);
+        }
+        .glass-table tbody tr td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(242, 237, 230, 0.7);
+            vertical-align: middle;
+        }
+        .glass-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status & Delivery Method Pills */
+        .apple-pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 13px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+        .badge-new {
+            background: rgba(59, 130, 246, 0.12);
+            color: #1d4ed8;
+            border: 1px solid rgba(59, 130, 246, 0.25);
+        }
+        .badge-confirmed {
+            background: rgba(14, 165, 233, 0.12);
+            color: #0369a1;
+            border: 1px solid rgba(14, 165, 233, 0.25);
+        }
+        .badge-shipping {
+            background: rgba(245, 158, 11, 0.14);
+            color: #b45309;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .badge-delivered {
+            background: rgba(16, 185, 129, 0.14);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .badge-cancelled {
+            background: rgba(239, 68, 68, 0.12);
+            color: #b91c1c;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+        .badge-returned {
+            background: rgba(100, 116, 139, 0.12);
+            color: #475569;
+            border: 1px solid rgba(100, 116, 139, 0.25);
+        }
+
+        /* Method badge */
+        .badge-pickup {
+            background: rgba(147, 51, 234, 0.1);
+            color: #7e22ce;
+            border: 1px solid rgba(147, 51, 234, 0.25);
+        }
+        .badge-delivery {
+            background: rgba(238, 77, 45, 0.08);
+            color: #c2410c;
+            border: 1px solid rgba(238, 77, 45, 0.25);
+        }
+
+        /* Button Process (Xử lý đơn) */
+        .btn-view-order {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1.5px solid rgba(213, 206, 196, 0.8);
+            color: #1c1917;
+            border-radius: 9999px;
+            padding: 6px 16px;
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            transition: all 0.25s var(--spring-bounce);
+        }
+        .btn-view-order:hover {
+            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%);
+            border-color: transparent;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3);
+        }
+        .btn-view-order:active {
+            transform: scale(0.95);
+        }
+
+        /* Pagination Glass */
+        .glass-pagination .page-link {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            color: #475569;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 10px;
+            margin: 0 3px;
+            transition: all 0.2s var(--spring-bounce);
+        }
+        .glass-pagination .page-link:hover {
+            background: #ffffff;
+            color: var(--shopee-orange);
+            transform: translateY(-1px);
+        }
+        .glass-pagination .page-item.active .page-link {
+            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.3);
+        }
+    </style>
+
+    <!-- 1. PAGE HEADER -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-clipboard-list text-warning me-2"></i>Quản Lý Đơn Hàng Chuỗi</h4>
-            <p class="text-muted small mb-0">Xử lý quy trình đơn hàng đa trạng thái, quản lý Click & Collect và phân công nhân viên giao hàng.</p>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <div style="width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3);">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                </div>
+                <h4 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.3px;">Quản Lý Đơn Hàng Chuỗi</h4>
+            </div>
+            <p class="text-muted small mb-0 ms-1">
+                Theo dõi toàn bộ đơn hàng sách cũ đa chi nhánh, tiếp nhận đơn Click &amp; Collect và phân công nhân viên giao hàng.
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a th:href="@{/shipper/orders}" class="btn btn-outline-dark btn-sm rounded-pill px-3 py-2 fw-semibold">
+                <i class="fa-solid fa-motorcycle me-1 text-warning"></i>Cổng Shipper
+            </a>
         </div>
     </div>
 
-    <!-- STATUS TABS / BADGE COUNTERS -->
-    <div class="card card-custom mb-4">
-        <div class="card-body p-2">
-            <ul class="nav nav-pills gap-1">
-                <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus == null} ? 'active bg-dark' : 'text-dark'" 
-                       th:href="@{/admin/orders(storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
-                        Tất cả đơn
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'NEW'} ? 'active bg-primary' : 'text-primary'" 
-                       th:href="@{/admin/orders(status='NEW', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Đơn mới <span class="badge bg-primary-subtle text-primary ms-1" th:text="${countNew}">0</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'CONFIRMED'} ? 'active bg-info text-dark' : 'text-info-emphasis'" 
-                       th:href="@{/admin/orders(status='CONFIRMED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Đã xác nhận <span class="badge bg-info-subtle text-dark ms-1" th:text="${countConfirmed}">0</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'active bg-warning text-dark' : 'text-warning-emphasis'" 
-                       th:href="@{/admin/orders(status='SHIPPING', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Đang giao <span class="badge bg-warning-subtle text-dark ms-1" th:text="${countShipping}">0</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'DELIVERED'} ? 'active bg-success' : 'text-success'" 
-                       th:href="@{/admin/orders(status='DELIVERED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Đã giao <span class="badge bg-success-subtle text-success ms-1" th:text="${countDelivered}">0</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'CANCELLED'} ? 'active bg-danger' : 'text-danger'" 
-                       th:href="@{/admin/orders(status='CANCELLED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Đã hủy <span class="badge bg-danger-subtle text-danger ms-1" th:text="${countCancelled}">0</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link small fw-semibold" th:classappend="${selectedStatus != null and selectedStatus.name() == 'RETURNED'} ? 'active bg-secondary' : 'text-secondary'" 
-                       th:href="@{/admin/orders(status='RETURNED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
-                        Trả hàng <span class="badge bg-secondary-subtle text-secondary ms-1" th:text="${countReturned}">0</span>
-                    </a>
-                </li>
-            </ul>
+    <!-- 2. STATUS TABS: IOS PILL DOCK WITH BADGE COUNTERS -->
+    <div class="d-flex justify-content-start">
+        <div class="ios-status-dock">
+            <a class="ios-status-tab" th:classappend="${selectedStatus == null} ? 'active' : ''" 
+               th:href="@{/admin/orders(storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
+                <span>Tất cả đơn</span>
+            </a>
+            <a class="ios-status-tab" th:classappend="${selectedStatus != null and selectedStatus.name() == 'NEW'} ? 'active' : ''" 
+               th:href="@{/admin/orders(status='NEW', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
+                <span>Đơn mới</span>
+                <span class="tab-counter" th:text="${countNew}">0</span>
+            </a>
+            <a class="ios-status-tab" th:classappend="${selectedStatus != null and selectedStatus.name() == 'CONFIRMED'} ? 'active' : ''" 
+               th:href="@{/admin/orders(status='CONFIRMED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
+                <span>Đã xác nhận</span>
+                <span class="tab-counter" th:text="${countConfirmed}">0</span>
+            </a>
+            <a class="ios-status-tab" th:classappend="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'active' : ''" 
+               th:href="@{/admin/orders(status='SHIPPING', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
+                <span>Đang giao</span>
+                <span class="tab-counter" th:text="${countShipping}">0</span>
+            </a>
+            <a class="ios-status-tab" th:classappend="${selectedStatus != null and selectedStatus.name() == 'DELIVERED'} ? 'active' : ''" 
+               th:href="@{/admin/orders(status='DELIVERED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
+                <span>Đã giao</span>
+                <span class="tab-counter" th:text="${countDelivered}">0</span>
+            </a>
+            <a class="ios-status-tab" th:classappend="${selectedStatus != null and selectedStatus.name() == 'CANCELLED'} ? 'active' : ''" 
+               th:href="@{/admin/orders(status='CANCELLED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
+                <span>Đã hủy</span>
+                <span class="tab-counter" th:text="${countCancelled}">0</span>
+            </a>
+            <a class="ios-status-tab" th:classappend="${selectedStatus != null and selectedStatus.name() == 'RETURNED'} ? 'active' : ''" 
+               th:href="@{/admin/orders(status='RETURNED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
+                <span>Trả hàng</span>
+                <span class="tab-counter" th:text="${countReturned}">0</span>
+            </a>
         </div>
     </div>
 
-    <!-- FILTER BAR -->
-    <div class="card card-custom mb-4">
-        <div class="card-body p-3">
-            <form th:action="@{/admin/orders}" method="get" class="row g-2 align-items-center">
+    <!-- 3. FILTER BAR LIQUID GLASS -->
+    <div class="glass-card mb-4">
+        <div class="p-3 p-md-4">
+            <form th:action="@{/admin/orders}" method="get" class="row g-3 align-items-center">
                 <input type="hidden" name="status" th:if="${selectedStatus != null}" th:value="${selectedStatus}">
+                
+                <!-- Tìm kiếm theo mã đơn / Tên / SĐT -->
                 <div class="col-md-5">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
-                        <input type="text" name="keyword" class="form-control border-start-0 ps-0" th:value="${keyword}" placeholder="Tìm theo mã đơn (OBS-...), tên người nhận, SĐT...">
+                    <div class="position-relative">
+                        <i class="fa-solid fa-magnifying-glass position-absolute text-muted" style="left: 16px; top: 50%; transform: translateY(-50%); font-size: 14px;"></i>
+                        <input type="text" name="keyword" class="form-control apple-pill-input ps-5" th:value="${keyword}" placeholder="Tìm theo mã đơn (OBS-...), tên người nhận, SĐT...">
                     </div>
                 </div>
+
+                <!-- Lọc theo Chi nhánh -->
                 <div class="col-md-3">
-                    <select name="storeId" class="form-select">
+                    <select name="storeId" class="form-select apple-pill-select">
                         <option value="">-- Mọi chi nhánh xuất hàng --</option>
                         <option th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStoreId == st.id}"></option>
                     </select>
                 </div>
+
+                <!-- Lọc theo Hình thức nhận -->
                 <div class="col-md-3">
-                    <select name="deliveryMethod" class="form-select">
+                    <select name="deliveryMethod" class="form-select apple-pill-select">
                         <option value="">-- Mọi hình thức nhận --</option>
                         <option value="HOME_DELIVERY" th:selected="${selectedDeliveryMethod != null and selectedDeliveryMethod.name() == 'HOME_DELIVERY'}">Giao tận nơi</option>
                         <option value="STORE_PICKUP" th:selected="${selectedDeliveryMethod != null and selectedDeliveryMethod.name() == 'STORE_PICKUP'}">Nhận tại cửa hàng (Click &amp; Collect)</option>
                     </select>
                 </div>
-                <div class="col-md-1 d-grid">
-                    <button type="submit" class="btn btn-dark">Lọc</button>
+
+                <!-- Nút Lọc & Nút Reset -->
+                <div class="col-md-1 d-flex gap-2">
+                    <button type="submit" class="btn-filter-pill w-100">
+                        <i class="fa-solid fa-filter"></i>Lọc
+                    </button>
+                    <a th:if="${keyword != null or selectedStoreId != null or selectedDeliveryMethod != null or selectedStatus != null}"
+                       th:href="@{/admin/orders}" class="btn btn-light rounded-pill px-3 d-flex align-items-center justify-content-center text-muted border" title="Xóa bộ lọc">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ORDERS TABLE -->
-    <div class="card card-custom">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <span class="fw-semibold">Danh sách đơn hàng (<span th:text="${totalElements}">0</span> đơn)</span>
+    <!-- 4. ORDERS TABLE LIQUID GLASS -->
+    <div class="glass-card">
+        <div class="glass-card-header">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-box-archive text-warning"></i>
+                <span class="fw-bold text-dark fs-6">Danh Sách Đơn Hàng</span>
+                <span class="badge bg-light text-secondary border rounded-pill ms-1" th:text="${totalElements} + ' đơn'">0 đơn</span>
+            </div>
+            <div class="small text-muted">
+                <i class="fa-solid fa-clock-rotate-left me-1"></i>Sắp xếp: Mới nhất trước
+            </div>
         </div>
-        <div class="card-body p-0">
+
+        <div class="p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr class="small text-muted text-uppercase">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
                             <th class="ps-4">Mã đơn hàng</th>
                             <th>Khách hàng</th>
                             <th>Chi nhánh</th>
                             <th>Hình thức nhận</th>
-                            <th class="text-end">Tổng tiền</th>
+                            <th class="text-end">Tổng tiền (Shopee)</th>
                             <th class="text-center">Thanh toán</th>
                             <th class="text-center">Trạng thái</th>
                             <th>Shipper</th>
@@ -118,56 +441,73 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Empty State -->
                         <tr th:if="${orderPage.empty}">
                             <td colspan="9" class="text-center py-5 text-muted">
-                                <i class="fa-solid fa-receipt fa-3x mb-3 text-secondary"></i>
-                                <p class="mb-0">Không có đơn hàng nào phù hợp với bộ lọc.</p>
+                                <div style="width: 70px; height: 70px; border-radius: 50%; background: rgba(232, 222, 200, 0.35); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: #8C4A27; font-size: 28px;">
+                                    <i class="fa-solid fa-receipt"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1">Không có đơn hàng nào phù hợp với bộ lọc</h6>
+                                <p class="small mb-0 text-secondary">Hãy thử điều chỉnh từ khóa tìm kiếm, chi nhánh hoặc chọn trạng thái khác.</p>
                             </td>
                         </tr>
+
+                        <!-- Order Rows -->
                         <tr th:each="ord : ${orderPage.content}">
                             <td class="ps-4">
-                                <a th:href="@{/admin/orders/{id}(id=${ord.id})}" class="fw-bold text-primary text-decoration-none" th:text="${ord.orderCode}">OBS-2026-1234</a>
-                                <div class="text-muted" style="font-size: 11px;" th:text="${#temporals.format(ord.createdAt, 'dd/MM/yyyy HH:mm')}">29/09/2026 14:30</div>
+                                <a th:href="@{/admin/orders/{id}(id=${ord.id})}" class="fw-bold text-primary text-decoration-none" style="font-family: 'SF Pro Display', sans-serif; letter-spacing: 0.3px;" th:text="${ord.orderCode}">OBS-2026-1234</a>
+                                <div class="text-muted" style="font-size: 11.5px;">
+                                    <i class="fa-regular fa-clock me-1"></i><span th:text="${#temporals.format(ord.createdAt, 'dd/MM/yyyy HH:mm')}">29/09/2026 14:30</span>
+                                </div>
                             </td>
                             <td>
-                                <strong th:text="${ord.receiverName}">Người nhận</strong>
-                                <div class="text-muted small"><i class="fa-solid fa-phone me-1"></i><span th:text="${ord.receiverPhone}">0901234567</span></div>
+                                <strong class="text-dark" th:text="${ord.receiverName}">Người nhận</strong>
+                                <div class="text-muted small">
+                                    <i class="fa-solid fa-phone me-1 text-secondary" style="font-size: 11px;"></i><span th:text="${ord.receiverPhone}">0901234567</span>
+                                </div>
                             </td>
-                            <td class="small" th:text="${ord.store != null ? ord.store.storeName : '-'}">Thủ Đức</td>
-                            <td>
-                                <span th:if="${ord.deliveryMethod.name() == 'STORE_PICKUP'}" class="badge bg-purple-subtle text-primary border">
-                                    <i class="fa-solid fa-shop me-1"></i>Nhận tại Shop
+                            <td class="small">
+                                <span class="badge bg-light text-dark border px-2 py-1 rounded-pill">
+                                    <i class="fa-solid fa-store me-1 text-warning"></i><span th:text="${ord.store != null ? ord.store.storeName : '-'}">Thủ Đức</span>
                                 </span>
-                                <span th:if="${ord.deliveryMethod.name() == 'HOME_DELIVERY'}" class="badge bg-light text-secondary border">
-                                    <i class="fa-solid fa-truck-fast me-1"></i>Giao tận nơi
+                            </td>
+                            <td>
+                                <span th:if="${ord.deliveryMethod.name() == 'STORE_PICKUP'}" class="apple-pill-badge badge-pickup">
+                                    <i class="fa-solid fa-shop"></i>Nhận tại Shop
+                                </span>
+                                <span th:if="${ord.deliveryMethod.name() == 'HOME_DELIVERY'}" class="apple-pill-badge badge-delivery">
+                                    <i class="fa-solid fa-truck-fast"></i>Giao tận nơi
                                 </span>
                             </td>
                             <td class="text-end">
-                                <strong class="text-danger" th:text="${#numbers.formatDecimal(ord.finalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">150,000 đ</strong>
+                                <strong style="color: var(--shopee-orange); font-size: 15px; font-weight: 800;" th:text="${#numbers.formatDecimal(ord.finalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">150,000 đ</strong>
                             </td>
                             <td class="text-center">
-                                <div class="small fw-semibold" th:text="${ord.paymentMethod.name()}">COD</div>
-                                <span th:if="${ord.paymentStatus.name() == 'PAID'}" class="badge bg-success" style="font-size: 10px;">Đã TT</span>
-                                <span th:if="${ord.paymentStatus.name() == 'UNPAID'}" class="badge bg-secondary" style="font-size: 10px;">Chưa TT</span>
-                                <span th:if="${ord.paymentStatus.name() == 'REFUNDED'}" class="badge bg-danger" style="font-size: 10px;">Hoàn tiền</span>
+                                <div class="small fw-semibold text-secondary" th:text="${ord.paymentMethod.name()}">COD</div>
+                                <span th:if="${ord.paymentStatus.name() == 'PAID'}" class="badge bg-success-subtle text-success border border-success-subtle rounded-pill" style="font-size: 10.5px;">Đã TT</span>
+                                <span th:if="${ord.paymentStatus.name() == 'UNPAID'}" class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill" style="font-size: 10.5px;">Chưa TT</span>
+                                <span th:if="${ord.paymentStatus.name() == 'REFUNDED'}" class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill" style="font-size: 10.5px;">Hoàn tiền</span>
                             </td>
                             <td class="text-center">
-                                <span th:if="${ord.orderStatus.name() == 'NEW'}" class="badge bg-primary">Mới đặt</span>
-                                <span th:if="${ord.orderStatus.name() == 'CONFIRMED'}" class="badge bg-info text-dark">Đã xác nhận</span>
-                                <span th:if="${ord.orderStatus.name() == 'SHIPPING'}" class="badge bg-warning text-dark">Đang giao</span>
-                                <span th:if="${ord.orderStatus.name() == 'DELIVERED'}" class="badge bg-success">Đã giao</span>
-                                <span th:if="${ord.orderStatus.name() == 'CANCELLED'}" class="badge bg-danger">Đã hủy</span>
-                                <span th:if="${ord.orderStatus.name() == 'RETURNED'}" class="badge bg-secondary">Trả hàng</span>
+                                <span th:if="${ord.orderStatus.name() == 'NEW'}" class="apple-pill-badge badge-new">Mới đặt</span>
+                                <span th:if="${ord.orderStatus.name() == 'CONFIRMED'}" class="apple-pill-badge badge-confirmed">Đã xác nhận</span>
+                                <span th:if="${ord.orderStatus.name() == 'SHIPPING'}" class="apple-pill-badge badge-shipping">Đang giao</span>
+                                <span th:if="${ord.orderStatus.name() == 'DELIVERED'}" class="apple-pill-badge badge-delivered">Đã giao</span>
+                                <span th:if="${ord.orderStatus.name() == 'CANCELLED'}" class="apple-pill-badge badge-cancelled">Đã hủy</span>
+                                <span th:if="${ord.orderStatus.name() == 'RETURNED'}" class="apple-pill-badge badge-returned">Trả hàng</span>
                             </td>
                             <td class="small">
-                                <span th:if="${ord.shipper != null}" class="text-success fw-semibold">
-                                    <i class="fa-solid fa-motorcycle me-1"></i><span th:text="${ord.shipper.fullName}">Shipper</span>
-                                </span>
-                                <span th:if="${ord.shipper == null}" class="text-muted fst-italic">Chưa gán</span>
+                                <div th:if="${ord.shipper != null}" class="d-flex align-items-center gap-2">
+                                    <div style="width: 26px; height: 26px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: #047857; font-size: 11px;">
+                                        <i class="fa-solid fa-motorcycle"></i>
+                                    </div>
+                                    <span class="text-dark fw-semibold" th:text="${ord.shipper.fullName}">Shipper</span>
+                                </div>
+                                <span th:if="${ord.shipper == null}" class="text-muted fst-italic" style="font-size: 12px;">Chưa gán</span>
                             </td>
                             <td class="text-end pe-4">
-                                <a th:href="@{/admin/orders/{id}(id=${ord.id})}" class="btn btn-sm btn-outline-dark">
-                                    <i class="fa-solid fa-eye me-1"></i>Xử lý
+                                <a th:href="@{/admin/orders/{id}(id=${ord.id})}" class="btn-view-order">
+                                    <i class="fa-solid fa-eye"></i>Xử lý
                                 </a>
                             </td>
                         </tr>
@@ -176,18 +516,22 @@
             </div>
         </div>
 
-        <!-- PAGINATION -->
-        <div class="card-footer bg-white border-0 py-3" th:if="${totalPages > 1}">
+        <!-- PAGINATION APPLE LIQUID GLASS -->
+        <div class="p-3 border-top border-light-subtle" th:if="${totalPages > 1}">
             <nav>
-                <ul class="pagination justify-content-center mb-0">
+                <ul class="pagination glass-pagination justify-content-center mb-0">
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
-                        <a class="page-link" th:href="@{/admin/orders(page=${currentPage - 1}, keyword=${keyword}, status=${selectedStatus}, storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">&laquo; Trước</a>
+                        <a class="page-link" th:href="@{/admin/orders(page=${currentPage - 1}, keyword=${keyword}, status=${selectedStatus}, storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
+                            <i class="fa-solid fa-chevron-left me-1"></i>Trước
+                        </a>
                     </li>
                     <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${currentPage == i} ? 'active' : ''">
                         <a class="page-link" th:href="@{/admin/orders(page=${i}, keyword=${keyword}, status=${selectedStatus}, storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}" th:text="${i + 1}">1</a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
-                        <a class="page-link" th:href="@{/admin/orders(page=${currentPage + 1}, keyword=${keyword}, status=${selectedStatus}, storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">Sau &raquo;</a>
+                        <a class="page-link" th:href="@{/admin/orders(page=${currentPage + 1}, keyword=${keyword}, status=${selectedStatus}, storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod})}">
+                            Sau<i class="fa-solid fa-chevron-right ms-1"></i>
+                        </a>
                     </li>
                 </ul>
             </nav>
