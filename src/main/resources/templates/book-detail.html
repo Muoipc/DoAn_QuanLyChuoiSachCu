@@ -673,6 +673,197 @@
             margin-top: 10px;
         }
 
+        /* ================= 3.5. KHỐI THÔNG TIN SHOP / CHI NHÁNH CHUẨN SHOPEE X APPLE LIQUID GLASS ================= */
+        .shopee-shop-card {
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid rgba(232, 222, 200, 0.7);
+            box-shadow: 0 4px 16px rgba(45, 24, 15, 0.04);
+            margin: 16px 0;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+        }
+
+        .shop-card-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .shop-avatar-box {
+            position: relative;
+            width: 78px;
+            height: 78px;
+            flex-shrink: 0;
+        }
+        .shop-avatar-img {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            object-fit: cover;
+        }
+        /* Badge "Yêu Thích+" dạng pill nổi dưới chân avatar, không bị clip */
+        .shop-badge-official {
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ee4d2d, #d94420);
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            white-space: nowrap;
+            border: 1.5px solid #ffffff;
+            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.3);
+            z-index: 2;
+            letter-spacing: 0.3px;
+        }
+
+        .shop-meta-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .shop-name-title {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+        .shop-name-title a {
+            color: #1C1917;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .shop-name-title a:hover {
+            color: #ee4d2d;
+        }
+
+        .shop-online-status {
+            font-size: 12px;
+            color: #78716C;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .online-indicator-dot {
+            width: 7px;
+            height: 7px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-sep {
+            color: #d6d3d1;
+            margin: 0 2px;
+        }
+
+        .shop-action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .btn-shop-chat {
+            background: rgba(238, 77, 45, 0.08);
+            color: #ee4d2d;
+            border: 1px solid #ee4d2d;
+            border-radius: 4px;
+            padding: 6px 14px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+        .btn-shop-chat:hover {
+            background: rgba(238, 77, 45, 0.16);
+        }
+        .btn-shop-view {
+            background: #ffffff;
+            color: #574e45;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            padding: 6px 14px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+        .btn-shop-view:hover {
+            background: #FAF6F0;
+            border-color: #8C4A27;
+            color: #8C4A27;
+        }
+
+        .shop-card-right-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px 28px;
+            border-left: 1px solid #F0ECE4;
+            padding-left: 32px;
+        }
+        .shop-stat-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .shop-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+        }
+        .shop-stat-item .stat-label {
+            color: #78716C;
+        }
+        .shop-stat-item .stat-val {
+            color: #1C1917;
+            font-weight: 600;
+        }
+        .shop-stat-item .stat-val.highlight {
+            color: #ee4d2d;
+            font-weight: 700;
+        }
+
+        @media (max-width: 860px) {
+            .shopee-shop-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+                padding: 18px;
+            }
+            .shop-card-right-stats {
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px solid #F0ECE4;
+                padding-top: 14px;
+                width: 100%;
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 520px) {
+            .shop-card-right-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px 14px;
+            }
+        }
+
         /* ================= 4. CHI TIẾT SẢN PHẨM & MÔ TẢ CHUẨN SHOPEE ================= */
         .product-specs-section {
             background: #ffffff;
@@ -723,8 +914,9 @@
             flex: 1;
         }
         .specs-breadcrumb-link {
-            color: #05a;
+            color: #8C4A27;
             font-size: 13px;
+            font-weight: 500;
             text-decoration: none;
             transition: color 0.15s ease;
         }
@@ -1054,7 +1246,11 @@
         <nav class="breadcrumb-wrap">
             <a th:href="@{/}">Trang Chủ</a>
             <span class="breadcrumb-sep">&gt;</span>
-            <a th:href="@{/search}" th:text="${book.category != null ? book.category.categoryName : 'Sách Cũ'}">Văn Học</a>
+            <a th:href="@{/search}">Kho Sách Cũ</a>
+            <span class="breadcrumb-sep" th:if="${book.category != null}">&gt;</span>
+            <a th:if="${book.category != null}" 
+               th:href="@{/search(categoryId=${book.category.id})}" 
+               th:text="${book.category.categoryName}">Văn Học</a>
             <span class="breadcrumb-sep">&gt;</span>
             <span class="breadcrumb-active" th:text="${book.title}">Tên cuốn sách</span>
         </nav>
@@ -1262,33 +1458,6 @@
                     </div>
                 </div>
 
-                <!-- THUỘC TÍNH: TỒN KHO 5 CHI NHÁNH TP.HCM (TỐI GIẢN) -->
-                <div class="attribute-row">
-                    <div class="attr-label">Địa Điểm Có Sách</div>
-                    <div>
-                        <div class="store-stock-indicator-row">
-                            <i class="fa-solid fa-location-dot text-danger"></i>
-                            <span>Sẵn sách tại hệ thống 5 chi nhánh TP.HCM (Tổng kho: <strong th:text="${totalStock} + ' cuốn'">15 cuốn</strong>)</span>
-                            <span class="toggle-store-drawer-link" onclick="toggleStoreDrawer()">Xem chi tiết các shop ▾</span>
-                        </div>
-
-                        <!-- PANEL 5 CHI NHÁNH (THU GỌN) -->
-                        <div class="stores-dropdown-panel store-stock-card" id="storeDrawer">
-                            <div th:each="inv : ${inventoryList}" class="store-inv-line">
-                                <div>
-                                    <strong th:text="${inv.store != null ? inv.store.storeName : 'Chi nhánh TP.HCM'}">CN 1: Thủ Đức</strong>
-                                    <span style="color:#78716C; margin-left:6px;" th:text="${inv.store != null ? inv.store.address : ''}">Số 48 Võ Văn Ngân</span>
-                                </div>
-                                <div>
-                                    <span th:if="${inv.quantity > 3}" style="color:#007a57; font-weight:700;" th:text="'Còn ' + ${inv.quantity} + ' cuốn'">Còn 4 cuốn</span>
-                                    <span th:if="${inv.quantity > 0 and inv.quantity <= 3}" style="color:#b45309; font-weight:700;" th:text="'Còn ' + ${inv.quantity} + ' cuốn'">Còn 2 cuốn</span>
-                                    <span th:if="${inv.quantity == 0}" style="color:#dc2626;">Tạm hết</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- THUỘC TÍNH: SỐ LƯỢNG (SHOPEE STEPPER) -->
                 <form action="/cart/add" method="post" id="cartForm">
                     <input type="hidden" name="bookId" th:value="${book.id}">
@@ -1304,10 +1473,13 @@
                         <div style="display:flex; align-items:center; gap:16px;">
                             <div class="quantity-stepper-wrap">
                                 <button type="button" class="btn-qty-step qty-btn" onclick="changeQty(-1)">-</button>
-                                <input type="text" id="buyQty" class="input-qty-step qty-input" value="1" readonly>
+                                <input type="text" id="buyQty" class="input-qty-step qty-input" value="1" 
+                                       onblur="validateQtyInput(this)" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 <button type="button" class="btn-qty-step qty-btn" onclick="changeQty(1)">+</button>
                             </div>
-                            <span style="font-size:13px; color:#78716C;" th:text="${totalStock} + ' sản phẩm có sẵn tại TP.HCM'">
+                            <span style="font-size:13px; color:#78716C;" id="stockDisplay" 
+                                  th:text="${totalStock} + ' sản phẩm có sẵn tại TP.HCM'"
+                                  th:data-max-stock="${totalStock}">
                                 15 sản phẩm có sẵn tại TP.HCM
                             </span>
                         </div>
@@ -1340,6 +1512,76 @@
 
         </div>
 
+        <!-- 3.5. THÔNG TIN SHOP / CHI NHÁNH CỬA HÀNG (CHUẨN SHOPEE PDP STOREFRONT) -->
+        <section class="shopee-shop-card">
+            <div class="shop-card-left">
+                <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1}, categoryId=${book.category != null ? book.category.id : 1}, entryPoint='ShopByPDP', itemId=${book.id})}" class="shop-avatar-link" style="text-decoration:none;">
+                    <div class="shop-avatar-box">
+                        <img th:src="${store != null && store.image != null ? store.image : '/images/logo-books-badge.png'}" 
+                             onerror="this.src='/images/logo-books-badge.png'" 
+                             alt="Shop Avatar" class="shop-avatar-img">
+                        <span class="shop-badge-official">Yêu Thích+</span>
+                    </div>
+                </a>
+                <div class="shop-meta-info">
+                    <h3 class="shop-name-title">
+                        <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1}, categoryId=${book.category != null ? book.category.id : 1}, entryPoint='ShopByPDP', itemId=${book.id})}" 
+                           th:text="${store != null ? store.storeName : 'Chi Nhánh 1: Thủ Đức (Gần HCMUTE)'}">
+                           Chi Nhánh 1: Thủ Đức (Gần HCMUTE)
+                        </a>
+                    </h3>
+                    <div class="shop-online-status">
+                        <span class="online-indicator-dot"></span>
+                        <span>Online 5 Phút Trước</span>
+                        <span class="status-sep">|</span>
+                        <span th:text="${store != null ? store.district : 'TP. Thủ Đức'}">TP. Thủ Đức</span>
+                    </div>
+                    <div class="shop-action-buttons">
+                        <button type="button" class="btn-shop-chat" onclick="document.querySelector('.mini-chatbot-fab')?.click()">
+                            <i class="fa-solid fa-comments"></i> Chat Ngay
+                        </button>
+                        <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1}, categoryId=${book.category != null ? book.category.id : 1}, entryPoint='ShopByPDP', itemId=${book.id})}" class="btn-shop-view">
+                            <i class="fa-solid fa-store"></i> Xem Shop
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6 THỐNG KÊ CHI NHÁNH CHUẨN SHOPEE -->
+            <div class="shop-card-right-stats">
+                <div class="shop-stat-col">
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Đánh Giá:</span>
+                        <span class="stat-val highlight">4.9k</span>
+                    </div>
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Sản Phẩm:</span>
+                        <span class="stat-val highlight" th:text="${totalStock != null ? totalStock + '+' : '185+'}">185+</span>
+                    </div>
+                </div>
+                <div class="shop-stat-col">
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Tỉ Lệ Phản Hồi:</span>
+                        <span class="stat-val highlight">99%</span>
+                    </div>
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Thời Gian Phản Hồi:</span>
+                        <span class="stat-val highlight">trong vài phút</span>
+                    </div>
+                </div>
+                <div class="shop-stat-col">
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Tham Gia:</span>
+                        <span class="stat-val">3 Năm Trước</span>
+                    </div>
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Người Theo Dõi:</span>
+                        <span class="stat-val">12.8k</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- 4. THÔNG TIN CHI TIẾT SÁCH (SPECS & DESCRIPTION CHUẨN SHOPEE) -->
         <section class="product-specs-section">
             <div class="section-header-title">CHI TIẾT SẢN PHẨM</div>
@@ -1348,14 +1590,14 @@
                 <div class="specs-row">
                     <span class="specs-label">Danh Mục</span>
                     <div class="specs-value">
-                        <a th:href="@{/}" class="specs-breadcrumb-link">Shopee</a>
+                        <a th:href="@{/}" class="specs-breadcrumb-link">Trang Chủ</a>
                         <span class="specs-breadcrumb-sep">&gt;</span>
-                        <a th:href="@{/search}" class="specs-breadcrumb-link">Nhà Sách Online</a>
-                        <span class="specs-breadcrumb-sep">&gt;</span>
-                        <a th:href="@{/search(cat=${book.category != null ? book.category.id : 1})}" class="specs-breadcrumb-link" 
-                           th:text="${book.category != null ? book.category.categoryName : 'Văn Học'}">Văn Học</a>
-                        <span class="specs-breadcrumb-sep">&gt;</span>
-                        <span style="color:#57534e;" th:text="${book.title}">Tên cuốn sách</span>
+                        <a th:href="@{/search}" class="specs-breadcrumb-link">Kho Sách Cũ</a>
+                        <span class="specs-breadcrumb-sep" th:if="${book.category != null}">&gt;</span>
+                        <a th:if="${book.category != null}" 
+                           th:href="@{/search(categoryId=${book.category.id})}" 
+                           class="specs-breadcrumb-link" 
+                           th:text="${book.category.categoryName}">Văn Học &amp; Tiểu Thuyết</a>
                     </div>
                 </div>
 
@@ -1565,6 +1807,82 @@
             </div>
         </section>
 
+        <!-- 6. KHỐI CÁC SẢN PHẨM KHÁC CỦA SHOP (KHỚP 100% ẢNH SHOPEE IMAGE_B955DC.PNG) -->
+        <section class="product-shelf-section" th:if="${otherStoreBooks != null && !otherStoreBooks.isEmpty()}" 
+                 style="margin-top:20px; background:#fff; border-radius:4px; border:1px solid rgba(0,0,0,0.08); padding:20px 24px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                <h2 style="font-size:16px; font-weight:700; color:#1C1917; text-transform:uppercase; margin:0; letter-spacing:0.5px;">CÁC SẢN PHẨM KHÁC CỦA SHOP</h2>
+                <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1})}" 
+                   style="font-size:13px; font-weight:600; color:#ee4d2d; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                    Xem Tất Cả <i class="fa-solid fa-chevron-right fa-xs"></i>
+                </a>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:14px;">
+                <a th:each="ob, iterStat : ${otherStoreBooks}" th:href="@{/books/{id}(id=${ob.id})}" 
+                   style="background:#ffffff; border-radius:4px; border:1px solid rgba(0,0,0,0.08); overflow:hidden; text-decoration:none; color:inherit; display:flex; flex-direction:column; transition:transform 0.2s, box-shadow 0.2s;" 
+                   onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 20px rgba(45,24,15,0.08)';" 
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    <div style="width:100%; height:180px; background:#FDFBF7; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;">
+                        <img th:src="${ob.primaryImageUrl != null ? ob.primaryImageUrl : '/images/books/book_1.jpg'}" th:alt="${ob.title}" style="max-width:90%; max-height:90%; object-fit:contain;">
+                        <span style="position:absolute; top:6px; left:6px; background:rgba(22,163,74,0.9); color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:2px;" th:text="${ob.conditionPercent} + '% Mới'">90% Mới</span>
+                        <span style="position:absolute; top:6px; right:6px; background:rgba(254,238,234,0.95); color:#ee4d2d; font-size:10px; font-weight:800; padding:2px 5px; border-radius:2px;" 
+                              th:if="${ob.discountPercent != null && ob.discountPercent > 0}" th:text="'-' + ${ob.discountPercent} + '%'">-20%</span>
+                    </div>
+                    <div style="padding:10px 12px 12px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
+                        <div>
+                            <div style="font-size:12.5px; font-weight:600; color:#1C1917; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:4px;" th:text="${ob.title}">Tên sách</div>
+                            <div style="font-size:11px; color:#78716C; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:6px;" th:text="${ob.author != null ? ob.author : 'Tác giả'}">Tác giả</div>
+                        </div>
+                        <div>
+                            <div style="font-size:14px; font-weight:800; color:#ee4d2d;" th:text="'Từ ₫' + ${#numbers.formatDecimal(ob.minPrice, 0, 'POINT', 0, 'COMMA')}">₫50.000</div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px; font-size:11px; color:#78716C;">
+                                <span style="color:#d97706;"><i class="fa-solid fa-star fa-xs"></i> 4.9</span>
+                                <span th:text="${ob.totalSold != null ? ob.totalSold : 120} + ' đã bán'">120 đã bán</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 7. KHỐI CÓ THỂ BẠN CŨNG THÍCH (KHỚP 100% ẢNH SHOPEE IMAGE_B955DC.PNG) -->
+        <section class="product-shelf-section" th:if="${relatedBooks != null && !relatedBooks.isEmpty()}" 
+                 style="margin-top:20px; margin-bottom:50px; background:#fff; border-radius:4px; border:1px solid rgba(0,0,0,0.08); padding:20px 24px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                <h2 style="font-size:16px; font-weight:700; color:#1C1917; text-transform:uppercase; margin:0; letter-spacing:0.5px;">CÓ THỂ BẠN CŨNG THÍCH</h2>
+                <a th:href="@{/search(categoryId=${book.category != null ? book.category.id : 1})}" 
+                   style="font-size:13px; font-weight:600; color:#ee4d2d; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                    Xem Tất Cả <i class="fa-solid fa-chevron-right fa-xs"></i>
+                </a>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:14px;">
+                <a th:each="rb : ${relatedBooks}" th:href="@{/books/{id}(id=${rb.id})}" 
+                   style="background:#ffffff; border-radius:4px; border:1px solid rgba(0,0,0,0.08); overflow:hidden; text-decoration:none; color:inherit; display:flex; flex-direction:column; transition:transform 0.2s, box-shadow 0.2s;" 
+                   onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 20px rgba(45,24,15,0.08)';" 
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    <div style="width:100%; height:180px; background:#FDFBF7; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;">
+                        <img th:src="${rb.primaryImageUrl != null ? rb.primaryImageUrl : '/images/books/book_1.jpg'}" th:alt="${rb.title}" style="max-width:90%; max-height:90%; object-fit:contain;">
+                        <span style="position:absolute; top:6px; left:6px; background:rgba(22,163,74,0.9); color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:2px;" th:text="${rb.conditionPercent} + '% Mới'">90% Mới</span>
+                        <span style="position:absolute; top:6px; right:6px; background:rgba(254,238,234,0.95); color:#ee4d2d; font-size:10px; font-weight:800; padding:2px 5px; border-radius:2px;" 
+                              th:if="${rb.discountPercent != null && rb.discountPercent > 0}" th:text="'-' + ${rb.discountPercent} + '%'">-20%</span>
+                    </div>
+                    <div style="padding:10px 12px 12px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
+                        <div>
+                            <div style="font-size:12.5px; font-weight:600; color:#1C1917; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:4px;" th:text="${rb.title}">Tên sách</div>
+                            <div style="font-size:11px; color:#78716C; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:6px;" th:text="${rb.author != null ? rb.author : 'Tác giả'}">Tác giả</div>
+                        </div>
+                        <div>
+                            <div style="font-size:14px; font-weight:800; color:#ee4d2d;" th:text="'Từ ₫' + ${#numbers.formatDecimal(rb.minPrice, 0, 'POINT', 0, 'COMMA')}">₫50.000</div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px; font-size:11px; color:#78716C;">
+                                <span style="color:#d97706;"><i class="fa-solid fa-star fa-xs"></i> 4.9</span>
+                                <span th:text="${rb.totalSold != null ? rb.totalSold : 0} + ' đã bán'">120 đã bán</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
         <!-- MODAL PHÓNG TO ẢNH ĐÁNH GIÁ CHUẨN APPLE LIQUID GLASS -->
         <div id="reviewImgModal" onclick="closeReviewImgModal()" 
              style="display:none; position:fixed; inset:0; background:rgba(15,10,5,0.85); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); z-index:999999; align-items:center; justify-content:center; cursor:zoom-out; padding:20px;">
@@ -1726,16 +2044,67 @@
             }
         }
 
+        /* Số lượng tồn kho tối đa — đọc từ data attribute trên thẻ hiển thị stock */
+        const maxStock = parseInt(document.getElementById('stockDisplay')?.dataset?.maxStock) || 0;
+
+        /**
+         * Tăng/giảm số lượng mua, giới hạn trong [1, maxStock]
+         * @param delta - giá trị thay đổi (+1 hoặc -1)
+         */
         function changeQty(delta) {
             const input = document.getElementById('buyQty');
             let current = parseInt(input.value) || 1;
             current += delta;
             if (current < 1) current = 1;
+            if (maxStock > 0 && current > maxStock) {
+                current = maxStock;
+                showStockWarning();
+            }
             input.value = current;
+        }
+
+        /**
+         * Hiển thị cảnh báo khi số lượng vượt tồn kho
+         */
+        function showStockWarning() {
+            // Tìm hoặc tạo thẻ cảnh báo
+            let warn = document.getElementById('stock-warning');
+            if (!warn) {
+                warn = document.createElement('div');
+                warn.id = 'stock-warning';
+                warn.style.cssText = 'color:#ee4d2d; font-size:12px; margin-top:6px; font-weight:600; transition:opacity 0.3s;';
+                const stepper = document.querySelector('.quantity-stepper-wrap');
+                if (stepper) stepper.parentElement.appendChild(warn);
+            }
+            warn.textContent = 'Số lượng tối đa có thể mua là ' + maxStock;
+            warn.style.opacity = '1';
+            clearTimeout(warn._timer);
+            warn._timer = setTimeout(() => { warn.style.opacity = '0'; }, 3000);
+        }
+
+        /**
+         * Validate khi user gõ trực tiếp số lượng vào ô input
+         * Chặn giá trị < 1 hoặc > maxStock
+         */
+        function validateQtyInput(input) {
+            let val = parseInt(input.value);
+            if (isNaN(val) || val < 1) val = 1;
+            if (maxStock > 0 && val > maxStock) {
+                val = maxStock;
+                showStockWarning();
+            }
+            input.value = val;
         }
 
         function addToCart() {
             const qty = document.getElementById('buyQty') ? (parseInt(document.getElementById('buyQty').value) || 1) : 1;
+
+            // Kiểm tra số lượng không vượt tồn kho
+            if (maxStock > 0 && qty > maxStock) {
+                showStockWarning();
+                document.getElementById('buyQty').value = maxStock;
+                return;
+            }
             const bookIdInput = document.querySelector('#cartForm input[name="bookId"]');
             const bookId = bookIdInput ? bookIdInput.value : '';
             const storeIdInput = document.getElementById('selectedStoreId');
@@ -1773,6 +2142,13 @@
         function buyNow() {
             const qtyInput = document.getElementById('buyQty');
             const qty = qtyInput ? (parseInt(qtyInput.value) || 1) : 1;
+
+            // Kiểm tra số lượng không vượt tồn kho
+            if (maxStock > 0 && qty > maxStock) {
+                showStockWarning();
+                if (qtyInput) qtyInput.value = maxStock;
+                return;
+            }
             const bookIdInput = document.querySelector('#cartForm input[name="bookId"]');
             const bookId = bookIdInput ? bookIdInput.value : '';
             const storeIdInput = document.getElementById('selectedStoreId');

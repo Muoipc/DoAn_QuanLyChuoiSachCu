@@ -52,6 +52,7 @@ public class SearchController {
             @RequestParam(value = "q", required = false) String query,
             @RequestParam(value = "cat", required = false) Integer categoryId,
             @RequestParam(value = "category", required = false) Integer categoryParam,
+            @RequestParam(value = "categoryId", required = false) Integer categoryIdShopee,
             @RequestParam(value = "cond", required = false) Integer minCondition,
             @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
             @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
@@ -59,9 +60,9 @@ public class SearchController {
             @RequestParam(value = "sort", defaultValue = "popular") String sort,
             Model model) {
 
-        // Hỗ trợ cả 2 tham số: ?keyword=... (chuẩn Shopee) và ?q=... (chuẩn tìm kiếm thông dụng)
+        // Hỗ trợ cả các tham số: ?keyword=... (chuẩn Shopee), ?q=..., ?categoryId=..., ?cat=..., ?category=...
         String effectiveQuery = (keyword != null && !keyword.isBlank()) ? keyword : query;
-        Integer effectiveCategoryId = (categoryId != null) ? categoryId : categoryParam;
+        Integer effectiveCategoryId = (categoryId != null) ? categoryId : (categoryIdShopee != null ? categoryIdShopee : categoryParam);
 
         List<Book> allBooks = bookRepository.findAllActiveWithImages();
 

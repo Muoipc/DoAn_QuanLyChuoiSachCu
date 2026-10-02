@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import vn.iotstar.entity.Book;
 import vn.iotstar.entity.Inventory;
 import vn.iotstar.entity.Review;
+import vn.iotstar.entity.Store;
 import vn.iotstar.repository.BookRepository;
 import vn.iotstar.repository.InventoryRepository;
 import vn.iotstar.repository.ReviewRepository;
@@ -19,6 +20,7 @@ import vn.iotstar.security.CustomUserDetails;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Controller xử lý chi tiết sách và xem tồn kho chuỗi 5 chi nhánh TP.HCM.
@@ -42,6 +44,9 @@ public class BookController {
 
     @Autowired
     private WishlistRepository wishlistRepository;
+
+    @Autowired
+    private vn.iotstar.repository.StoreRepository storeRepository;
 
     /**
      * Xem chi tiết sách theo ID.
@@ -96,6 +101,28 @@ public class BookController {
             );
         }
 
+        // 5.1 Sách khác của cùng chi nhánh/shop (CÁC SẢN PHẨM KHÁC CỦA SHOP - Top 6)
+        List<Book> otherStoreBooks = List.of();
+        if (inventoryList != null && !inventoryList.isEmpty() && inventoryList.get(0).getStore() != null) {
+            List<Inventory> storeInvs = inventoryRepository.findByStoreId(inventoryList.get(0).getStore().getId());
+            otherStoreBooks = storeInvs.stream()
+                    .map(Inventory::getBook)
+                    .filter(b -> b != null && !b.getId().equals(id))
+                    .distinct()
+                    .sorted((b1, b2) -> {
+                        int s1 = b1.getTotalSold() != null ? b1.getTotalSold() : 0;
+                        int s2 = b2.getTotalSold() != null ? b2.getTotalSold() : 0;
+                        return Integer.compare(s2, s1);
+                    })
+                    .limit(6)
+                    .collect(Collectors.toList());
+        }
+        if (otherStoreBooks.isEmpty()) {
+            otherStoreBooks = bookRepository.findAll(PageRequest.of(0, 6)).getContent().stream()
+                    .filter(b -> !b.getId().equals(id))
+                    .collect(Collectors.toList());
+        }
+
         // 6. Kiểm tra trạng thái yêu thích (Wishlist) và lịch sử mua sách của người dùng hiện tại
         boolean isLiked = false;
         boolean hasPurchased = false;
@@ -110,6 +137,16 @@ public class BookController {
         long likesCount = 120 + actualLikes;
 
         // 7. Đưa dữ liệu vào Model cho Thymeleaf render
+        Store primaryStore = null;
+        if (inventoryList != null && !inventoryList.isEmpty()) {
+            primaryStore = inventoryList.get(0).getStore();
+        } else {
+            List<Store> allActive = storeRepository.findByIsActiveTrue();
+            if (!allActive.isEmpty()) {
+                primaryStore = allActive.get(0);
+            }
+        }
+        model.addAttribute("store", primaryStore);
         model.addAttribute("book", book);
         model.addAttribute("inventoryList", inventoryList);
         model.addAttribute("totalStock", totalStock);
@@ -125,6 +162,8 @@ public class BookController {
         model.addAttribute("hasReviewed", hasReviewed);
         model.addAttribute("isLoggedIn", userDetails != null);
         model.addAttribute("relatedBooks", relatedBooks);
+        model.addAttribute("otherStoreBooks", otherStoreBooks);
+        model.addAttribute("bestSellerBooks", otherStoreBooks);
         model.addAttribute("isLiked", isLiked);
         model.addAttribute("likesCount", likesCount);
         model.addAttribute("pageTitle", book.getTitle() + " - Chuỗi Sách Cũ");

@@ -77,7 +77,7 @@ public class VNPayConfig {
         vnp_Params.put("vnp_Amount", String.valueOf(amountVnd * 100)); // VNPay tính bằng đơn vị đồng x 100
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_TxnRef", orderCode);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don sach cu #" + orderCode);
+        vnp_Params.put("vnp_OrderInfo", "Thanh_toan_don_sach_cu_" + orderCode);
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_ReturnUrl", VNP_RETURN_URL);

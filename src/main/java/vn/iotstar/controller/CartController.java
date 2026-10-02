@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.iotstar.entity.Cart;
 import vn.iotstar.entity.CartItem;
+import vn.iotstar.entity.Inventory;
 import vn.iotstar.security.CustomUserDetails;
 import vn.iotstar.service.ICartService;
+import vn.iotstar.repository.InventoryRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,6 +37,10 @@ public class CartController {
 
     @Autowired
     private vn.iotstar.repository.VoucherRepository voucherRepository;
+
+    /** Repository tồn kho — dùng để kiểm tra số lượng có sẵn trước khi thêm giỏ hàng */
+    @Autowired
+    private InventoryRepository inventoryRepository;
 
     /**
      * Xác định userId của phiên hiện tại: ưu tiên tài khoản đã đăng nhập Spring Security.
@@ -174,6 +180,17 @@ public class CartController {
             @RequestParam(value = "storeId", defaultValue = "1") Long storeId,
             @RequestParam(value = "quantity", defaultValue = "1") int quantity) {
         Long userId = resolveUserId(userDetails);
+
+        // Kiểm tra tồn kho: tổng số lượng có sẵn tại tất cả chi nhánh
+        List<Inventory> inventories = inventoryRepository.findByBookId(bookId);
+        int totalStock = inventories.stream().mapToInt(Inventory::getQuantity).sum();
+        if (totalStock > 0 && quantity > totalStock) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "success", false,
+                "message", "Số lượng vượt quá tồn kho! Chỉ còn " + totalStock + " sản phẩm có sẵn."
+            ));
+        }
+
         cartService.addToCart(userId, bookId, storeId, quantity);
         int newTotal = cartService.getCartTotalCount(userId);
         return ResponseEntity.ok(Map.of("count", newTotal, "success", true, "message", "Đã thêm vào giỏ hàng thành công!"));

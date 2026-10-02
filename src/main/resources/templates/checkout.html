@@ -879,14 +879,14 @@
                 <!-- 3. KHUNG VOUCHER & ĐIỂM TÍCH LŨY (SHOPEE VOUCHER & COINS) -->
                 <div class="shopee-checkout-card">
                     <div class="voucher-coins-section">
-                        <!-- Shopee Voucher -->
+                        <!-- Mã Giảm Giá Sách Cũ -->
                         <div class="voucher-row-flex">
                             <div class="voucher-label-left">
                                 <i class="fa-solid fa-ticket text-danger" style="font-size:20px;"></i>
-                                <span>Shopee Voucher</span>
+                                <span>Mã Giảm Giá</span>
                             </div>
                             <div class="voucher-action-right">
-                                <button type="button" class="btn-select-voucher" onclick="openVoucherModal()" style="color:#0288d1; font-weight:600; cursor:pointer; font-size:13.5px; padding:6px 14px; border-radius:9999px; background:rgba(2,136,209,0.08); border:none;">
+                                <button type="button" class="btn-select-voucher" onclick="openVoucherModal()" style="color:#8C4A27; font-weight:600; cursor:pointer; font-size:13.5px; padding:6px 14px; border-radius:9999px; background:rgba(140,74,39,0.08); border:none;">
                                     Chọn Voucher &gt;
                                 </button>
                                 <input type="text" name="voucherCode" id="voucherCodeInput" class="voucher-code-input" placeholder="Nhập mã voucher" th:value="${selectedVoucherCode != null ? selectedVoucherCode : 'VOUCHER20K'}">
@@ -894,12 +894,12 @@
                             </div>
                         </div>
 
-                        <!-- Shopee Xu / Điểm Tích Lũy -->
+                        <!-- Điểm Tích Lũy Sách Cũ -->
                         <div class="coins-row-flex" style="border-top:1px dashed rgba(232, 222, 200, 0.8); padding-top:16px;">
                             <div class="coins-label-left">
                                 <i class="fa-solid fa-coins text-warning" style="font-size:20px;"></i>
-                                <span>Shopee Xu</span>
-                                <span style="font-size:12.5px; color:#78716C; font-weight:400;">Dùng 2.000 Xu [-₫2.000]</span>
+                                <span>Điểm Tích Lũy</span>
+                                <span style="font-size:12.5px; color:#78716C; font-weight:400;">Dùng 2.000 điểm [-₫2.000]</span>
                             </div>
                             <div style="display:flex; align-items:center; gap:12px;">
                                 <span style="font-weight:700; color:#ee4d2d;" id="coinsDiscountTxt">-₫2.000</span>
@@ -977,7 +977,7 @@
                     <div class="terms-and-order-action">
                         <div class="terms-notice-text">
                             Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo 
-                            <a th:href="@{/help}" style="color:#ee4d2d; font-weight:600; text-decoration:none;">Điều khoản Shopee</a>.
+                            <a th:href="@{/help}" style="color:#ee4d2d; font-weight:600; text-decoration:none;">Điều khoản Chuỗi Cửa Hàng Sách Cũ</a>.
                         </div>
 
                         <button type="submit" class="btn-shopee-place-order btn-place-order" id="btnPlaceOrder">

@@ -711,13 +711,6 @@
                     <!-- 4. Khoảng giá -->
                     <div class="filter-group" style="border-bottom:none;">
                         <div class="filter-group-title">Khoảng Giá (₫)</div>
-                        <!-- Nút lọc nhanh khoảng giá trong sidebar -->
-                        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
-                            <button type="button" class="btn-sidebar-quick-price" onclick="setQuickPrice('', 50000)">Dưới 50k</button>
-                            <button type="button" class="btn-sidebar-quick-price" onclick="setQuickPrice(50000, 100000)">50k - 100k</button>
-                            <button type="button" class="btn-sidebar-quick-price" onclick="setQuickPrice(100000, 200000)">100k - 200k</button>
-                            <button type="button" class="btn-sidebar-quick-price" onclick="setQuickPrice(200000, '')">Trên 200k</button>
-                        </div>
                         <div class="price-inputs-row">
                             <input type="number" name="minPrice" class="input-price filter-price-input" placeholder="₫ TỪ" th:value="${selectedMinPrice}">
                             <span>-</span>
