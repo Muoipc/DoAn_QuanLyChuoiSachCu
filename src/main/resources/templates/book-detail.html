@@ -1313,21 +1313,22 @@
                 <!-- HÀNG THÔNG SỐ UY TÍN (SOCIAL PROOF ROW) -->
                 <div class="product-stats-row">
                     <div class="stats-left-group">
-                        <div>
-                            <span class="stat-rating-val" th:text="${avgRating}">4.8</span>
+                        <div th:if="${reviewCount > 0}">
+                            <span class="stat-rating-val" th:text="${avgRating}">5.0</span>
                             <span class="stat-stars">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star-half-stroke"></i>
+                                <i class="fa-solid fa-star" th:each="i : ${#numbers.sequence(1, T(java.lang.Math).round(T(java.lang.Double).parseDouble(avgRating)))}"></i>
+                                <i class="fa-regular fa-star" th:if="${T(java.lang.Math).round(T(java.lang.Double).parseDouble(avgRating)) < 5}" 
+                                   th:each="i : ${#numbers.sequence(T(java.lang.Math).round(T(java.lang.Double).parseDouble(avgRating)) + 1, 5)}"></i>
                             </span>
+                        </div>
+                        <div th:if="${reviewCount == 0}">
+                            <span class="stat-rating-val" style="border-bottom:none; color:#78716C; font-size:14px; font-weight:600;">Chưa có đánh giá</span>
                         </div>
 
                         <span class="stat-sep-pipe"></span>
 
                         <div>
-                            <span class="stat-count-link" th:text="${reviewCount}">128</span>
+                            <span class="stat-count-link" th:text="${reviewCount}">0</span>
                             <span style="color:#78716C;">Đánh Giá</span>
                         </div>
 
@@ -1358,26 +1359,6 @@
                     <span class="price-voucher-badge">
                         <i class="fa-solid fa-ticket"></i> Giá Theo Tình Trạng
                     </span>
-                </div>
-
-                <!-- THUỘC TÍNH: MÃ GIẢM GIÁ CỦA SHOP -->
-                <div class="attribute-row">
-                    <div class="attr-label">Mã Giảm Giá Của Shop</div>
-                    <div class="voucher-tags-list">
-                        <th:block th:if="${vouchers != null and !vouchers.isEmpty()}">
-                            <span th:each="v, iter : ${vouchers}" 
-                                  th:if="${iter.index < 3}"
-                                  class="voucher-tag-pill" 
-                                  onclick="openBookVoucherModal()"
-                                  th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? ('Giảm ' + v.discountValue.intValue() + '%') : ('Giảm ' + #numbers.formatDecimal(v.discountValue, 0, 'POINT', 0, 'COMMA') + '₫')}">Giảm 20.000₫</span>
-                        </th:block>
-                        <th:block th:unless="${vouchers != null and !vouchers.isEmpty()}">
-                            <span class="voucher-tag-pill" onclick="openBookVoucherModal()">Giảm 15kđ</span>
-                            <span class="voucher-tag-pill" onclick="openBookVoucherModal()">Giảm 20kđ</span>
-                            <span class="voucher-tag-pill" onclick="openBookVoucherModal()">Giảm 10%</span>
-                        </th:block>
-                        <a href="javascript:void(0)" onclick="openBookVoucherModal()" class="link-view-all-vouchers">Xem tất cả &gt;</a>
-                    </div>
                 </div>
 
                 <!-- THUỘC TÍNH: CHÍNH SÁCH SHOPEE AN TÂM -->
@@ -1596,22 +1577,32 @@
         </section>
 
         <!-- 5. ĐÁNH GIÁ SẢN PHẨM (REVIEWS) CHUẨN SHOPEE -->
-        <section class="reviews-section review-card" id="reviewsSection">
+        <section class="reviews-section review-card" id="reviewsSection" th:data-book-id="${book.id}">
+            <!-- LUÔN CÓ SẴN ID SÁCH HIỆN TẠI ĐỂ JS TRUY VẤN CHÍNH XÁC 100% -->
+            <input type="hidden" id="currentBookIdHolder" th:value="${book.id}">
+
             <div class="section-header-title">ĐÁNH GIÁ SẢN PHẨM</div>
 
             <!-- THANH TỔNG QUAN ĐIỂM ĐÁNH GIÁ CHUẨN SHOPEE -->
             <div class="reviews-overview-box">
                 <div class="overview-score-col">
-                    <div>
-                        <span class="score-large-num" id="overviewScoreText" th:text="${avgRating}">4.8</span>
+                    <div th:if="${reviewCount > 0}">
+                        <span class="score-large-num" id="overviewScoreText" th:text="${avgRating}">5.0</span>
                         <span style="font-size:15px; color:#ee4d2d; font-weight:700;">trên 5</span>
                     </div>
+                    <div th:if="${reviewCount == 0}">
+                        <span class="score-large-num" id="overviewScoreText" style="font-size:26px; color:#78716c;">0.0</span>
+                        <span style="font-size:14px; color:#78716c;">/ 5</span>
+                    </div>
                     <div class="score-stars-row" id="overviewStarsRow">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star-half-stroke"></i>
+                        <th:block th:if="${reviewCount > 0}">
+                            <i class="fa-solid fa-star" th:each="i : ${#numbers.sequence(1, T(java.lang.Math).round(T(java.lang.Double).parseDouble(avgRating)))}"></i>
+                            <i class="fa-regular fa-star" th:if="${T(java.lang.Math).round(T(java.lang.Double).parseDouble(avgRating)) < 5}" 
+                               th:each="i : ${#numbers.sequence(T(java.lang.Math).round(T(java.lang.Double).parseDouble(avgRating)) + 1, 5)}"></i>
+                        </th:block>
+                        <th:block th:if="${reviewCount == 0}">
+                            <i class="fa-regular fa-star" style="color:#d6d3d1;" th:each="i : ${#numbers.sequence(1, 5)}"></i>
+                        </th:block>
                     </div>
                 </div>
 
@@ -2252,14 +2243,45 @@
             });
         }
 
+        function getPageBookId() {
+            const holder = document.getElementById('currentBookIdHolder');
+            if (holder && holder.value) return holder.value;
+            const sec = document.getElementById('reviewsSection');
+            if (sec && sec.dataset.bookId) return sec.dataset.bookId;
+            const hidden = document.getElementById('reviewBookId');
+            if (hidden && hidden.value) return hidden.value;
+            const m = window.location.pathname.match(/\/books\/(\d+)/);
+            if (m && m[1]) return m[1];
+            return '1';
+        }
+
+        function updateOverviewStars(score) {
+            const starRow = document.getElementById('overviewStarsRow');
+            if (!starRow) return;
+            const rounded = Math.round(score);
+            let html = '';
+            if (score <= 0) {
+                for (let i = 1; i <= 5; i++) {
+                    html += '<i class="fa-regular fa-star" style="color:#d6d3d1;"></i> ';
+                }
+            } else {
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= rounded) {
+                        html += '<i class="fa-solid fa-star"></i> ';
+                    } else {
+                        html += '<i class="fa-regular fa-star"></i> ';
+                    }
+                }
+            }
+            starRow.innerHTML = html;
+        }
+
         function filterByRating(rating, chipBtn) {
             // Cập nhật trạng thái active cho chip được chọn
             document.querySelectorAll('.shopee-filter-chip').forEach(btn => btn.classList.remove('active'));
             if (chipBtn) chipBtn.classList.add('active');
 
-            const bookIdEl = document.getElementById('reviewBookId');
-            const bookId = bookIdEl ? bookIdEl.value : /*[[${book.id}]]*/ '1';
-
+            const bookId = getPageBookId();
             const url = '/api/reviews/book/' + encodeURIComponent(bookId) + (rating > 0 ? '?rating=' + rating : '');
 
             fetch(url)
@@ -2267,6 +2289,33 @@
                 .then(data => {
                     if (data.success) {
                         renderReviewsList(data.reviews, rating);
+
+                        // Cập nhật điểm số trung bình nếu có
+                        if (data.avgRating && data.totalReviews !== undefined) {
+                            const scoreEl = document.getElementById('overviewScoreText');
+                            if (scoreEl) {
+                                if (data.totalReviews > 0) {
+                                    scoreEl.innerText = data.avgRating;
+                                    scoreEl.style.fontSize = '28px';
+                                    scoreEl.style.color = '#ee4d2d';
+                                } else {
+                                    scoreEl.innerText = '0.0';
+                                    scoreEl.style.fontSize = '26px';
+                                    scoreEl.style.color = '#78716c';
+                                }
+                            }
+                            updateOverviewStars(parseFloat(data.avgRating || 0));
+                        }
+
+                        // Cập nhật số lượng trên các chip
+                        if (data.counts) {
+                            if (document.getElementById('chipCountAll')) document.getElementById('chipCountAll').innerText = data.counts.all || '0';
+                            if (document.getElementById('chipCount5')) document.getElementById('chipCount5').innerText = data.counts.star5 || '0';
+                            if (document.getElementById('chipCount4')) document.getElementById('chipCount4').innerText = data.counts.star4 || '0';
+                            if (document.getElementById('chipCount3')) document.getElementById('chipCount3').innerText = data.counts.star3 || '0';
+                            if (document.getElementById('chipCount2')) document.getElementById('chipCount2').innerText = data.counts.star2 || '0';
+                            if (document.getElementById('chipCount1')) document.getElementById('chipCount1').innerText = data.counts.star1 || '0';
+                        }
                     }
                 })
                 .catch(err => {
@@ -2428,7 +2477,7 @@
 
         function handleBookReviewSubmit(e) {
             e.preventDefault();
-            const bookId = document.getElementById('reviewBookId').value;
+            const bookId = getPageBookId();
             const rating = document.getElementById('reviewRatingInput').value;
             const commentInput = document.getElementById('reviewCommentInput');
             const comment = commentInput ? commentInput.value.trim() : '';
@@ -2473,9 +2522,14 @@
                     clearReviewImage();
 
                     // Cập nhật điểm trung bình
-                    if (data.avgRating) {
+                    if (data.avgRating && data.avgRating !== '0.0') {
                         const scoreEl = document.getElementById('overviewScoreText');
-                        if (scoreEl) scoreEl.innerText = data.avgRating;
+                        if (scoreEl) {
+                            scoreEl.innerText = data.avgRating;
+                            scoreEl.style.fontSize = '28px';
+                            scoreEl.style.color = '#ee4d2d';
+                        }
+                        updateOverviewStars(parseFloat(data.avgRating));
                     }
 
                     // Cập nhật số lượng trên các chip
@@ -2488,7 +2542,7 @@
                         if (document.getElementById('chipCount1')) document.getElementById('chipCount1').innerText = data.counts.star1 || '0';
                     }
 
-                    // Nạp lại danh sách đánh giá tất cả
+                    // Nạp lại danh sách đánh giá tất cả của đúng cuốn sách này
                     const allChip = document.querySelector('.shopee-filter-chip[data-rating="0"]');
                     filterByRating(0, allChip);
                 } else {

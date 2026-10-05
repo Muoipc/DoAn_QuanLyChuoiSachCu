@@ -83,10 +83,10 @@ public class BookController {
         // 4. Lấy danh sách đánh giá & điểm đánh giá trung bình
         List<Review> reviews = reviewRepository.findByBookIdOrderByCreatedAtDesc(id);
         Double avgRating = reviewRepository.getAverageRatingByBookId(id);
-        if (avgRating == null) {
-            avgRating = 5.0;
-        }
         long reviewCount = reviewRepository.countByBookId(id);
+        if (avgRating == null || reviewCount == 0) {
+            avgRating = 0.0;
+        }
 
         long count5Star = reviewRepository.countByBookIdAndRating(id, 5);
         long count4Star = reviewRepository.countByBookIdAndRating(id, 4);
@@ -154,7 +154,7 @@ public class BookController {
         model.addAttribute("inventoryList", inventoryList);
         model.addAttribute("totalStock", totalStock);
         model.addAttribute("reviews", reviews);
-        model.addAttribute("avgRating", String.format(java.util.Locale.US, "%.1f", avgRating));
+        model.addAttribute("avgRating", (reviewCount > 0 && avgRating > 0) ? String.format(java.util.Locale.US, "%.1f", avgRating) : "0.0");
         model.addAttribute("reviewCount", reviewCount);
         model.addAttribute("count5Star", count5Star);
         model.addAttribute("count4Star", count4Star);
