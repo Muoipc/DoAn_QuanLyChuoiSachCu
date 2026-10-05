@@ -546,6 +546,45 @@
             border-color: #ee4d2d;
             background: #fff;
         }
+        
+        .btn-pagination {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            color: #78716C;
+            text-decoration: none;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .btn-pagination:hover {
+            background: #f8f9fa;
+            color: #ee4d2d;
+        }
+        .btn-pagination-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: transparent;
+            color: #78716C;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-pagination-number:hover {
+            color: #ee4d2d;
+        }
+        .btn-pagination-number.active {
+            background: #ee4d2d;
+            color: white;
+            box-shadow: 0 4px 10px rgba(238, 77, 45, 0.2);
+        }
 
         @media screen and (max-width: 992px) {
             .search-layout {
@@ -581,6 +620,15 @@
             }
             .quick-filter-chips-list::-webkit-scrollbar {
                 display: none;
+            }
+            .filter-collapse-content {
+                display: none;
+                padding-top: 12px;
+                border-top: 1px solid rgba(0,0,0,0.05);
+                margin-top: 12px;
+            }
+            .filter-sidebar.expanded .filter-collapse-content {
+                display: block;
             }
         }
 
@@ -658,8 +706,8 @@
                 </div>
 
                 <form th:action="@{/search}" method="get" id="filterForm" class="filter-collapse-content">
-                    <input type="hidden" name="q" th:value="${selectedQuery}">
-                    <input type="hidden" name="sort" th:value="${selectedSort}">
+                    <input type="hidden" name="q" th:if="${selectedQuery != null and selectedQuery != ''}" th:value="${selectedQuery}">
+                    <input type="hidden" name="sort" th:if="${selectedSort != null and selectedSort != ''}" th:value="${selectedSort}">
 
                     <!-- 1. Danh mục thể loại -->
                     <div class="filter-group">
@@ -719,7 +767,7 @@
                         <button type="submit" class="btn-apply-filter">ÁP DỤNG</button>
                     </div>
 
-                    <a th:href="@{/search}" class="btn-clear-filter">XÓA BỘ LỌC</a>
+                    <a th:href="@{/search(q=${selectedQuery != null ? selectedQuery : ''})}" class="btn-clear-filter">XÓA BỘ LỌC</a>
                 </form>
             </aside>
 
@@ -764,15 +812,17 @@
                     <!-- Cụm Phân Trang Mini Góc Phải -->
                     <div class="pagination-mini">
                         <div class="page-num-mini">
-                            <span class="page-current-mini">1</span>/<span th:text="${totalFound != null and totalFound > 20 ? (totalFound + 19) / 20 : 1}">7</span>
+                            <span class="page-current-mini" th:text="${currentPage != null ? currentPage : 1}">1</span>/<span th:text="${totalPages != null ? totalPages : 1}">7</span>
                         </div>
                         <div class="page-nav-mini">
-                            <button class="page-btn-mini disabled" disabled aria-label="Trang trước">
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage != null and currentPage > 1 ? currentPage - 1 : 1})}"
+                               class="page-btn-mini" th:classappend="${!hasPrev} ? 'disabled' : ''" th:attr="aria-disabled=${!hasPrev}, tabindex=${!hasPrev ? '-1' : '0'}" aria-label="Trang trước">
                                 <i class="fa-solid fa-chevron-left"></i>
-                            </button>
-                            <button class="page-btn-mini" aria-label="Trang sau">
+                            </a>
+                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage != null and currentPage < totalPages ? currentPage + 1 : totalPages})}"
+                               class="page-btn-mini" th:classappend="${!hasNext} ? 'disabled' : ''" th:attr="aria-disabled=${!hasNext}, tabindex=${!hasNext ? '-1' : '0'}" aria-label="Trang sau">
                                 <i class="fa-solid fa-chevron-right"></i>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -798,6 +848,25 @@
                                 <i class="fa-solid fa-bolt-lightning"></i> Mua Ngay
                             </button>
                         </div>
+                    </a>
+                </div>
+                
+                <!-- Thanh Phân Trang (Bottom Pagination) -->
+                <div th:if="${totalPages > 1}" class="shopee-pagination-bar" style="display:flex; justify-content:center; align-items:center; gap:12px; margin-top: 40px; margin-bottom: 20px;">
+                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage - 1})}"
+                       th:if="${hasPrev}"
+                       class="btn-pagination">
+                       <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                    
+                    <a th:each="i : ${#numbers.sequence(1, totalPages)}"
+                       th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort}, page=${i})}"
+                       class="btn-pagination-number" th:classappend="${currentPage == i} ? 'active' : ''" th:text="${i}">1</a>
+
+                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage + 1})}"
+                       th:if="${hasNext}"
+                       class="btn-pagination">
+                       <i class="fa-solid fa-chevron-right"></i>
                     </a>
                 </div>
 

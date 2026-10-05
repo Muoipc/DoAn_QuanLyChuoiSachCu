@@ -11,12 +11,14 @@ import vn.iotstar.repository.BookRepository;
 import vn.iotstar.repository.CategoryRepository;
 import vn.iotstar.repository.StoreRepository;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 /**
  * Controller điều hướng trang chủ và các trang công cộng dành cho khách (Guest).
  * Ghi chú cho Cường: Controller này sử dụng Spring Data JPA Repository để truy vấn danh sách
- * 20 cuốn sách cũ đã thẩm định, sách bán chạy (> 10 cuốn), danh mục và 5 chi nhánh kho tại TP.HCM từ MySQL lên Thymeleaf.
+ * sách cũ đã thẩm định, sách bán chạy (> 10 cuốn), danh mục và 5 chi nhánh kho tại TP.HCM từ MySQL lên Thymeleaf.
  */
 @Controller
 public class HomeController {
@@ -43,8 +45,9 @@ public class HomeController {
             flashSaleBooks = flashSaleBooks.subList(0, 5);
         }
 
-        // 2. Lấy toàn bộ danh sách 20 cuốn sách cũ đang hoạt động
-        List<Book> dailyBooks = bookRepository.findAllActiveWithImages();
+        // 2. Lấy danh sách 20 cuốn sách cũ hiển thị trang chủ
+        Pageable pageable = PageRequest.of(0, 20);
+        List<Book> dailyBooks = bookRepository.findTopBooksWithImages(pageable);
 
         // 3. Lấy danh sách danh mục thể loại và hệ thống 5 chi nhánh tại TP.HCM
         List<Category> categories = categoryRepository.findByIsActiveTrue();

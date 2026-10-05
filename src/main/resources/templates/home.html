@@ -1333,8 +1333,11 @@
                 }
             }).catch(() => {});
 
-        // Đếm ngược Flash Sale thời gian thực
-        let totalSeconds = 2 * 3600 + 45 * 60 + 18;
+        // Đếm ngược Flash Sale thời gian thực (đến cuối ngày)
+        let now = new Date();
+        let endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+        let totalSeconds = Math.floor((endOfDay - now) / 1000);
+        if (totalSeconds < 0) totalSeconds = 0;
         setInterval(() => {
             if (totalSeconds > 0) {
                 totalSeconds--;

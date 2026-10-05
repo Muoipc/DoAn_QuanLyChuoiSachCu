@@ -70,6 +70,7 @@ public class StoreController {
             @RequestParam(value = "entryPoint", required = false) String entryPoint,
             @RequestParam(value = "itemId", required = false) Long itemId,
             @RequestParam(value = "sort", defaultValue = "popular") String sort,
+            @RequestParam(value = "page", defaultValue = "1") int page,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model) {
 
@@ -176,14 +177,29 @@ public class StoreController {
             });
         }
 
-        // 7. Lấy voucher ưu đãi của cửa hàng
+        // 7. Phân trang 20 sách 1 trang cho chi nhánh
+        int pageSize = 20;
+        int totalItems = booksInStore.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (page < 1) page = 1;
+        if (totalPages > 0 && page > totalPages) page = totalPages;
+
+        int fromIndex = (page - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, totalItems);
+        List<Book> pagedBooks = (totalItems > 0) ? booksInStore.subList(fromIndex, toIndex) : Collections.emptyList();
+
+        // 8. Lấy voucher ưu đãi của cửa hàng
         try {
             model.addAttribute("vouchers", voucherService.getAllAvailableVouchers(null));
         } catch (Exception ignored) {}
 
         model.addAttribute("store", store);
-        model.addAttribute("books", booksInStore);
-        model.addAttribute("totalBooks", booksInStore.size());
+        model.addAttribute("books", pagedBooks);
+        model.addAttribute("totalBooks", totalItems);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("hasNext", page < totalPages);
+        model.addAttribute("hasPrev", page > 1);
         model.addAttribute("bestSellerBooks", bestSellerBooks);
         model.addAttribute("recommendedBooks", recommendedBooks);
         model.addAttribute("storeCategories", storeCategories);
@@ -216,11 +232,12 @@ public class StoreController {
             @RequestParam(value = "entryPoint", required = false) String entryPoint,
             @RequestParam(value = "itemId", required = false) Long itemId,
             @RequestParam(value = "sort", defaultValue = "popular") String sort,
+            @RequestParam(value = "page", defaultValue = "1") int page,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model) {
         Store store = storeRepository.findBySlug(slug).orElse(null);
         if (store != null) {
-            return storeDetail(store.getId(), categoryId, null, minCondition, minPrice, maxPrice, entryPoint, itemId, sort, userDetails, model);
+            return storeDetail(store.getId(), categoryId, null, minCondition, minPrice, maxPrice, entryPoint, itemId, sort, page, userDetails, model);
         }
         return "redirect:/stores";
     }

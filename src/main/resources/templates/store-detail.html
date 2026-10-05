@@ -486,6 +486,62 @@
             font-weight: 700;
         }
 
+        /* THANH PHÂN TRANG 20 ĐẦU SÁCH CỦA SHOP */
+        .shopee-pagination-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 36px;
+            margin-bottom: 20px;
+        }
+        .btn-pagination {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: white;
+            color: #78716C;
+            text-decoration: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            transition: all 0.2s;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        .btn-pagination:hover {
+            background: #faf6f0;
+            color: var(--color-fire);
+            border-color: var(--color-fire);
+        }
+        .btn-pagination-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px;
+            height: 38px;
+            padding: 0 8px;
+            border-radius: 8px;
+            background: white;
+            color: #44403C;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            transition: all 0.2s;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        .btn-pagination-number:hover {
+            color: var(--color-fire);
+            border-color: var(--color-fire);
+        }
+        .btn-pagination-number.active {
+            background: var(--color-fire);
+            color: white;
+            border-color: var(--color-fire);
+            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.25);
+        }
+
         /* LƯỚI SẢN PHẨM FLUID RESPONSIVE (CHỐNG TRÀN VỠ GIAO DIỆN) */
         .shop-book-grid {
             display: grid;
@@ -906,7 +962,7 @@
         </section>
 
         <!-- 4. NAVIGATION TABS (CHUẨN SHOPEE IMAGE_F83F6B.PNG) -->
-        <nav class="shop-tabs-bar">
+        <nav class="shop-tabs-bar" id="shopTabsBar">
             <a th:href="@{/stores/{id}(id=${store.id})}" class="shop-tab-item" th:classappend="${selectedCategoryId == null ? 'active' : ''}">
                 Dạo
             </a>
@@ -991,7 +1047,7 @@
         </section>
 
         <!-- 7. BỐ CỤC 2 CỘT: DANH MỤC NGẮN GỌN + LƯỚI SẢN PHẨM CỦA SHOP -->
-        <div class="store-main-layout">
+        <div class="store-main-layout" id="storeMainLayout">
 
             <!-- CỘT TRÁI: DANH MỤC NGẮN GỌN CHUẨN SHOPEE (KHỚP 100% ẢNH IMAGE_4236D4.PNG) -->
             <aside class="shop-sidebar-category">
@@ -1073,6 +1129,25 @@
                     </a>
                 </div>
 
+                <!-- THANH PHÂN TRANG 20 ĐẦU SÁCH CỦA SHOP (CHUẨN SHOPEE) -->
+                <div th:if="${totalPages > 1}" class="shopee-pagination-bar">
+                    <a th:href="@{/stores/{id}(id=${store.id}, categoryId=${selectedCategoryId}, cond=${minCondition}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${currentSort}, page=${currentPage - 1})}"
+                       th:if="${hasPrev}"
+                       class="btn-pagination" aria-label="Trang trước">
+                       <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                    
+                    <a th:each="i : ${#numbers.sequence(1, totalPages)}"
+                       th:href="@{/stores/{id}(id=${store.id}, categoryId=${selectedCategoryId}, cond=${minCondition}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${currentSort}, page=${i})}"
+                       class="btn-pagination-number" th:classappend="${currentPage == i} ? 'active' : ''" th:text="${i}">1</a>
+
+                    <a th:href="@{/stores/{id}(id=${store.id}, categoryId=${selectedCategoryId}, cond=${minCondition}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${currentSort}, page=${currentPage + 1})}"
+                       th:if="${hasNext}"
+                       class="btn-pagination" aria-label="Trang sau">
+                       <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
+
                 <!-- KHI KHÔNG CÓ SẢN PHẨM -->
                 <div class="empty-shop-box" th:if="${totalBooks == 0}">
                     <i class="fa-solid fa-book-open-reader"></i>
@@ -1138,7 +1213,7 @@
 
         // 3. Lưu Voucher
         function saveShopVoucher(code, btn) {
-            fetch('/vouchers/api/save?code=' + encodeURIComponent(code), { method: 'POST' })
+            fetch('/api/vouchers/save-ajax?code=' + encodeURIComponent(code), { method: 'POST' })
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data.success) {
@@ -1155,6 +1230,101 @@
                     btn.disabled = true;
                 });
         }
+
+        // 4. Lọc danh mục và sắp xếp bằng AJAX — Giữ nguyên vị trí cuộn, không reload trang, không giật lên đầu trang
+        function loadStoreProductsAjax(url, pushState) {
+            if (typeof pushState === 'undefined') pushState = true;
+            const layout = document.getElementById('storeMainLayout');
+            if (!layout) {
+                window.location.href = url;
+                return;
+            }
+
+            const productsCol = layout.querySelector('.shop-products-col');
+            if (productsCol) {
+                productsCol.style.opacity = '0.4';
+                productsCol.style.pointerEvents = 'none';
+                productsCol.style.transition = 'opacity 0.15s ease';
+            }
+
+            fetch(url)
+                .then(function(res) {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.text();
+                })
+                .then(function(html) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newLayout = doc.getElementById('storeMainLayout');
+                    if (newLayout) {
+                        layout.innerHTML = newLayout.innerHTML;
+                        const newTabs = doc.getElementById('shopTabsBar');
+                        const curTabs = document.getElementById('shopTabsBar');
+                        if (newTabs && curTabs) {
+                            curTabs.innerHTML = newTabs.innerHTML;
+                        }
+                        if (pushState) {
+                            window.history.pushState({ path: url }, '', url);
+                        }
+                    } else {
+                        window.location.href = url;
+                    }
+                })
+                .catch(function(err) {
+                    console.error('Lỗi khi tải danh mục AJAX:', err);
+                    window.location.href = url;
+                })
+                .finally(function() {
+                    const updatedCol = layout.querySelector('.shop-products-col');
+                    if (updatedCol) {
+                        updatedCol.style.opacity = '1';
+                        updatedCol.style.pointerEvents = 'auto';
+                    }
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const layout = document.getElementById('storeMainLayout');
+            if (layout) {
+                // Event delegation cho link danh mục, nút sắp xếp và thanh phân trang
+                layout.addEventListener('click', function(e) {
+                    const targetLink = e.target.closest('.shop-cat-root-link, .shop-cat-sub-link, .btn-sort-item, .empty-shop-box a, .btn-pagination, .btn-pagination-number');
+                    if (!targetLink) return;
+
+                    const href = targetLink.getAttribute('href');
+                    if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+
+                    e.preventDefault();
+                    loadStoreProductsAjax(href, true);
+                });
+            }
+
+            // Xử lý nút "Xem Tất Cả >" ở các kệ sách (GỢI Ý CHO BẠN, SẢN PHẨM BÁN CHẠY) và Tabs Bar trên cùng
+            document.addEventListener('click', function(e) {
+                const shelfLink = e.target.closest('.shelf-view-all-link, .shop-tabs-bar .shop-tab-item');
+                if (!shelfLink) return;
+
+                const href = shelfLink.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+
+                e.preventDefault();
+                if (layout) {
+                    layout.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                loadStoreProductsAjax(href, true);
+            });
+
+            window.addEventListener('popstate', function() {
+                loadStoreProductsAjax(window.location.href, false);
+            });
+
+            // Nếu truy cập từ link bên ngoài có sẵn categoryId/sort/page thì cuộn mượt xuống phần sản phẩm
+            if (window.location.search.includes('categoryId=') || window.location.search.includes('cat=') || window.location.search.includes('sort=') || window.location.search.includes('page=')) {
+                if (window.scrollY < 200 && layout) {
+                    layout.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
     </script>
 
 </body>

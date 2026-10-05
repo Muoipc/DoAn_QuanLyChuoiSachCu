@@ -31,6 +31,12 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findAllActiveWithImages();
 
     /**
+     * Lấy danh sách sách giới hạn số lượng cho trang chủ
+     */
+    @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.category LEFT JOIN FETCH b.images WHERE b.isActive = true ORDER BY b.totalSold DESC")
+    List<Book> findTopBooksWithImages(Pageable pageable);
+
+    /**
      * Ghi chú cho Cường: Lấy chi tiết sách theo ID kèm danh mục và toàn bộ danh sách ảnh các góc chụp.
      */
     @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.category LEFT JOIN FETCH b.images WHERE b.id = :id AND b.isActive = true")
