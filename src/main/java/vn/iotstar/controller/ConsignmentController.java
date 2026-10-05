@@ -15,6 +15,7 @@ import vn.iotstar.repository.BookConsignmentRepository;
 import vn.iotstar.repository.CategoryRepository;
 import vn.iotstar.repository.StoreRepository;
 import vn.iotstar.repository.UserRepository;
+import vn.iotstar.service.INotificationService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -55,6 +56,9 @@ public class ConsignmentController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private INotificationService notificationService;
 
     /**
      * Helper nạp User hiện tại (mặc định lấy user test ID 4 nếu chưa đăng nhập Spring Security)
@@ -140,8 +144,16 @@ public class ConsignmentController {
 
         BookConsignment saved = consignmentRepository.save(consignment);
 
+        // Bắn thông báo tự động tới toàn bộ Admin và Quản lý chi nhánh tiếp nhận
+        try {
+            notificationService.notifyConsignmentSubmitted(saved);
+        } catch (Exception e) {
+            System.err.println("Lỗi gửi thông báo ký gửi: " + e.getMessage());
+        }
+
         redirectAttributes.addFlashAttribute("successMessage", 
-                "Gửi phiếu ký gửi #" + saved.getId() + " thành công! Chi nhánh " + store.getStoreName() + " sẽ liên hệ thẩm định trong 24h.");
+                "Gửi phiếu ký gửi #" + saved.getId() + " thành công! Thông báo đã được gửi tới Ban Quản Trị và Quản lý Chi nhánh " + 
+                store.getStoreName() + " để tiến hành kiểm tra, thẩm định hình ảnh và duyệt giá.");
         return "redirect:/consignments/my-list";
     }
 

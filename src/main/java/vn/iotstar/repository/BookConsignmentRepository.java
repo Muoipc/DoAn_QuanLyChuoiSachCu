@@ -27,4 +27,5 @@ public interface BookConsignmentRepository extends JpaRepository<BookConsignment
     );
 
     long countByStatus(BookConsignment.ConsignmentStatus status);
+    long countByStoreIdAndStatus(Long storeId, BookConsignment.ConsignmentStatus status);
 }
