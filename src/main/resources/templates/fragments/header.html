@@ -8,6 +8,8 @@
 
 <!-- FRAGMENT SHOPEE HEADER NGUYÊN BẢN (KHÔNG CÓ THẺ WRAPPER BỌC NGOÀI, THUẦN NATIVE BROWSER STICKY SIÊU MƯỢT) -->
 <th:block th:fragment="shopeeHeader">
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (claudiusnoc/liquid-glass-design-system) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 
     <style>
         /* CONTAINER SHOPEE GOM VÔ GIỮA CHUẨN 1200PX ĐỒNG BỘ MỌI TRANG */
@@ -102,11 +104,12 @@
             color: #8C4A27;
         }
 
-        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        /* ================= APPLE LIQUID GLASS LANGUAGE DROPDOWN ================= */
         .lang-dropdown-box {
             position: relative;
             display: inline-block;
             flex-shrink: 0;
+            padding: 4px 0;
         }
         .lang-trigger-btn {
             display: inline-flex;
@@ -115,49 +118,80 @@
             cursor: pointer;
             font-weight: 700;
             color: #292524;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: all 0.15s ease;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             font-size: 12.5px;
             white-space: nowrap;
             flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04);
         }
         .lang-trigger-btn:hover {
             color: #8C4A27;
-            background: rgba(140, 74, 39, 0.08);
+            background: #ffffff;
+            border-color: rgba(140, 74, 39, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.1);
+        }
+        .lang-trigger-btn:active {
+            transform: scale(0.96);
         }
         .lang-dropdown-menu {
             position: absolute;
-            top: 100%;
+            top: calc(100% + 4px);
             right: 0;
-            background: #ffffff;
-            border-radius: 4px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            border: 1px solid #E8DEC8;
-            min-width: 145px;
+            background: rgba(255, 255, 255, 0.90) !important;
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.14), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+            min-width: 155px;
             display: none;
             z-index: 100010 !important;
-            padding: 6px 0;
+            padding: 6px !important;
+            box-sizing: border-box;
+            animation: applePopoverFade 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .lang-dropdown-box:hover .lang-dropdown-menu {
-            display: block;
+        .lang-dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 0;
+            right: 0;
+            height: 18px;
+            background: transparent;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu,
+        .lang-dropdown-box.active .lang-dropdown-menu,
+        .lang-dropdown-menu:hover {
+            display: block !important;
         }
         .lang-item-btn {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
+            gap: 10px;
+            padding: 9px 14px;
             font-size: 13px;
             color: #1C1917;
             cursor: pointer;
-            transition: background 0.15s;
-            font-weight: 600;
+            border-radius: 10px !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-weight: 700;
             text-decoration: none;
             white-space: nowrap;
         }
         .lang-item-btn:hover {
-            background: #F5ECE4;
-            color: #8C4A27;
+            background: rgba(140, 74, 39, 0.09) !important;
+            color: #8C4A27 !important;
+            transform: translateX(3px) !important;
+        }
+        .lang-item-btn:active {
+            transform: scale(0.96);
         }
 
         /* SHOPEE NOTIFICATION POPOVER (KHỚP 100% ẢNH SHOPEE IMAGE_8B39D3.PNG) */
@@ -190,90 +224,124 @@
             margin-left: 2px;
         }
 
+        /* ================= APPLE LIQUID GLASS NOTIFICATION POPOVER ================= */
+        .shopee-noti-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+        .shopee-noti-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: -20px;
+            right: -20px;
+            height: 18px;
+            background: transparent;
+            z-index: 100008;
+            pointer-events: auto;
+        }
         .shopee-noti-popover {
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 6px);
             right: 0;
-            width: 404px;
-            background: #ffffff;
-            border-radius: 2px;
-            box-shadow: 0 1px 16px rgba(0, 0, 0, 0.18);
-            border: 1px solid rgba(0, 0, 0, 0.09);
+            width: 410px;
+            background: rgba(255, 255, 255, 0.88) !important;
+            backdrop-filter: blur(32px) saturate(200%) brightness(103%) !important;
+            -webkit-backdrop-filter: blur(32px) saturate(200%) brightness(103%) !important;
+            border-radius: 20px !important;
+            box-shadow: 
+                0 20px 48px -6px rgba(45, 24, 15, 0.16),
+                0 4px 14px -2px rgba(45, 24, 15, 0.05),
+                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
             display: none;
             flex-direction: column;
             z-index: 100010 !important;
             cursor: default;
             white-space: normal !important;
+            padding: 6px !important;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .shopee-noti-popover::before {
             content: '';
             position: absolute;
-            top: -10px;
+            top: -18px;
             left: 0;
             width: 100%;
-            height: 10px;
+            height: 18px;
+            background: transparent;
+            pointer-events: auto;
         }
         .shopee-noti-arrow {
-            position: absolute;
-            top: -7px;
-            right: 32px;
-            width: 0;
-            height: 0;
-            border-left: 7px solid transparent;
-            border-right: 7px solid transparent;
-            border-bottom: 7px solid #ffffff;
+            display: none !important;
         }
         .shopee-noti-wrapper:hover .shopee-noti-popover {
             display: flex;
+            animation: applePopoverFade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes applePopoverFade {
+            from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .noti-popover-header {
-            height: 38px;
-            line-height: 38px;
-            padding: 0 14px;
+            padding: 12px 16px;
             font-size: 13.5px;
-            color: rgba(0, 0, 0, 0.4);
-            font-weight: 600;
-            background: #fafafa;
-            border-bottom: 1px solid #f0f0f0;
+            color: #1C1917;
+            font-weight: 800;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 14px;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
             user-select: none;
             text-align: left;
-            white-space: nowrap !important;
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
         .noti-popover-list {
             display: flex !important;
             flex-direction: column !important;
+            gap: 6px !important;
             max-height: 380px;
             overflow-y: auto;
             width: 100% !important;
+            padding: 2px;
         }
         .noti-popover-list a.noti-item {
             display: flex !important;
             flex-direction: row !important;
             align-items: flex-start !important;
             width: 100% !important;
-            padding: 10px 14px !important;
+            padding: 12px 14px !important;
             text-decoration: none !important;
-            background: #ffffff;
-            border-bottom: 1px solid #f5f5f5;
-            transition: background-color 0.15s ease;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 14px !important;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             gap: 12px !important;
             text-align: left !important;
             white-space: normal !important;
             box-sizing: border-box !important;
         }
         .noti-popover-list a.noti-item.unread {
-            background-color: #fff8f7 !important;
+            background: rgba(255, 248, 244, 0.85) !important;
+            border-color: rgba(217, 119, 6, 0.2) !important;
         }
         .noti-popover-list a.noti-item:hover {
-            background-color: #f7f7f7 !important;
+            background: #ffffff !important;
+            transform: translateY(-2px) scale(1.01) !important;
+            box-shadow: 0 8px 20px rgba(140, 74, 39, 0.12), inset 0 1px 1px rgba(255, 255, 255, 1) !important;
+            border-color: rgba(255, 255, 255, 1) !important;
         }
         .noti-thumb {
-            width: 44px !important;
-            height: 44px !important;
-            border-radius: 4px;
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 10px !important;
             object-fit: cover;
             flex-shrink: 0 !important;
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.08);
             display: block !important;
         }
         .noti-body {
@@ -283,8 +351,8 @@
             flex-direction: column !important;
         }
         .noti-title {
-            font-size: 13px !important;
-            font-weight: 700 !important;
+            font-size: 13.5px !important;
+            font-weight: 800 !important;
             color: #1C1917 !important;
             margin-bottom: 4px !important;
             line-height: 18px !important;
@@ -297,7 +365,7 @@
         }
         .noti-desc {
             font-size: 12px !important;
-            color: #666666 !important;
+            color: #574E45 !important;
             line-height: 16px !important;
             white-space: normal !important;
             display: -webkit-box;
@@ -305,50 +373,76 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-align: left !important;
-            font-weight: normal !important;
+            font-weight: 500 !important;
         }
         .noti-preview-grid {
             display: flex !important;
             flex-direction: row !important;
-            gap: 6px !important;
-            margin-top: 6px !important;
+            gap: 8px !important;
+            margin-top: 8px !important;
         }
         .noti-preview-grid img {
             width: 44px !important;
             height: 44px !important;
-            border-radius: 3px !important;
+            border-radius: 8px !important;
             object-fit: cover !important;
-            border: 1px solid #E8DEC8 !important;
+            border: 1px solid rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
             display: block !important;
             flex-shrink: 0 !important;
+            transition: transform 0.2s ease;
+        }
+        .noti-preview-grid img:hover {
+            transform: scale(1.08);
         }
         a.noti-popover-footer {
             display: block !important;
-            width: 100% !important;
-            height: 40px !important;
-            line-height: 40px !important;
+            width: calc(100% - 16px) !important;
+            margin: 8px auto 4px auto !important;
+            padding: 10px 20px !important;
             text-align: center !important;
-            font-size: 13.5px !important;
-            color: #1C1917 !important;
-            font-weight: 600 !important;
+            font-size: 13px !important;
+            color: #8C4A27 !important;
+            font-weight: 800 !important;
             text-decoration: none !important;
-            background: #ffffff !important;
-            border-top: 1px solid #f0f0f0 !important;
-            transition: background-color 0.15s !important;
+            background: rgba(140, 74, 39, 0.08) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(140, 74, 39, 0.15) !important;
+            border-radius: 9999px !important;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
             box-sizing: border-box !important;
             white-space: nowrap !important;
         }
         a.noti-popover-footer:hover {
-            background-color: #f5f5f5 !important;
-            color: #8C4A27 !important;
+            background: linear-gradient(135deg, #8C4A27 0%, #6B3416 100%) !important;
+            color: #ffffff !important;
+            border-color: transparent !important;
+            box-shadow: 0 6px 18px rgba(140, 74, 39, 0.35) !important;
+            transform: translateY(-2px) !important;
+        }
+        a.noti-popover-footer:active {
+            transform: scale(0.96) !important;
         }
 
-        /* SHOPEE USER POPOVER (KHỚP 100% ẢNH SHOPEE IMAGE_557563.PNG) */
+        /* ================= SHOPEE USER POPOVER (FIX HOVER BRIDGE & CHỐNG TỰ ĐỘNG TẮT) ================= */
         .shopee-user-wrapper {
             position: relative;
             display: inline-block;
             cursor: pointer;
-            padding: 2px 0;
+            padding: 4px 0;
+        }
+        /* Cầu nối hover vô hình phía dưới trigger giúp chuột rê xuống popover không bao giờ bị mất */
+        .shopee-user-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: -30px;
+            right: -30px;
+            height: 24px;
+            background: transparent;
+            z-index: 100008;
+            pointer-events: auto;
         }
         .shopee-user-trigger {
             display: flex;
@@ -357,6 +451,12 @@
             color: #1C1917;
             font-size: 13px;
             font-weight: 700;
+            padding: 2px 4px;
+            border-radius: 9999px;
+            transition: all 0.15s ease;
+        }
+        .shopee-user-wrapper:hover .shopee-user-trigger {
+            color: #8C4A27;
         }
         .shopee-user-avatar {
             width: 22px;
@@ -375,46 +475,67 @@
         }
         .shopee-user-popover {
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 4px);
             right: 0;
-            width: 160px;
-            background: #ffffff;
-            border-radius: 2px;
-            box-shadow: 0 1px 12px 0 rgba(0,0,0,0.18);
-            border: 1px solid rgba(0,0,0,0.08);
+            width: 185px;
+            background: rgba(255, 255, 255, 0.92) !important;
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
+            border-radius: 18px !important;
+            box-shadow: 
+                0 20px 48px -6px rgba(45, 24, 15, 0.16),
+                0 4px 14px -2px rgba(45, 24, 15, 0.04),
+                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
             display: none;
             flex-direction: column;
             z-index: 100010 !important;
-            padding: 4px 0;
+            padding: 8px !important;
+            gap: 4px !important;
+            box-sizing: border-box;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        /* Cầu nối vô hình giúp rê chuột từ trigger xuống popover không bị mất */
+        /* Cầu nối ngược từ popover lên phía trên */
         .shopee-user-popover::before {
             content: '';
             position: absolute;
-            top: -10px;
-            left: 0;
-            width: 100%;
-            height: 10px;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            height: 20px;
+            background: transparent;
+            pointer-events: auto;
         }
-        /* Mũi tên tam giác chỉ lên đỉnh popover khớp Shopee */
         .shopee-popover-arrow {
-            position: absolute;
-            top: -7px;
-            right: 24px;
-            width: 0;
-            height: 0;
-            border-left: 7px solid transparent;
-            border-right: 7px solid transparent;
-            border-bottom: 7px solid #ffffff;
+            display: none !important;
         }
         .shopee-user-wrapper:hover .shopee-user-popover {
             display: flex;
+            animation: applePopoverFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .shopee-popover-item {
-            padding: 10px 16px;
-            color: #333333;
-            font-size: 13.5px;
-            font-weight: 500;
+            padding: 10px 14px;
+            color: #1C1917;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            display: block;
+            border-radius: 12px !important;
+            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: left;
+        }
+        .shopee-popover-item:hover {
+            background-color: rgba(140, 74, 39, 0.08) !important;
+            color: #8C4A27 !important;
+            transform: translateX(3px) !important;
+        }
+        .shopee-popover-item.logout-item:hover {
+            background-color: #fff1f2 !important;
+            color: #e11d48 !important;
+        }
+        .shopee-popover-item:active {
+            transform: scale(0.96) !important;
+        }
             text-decoration: none;
             display: block;
             transition: background-color 0.15s, color 0.15s;
@@ -442,7 +563,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 32px;
+            gap: 40px;
         }
 
         /* Brand Logo Báo Chí "Books" */
@@ -485,7 +606,7 @@
         /* Shopee Search Container */
         .shopee-search-container {
             flex: 1;
-            max-width: 720px;
+            max-width: 680px;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -494,17 +615,20 @@
         .shopee-search-bar {
             display: flex;
             align-items: center;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.52) !important;
+            backdrop-filter: blur(28px) saturate(200%) brightness(102%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(200%) brightness(102%) !important;
             border-radius: 28px;
             padding: 4px 6px 4px 18px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-            border: 1.5px solid rgba(255, 255, 255, 0.8);
-            transition: all 0.2s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), inset 0 1.5px 2px rgba(255, 255, 255, 0.95);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            transition: all 0.25s var(--spring-ease);
         }
 
         .shopee-search-bar:focus-within {
-            box-shadow: 0 4px 20px rgba(140, 74, 39, 0.25);
-            border-color: #8C4A27;
+            background: rgba(255, 255, 255, 0.68) !important;
+            box-shadow: 0 8px 28px rgba(140, 74, 39, 0.2), inset 0 1.5px 2px rgba(255, 255, 255, 0.98);
+            border-color: rgba(140, 74, 39, 0.45);
         }
 
         .shopee-search-bar input {
@@ -522,9 +646,11 @@
         }
 
         .btn-search-shopee {
-            background: #8C4A27;
+            background: linear-gradient(135deg, rgba(140, 74, 39, 0.75) 0%, rgba(115, 54, 21, 0.78) 100%) !important;
+            backdrop-filter: blur(20px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
             color: #ffffff;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.35) !important;
             border-radius: 22px;
             padding: 10px 24px;
             font-size: 14px;
@@ -533,15 +659,17 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: background 0.15s ease, transform 0.1s ease;
+            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+            transition: all 0.2s var(--spring-ease);
         }
 
         .btn-search-shopee:hover {
-            background: #733615;
+            background: linear-gradient(135deg, rgba(140, 74, 39, 0.88) 0%, rgba(115, 54, 21, 0.9) 100%) !important;
             transform: scale(1.02);
+            box-shadow: 0 6px 18px rgba(140, 74, 39, 0.3), inset 0 1px 1.5px rgba(255, 255, 255, 0.5) !important;
         }
 
-        /* Từ khóa tìm kiếm hot kiểu Shopee */
+        /* Từ khóa tìm kiếm hot kiểu Shopee - Hiệu ứng kính mờ Apple Liquid Glass */
         .shopee-hot-keywords {
             display: flex;
             align-items: center;
@@ -556,21 +684,65 @@
         .shopee-hot-keywords a {
             font-size: 11.5px;
             font-weight: 600;
-            color: #574E45;
-            background: rgba(245, 236, 228, 0.85);
-            border: 1px solid #E8DEC8;
-            padding: 3px 12px;
-            border-radius: 20px;
-            transition: all 0.15s ease;
+            color: #443c34;
+            background: rgba(255, 255, 255, 0.52);
+            backdrop-filter: blur(16px) saturate(180%) brightness(104%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%) brightness(104%);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.05), inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
+            padding: 3px 13px;
+            border-radius: 9999px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
         }
         .shopee-hot-keywords a:hover {
-            background: #8C4A27;
+            background: rgba(238, 77, 45, 0.88);
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
             color: #ffffff;
-            border-color: #8C4A27;
+            border-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.35);
             transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.2);
             text-decoration: none;
+        }
+
+        /* Nút Kho Voucher Header */
+        .btn-header-voucher {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 15px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+            color: #1C1917;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+        .btn-header-voucher:hover {
+            background-color: #ffffff;
+            border-color: #ee4d2d;
+            color: #ee4d2d;
+        }
+        .btn-header-voucher i {
+            color: #ee4d2d;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .btn-header-voucher span {
+                display: none;
+            }
+            .btn-header-voucher {
+                padding: 7px 10px;
+            }
         }
 
         /* Giỏ hàng Shopee */
@@ -661,17 +833,9 @@
     <div class="shopee-topbar">
         <div class="container-shopee topbar-content">
             <div class="topbar-nav">
-                <a th:href="@{/consignments}">Kênh Người Bán</a>
+                <a th:href="@{/consignments}"><i class="fa-solid fa-recycle me-1" style="color:#10b981;"></i> Ký Gửi Sách Cũ</a>
                 <span class="topbar-divider"></span>
-                <a href="javascript:void(0)" onclick="alert('Quét mã QR để tải ứng dụng Chuỗi Sách Cũ trên iOS & Android!')">Tải Ứng Dụng</a>
-                <span class="topbar-divider"></span>
-                <span style="display:inline-flex; align-items:center; gap:6px;">
-                    Kết Nối
-                    <a href="https://facebook.com" target="_blank" style="color:inherit;" title="Facebook"><i class="fa-brands fa-facebook" style="font-size:14px;"></i></a>
-                    <a href="https://instagram.com" target="_blank" style="color:inherit;" title="Instagram"><i class="fa-brands fa-instagram" style="font-size:14px;"></i></a>
-                </span>
-                <span class="topbar-divider"></span>
-                <a href="javascript:void(0)" onclick="openStoreModal()"><i class="fa-solid fa-store me-1" style="color:#8C4A27;"></i> 5 Cửa Hàng TP.HCM</a>
+                <a href="javascript:void(0)" onclick="openStoreModal()"><i class="fa-solid fa-store me-1" style="color:#8C4A27;"></i> Hệ Thống Cửa Hàng TP.HCM</a>
             </div>
 
             <div class="topbar-links">
@@ -789,7 +953,7 @@
                         <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="shopee-popover-item text-danger fw-bold"><i class="fa-solid fa-gauge-high me-1 text-danger"></i>Kênh Quản Trị</a>
                         <a th:href="@{/user/account/profile}" class="shopee-popover-item">Tài Khoản Của Tôi</a>
                         <a th:href="@{/orders}" class="shopee-popover-item">Đơn Mua</a>
-                        <a th:href="@{/logout}" class="shopee-popover-item" style="color:#c62828;">Đăng Xuất</a>
+                        <a th:href="@{/logout}" class="shopee-popover-item logout-item" style="color:#c62828;">Đăng Xuất</a>
                     </div>
                 </div>
             </div>
@@ -830,90 +994,410 @@
                 </div>
             </div>
 
-            <!-- Giỏ hàng Shopee với Live Badge Counter -->
-            <div class="shopee-cart-wrap" id="shopeeCartWrap">
-                <a th:href="@{/cart}" title="Xem giỏ hàng của bạn">
-                    <i class="fa-solid fa-cart-shopping shopee-cart-icon"></i>
-                    <span class="shopee-cart-badge" id="headerCartBadge">0</span>
-                </a>
+            <!-- Nhóm nút hành động Header: Giỏ Hàng Chuẩn Shopee -->
+            <div class="header-action-group" style="display:flex; align-items:center; gap:16px;">
+                <!-- Giỏ hàng Shopee với Live Badge Counter -->
+                <div class="shopee-cart-wrap" id="shopeeCartWrap">
+                    <a th:href="@{/cart}" aria-label="Giỏ hàng">
+                        <i class="fa-solid fa-cart-shopping shopee-cart-icon"></i>
+                        <span class="shopee-cart-badge" id="headerCartBadge">0</span>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- MODAL 5 CHI NHÁNH TP.HCM -->
+    <!-- MODAL HỆ THỐNG CỬA HÀNG TP.HCM -->
     <div class="modal-stores-backdrop" id="storeModal" onclick="closeStoreModal(event)">
-        <div class="modal-stores-content" onclick="event.stopPropagation()">
+        <div class="modal-stores-content" onclick="event.stopPropagation()" style="max-width:850px; max-height:85vh; overflow-y:auto;">
             <button type="button" class="modal-close-btn" onclick="closeStoreModal()"><i class="fa-solid fa-xmark"></i></button>
 
             <h3 style="font-size: 18px; font-weight: 900; color: #1C1917; display:flex; align-items:center; gap:8px;">
                 <i class="fa-solid fa-shop" style="color:#8C4A27;"></i>
-                <span>HỆ THỐNG 5 CHI NHÁNH CHUỖI SÁCH CŨ TẠI TP. HỒ CHÍ MINH</span>
+                <span>HỆ THỐNG CÁC HIỆU SÁCH CŨ UY TÍN TẠI TP. HỒ CHÍ MINH</span>
             </h3>
             <p style="font-size: 13px; color: #574E45; margin-top: 4px;">
                 Quý khách có thể ghé đọc thử, nhận sách Click &amp; Collect trong 2h hoặc ký gửi trực tiếp tại quầy:
             </p>
 
-            <div class="modal-store-grid">
+            <div class="modal-store-grid" style="grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:12px;">
                 <div class="modal-store-card">
                     <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Chi Nhánh 1: TP. Thủ Đức (Gần HCMUTE)
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Bá Tân – Sách Cũ Thư Viện (Thủ Đức)
                     </h5>
-                    <p style="font-size: 13px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 1 Võ Văn Ngân, P. Linh Chiểu, TP. Thủ Đức
+                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Gian số 10, Đường Sách Thủ Đức, 2 Hồ Thị Tư, P. Hiệp Phú
                     </p>
                     <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>028-38968641</strong>
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>0962.936.310</strong>
                     </p>
+                    <a th:href="@{/stores/1}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
                 </div>
                 <div class="modal-store-card">
                     <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Chi Nhánh 2: Làng Đại Học Quốc Gia TP.HCM
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Little Cats Bookstore – Đường Sách Q1
                     </h5>
-                    <p style="font-size: 13px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Khu Phố 6, P. Linh Trung, TP. Thủ Đức
+                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Đường Sách Nguyễn Văn Bình, P. Bến Nghé, Quận 1
                     </p>
                     <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>028-37242160</strong>
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>028.3822.9988</strong>
                     </p>
+                    <a th:href="@{/stores/2}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
                 </div>
                 <div class="modal-store-card">
                     <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Chi Nhánh 3: Quận Phú Nhuận (Trung Tâm)
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Sách Cũ Bảo Khang – Làng ĐHQG TP.HCM
                     </h5>
-                    <p style="font-size: 13px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> 142 Phan Xích Long, P. 2, Q. Phú Nhuận
+                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Tòa Nhà Công Vụ ĐHQG-HCM, Đường Nguyễn Du, TP. Thủ Đức
                     </p>
                     <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:30 - 22:00 | Hotline: <strong>028-39951234</strong>
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>0908.123.456</strong>
                     </p>
+                    <a th:href="@{/stores/3}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
                 </div>
                 <div class="modal-store-card">
                     <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Chi Nhánh 4: Quận 1 (Phố Sách Nguyễn Văn Bình)
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Sách Cũ Tổng Hợp 160 – Trần Huy Liệu
                     </h5>
-                    <p style="font-size: 13px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Gian hàng M08, Đường Sách Nguyễn Văn Bình, Bến Nghé, Q.1
+                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 160 Trần Huy Liệu, P. 15, Q. Phú Nhuận
                     </p>
                     <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 22:00 | Hotline: <strong>028-38225678</strong>
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>028.3847.9924</strong>
                     </p>
+                    <a th:href="@{/stores/4}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
                 </div>
                 <div class="modal-store-card">
                     <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Chi Nhánh 5: Khu Học Thuật Quận 5
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Hiệu Sách Cũ Tấn Phương – Trần Nhân Tôn
                     </h5>
-                    <p style="font-size: 13px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> 280 An Dương Vương, P. 4, Q. 5
+                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 29 Trần Nhân Tôn, P. 9, Quận 5
                     </p>
                     <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>028-38352020</strong>
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 07:30 - 21:30 | Hotline: <strong>028.3835.1122</strong>
                     </p>
+                    <a th:href="@{/stores/5}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
                 </div>
+                <div class="modal-store-card">
+                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Tiệm Sách Ngoại Văn Momo – Phú Nhuận
+                    </h5>
+                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 205 Trần Huy Liệu, P. 15, Q. Phú Nhuận
+                    </p>
+                    <p style="font-size: 12px; color: #78716C;">
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 09:00 - 20:30 | Hotline: <strong>0938.556.789</strong>
+                    </p>
+                    <a th:href="@{/stores/6}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
+                </div>
+                <div class="modal-store-card">
+                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Kho Sách Cũ ABC – Sài Gòn
+                    </h5>
+                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 35 Đường Tám Danh, P. 4, Quận 8
+                    </p>
+                    <p style="font-size: 12px; color: #78716C;">
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>028.3855.4433</strong>
+                    </p>
+                    <a th:href="@{/stores/7}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
+                </div>
+                <div class="modal-store-card">
+                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
+                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Hiệu Sách Cũ Khải Vinh – Trần Nhân Tôn
+                    </h5>
+                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 43 Trần Nhân Tôn, P. 9, Quận 5
+                    </p>
+                    <p style="font-size: 12px; color: #78716C;">
+                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>028.3833.6677</strong>
+                    </p>
+                    <a th:href="@{/stores/8}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
+                </div>
+            </div>
+
+            <div style="margin-top:16px; text-align:center;">
+                <a th:href="@{/stores}" style="display:inline-flex; align-items:center; gap:6px; background:#ee4d2d; color:#ffffff; padding:10px 24px; border-radius:6px; font-size:13.5px; font-weight:700; text-decoration:none; box-shadow:0 4px 12px rgba(238,77,45,0.2);">
+                    <i class="fa-solid fa-store"></i> Xem Bản Đồ &amp; Danh Sách 8 Chi Nhánh &gt;
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPT ĐIỀU KHIỂN CHUNG CHO HEADER -->
+    <!-- TOAST CONTAINER APPLE LIQUID GLASS TOÀN CỤC -->
+    <div id="universalToastContainer"></div>
+
+    <!-- MODAL XÁC NHẬN & THÔNG BÁO APPLE LIQUID GLASS TOÀN CỤC (THAY THẾ CONFIRM & ALERT MẶC ĐỊNH) -->
+    <div id="universalLiquidModalOverlay" class="universal-liquid-modal-overlay" style="display:none;" onclick="if(event.target===this) window.closeUniversalModal();">
+        <div class="universal-liquid-modal-card">
+            <!-- Nút đóng góc phải -->
+            <button type="button" class="btn-close-liquid-modal" onclick="window.closeUniversalModal()" aria-label="Đóng">&times;</button>
+            
+            <!-- Biểu tượng trung tâm -->
+            <div id="universalModalIconWrap" class="universal-modal-icon-circle">
+                <i id="universalModalIcon" class="fa-solid fa-circle-question"></i>
+            </div>
+            
+            <!-- Tiêu đề -->
+            <h3 id="universalModalTitle" class="universal-modal-title">Xác Nhận Hành Động</h3>
+            
+            <!-- Nội dung mô tả -->
+            <p id="universalModalDesc" class="universal-modal-desc">
+                Nội dung chi tiết của thông báo hoặc xác nhận.
+            </p>
+            
+            <!-- Cụm nút hành động -->
+            <div id="universalModalActions" class="universal-modal-actions">
+                <button type="button" id="universalModalCancelBtn" class="btn-liquid-cancel" onclick="window.closeUniversalModal()">
+                    Để Sau
+                </button>
+                <button type="button" id="universalModalConfirmBtn" class="btn-liquid-confirm">
+                    Xác Nhận
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Toast Container Apple Liquid Glass */
+        #universalToastContainer {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100060 !important;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+        .liquid-toast-item {
+            pointer-events: auto;
+            min-width: 300px;
+            max-width: 440px;
+            padding: 14px 20px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 12px 36px -6px rgba(45, 24, 15, 0.2), 0 4px 12px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #1C1917;
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1.45;
+            animation: liquidToastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: all 0.25s ease;
+        }
+        @keyframes liquidToastSlideIn {
+            from { opacity: 0; transform: translateY(-16px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .liquid-toast-item.hide {
+            opacity: 0;
+            transform: translateY(-12px) scale(0.95);
+        }
+        .liquid-toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 15px;
+        }
+        .liquid-toast-item.success .liquid-toast-icon {
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
+        }
+        .liquid-toast-item.warning .liquid-toast-icon {
+            background: rgba(245, 158, 11, 0.15);
+            color: #d97706;
+        }
+        .liquid-toast-item.error .liquid-toast-icon {
+            background: rgba(239, 68, 68, 0.15);
+            color: #dc2626;
+        }
+        .liquid-toast-item.info .liquid-toast-icon {
+            background: rgba(2, 132, 199, 0.15);
+            color: #0284c7;
+        }
+
+        /* Modal Overlay Apple Liquid Glass */
+        .universal-liquid-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(35, 18, 10, 0.48);
+            backdrop-filter: blur(16px) saturate(160%);
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
+            z-index: 100050 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+            animation: universalOverlayFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes universalOverlayFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .universal-liquid-modal-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(36px) saturate(200%) brightness(102%);
+            -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(102%);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 24px 64px -12px rgba(45, 24, 15, 0.28), 0 8px 24px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 430px;
+            padding: 34px 28px 26px;
+            text-align: center;
+            position: relative;
+            transform: scale(0.95);
+            animation: universalModalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            box-sizing: border-box;
+        }
+        @keyframes universalModalPop {
+            to { transform: scale(1); }
+        }
+        .btn-close-liquid-modal {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            background: rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 20px;
+            line-height: 1;
+            color: #78716C;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+        .btn-close-liquid-modal:hover {
+            background: rgba(0, 0, 0, 0.08);
+            color: #1C1917;
+        }
+        .universal-modal-icon-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, rgba(238, 77, 45, 0.12) 0%, rgba(255, 107, 74, 0.24) 100%);
+            border: 2px solid rgba(238, 77, 45, 0.28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #ee4d2d;
+            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.18);
+        }
+        .universal-modal-icon-circle.danger {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.12) 0%, rgba(239, 68, 68, 0.24) 100%);
+            border-color: rgba(220, 38, 38, 0.3);
+            color: #dc2626;
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.18);
+        }
+        .universal-modal-icon-circle.info {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(56, 189, 248, 0.24) 100%);
+            border-color: rgba(14, 165, 233, 0.3);
+            color: #0284c7;
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.18);
+        }
+        .universal-modal-icon-circle.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(52, 211, 153, 0.24) 100%);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #059669;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.18);
+        }
+        .universal-modal-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: #1C1917;
+            margin: 0 0 10px;
+            letter-spacing: -0.2px;
+        }
+        .universal-modal-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #57534E;
+            margin: 0 0 24px;
+            padding: 0 8px;
+        }
+        .universal-modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-liquid-cancel {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 1.5px solid #E7DFD5;
+            background: #FAF8F5;
+            color: #57534E;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-liquid-cancel:hover {
+            background: #F0ECE4;
+            color: #1C1917;
+            border-color: #D6CABA;
+        }
+        .btn-liquid-cancel:active {
+            transform: scale(0.97);
+        }
+        .btn-liquid-confirm {
+            flex: 1.35;
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%);
+            color: #ffffff !important;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(238, 77, 45, 0.35);
+            transition: all 0.15s ease;
+        }
+        .btn-liquid-confirm:hover {
+            background: linear-gradient(135deg, #d83d1e 0%, #f44336 100%);
+            box-shadow: 0 6px 20px rgba(238, 77, 45, 0.45);
+            transform: translateY(-1px);
+            color: #ffffff !important;
+        }
+        .btn-liquid-confirm.btn-danger {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.35);
+        }
+        .btn-liquid-confirm.btn-danger:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.45);
+        }
+    </style>
+
+    <!-- SCRIPT ĐIỀU KHIỂN CHUNG CHO HEADER & TOAST/MODAL TOÀN CỤC -->
     <script>
         function openStoreModal() {
             var m = document.getElementById('storeModal');
@@ -923,6 +1407,128 @@
             var m = document.getElementById('storeModal');
             if (m) m.classList.remove('open');
         }
+
+        // ================= HÀM TOAST TOÀN CỤC CHUẨN APPLE LIQUID GLASS =================
+        window.showLiquidToast = function(message, type) {
+            type = type || 'info';
+            var container = document.getElementById('universalToastContainer');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'universalToastContainer';
+                document.body.appendChild(container);
+            }
+
+            var icons = {
+                success: '<i class="fa-solid fa-circle-check"></i>',
+                warning: '<i class="fa-solid fa-triangle-exclamation"></i>',
+                error: '<i class="fa-solid fa-circle-xmark"></i>',
+                info: '<i class="fa-solid fa-circle-info"></i>'
+            };
+
+            var toast = document.createElement('div');
+            toast.className = 'liquid-toast-item ' + type;
+            toast.innerHTML = 
+                '<div class="liquid-toast-icon">' + (icons[type] || icons.info) + '</div>' +
+                '<div style="flex:1;">' + message + '</div>';
+
+            container.appendChild(toast);
+
+            setTimeout(function() {
+                toast.classList.add('hide');
+                setTimeout(function() {
+                    if (toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 300);
+            }, 3500);
+        };
+
+        // ================= HÀM MODAL DIALOG TOÀN CỤC (THAY THẾ CONFIRM/ALERT MẶC ĐỊNH) =================
+        window._universalModalConfirmCallback = null;
+        window._universalModalCancelCallback = null;
+
+        window.showConfirmDialog = function(options) {
+            options = options || {};
+            var overlay = document.getElementById('universalLiquidModalOverlay');
+            if (!overlay) {
+                if (confirm(options.message || '')) {
+                    if (options.onConfirm) options.onConfirm();
+                    else if (options.confirmUrl) window.location.href = options.confirmUrl;
+                }
+                return;
+            }
+
+            var titleEl = document.getElementById('universalModalTitle');
+            var descEl = document.getElementById('universalModalDesc');
+            var iconWrap = document.getElementById('universalModalIconWrap');
+            var iconEl = document.getElementById('universalModalIcon');
+            var cancelBtn = document.getElementById('universalModalCancelBtn');
+            var confirmBtn = document.getElementById('universalModalConfirmBtn');
+
+            titleEl.innerText = options.title || 'Xác Nhận';
+            descEl.innerText = options.message || '';
+            
+            // Icon & màu sắc
+            iconWrap.className = 'universal-modal-icon-circle';
+            confirmBtn.className = 'btn-liquid-confirm';
+
+            if (options.type === 'danger' || options.type === 'trash') {
+                iconWrap.classList.add('danger');
+                confirmBtn.classList.add('btn-danger');
+                iconEl.className = options.type === 'trash' ? 'fa-regular fa-trash-can' : 'fa-solid fa-triangle-exclamation';
+            } else if (options.type === 'auth' || options.type === 'lock') {
+                iconEl.className = 'fa-solid fa-lock';
+            } else if (options.type === 'info') {
+                iconWrap.classList.add('info');
+                iconEl.className = 'fa-solid fa-circle-info';
+            } else if (options.type === 'success') {
+                iconWrap.classList.add('success');
+                iconEl.className = 'fa-solid fa-circle-check';
+            } else {
+                iconEl.className = options.icon || 'fa-solid fa-circle-question';
+            }
+
+            cancelBtn.style.display = options.hideCancel ? 'none' : 'block';
+            cancelBtn.innerText = options.cancelText || 'Để Sau';
+            confirmBtn.innerHTML = (options.type === 'auth' ? '<i class="fa-solid fa-right-to-bracket me-1"></i> ' : '') + (options.confirmText || 'Đồng Ý');
+
+            window._universalModalConfirmCallback = function() {
+                window.closeUniversalModal();
+                if (typeof options.onConfirm === 'function') {
+                    options.onConfirm();
+                } else if (options.confirmUrl) {
+                    window.location.href = options.confirmUrl;
+                }
+            };
+            window._universalModalCancelCallback = function() {
+                window.closeUniversalModal();
+                if (typeof options.onCancel === 'function') {
+                    options.onCancel();
+                }
+            };
+
+            confirmBtn.onclick = window._universalModalConfirmCallback;
+            cancelBtn.onclick = window._universalModalCancelCallback;
+
+            overlay.style.display = 'flex';
+        };
+
+        window.showAlertDialog = function(options) {
+            options = options || {};
+            window.showConfirmDialog({
+                title: options.title || 'Thông Báo',
+                message: options.message || '',
+                type: options.type || 'info',
+                icon: options.icon || 'fa-solid fa-circle-info',
+                confirmText: options.okText || 'Đã Hiểu',
+                hideCancel: true,
+                onConfirm: options.onOk
+            });
+        };
+
+        window.closeUniversalModal = function() {
+            var overlay = document.getElementById('universalLiquidModalOverlay');
+            if (overlay) overlay.style.display = 'none';
+        };
+
         // Tải số lượng giỏ hàng thực tế
         (function() {
             fetch('/cart/api/count')
@@ -935,7 +1541,269 @@
                 })
                 .catch(function() {});
         })();
+
+        // ================= HIỆU ỨNG HÀNG TỰ NHẢY VÀO GIỎ TOÀN CỤC =================
+        window.triggerFlyToCart = function(sourceImg, newCount, bookTitle) {
+            var cartTarget = document.getElementById('shopeeCartWrap') || document.getElementById('headerCartBadge');
+            if (!cartTarget) return;
+
+            var cartIcon = cartTarget.querySelector('.shopee-cart-icon') || cartTarget;
+            var cartBadge = document.getElementById('headerCartBadge');
+
+            if (sourceImg) {
+                var srcRect = sourceImg.getBoundingClientRect();
+                var destRect = cartTarget.getBoundingClientRect();
+
+                // Tạo bóng sản phẩm bay hình vòng cung
+                var flyer = document.createElement('img');
+                flyer.src = sourceImg.src;
+                flyer.className = 'fly-to-cart-item';
+                flyer.style.top = srcRect.top + 'px';
+                flyer.style.left = srcRect.left + 'px';
+                flyer.style.width = srcRect.width + 'px';
+                flyer.style.height = srcRect.height + 'px';
+                flyer.style.opacity = '1';
+                flyer.style.transform = 'scale(1) rotate(0deg)';
+                document.body.appendChild(flyer);
+
+                // Bay parabol vào giỏ hàng
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        flyer.style.top = (destRect.top + 4) + 'px';
+                        flyer.style.left = (destRect.left + 4) + 'px';
+                        flyer.style.width = '24px';
+                        flyer.style.height = '32px';
+                        flyer.style.opacity = '0.2';
+                        flyer.style.transform = 'scale(0.25) rotate(360deg)';
+                    });
+                });
+
+                setTimeout(function() {
+                    if (flyer && flyer.parentNode) flyer.parentNode.removeChild(flyer);
+                    animateCartLanding(cartBadge, cartIcon, newCount);
+                }, 800);
+            } else {
+                animateCartLanding(cartBadge, cartIcon, newCount);
+            }
+
+            showFlyToast(bookTitle || 'Đã thêm sản phẩm vào giỏ hàng!');
+        };
+
+        function animateCartLanding(cartBadge, cartIcon, newCount) {
+            if (cartBadge) {
+                if (newCount !== undefined && newCount !== null) {
+                    cartBadge.innerText = newCount;
+                }
+                cartBadge.classList.remove('cart-badge-bounce');
+                void cartBadge.offsetWidth;
+                cartBadge.classList.add('cart-badge-bounce');
+            }
+            if (cartIcon) {
+                cartIcon.classList.remove('cart-icon-shake');
+                void cartIcon.offsetWidth;
+                cartIcon.classList.add('cart-icon-shake');
+            }
+        }
+
+        function showFlyToast(text) {
+            var oldToast = document.querySelector('.cart-fly-toast');
+            if (oldToast && oldToast.parentNode) oldToast.parentNode.removeChild(oldToast);
+
+            var toast = document.createElement('div');
+            toast.className = 'cart-fly-toast';
+            toast.innerHTML = '<i class="fa-solid fa-circle-check text-success" style="font-size:16px;"></i><span>' + text + '</span>';
+            document.body.appendChild(toast);
+
+            requestAnimationFrame(function() {
+                toast.classList.add('show');
+            });
+
+            setTimeout(function() {
+                toast.classList.remove('show');
+                setTimeout(function() {
+                    if (toast && toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 400);
+            }, 2500);
+        }
+
+        // ================= WIDGET TRỢ LÝ AI MINI TOÀN CỤC =================
+        function toggleAiMiniChat() {
+            var widget = document.getElementById('aiMiniChatWidget');
+            if (!widget) return;
+            if (widget.style.display === 'none' || widget.style.display === '') {
+                widget.style.display = 'flex';
+                var inp = document.getElementById('miniChatInput');
+                if (inp) inp.focus();
+                scrollMiniChatBottom();
+            } else {
+                widget.style.display = 'none';
+            }
+        }
+
+        function sendMiniChatPrompt(promptText) {
+            var inp = document.getElementById('miniChatInput');
+            if (inp) {
+                inp.value = promptText;
+                sendMiniChatMessage();
+            }
+        }
+
+        function sendMiniChatMessage() {
+            var inp = document.getElementById('miniChatInput');
+            if (!inp) return;
+            var text = inp.value.trim();
+            if (!text) return;
+
+            var body = document.getElementById('miniChatBody');
+            inp.value = '';
+
+            // User bubble
+            var userRow = document.createElement('div');
+            userRow.style.cssText = 'display:flex; justify-content:flex-end;';
+            userRow.innerHTML = '<div style="background:linear-gradient(135deg, #ff5722 0%, #ee4d2d 100%); color:#fff; padding:9px 13px; border-radius:16px; border-top-right-radius:4px; max-width:85%; line-height:1.45; word-break:break-word;">' + escapeMiniHtml(text) + '</div>';
+            body.appendChild(userRow);
+            scrollMiniChatBottom();
+
+            // Typing indicator
+            var typingRow = document.createElement('div');
+            typingRow.id = 'miniChatTyping';
+            typingRow.style.cssText = 'display:flex; gap:8px; align-items:center; color:#78716c; font-size:12px;';
+            typingRow.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#ee4d2d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px;"><i class="fa-solid fa-robot"></i></div> <span>AI đang tìm sách...</span>';
+            body.appendChild(typingRow);
+            scrollMiniChatBottom();
+
+            fetch('/ai-assistant/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                var tp = document.getElementById('miniChatTyping');
+                if (tp) tp.remove();
+
+                var aiRow = document.createElement('div');
+                aiRow.style.cssText = 'display:flex; gap:8px; align-items:flex-start;';
+
+                var replyHtml = (data.reply || '')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+
+                var cardsHtml = '';
+                if (data.suggestedBooks && data.suggestedBooks.length > 0) {
+                    cardsHtml = '<div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">';
+                    data.suggestedBooks.forEach(function(b) {
+                        var p = Number(b.price || 0).toLocaleString('vi-VN');
+                        cardsHtml += '<div style="display:flex; gap:8px; background:rgba(255,255,255,0.9); border:1px solid #e7e5e4; border-radius:12px; padding:8px; align-items:center;">' +
+                            '<img src="' + (b.imageUrl || '/images/books/book_1.jpg') + '" style="width:42px; height:58px; object-fit:cover; border-radius:6px; flex-shrink:0;">' +
+                            '<div style="flex:1; min-width:0;">' +
+                                '<div style="font-weight:700; font-size:12.5px; color:#1C1917; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + escapeMiniHtml(b.title) + '</div>' +
+                                '<div style="font-size:11px; color:#78716c; margin-top:2px;">Mới ' + (b.conditionPercent || 90) + '% · ' + escapeMiniHtml(b.availableStores || 'Kho TP.HCM') + '</div>' +
+                                '<div style="font-weight:700; color:#ee4d2d; font-size:12.5px; margin-top:2px;">₫' + p + '</div>' +
+                            '</div>' +
+                            '<div style="display:flex; flex-direction:column; gap:4px; flex-shrink:0;">' +
+                                '<a href="' + (b.buyNowUrl || '/checkout?buyNow=true&bookId=' + b.id) + '" style="padding:4px 8px; border-radius:6px; background:#ee4d2d; color:#fff; font-size:10.5px; font-weight:700; text-decoration:none; text-align:center;">Mua Ngay</a>' +
+                                '<a href="' + (b.detailUrl || '/books/' + b.id) + '" style="padding:4px 8px; border-radius:6px; background:#f5f5f4; color:#44403c; font-size:10.5px; text-decoration:none; text-align:center;">Chi Tiết</a>' +
+                            '</div>' +
+                        '</div>';
+                    });
+                    cardsHtml += '</div>';
+                }
+
+                aiRow.innerHTML = '<div style="width:28px; height:28px; border-radius:50%; background:#ee4d2d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;"><i class="fa-solid fa-robot"></i></div>' +
+                    '<div style="background:#f5f0eb; padding:10px 14px; border-radius:16px; border-top-left-radius:4px; color:#292524; line-height:1.5; max-width:85%; font-size:12.5px;">' +
+                        '<div>' + replyHtml + '</div>' +
+                        cardsHtml +
+                    '</div>';
+
+                body.appendChild(aiRow);
+                scrollMiniChatBottom();
+            })
+            .catch(function() {
+                var tp = document.getElementById('miniChatTyping');
+                if (tp) tp.remove();
+            });
+        }
+
+        function scrollMiniChatBottom() {
+            var body = document.getElementById('miniChatBody');
+            if (body) body.scrollTop = body.scrollHeight;
+        }
+
+        function escapeMiniHtml(s) {
+            if (!s) return '';
+            var d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        // Tự động ẩn Floating Button trên trang /ai-assistant để tránh trùng lặp
+        if (window.location.pathname.indexOf('/ai-assistant') !== -1) {
+            var btn = document.getElementById('aiFloatingBtn');
+            if (btn) btn.style.display = 'none';
+        }
     </script>
+
+    <!-- WIDGET TRỢ LÝ AI MINI TOÀN CỤC (GLOBAL MINI CHAT WIDGET APPLE LIQUID GLASS) -->
+    <div id="aiMiniChatWidget" style="display:none; position:fixed; bottom:96px; right:30px; width:380px; height:560px; max-height:82vh; max-width:calc(100vw - 40px); z-index:99998; border-radius:24px; background:rgba(255, 255, 255, 0.92); backdrop-filter:blur(36px) saturate(200%); -webkit-backdrop-filter:blur(36px) saturate(200%); border:1.5px solid rgba(255, 255, 255, 0.95); box-shadow:0 24px 60px rgba(45, 24, 15, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.95); flex-direction:column; overflow:hidden; transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1);">
+        <!-- Top bar của widget -->
+        <div style="padding:14px 18px; background:linear-gradient(135deg, rgba(140, 74, 39, 0.92) 0%, rgba(238, 77, 45, 0.92) 100%); color:#ffffff; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.2);">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:16px;">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <div style="font-weight:700; font-size:14px; line-height:1.2;">Trợ Lý AI Chuỗi Sách Cũ</div>
+                    <div style="font-size:11px; opacity:0.9; display:flex; align-items:center; gap:4px; margin-top:2px;">
+                        <span style="width:7px; height:7px; border-radius:50%; background:#10b981; display:inline-block;"></span> 5 chi nhánh TP.HCM
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <a th:href="@{/ai-assistant}" target="_blank" title="Mở toàn màn hình" style="color:#ffffff; font-size:13px; opacity:0.85; padding:6px; cursor:pointer;">
+                    <i class="fa-solid fa-up-right-from-square"></i>
+                </a>
+                <button type="button" onclick="toggleAiMiniChat()" style="background:none; border:none; color:#ffffff; font-size:18px; cursor:pointer; opacity:0.85; padding:2px 6px;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Khung tin nhắn -->
+        <div id="miniChatBody" style="flex:1; padding:14px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; font-size:13px;">
+            <!-- Tin nhắn chào -->
+            <div style="display:flex; gap:8px; align-items:flex-start;">
+                <div style="width:28px; height:28px; border-radius:50%; background:#ee4d2d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div style="background:#f5f0eb; padding:10px 14px; border-radius:16px; border-top-left-radius:4px; color:#292524; line-height:1.5; max-width:85%;">
+                    Chào bạn! Em là <strong>Trợ lý AI</strong> của Chuỗi Sách Cũ TP.HCM. Em có thể tư vấn sách, kiểm tra tồn kho tại 5 chi nhánh hoặc giải đáp phí ship và chính sách đồng kiểm ạ!
+                </div>
+            </div>
+
+            <!-- Gợi ý nhanh (Quick Chips) -->
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin: 4px 0 4px 36px;">
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Các chi nhánh ở đâu?')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">📍 5 Chi nhánh</button>
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Gợi ý sách chữa lành')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">🌱 Sách chữa lành</button>
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Sách sinh viên giá rẻ dưới 50k')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">💰 Sách dưới 50K</button>
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Phí vận chuyển bao nhiêu?')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">🚚 Phí ship</button>
+            </div>
+        </div>
+
+        <!-- Ô nhập tin nhắn -->
+        <div style="padding:10px 14px; background:rgba(255,255,255,0.95); border-top:1px solid rgba(0,0,0,0.06); display:flex; gap:8px; align-items:center;">
+            <input type="text" id="miniChatInput" placeholder="Hỏi AI về sách, tồn kho, giá..." style="flex:1; height:38px; border-radius:9999px; border:1px solid #e7e5e4; padding:0 14px; font-size:13px; outline:none; background:#faf8f5;" onkeydown="if(event.key==='Enter') sendMiniChatMessage()">
+            <button type="button" onclick="sendMiniChatMessage()" style="width:38px; height:38px; border-radius:50%; border:none; background:#ee4d2d; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; box-shadow:0 3px 8px rgba(238,77,45,0.3);">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- NÚT WIDGET TRỢ LÝ AI NỔI TOÀN CỤC (FLOATING FAB) -->
+    <div id="aiFloatingBtn" class="ai-floating-widget-btn" onclick="toggleAiMiniChat()" title="Trợ Lý AI Tư Vấn Sách Cũ">
+        <i class="fa-solid fa-robot"></i>
+        <span class="ai-floating-status-dot"></span>
+    </div>
 </th:block>
 
 </body>

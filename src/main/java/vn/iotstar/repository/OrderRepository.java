@@ -22,6 +22,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.items i LEFT JOIN FETCH i.book b LEFT JOIN FETCH o.store s LEFT JOIN FETCH o.shippingUnit su WHERE o.orderCode = :orderCode")
     Optional<Order> findByOrderCodeWithDetails(@Param("orderCode") String orderCode);
 
+    @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.items i LEFT JOIN FETCH i.book b LEFT JOIN FETCH o.store s LEFT JOIN FETCH o.shippingUnit su WHERE o.id = :id")
+    Optional<Order> findByIdWithDetails(@Param("id") Long id);
+
     /**
      * Ghi chú cho Cường: Lấy toàn bộ đơn hàng của khách hàng kèm danh sách sách và chi nhánh phục vụ
      * cho trang Lịch sử đơn hàng (/orders).

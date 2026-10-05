@@ -51,17 +51,30 @@ public class SearchController {
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "q", required = false) String query,
             @RequestParam(value = "cat", required = false) Integer categoryId,
+            @RequestParam(value = "category", required = false) Integer categoryParam,
+            @RequestParam(value = "categoryId", required = false) Integer categoryIdShopee,
             @RequestParam(value = "cond", required = false) Integer minCondition,
-            @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
-            @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(value = "minPrice", required = false) String minPriceStr,
+            @RequestParam(value = "maxPrice", required = false) String maxPriceStr,
             @RequestParam(value = "store", required = false) Long storeId,
             @RequestParam(value = "sort", defaultValue = "popular") String sort,
+            @RequestParam(value = "page", defaultValue = "1") int page,
             Model model) {
 
-        // Hỗ trợ cả 2 tham số: ?keyword=... (chuẩn Shopee) và ?q=... (chuẩn tìm kiếm thông dụng)
-        String effectiveQuery = (keyword != null && !keyword.isBlank()) ? keyword : query;
+        BigDecimal minPrice = null;
+        if (minPriceStr != null && !minPriceStr.isBlank()) {
+            try { minPrice = new BigDecimal(minPriceStr); } catch (Exception e) {}
+        }
+        BigDecimal maxPrice = null;
+        if (maxPriceStr != null && !maxPriceStr.isBlank()) {
+            try { maxPrice = new BigDecimal(maxPriceStr); } catch (Exception e) {}
+        }
 
-        List<Book> allBooks = bookRepository.findAllActiveWithImages();
+        // Hỗ trợ cả các tham số: ?keyword=... (chuẩn Shopee), ?q=..., ?categoryId=..., ?cat=..., ?category=...
+        String effectiveQuery = (keyword != null && !keyword.isBlank()) ? keyword : query;
+        Integer effectiveCategoryId = (categoryId != null) ? categoryId : (categoryIdShopee != null ? categoryIdShopee : categoryParam);
+
+        List<Book> allBooks = new ArrayList<>(bookRepository.findAllActiveWithImages());
 
         // 1. Lọc theo từ khóa
         if (effectiveQuery != null && !effectiveQuery.isBlank()) {
@@ -75,9 +88,9 @@ public class SearchController {
         }
 
         // 2. Lọc theo danh mục
-        if (categoryId != null) {
+        if (effectiveCategoryId != null) {
             allBooks = allBooks.stream().filter(b ->
-                    b.getCategory() != null && categoryId.equals(b.getCategory().getId())
+                    b.getCategory() != null && effectiveCategoryId.equals(b.getCategory().getId())
             ).collect(Collectors.toList());
         }
 
@@ -90,13 +103,15 @@ public class SearchController {
 
         // 4. Lọc theo khoảng giá
         if (minPrice != null) {
+            BigDecimal finalMinPrice = minPrice;
             allBooks = allBooks.stream().filter(b ->
-                    b.getPrice() != null && b.getPrice().compareTo(minPrice) >= 0
+                    b.getPrice() != null && b.getPrice().compareTo(finalMinPrice) >= 0
             ).collect(Collectors.toList());
         }
         if (maxPrice != null) {
+            BigDecimal finalMaxPrice = maxPrice;
             allBooks = allBooks.stream().filter(b ->
-                    b.getPrice() != null && b.getPrice().compareTo(maxPrice) <= 0
+                    b.getPrice() != null && b.getPrice().compareTo(finalMaxPrice) <= 0
             ).collect(Collectors.toList());
         }
 
@@ -104,7 +119,7 @@ public class SearchController {
         if (storeId != null) {
             List<Inventory> storeInventory = inventoryRepository.findByStoreId(storeId);
             Set<Long> inStockBookIds = storeInventory.stream()
-                    .filter(inv -> inv.getQuantity() != null && inv.getQuantity() > 0)
+                    .filter(inv -> inv.getQuantity() != null && inv.getQuantity() > 0 && inv.getBook() != null && inv.getBook().getId() != null)
                     .map(inv -> inv.getBook().getId())
                     .collect(Collectors.toSet());
 
@@ -113,27 +128,31 @@ public class SearchController {
             ).collect(Collectors.toList());
         }
 
-        // 6. Sắp xếp kết quả
+        // 6. Sắp xếp kết quả (bảo vệ an toàn chống NullPointerException khi giá null)
         if ("sales".equalsIgnoreCase(sort)) {
-            allBooks.sort((b1, b2) -> Integer.compare(
+            allBooks = allBooks.stream().sorted((b1, b2) -> Integer.compare(
                     b2.getTotalSold() != null ? b2.getTotalSold() : 0,
                     b1.getTotalSold() != null ? b1.getTotalSold() : 0
-            ));
+            )).collect(Collectors.toList());
         } else if ("price-asc".equalsIgnoreCase(sort)) {
-            allBooks.sort(Comparator.comparing(Book::getPrice));
+            allBooks = allBooks.stream().sorted(Comparator.comparing(b -> b.getPrice() != null ? b.getPrice() : BigDecimal.ZERO)).collect(Collectors.toList());
         } else if ("price-desc".equalsIgnoreCase(sort)) {
-            allBooks.sort((b1, b2) -> b2.getPrice().compareTo(b1.getPrice()));
+            allBooks = allBooks.stream().sorted((b1, b2) -> {
+                BigDecimal p1 = b1.getPrice() != null ? b1.getPrice() : BigDecimal.ZERO;
+                BigDecimal p2 = b2.getPrice() != null ? b2.getPrice() : BigDecimal.ZERO;
+                return p2.compareTo(p1);
+            }).collect(Collectors.toList());
         } else if ("latest".equalsIgnoreCase(sort)) {
-            allBooks.sort((b1, b2) -> {
+            allBooks = allBooks.stream().sorted((b1, b2) -> {
                 if (b1.getCreatedAt() == null || b2.getCreatedAt() == null) return 0;
                 return b2.getCreatedAt().compareTo(b1.getCreatedAt());
-            });
+            }).collect(Collectors.toList());
         } else {
             // "popular": Sắp xếp theo lượt xem
-            allBooks.sort((b1, b2) -> Integer.compare(
+            allBooks = allBooks.stream().sorted((b1, b2) -> Integer.compare(
                     b2.getViewsCount() != null ? b2.getViewsCount() : 0,
                     b1.getViewsCount() != null ? b1.getViewsCount() : 0
-            ));
+            )).collect(Collectors.toList());
         }
 
         List<Category> categories = categoryRepository.findByIsActiveTrue();
@@ -148,8 +167,23 @@ public class SearchController {
             model.addAttribute("recommendedBooks", recommendedBooks);
         }
 
-        model.addAttribute("books", allBooks);
-        model.addAttribute("totalFound", allBooks.size());
+        // Phân trang 20 sách 1 trang
+        int pageSize = 20;
+        int totalItems = allBooks.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (page < 1) page = 1;
+        if (totalPages > 0 && page > totalPages) page = totalPages;
+        
+        int fromIndex = (page - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, totalItems);
+        List<Book> pagedBooks = (totalItems > 0) ? allBooks.subList(fromIndex, toIndex) : allBooks;
+
+        model.addAttribute("books", pagedBooks);
+        model.addAttribute("totalFound", totalItems);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("hasNext", page < totalPages);
+        model.addAttribute("hasPrev", page > 1);
         model.addAttribute("categories", categories);
         model.addAttribute("stores", stores);
 

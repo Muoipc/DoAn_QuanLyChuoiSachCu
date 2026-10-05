@@ -30,19 +30,140 @@
         }
         a { color: inherit; text-decoration: none; }
 
+        /* HEADER CHUẨN AUTH SHOPEE FLEXIBLE */
         .auth-header {
             background: rgba(45, 24, 15, 0.28);
             backdrop-filter: blur(36px);
-            padding: 16px 0;
+            -webkit-backdrop-filter: blur(36px);
+            padding: 14px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            position: relative;
+            z-index: 10;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
-        .header-inner { display: flex; align-items: center; justify-content: space-between; }
-        .brand-box { display: flex; align-items: center; gap: 16px; }
-        .brand-img { height: 50px; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35)); }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 clamp(12px, 3vw, 24px);
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: clamp(10px, 2vw, 16px);
+        }
+        .brand-img {
+            height: clamp(38px, 5vw, 50px);
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+        }
         .auth-page-title {
-            font-size: 22px; font-weight: 800; color: #1C1917;
-            border-left: 2px solid #1C1917; padding-left: 14px; text-transform: uppercase;
+            font-size: clamp(16px, 2.5vw, 22px);
+            font-weight: 800;
+            color: #1C1917;
+            border-left: 2px solid #1C1917;
+            padding-left: clamp(10px, 1.5vw, 14px);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .header-right-actions {
+            display: flex;
+            align-items: center;
+            gap: clamp(12px, 2vw, 20px);
+            flex-wrap: wrap;
+        }
+        .auth-help-link {
+            font-size: clamp(12px, 1.5vw, 13px);
+            font-weight: 700;
+            color: var(--color-fire);
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+        .auth-help-link:hover {
+            color: var(--color-fire-hover);
+        }
+
+        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN APPLE LIQUID GLASS */
+        .lang-dropdown-box {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-trigger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #292524;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 12.5px;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04);
+        }
+        .lang-trigger-btn:hover {
+            color: #8C4A27;
+            background: #ffffff;
+            border-color: rgba(140, 74, 39, 0.25);
+            transform: translateY(-1px);
+        }
+        .lang-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            border-radius: 14px;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.14), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            min-width: 145px;
+            display: none;
+            z-index: 1000;
+            padding: 6px;
+        }
+        .lang-dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 0;
+            right: 0;
+            height: 18px;
+            background: transparent;
+        }
+        .lang-dropdown-box:hover .lang-dropdown-menu,
+        .lang-dropdown-box.active .lang-dropdown-menu,
+        .lang-dropdown-menu:hover {
+            display: block !important;
+        }
+        .lang-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            font-size: 13px;
+            color: #1C1917;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.15s;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .lang-item-btn:hover {
+            background: #F5ECE4;
+            color: #8C4A27;
         }
 
         .auth-main-section {
@@ -64,13 +185,14 @@
         .banner-heading { font-size: 32px; font-weight: 900; line-height: 1.25; margin-bottom: 16px; }
         .banner-sub { font-size: 14px; color: #dcd3c9; line-height: 1.6; margin-bottom: 20px; }
 
-        .auth-card-glass {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(28px);
-            border-radius: 14px;
-            border: 1.5px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
-            padding: 30px;
+        .auth-card-glass, .auth-box, .auth-form-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(32px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(103%);
+            border-radius: 24px;
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 24px 60px rgba(45, 24, 15, 0.18), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: 34px;
         }
         .auth-card-title {
             font-size: 20px; font-weight: 900; color: #1C1917; margin-bottom: 8px;
@@ -84,104 +206,67 @@
         .form-group { margin-bottom: 12px; }
         .form-input-wrap {
             display: flex; align-items: center;
-            border: 1px solid #dcd7ce; border-radius: 8px;
-            background: #ffffff; padding: 0 12px; transition: 0.2s;
+            border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            padding: 0 14px; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .form-input-wrap:focus-within {
+            background: #ffffff;
             border-color: var(--color-fire);
-            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.12);
+            box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.14);
         }
         .input-icon { color: #78716C; font-size: 14px; width: 18px; }
         .auth-input {
-            width: 100%; border: none; outline: none; padding: 11px 8px;
+            width: 100%; border: none; outline: none; padding: 12px 8px;
             font-size: 13.5px; font-family: inherit; color: #1C1917; background: transparent;
+            border-radius: 12px;
         }
         .field-err { color: #dc2626; font-size: 11px; margin-top: 2px; }
 
-        .btn-submit-shopee {
-            background: var(--color-fire); color: white; border: none;
-            border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 800;
-            width: 100%; cursor: pointer; box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35);
-            transition: all 0.2s; margin-top: 8px; text-transform: uppercase;
+        .btn-submit-shopee, .btn-auth-primary {
+            background: linear-gradient(135deg, #8C4A27 0%, #6B3416 100%);
+            color: white; border: 1.5px solid rgba(255, 255, 255, 0.35);
+            border-radius: 9999px; padding: 14px; font-size: 15px; font-weight: 800;
+            width: 100%; cursor: pointer; box-shadow: 0 6px 20px rgba(140, 74, 39, 0.32), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.4);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); margin-top: 10px; text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .btn-submit-shopee:hover {
-            background: var(--color-fire-hover);
+        .btn-submit-shopee:hover, .btn-auth-primary:hover {
+            background: linear-gradient(135deg, #733615 0%, #52270f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 26px rgba(140, 74, 39, 0.45);
+        }
+        .btn-submit-shopee:active, .btn-auth-primary:active {
+            transform: scale(0.97);
         }
 
         .auth-footer {
             background: #25160d; color: #b7b0a5; padding: 20px 0; font-size: 12px; text-align: center;
         }
     
-        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
-        .lang-dropdown-box {
-            position: relative;
-            display: inline-block;
-        }
-        .lang-trigger-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            font-weight: 700;
-            color: #292524;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: all 0.15s ease;
-        }
-        .lang-trigger-btn:hover {
-            color: #8C4A27;
-            background: rgba(140, 74, 39, 0.08);
-        }
-        .lang-dropdown-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: #ffffff;
-            border-radius: 4px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            border: 1px solid #E8DEC8;
-            min-width: 145px;
-            display: none;
-            z-index: 1000;
-            padding: 6px 0;
-        }
-        .lang-dropdown-box:hover .lang-dropdown-menu {
-            display: block;
-        }
-        .lang-item-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            font-size: 13px;
-            color: #1C1917;
-            cursor: pointer;
-            transition: background 0.15s;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        .lang-item-btn:hover {
-            background: #F5ECE4;
-            color: #8C4A27;
-        }
-
     </style>
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 </head>
 <body>
 
+    <!-- HEADER AUTH -->
     <header class="auth-header">
         <div class="container header-inner">
             <div class="brand-box">
                 <a th:href="@{/}">
                     <img th:src="@{/images/logo-books.png}" alt="Logo Books" class="brand-img">
                 </a>
-                <span class="auth-page-title">Đăng Ký Tài Khoản</span>
+                <span class="auth-page-title">Đăng Ký</span>
             </div>
-            <a th:href="@{/login}" style="font-size:13px; font-weight:700; color:var(--color-fire);">
-                Đã có tài khoản? Đăng nhập ngay &gt;
-            </a>
-        </div>
-        <div style="position:absolute; top:12px; right:30px;">
+
+            <div class="header-right-actions">
+                <a th:href="@{/login}" class="auth-help-link">
+                    <span>Đã có tài khoản? Đăng nhập ngay</span>
+                    <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+
                 <div class="lang-dropdown-box">
                     <div class="lang-trigger-btn" id="currentLangLabel">
                         <i class="fa-solid fa-globe"></i>
@@ -197,8 +282,9 @@
                         </div>
                     </div>
                 </div>
-</div>
-</header>
+            </div>
+        </div>
+    </header>
 
     <main class="auth-main-section">
         <div class="container">
@@ -216,7 +302,7 @@
                     </div>
                 </div>
 
-                <div class="auth-card-glass">
+                <div class="auth-card-glass auth-box auth-form-card">
                     <div class="auth-card-title">ĐĂNG KÝ TÀI KHOẢN</div>
                     <p style="font-size:12.5px; color:#78716C; margin-bottom: 16px;">
                         Mã OTP xác thực sẽ được gửi tới Email của bạn.
@@ -272,7 +358,7 @@
                             <div class="field-err" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
                         </div>
 
-                        <button type="submit" class="btn-submit-shopee">
+                        <button type="submit" class="btn-submit-shopee btn-auth-primary">
                             ĐĂNG KÝ &amp; NHẬN MÃ OTP
                         </button>
                     </form>
@@ -288,7 +374,7 @@
 
     <footer class="auth-footer">
         <div class="container">
-            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+            <p>© 2026 Quản lý chuỗi cửa hàng sách cũ</p>
         </div>
     </footer>
     <script src="/js/i18n.js"></script>

@@ -30,7 +30,7 @@ public class AdminReportController {
     /**
      * Dashboard Quản Trị Hệ Thống & Báo Cáo Doanh Thu Trực Quan Với Chart.js
      */
-    @GetMapping({"/dashboard", "/reports", "/analytics"})
+    @GetMapping({"", "/", "/dashboard", "/reports", "/analytics"})
     public String dashboard(
             @RequestParam(name = "year", required = false) Integer yearParam,
             Model model

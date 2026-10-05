@@ -132,13 +132,17 @@ public class Book {
     public String getPrimaryImageUrl() {
         if (images != null && !images.isEmpty()) {
             for (BookImage img : images) {
-                if (Boolean.TRUE.equals(img.getIsPrimary()) && img.getImageUrl() != null && !img.getImageUrl().isBlank()) {
+                if (img != null && Boolean.TRUE.equals(img.getIsPrimary()) && img.getImageUrl() != null && !img.getImageUrl().isBlank()) {
                     return img.getImageUrl();
                 }
             }
-            return images.get(0).getImageUrl();
+            for (BookImage img : images) {
+                if (img != null && img.getImageUrl() != null && !img.getImageUrl().isBlank()) {
+                    return img.getImageUrl();
+                }
+            }
         }
-        return "/images/books/book-" + id + ".jpg";
+        return id != null ? "/images/books/book_" + id + ".jpg" : "/images/books/book_1.jpg";
     }
 
     /**
@@ -152,5 +156,29 @@ public class Book {
             }
         }
         return 0;
+    }
+
+    /**
+     * Ghi chú cho Cường: Lấy mức giá thấp nhất của cuốn sách (tương ứng phiên bản Sách cũ tiết kiệm - 85% giá chuẩn).
+     * Dùng để hiển thị ở ngoài danh sách (Storefront / Category card) theo đúng tiêu chuẩn sàn TMĐT (Shopee).
+     */
+    public BigDecimal getMinPrice() {
+        if (price != null) {
+            return price.multiply(new BigDecimal("0.85")).setScale(0, java.math.RoundingMode.HALF_UP);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * Ghi chú cho Cường: Tính toán mức phần trăm giảm giá sâu nhất so với giá bìa gốc khi áp dụng phiên bản tiết kiệm.
+     */
+    public int getMaxDiscountPercent() {
+        if (originalPrice != null && originalPrice.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal minP = getMinPrice();
+            if (minP != null && originalPrice.compareTo(minP) > 0) {
+                return originalPrice.subtract(minP).multiply(new BigDecimal(100)).divide(originalPrice, 0, java.math.RoundingMode.HALF_UP).intValue();
+            }
+        }
+        return getDiscountPercent();
     }
 }

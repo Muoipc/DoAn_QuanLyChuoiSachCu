@@ -39,3 +39,6 @@ Thumbs.db
 ### Application ###
 uploads/
 *.log
+graphify-out/
+*-local.properties
+.env

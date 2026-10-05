@@ -242,7 +242,7 @@ CREATE TABLE reviews (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     book_id BIGINT NOT NULL,
-    order_id BIGINT NOT NULL,
+    order_id BIGINT NULL,
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment TEXT NOT NULL,                     -- Logic kiểm tra độ dài >= 50 ký tự
     media_url VARCHAR(500),                    -- Link ảnh hoặc video trên Cloudinary
@@ -301,6 +301,19 @@ CREATE TABLE viewed_books (
     CONSTRAINT fk_viewed_users FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_viewed_books FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- 20. BẢNG KHO VOUCHER CỦA NGƯỜI DÙNG (USER_VOUCHERS)
+CREATE TABLE user_vouchers (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    voucher_id BIGINT NOT NULL,
+    is_used TINYINT(1) NOT NULL DEFAULT 0,
+    saved_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    used_at DATETIME NULL DEFAULT NULL,
+    UNIQUE KEY uk_user_voucher (user_id, voucher_id),
+    CONSTRAINT fk_user_vouchers_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_vouchers_voucher FOREIGN KEY (voucher_id) REFERENCES vouchers(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ====================================================================
 -- DỮ LIỆU KHỞI TẠO BAN ĐẦU (SEED DATA MẪU PHỤC VỤ TEST ĐỒ ÁN)
@@ -739,7 +752,15 @@ INSERT INTO shipping_units (id, name, code, contact_phone, base_fee, estimated_d
 INSERT INTO vouchers (id, code, description, discount_type, discount_value, min_order_amount, max_discount, start_date, end_date, usage_limit, used_count, is_active) VALUES
 (1, 'SACHCU20K', 'Giảm trực tiếp 20.000đ cho đơn từ 100.000đ', 'FIXED_AMOUNT', 20000.00, 100000.00, 20000.00, '2026-09-01 00:00:00', '2026-11-30 23:59:59', 200, 15, TRUE),
 (2, 'FREESHIP50K', 'Giảm 100% phí vận chuyển cho đơn sách cũ từ 200.000đ', 'FIXED_AMOUNT', 30000.00, 20000.00, 30000.00, '2026-09-01 00:00:00', '2026-11-30 23:59:59', 100, 28, TRUE),
-(3, 'HOISINHSACH10', 'Giảm 10% tổng giá trị đơn hàng mừng ngày hội sách', 'PERCENT', 10.00, 150000.00, 50000.00, '2026-09-01 00:00:00', '2026-12-31 23:59:59', 500, 42, TRUE);
+(3, 'HOISINHSACH10', 'Giảm 10% tổng giá trị đơn hàng mừng ngày hội sách', 'PERCENT', 10.00, 150000.00, 50000.00, '2026-09-01 00:00:00', '2026-12-31 23:59:59', 500, 42, TRUE),
+(4, 'FREESHIP15K', 'Giảm 15.000đ phí vận chuyển cho đơn hàng sách cũ từ 99.000đ', 'FIXED_AMOUNT', 15000.00, 99000.00, 15000.00, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 500, 0, TRUE),
+(5, 'FREESHIP30K', 'Miễn phí giao hàng tối đa 30.000đ cho đơn từ 250.000đ toàn quốc', 'FIXED_AMOUNT', 30000.00, 250000.00, 30000.00, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 300, 0, TRUE),
+(6, 'SACHCU50K', 'Giảm trực tiếp 50.000đ cho đơn hàng mua sách cũ từ 300.000đ', 'FIXED_AMOUNT', 50000.00, 30000.00, 50000.00, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 200, 0, TRUE),
+(7, 'HOISINH20', 'Ưu đãi tái sinh tri thức: Giảm 20% tối đa 80.000đ cho đơn từ 150.000đ', 'PERCENT', 20.00, 150000.00, 80000.00, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 150, 0, TRUE),
+(8, 'TRIANVIP', 'Tri ân bạn đọc thân thiết: Giảm 15% tối đa 100.000đ cho đơn từ 200.000đ', 'PERCENT', 15.00, 200000.00, 100000.00, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 100, 0, TRUE),
+(9, 'CHAOBANMOI', 'Món quà độc giả mới: Giảm ngay 25.000đ cho đơn hàng đầu tiên từ 80.000đ', 'FIXED_AMOUNT', 25000.00, 80000.00, 25000.00, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 1000, 0, TRUE),
+(10, 'YEUSACH10', 'Giảm 10% giá trị đơn hàng cho cộng đồng yêu sách cũ từ 100.000đ', 'PERCENT', 10.00, 100000.00, 50000.00, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 500, 0, TRUE),
+(11, 'MEGA100K', 'Đại tiệc sách cũ: Giảm sốc 100.000đ cho đơn hàng giá trị cao từ 500.000đ', 'FIXED_AMOUNT', 100000.00, 500000.00, 100000.00, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 50, 0, TRUE);
 
 -- 11. Nạp đơn hàng mẫu (Đủ 6 trạng thái đơn hàng)
 INSERT INTO orders (id, order_code, user_id, store_id, shipping_unit_id, shipper_id, voucher_id, receiver_name, receiver_phone, receiver_address, delivery_method, payment_method, payment_status, order_status, subtotal, shipping_fee, discount_amount, final_amount, customer_notes, created_at) VALUES
@@ -773,3 +794,11 @@ INSERT INTO wishlists (user_id, book_id) VALUES
 INSERT INTO viewed_books (user_id, book_id) VALUES
 (4, 1), (4, 2), (4, 4), (4, 6),
 (5, 3), (5, 4), (5, 7);
+
+-- 16. Nạp kho voucher mẫu cho người dùng (user_vouchers)
+INSERT INTO user_vouchers (user_id, voucher_id, is_used, saved_at, used_at) VALUES
+(4, 1, 1, '2026-09-15 10:00:00', '2026-09-20 09:15:00'),
+(4, 4, 0, '2026-09-21 08:30:00', NULL),
+(4, 7, 0, '2026-09-22 14:20:00', NULL),
+(5, 6, 0, '2026-09-22 11:00:00', NULL),
+(5, 9, 0, '2026-09-23 09:00:00', NULL);

@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.iotstar.entity.Cart;
 import vn.iotstar.entity.CartItem;
+import vn.iotstar.entity.Inventory;
 import vn.iotstar.security.CustomUserDetails;
 import vn.iotstar.service.ICartService;
+import vn.iotstar.repository.InventoryRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,6 +34,13 @@ public class CartController {
 
     @Autowired
     private ICartService cartService;
+
+    @Autowired
+    private vn.iotstar.repository.VoucherRepository voucherRepository;
+
+    /** Repository tồn kho — dùng để kiểm tra số lượng có sẵn trước khi thêm giỏ hàng */
+    @Autowired
+    private InventoryRepository inventoryRepository;
 
     /**
      * Xác định userId của phiên hiện tại: ưu tiên tài khoản đã đăng nhập Spring Security.
@@ -66,11 +75,14 @@ public class CartController {
                 .mapToInt(CartItem::getQuantity)
                 .sum();
 
+        List<vn.iotstar.entity.Voucher> vouchers = voucherRepository.findByIsActiveTrue();
+
         model.addAttribute("cart", cart);
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("totalSavings", totalSavings);
         model.addAttribute("totalQuantity", totalQuantity);
+        model.addAttribute("vouchers", vouchers);
         model.addAttribute("isGuestMode", userDetails == null);
         model.addAttribute("pageTitle", "Giỏ Hàng (" + totalQuantity + " cuốn sách) - Chuỗi Sách Cũ");
 
@@ -78,7 +90,10 @@ public class CartController {
     }
 
     /**
-     * Thêm sách cũ vào giỏ hàng.
+     * Thêm sách cũ vào giỏ hàng hoặc Mua Ngay.
+     * Ghi chú cho Cường:
+     * - Nếu action là "buy_now" hoặc "buynow": Điều hướng thẳng đến trang /checkout kèm param buyNow=true, bookId, storeId, quantity mà không lưu vào giỏ hàng CSDL.
+     * - Nếu action là thêm vào giỏ thông thường: Gọi cartService.addToCart và quay lại trang chi tiết sách.
      * URL: POST /cart/add
      */
     @PostMapping("/add")
@@ -90,12 +105,13 @@ public class CartController {
             @RequestParam(value = "action", defaultValue = "add") String action,
             RedirectAttributes redirectAttributes) {
 
+        // Tính năng Mua Ngay (Direct Buy Now / Instant Checkout): Không lưu CSDL cart, chuyển hướng ngay đến checkout
+        if ("buy_now".equalsIgnoreCase(action) || "buynow".equalsIgnoreCase(action)) {
+            return "redirect:/checkout?buyNow=true&bookId=" + bookId + "&storeId=" + storeId + "&quantity=" + quantity;
+        }
+
         Long userId = resolveUserId(userDetails);
         cartService.addToCart(userId, bookId, storeId, quantity);
-
-        if ("buynow".equalsIgnoreCase(action)) {
-            return "redirect:/cart";
-        }
 
         redirectAttributes.addFlashAttribute("successMessage", "Đã thêm sách vào giỏ hàng thành công!");
         return "redirect:/books/" + bookId;
@@ -128,6 +144,19 @@ public class CartController {
     }
 
     /**
+     * Xóa toàn bộ sản phẩm khỏi giỏ hàng.
+     * URL: GET/POST /cart/clear
+     */
+    @RequestMapping(value = "/clear", method = {RequestMethod.GET, RequestMethod.POST})
+    public String clearCart(@AuthenticationPrincipal CustomUserDetails userDetails, RedirectAttributes redirectAttributes) {
+        Long userId = resolveUserId(userDetails);
+        Cart cart = cartService.getOrCreateCartForUser(userId);
+        cartService.clearCart(cart.getId());
+        redirectAttributes.addFlashAttribute("successMessage", "Đã xóa toàn bộ sản phẩm khỏi giỏ hàng!");
+        return "redirect:/cart";
+    }
+
+    /**
      * API AJAX lấy số lượng sách hiện có trong giỏ hàng để cập nhật Badge đỏ cam trên Header.
      * URL: GET /cart/api/count
      */
@@ -137,6 +166,34 @@ public class CartController {
         Long userId = resolveUserId(userDetails);
         int count = cartService.getCartTotalCount(userId);
         return ResponseEntity.ok(Map.of("count", count, "success", true));
+    }
+
+    /**
+     * API AJAX thêm sách vào giỏ hàng phục vụ hiệu ứng bay vào giỏ hàng không tải lại trang.
+     * URL: POST /cart/api/add
+     */
+    @PostMapping("/api/add")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> addToCartAjax(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam("bookId") Long bookId,
+            @RequestParam(value = "storeId", defaultValue = "1") Long storeId,
+            @RequestParam(value = "quantity", defaultValue = "1") int quantity) {
+        Long userId = resolveUserId(userDetails);
+
+        // Kiểm tra tồn kho: tổng số lượng có sẵn tại tất cả chi nhánh
+        List<Inventory> inventories = inventoryRepository.findByBookId(bookId);
+        int totalStock = inventories.stream().mapToInt(Inventory::getQuantity).sum();
+        if (totalStock > 0 && quantity > totalStock) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "success", false,
+                "message", "Số lượng vượt quá tồn kho! Chỉ còn " + totalStock + " sản phẩm có sẵn."
+            ));
+        }
+
+        cartService.addToCart(userId, bookId, storeId, quantity);
+        int newTotal = cartService.getCartTotalCount(userId);
+        return ResponseEntity.ok(Map.of("count", newTotal, "success", true, "message", "Đã thêm vào giỏ hàng thành công!"));
     }
 
     /**

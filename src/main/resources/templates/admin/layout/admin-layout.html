@@ -5,54 +5,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:replace="${title}">Admin Dashboard - Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
-    
-    <!-- Google Fonts: Roboto (Đồng bộ tuyệt đối với thiết kế nguyên bản client Shopee / Sách cũ) -->
+    <title th:replace="${title}">Admin Dashboard - Chuỗi Sách Cũ HCMUTE</title>
+
+    <!-- Google Fonts: Be Vietnam Pro (Đồng bộ tuyệt đối giao diện khách hàng) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         /* =====================================================================
-           COLOR IDENTITY & DESIGN TOKENS (ĐỒNG BỘ 100% VỚI BẢN THIẾT KẾ GỐC)
+           HỆ MÀU SÁCH CŨ ẤM ÁP & APPLE LIQUID GLASS TOKENS
            ===================================================================== */
         :root {
-            --color-fire: #8C4A27;
-            --color-fire-hover: #733615;
-            --color-fire-deep: #d83a1e;
-            --color-fire-light: #F5ECE4;
-            
-            --color-trust-green: #007a57;
-            --color-trust-bg: #e6f7f0;
-            
-            --color-discount-gold: #ffbe00;
-            --color-gold-text: #b7791f;
+            /* Tông Sách Cũ Sepia & Giấy Mộc */
+            --admin-paper-bg: #FAF6F0;
+            --admin-body-bg: #FAF6F0;
+            --admin-text-main: #2D180F;
+            --admin-text-secondary: #6B5E55;
+            --admin-text-muted: #8F8175;
 
-            --color-bg-body: #F8F5EE;
-            --color-card-bg: #ffffff;
-            
-            --color-text-main: #1C1917;
-            --color-text-secondary: #44403C;
-            --color-text-light: #78716C;
-            --color-border: #E8DEC8;
-            --color-border-subtle: rgba(45, 24, 15, 0.08);
-            --color-shadow-card: 0 4px 20px -2px rgba(45, 24, 15, 0.06);
-            --color-shadow-hover: 0 8px 24px rgba(45, 24, 15, 0.12);
+            /* Nâu Da Thuộc & Đậm Đà Gỗ Cổ */
+            --admin-primary: #8C4A27;
+            --admin-primary-dark: #683418;
+            --admin-primary-hover: #A2562E;
+            --admin-primary-light: #F5ECE4;
+            --admin-primary-subtle: rgba(140, 74, 39, 0.08);
 
-            --radius-sm: 4px;
-            --radius-md: 10px;
-            --radius-lg: 16px;
+            /* Điểm Nhấn Shopee Cam Đỏ & Vàng Vintage */
+            --admin-accent-shopee: #EE4D2D;
+            --admin-accent-shopee-dark: #D73211;
+            --admin-accent-shopee-glow: rgba(238, 77, 45, 0.35);
+            --admin-accent-gold: #D4AF37;
+            --admin-accent-gold-soft: #F9E7B3;
 
-            /* Admin Vintage Espresso Palette */
-            --admin-sidebar-bg: #22120a;
-            --admin-sidebar-gradient: linear-gradient(180deg, #27140b 0%, #150b05 100%);
-            --admin-sidebar-active: #8C4A27;
-            --admin-sidebar-hover: rgba(140, 74, 39, 0.22);
+            /* Gradient Gỗ Gụ Cổ Điển Dành Cho Sidebar */
+            --admin-wood-dark: #2D180F;
+            --admin-wood-black: #1A0D07;
+            --admin-sidebar-text: #DCD0C0;
+            --admin-sidebar-heading: #C5A880;
+
+            /* Apple Liquid Glass Tokens */
+            --glass-bg: rgba(250, 246, 240, 0.82);
+            --glass-bg-card: rgba(255, 255, 255, 0.88);
+            --glass-bg-subtle: rgba(250, 246, 240, 0.65);
+            --glass-border: 1px solid rgba(232, 222, 200, 0.7);
+            --glass-border-strong: 1px solid rgba(215, 200, 175, 0.85);
+            --glass-blur: blur(24px) saturate(180%);
+            --glass-shadow: 0 10px 30px rgba(45, 24, 15, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            --glass-shadow-hover: 0 16px 36px rgba(45, 24, 15, 0.09), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+            --glass-shadow-dropdown: 0 18px 45px rgba(45, 24, 15, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+
+            /* Bo góc Squircle */
+            --squircle-sm: 8px;
+            --squircle-md: 10px;
+            --squircle-lg: 14px;
+            --squircle-pill: 9999px;
         }
 
         * {
@@ -60,141 +72,149 @@
         }
 
         body {
-            font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-            background-color: var(--color-bg-body);
-            color: var(--color-text-main);
-            font-size: 14px;
-            line-height: 1.45;
+            font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--admin-body-bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(238, 77, 45, 0.025) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(140, 74, 39, 0.035) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(212, 175, 55, 0.015) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--admin-text-main);
             margin: 0;
             padding: 0;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-            transition: color 0.15s ease, opacity 0.15s ease;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* =====================================================================
-           APPLE LIQUID GLASS EFFECTS (HIỆU ỨNG THỦY TINH MỜ ĐẶC TRƯNG)
-           ===================================================================== */
-        .liquid-glass-card {
-            background: rgba(255, 255, 255, 0.94);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--color-border);
-            box-shadow: var(--color-shadow-card);
-            border-radius: var(--radius-md);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .liquid-glass-card:hover {
-            box-shadow: var(--color-shadow-hover);
-        }
-
-        .liquid-sheen {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .liquid-sheen::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -120%;
-            width: 60%;
-            height: 100%;
-            background: linear-gradient(
-                105deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.05) 30%,
-                rgba(255, 255, 255, 0.4) 50%,
-                rgba(255, 255, 255, 0.05) 70%,
-                transparent 100%
-            );
-            transform: skewX(-22deg);
-            transition: left 0.85s cubic-bezier(0.19, 1, 0.22, 1);
-            pointer-events: none;
-        }
-
-        .liquid-sheen:hover::after {
-            left: 140%;
-        }
-
-        /* =====================================================================
-           SIDEBAR VINTAGE ESPRESSO GLASS (THANH ĐIỀU HƯỚNG QUẢN TRỊ CAO CẤP)
+           1. SIDEBAR (GỖ GỤ CỔ ĐIỂN & VỆT SÁNG SHOPEE CAM ĐỎ)
            ===================================================================== */
         #adminSidebar {
-            width: 260px;
+            width: 270px;
             min-height: 100vh;
-            background: var(--admin-sidebar-gradient);
+            background: linear-gradient(180deg, var(--admin-wood-dark) 0%, #1E100A 40%, var(--admin-wood-black) 100%);
             border-right: 1px solid rgba(232, 222, 200, 0.12);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 4px 0 25px rgba(26, 13, 7, 0.25);
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1040;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #adminSidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        #adminSidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #adminSidebar::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 10px;
+        }
+
+        #adminSidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 175, 55, 0.4);
         }
 
         #adminSidebar.collapsed {
-            margin-left: -260px;
+            margin-left: -270px;
         }
 
         .sidebar-brand {
-            padding: 18px 20px;
+            padding: 22px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(0, 0, 0, 0.15);
+            gap: 13px;
+            border-bottom: 1px solid rgba(232, 222, 200, 0.12);
+            text-decoration: none;
+            color: #ffffff;
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
         }
 
-        .sidebar-brand-img {
-            height: 40px;
-            width: auto;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
-            border-radius: 4px;
+        .sidebar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 20px;
+            right: 20px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.35), transparent);
+        }
+
+        .sidebar-brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--squircle-md);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(140, 74, 39, 0.35) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--admin-accent-gold);
+            font-size: 20px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .sidebar-brand:hover .sidebar-brand-icon {
+            transform: scale(1.06) rotate(-3deg);
+            border-color: rgba(212, 175, 55, 0.75);
+            color: #FFE58F;
         }
 
         .sidebar-brand-text h5 {
             margin: 0;
-            font-size: 15px;
-            font-weight: 900;
-            color: #ffffff;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
+            font-size: 15.5px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            background: linear-gradient(135deg, #FFF9EB 0%, #F5D38A 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
         }
 
-        .sidebar-portal-badge {
-            background: var(--color-fire-deep);
-            color: #ffffff;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 2px 7px;
-            border-radius: 3px;
+        .sidebar-brand-text small {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--admin-sidebar-heading);
+            letter-spacing: 0.6px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: inline-block;
+            display: block;
             margin-top: 2px;
+            opacity: 0.85;
         }
 
         .sidebar-menu {
-            padding: 14px 0 28px;
+            padding: 14px 0 24px;
             list-style: none;
             margin: 0;
+            flex: 1;
         }
 
         .sidebar-heading {
-            font-size: 11px;
+            font-size: 10.5px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #b0a495;
+            letter-spacing: 1.2px;
+            color: var(--admin-sidebar-heading);
             padding: 14px 22px 6px;
-            font-weight: 800;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             opacity: 0.85;
+        }
+
+        .sidebar-item {
+            margin: 2px 10px;
         }
 
         .sidebar-item a {
@@ -202,54 +222,69 @@
             align-items: center;
             gap: 13px;
             padding: 10px 16px;
-            margin: 2px 12px;
-            color: #ded6cb;
+            color: var(--admin-sidebar-text);
             text-decoration: none;
             font-size: 13.5px;
             font-weight: 500;
-            border-radius: 6px;
-            transition: all 0.18s ease;
+            border-radius: var(--squircle-md);
+            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 3.5px solid transparent;
+            position: relative;
         }
 
         .sidebar-item a i {
             width: 20px;
             text-align: center;
             font-size: 15px;
-            color: #e2b189;
-            transition: transform 0.2s ease;
+            color: #AFA193;
+            transition: color 0.2s, transform 0.2s;
+            flex-shrink: 0;
         }
 
         .sidebar-item a:hover {
-            background: var(--admin-sidebar-hover);
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            color: #FFFFFF;
+            transform: translateX(3px);
         }
 
         .sidebar-item a:hover i {
-            transform: scale(1.1);
-            color: #ffbe00;
+            color: var(--admin-accent-shopee);
+            transform: scale(1.12);
         }
 
         .sidebar-item.active a {
-            background: linear-gradient(90deg, #8C4A27 0%, #a45831 100%);
-            color: #ffffff;
-            font-weight: 700;
-            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.45);
+            background: linear-gradient(90deg, rgba(238, 77, 45, 0.25) 0%, rgba(238, 77, 45, 0.06) 100%);
+            color: #FFFFFF;
+            border-left-color: var(--admin-accent-shopee);
+            font-weight: 600;
+            box-shadow: inset 0 0 16px rgba(238, 77, 45, 0.15);
         }
 
         .sidebar-item.active a i {
-            color: #ffffff;
+            color: var(--admin-accent-shopee);
+            filter: drop-shadow(0 0 6px var(--admin-accent-shopee-glow));
+        }
+
+        .sidebar-footer-info {
+            padding: 14px 18px;
+            margin: 12px;
+            border-radius: var(--squircle-md);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(232, 222, 200, 0.08);
+            font-size: 11px;
+            color: #AFA193;
+            text-align: center;
         }
 
         /* =====================================================================
-           MAIN CONTENT WRAPPER & TOP NAVBAR (FROSTED LIQUID GLASS)
+           2. MAIN WRAPPER & TOP NAVBAR (APPLE LIQUID GLASS)
            ===================================================================== */
         #adminMain {
-            margin-left: 260px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-left: 270px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background-color: var(--color-bg-body);
         }
 
         #adminMain.expanded {
@@ -257,394 +292,402 @@
         }
 
         .admin-navbar {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border-bottom: 1px solid var(--color-border);
-            padding: 10px 28px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: var(--glass-border);
+            box-shadow: 0 4px 20px rgba(45, 24, 15, 0.035), inset 0 1px 1px rgba(255, 255, 255, 0.85);
+            padding: 12px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 1030;
-            box-shadow: 0 2px 14px rgba(45, 24, 15, 0.04);
         }
 
         .navbar-toggle-btn {
-            background: #faf8f5;
-            border: 1px solid #dcd7ce;
-            color: var(--color-text-main);
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(232, 222, 200, 0.85);
+            color: var(--admin-text-main);
             font-size: 15px;
-            border-radius: 6px;
-            padding: 6px 12px;
+            border-radius: var(--squircle-md);
+            padding: 7px 12px;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .navbar-toggle-btn:hover {
-            background: var(--color-fire-light);
-            border-color: var(--color-fire);
-            color: var(--color-fire);
+            background: #FFFFFF;
+            color: var(--admin-accent-shopee);
+            border-color: rgba(238, 77, 45, 0.4);
+            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.15);
         }
 
-        .store-status-pill {
-            background: var(--color-fire-light);
-            border: 1px solid var(--color-border);
-            color: var(--color-fire);
-            font-weight: 700;
-            font-size: 12.5px;
-            border-radius: 20px;
-            padding: 5px 14px;
+        .branch-badge {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(232, 222, 200, 0.8);
+            border-radius: var(--squircle-pill);
+            padding: 6px 14px;
+            font-size: 13px;
+            color: var(--admin-text-main);
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.03);
         }
 
-        .store-status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--color-trust-green);
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 0 2px rgba(0, 122, 87, 0.2);
-        }
-
-        .btn-view-store {
-            background: #ffffff;
-            border: 1px solid #dcd7ce;
-            color: var(--color-text-main);
-            border-radius: 20px;
-            padding: 5px 14px;
-            font-size: 12.5px;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(232, 222, 200, 0.8);
+            color: var(--admin-text-main);
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
             transition: all 0.2s ease;
         }
 
-        .btn-view-store:hover {
-            background: var(--color-fire-light);
-            border-color: var(--color-fire);
-            color: var(--color-fire);
+        .glass-btn:hover, .glass-btn:focus {
+            background: #FFFFFF;
+            border-color: rgba(140, 74, 39, 0.35);
+            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.08), inset 0 1px 1px rgba(255, 255, 255, 1);
+            color: var(--admin-primary);
         }
 
-        .btn-notif-bell {
-            background: #FAF6F0;
-            border: 1px solid #dcd7ce;
-            color: var(--color-text-main);
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.15s;
+        .notif-pulse {
+            animation: pulse-dot 1.8s infinite;
         }
 
-        .btn-notif-bell:hover {
-            border-color: var(--color-fire);
-            color: var(--color-fire);
-            background: #ffffff;
+        @keyframes pulse-dot {
+            0% { transform: translate(-50%, -50%) scale(0.95); box-shadow: 0 0 0 0 rgba(238, 77, 45, 0.7); }
+            70% { transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 0 6px rgba(238, 77, 45, 0); }
+            100% { transform: translate(-50%, -50%) scale(0.95); box-shadow: 0 0 0 0 rgba(238, 77, 45, 0); }
         }
 
-        .notif-badge-bubble {
-            position: absolute;
-            top: -3px;
-            right: -3px;
-            background: var(--color-fire-deep);
-            color: #ffffff;
-            font-size: 10px;
-            font-weight: 800;
-            border-radius: 10px;
-            padding: 1px 5px;
-            border: 2px solid #ffffff;
+        /* Menu Dropdown Kính Mờ */
+        .glass-dropdown-menu {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(232, 222, 200, 0.85);
+            border-radius: var(--squircle-lg);
+            box-shadow: var(--glass-shadow-dropdown);
+            padding: 8px;
         }
 
-        .user-menu-pill {
-            background: #FAF6F0;
-            border: 1px solid #dcd7ce;
-            color: var(--color-text-main);
-            border-radius: 20px;
-            padding: 4px 14px 4px 6px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+        .glass-dropdown-menu .dropdown-item {
+            border-radius: var(--squircle-sm);
+            padding: 8px 12px;
             font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.15s;
+            color: var(--admin-text-main);
+            transition: all 0.15s ease;
         }
 
-        .user-menu-pill:hover {
-            border-color: var(--color-fire);
-            background: #ffffff;
+        .glass-dropdown-menu .dropdown-item:hover {
+            background: rgba(140, 74, 39, 0.08);
+            color: var(--admin-primary);
         }
 
-        .user-avatar-mini {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid var(--color-border);
+        .glass-dropdown-menu .dropdown-item.text-danger:hover {
+            background: rgba(238, 77, 45, 0.08);
+            color: var(--admin-accent-shopee) !important;
         }
 
+        /* =====================================================================
+           3. COMPONENTS (CARD, NÚT BẤM, BẢNG BIỂU, INPUT, BADGE, MODAL)
+           ===================================================================== */
         .admin-content-body {
             padding: 28px;
             flex: 1;
         }
 
-        /* =====================================================================
-           CARDS & SURFACES (ĐỒNG BỘ NGUYÊN BẢN VINTAGE BOOKSTORE)
-           ===================================================================== */
+        /* Card Custom - Apple Liquid Glass */
         .card-custom {
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: var(--color-shadow-card);
+            border: var(--glass-border);
+            border-radius: var(--squircle-lg);
+            background: var(--glass-bg-card);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: var(--glass-shadow);
             margin-bottom: 24px;
-            overflow: hidden;
-            transition: box-shadow 0.2s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
         }
 
         .card-custom:hover {
-            box-shadow: var(--color-shadow-hover);
+            box-shadow: var(--glass-shadow-hover);
+            border-color: rgba(215, 195, 168, 0.9);
         }
 
         .card-custom .card-header {
-            background: #FAF6F0;
-            border-bottom: 1px solid var(--color-border);
-            padding: 15px 22px;
-            font-weight: 800;
-            font-size: 14.5px;
-            color: var(--color-text-main);
-            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            background: var(--glass-bg-subtle);
+            border-bottom: 1px solid rgba(232, 222, 200, 0.65);
+            padding: 16px 22px;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--admin-text-main);
+            border-radius: var(--squircle-lg) var(--squircle-lg) 0 0;
             display: flex;
             align-items: center;
-            justify-content: space-between;
         }
 
-        /* =====================================================================
-           BUTTONS & ACTIONS (VINTAGE TERRA COTTA / FIRE IDENTITY)
-           ===================================================================== */
+        /* Nút Bấm Chủ Đề Sách Cũ & Shopee */
         .btn-theme {
-            background-color: var(--color-fire);
-            color: #ffffff;
-            border: none;
-            font-weight: 700;
-            font-size: 13.5px;
-            padding: 9px 18px;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(140, 74, 39, 0.25);
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .btn-theme:hover {
-            background-color: var(--color-fire-hover);
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.35);
-        }
-
-        .btn-outline-theme, .btn-outline-secondary {
-            background: #ffffff;
-            border: 1px solid #dcd7ce;
-            color: var(--color-text-main);
+            background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
+            color: #ffffff !important;
+            border: 1px solid rgba(104, 52, 24, 0.6);
             font-weight: 600;
-            font-size: 13.5px;
-            padding: 8px 16px;
-            border-radius: 6px;
-            transition: all 0.15s ease;
+            border-radius: var(--squircle-md);
+            padding: 8px 18px;
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .btn-outline-theme:hover, .btn-outline-secondary:hover {
-            background: var(--color-fire-light);
-            border-color: var(--color-fire);
-            color: var(--color-fire);
+        .btn-theme:hover, .btn-theme:focus {
+            background: linear-gradient(135deg, var(--admin-primary-hover) 0%, var(--admin-primary) 100%);
+            box-shadow: 0 6px 16px rgba(140, 74, 39, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn-shopee {
+            background: linear-gradient(135deg, var(--admin-accent-shopee) 0%, var(--admin-accent-shopee-dark) 100%);
+            color: #ffffff !important;
+            border: 1px solid var(--admin-accent-shopee-dark);
+            font-weight: 600;
+            border-radius: var(--squircle-md);
+            padding: 8px 18px;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-shopee:hover, .btn-shopee:focus {
+            background: linear-gradient(135deg, #FF6447 0%, var(--admin-accent-shopee) 100%);
+            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-theme {
+            border: 1.5px solid var(--admin-primary);
+            color: var(--admin-primary) !important;
+            background: transparent;
+            font-weight: 600;
+            border-radius: var(--squircle-md);
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline-theme:hover {
+            background: var(--admin-primary);
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);
+        }
+
+        .btn {
+            border-radius: var(--squircle-md);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline-secondary {
+            border-color: rgba(215, 200, 180, 0.9);
+            color: var(--admin-text-secondary);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-outline-secondary:hover {
+            background: #FFFFFF;
+            border-color: var(--admin-primary);
+            color: var(--admin-primary);
         }
 
         .btn-dark {
-            background: #292524;
-            color: #ffffff;
-            border: none;
-            font-weight: 700;
-            border-radius: 6px;
-            transition: background 0.15s ease;
+            background: linear-gradient(135deg, #2D180F 0%, #1A0D07 100%);
+            border-color: #1A0D07;
+            box-shadow: 0 3px 10px rgba(45, 24, 15, 0.2);
         }
 
         .btn-dark:hover {
-            background: #1C1917;
-            color: #ffffff;
+            background: linear-gradient(135deg, #3D2216 0%, #2D180F 100%);
+            border-color: #2D180F;
         }
 
-        .btn-success {
-            background: var(--color-trust-green);
-            border: none;
-            font-weight: 700;
-            border-radius: 6px;
-        }
-
-        .btn-success:hover {
-            background: #006044;
-            color: #ffffff;
-        }
-
-        /* =====================================================================
-           FORM CONTROLS (INPUTS, SELECTS, TEXTAREAS)
-           ===================================================================== */
-        .form-label {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--color-text-main);
-            margin-bottom: 6px;
-        }
-
+        /* Form Controls */
         .form-control, .form-select {
-            background-color: #faf8f5;
-            border: 1px solid #dcd7ce;
-            color: var(--color-text-main);
-            border-radius: 6px;
+            border: 1px solid rgba(215, 200, 180, 0.85);
+            background-color: rgba(255, 255, 255, 0.92);
+            border-radius: var(--squircle-md);
+            color: var(--admin-text-main);
             font-size: 13.5px;
-            padding: 9px 13px;
-            transition: all 0.2s ease;
+            padding: 8px 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .form-control:focus, .form-select:focus {
-            background-color: #ffffff;
-            border-color: var(--color-fire);
-            box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.14);
-            color: var(--color-text-main);
-            outline: none;
+            border-color: var(--admin-primary);
+            box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.16);
+            background-color: #FFFFFF;
+            color: var(--admin-text-main);
         }
 
         .input-group-text {
-            background-color: #faf8f5;
-            border: 1px solid #dcd7ce;
-            color: var(--color-text-secondary);
+            border: 1px solid rgba(215, 200, 180, 0.85);
+            background-color: rgba(250, 246, 240, 0.85);
+            color: var(--admin-text-secondary);
+            border-radius: var(--squircle-md);
         }
 
-        /* =====================================================================
-           TABLES & LISTS (GIAO DIỆN BẢNG VINTAGE PARCHMENT)
-           ===================================================================== */
+        /* Bảng Biểu (.table, .table-custom) */
         .table {
-            color: var(--color-text-main);
-            margin-bottom: 0;
+            color: var(--admin-text-main);
+            border-color: rgba(232, 222, 200, 0.6);
         }
 
         .table thead th {
-            background-color: #F5ECE4 !important;
-            color: #1C1917 !important;
-            font-weight: 800;
+            background-color: rgba(246, 239, 230, 0.85);
+            color: var(--admin-text-main);
+            font-weight: 700;
             font-size: 12.5px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--color-border) !important;
-            border-top: none;
-            padding: 13px 14px;
-            vertical-align: middle;
+            letter-spacing: 0.6px;
+            border-bottom: 1.5px solid rgba(232, 222, 200, 0.85);
+            padding: 12px 16px;
         }
 
         .table tbody td {
+            padding: 12px 16px;
             vertical-align: middle;
-            padding: 13px 14px;
-            border-bottom: 1px solid var(--color-border-subtle);
+            border-bottom: 1px solid rgba(232, 222, 200, 0.5);
             font-size: 13.5px;
-            color: var(--color-text-main);
         }
 
-        .table-hover tbody tr:hover td {
-            background-color: #FAF6F0 !important;
+        .table-hover tbody tr {
+            transition: background-color 0.15s ease;
         }
 
-        /* =====================================================================
-           BADGES (CHUẨN TOKENS CLIENT SHOPEE)
-           ===================================================================== */
-        .badge-cond-high {
-            background-color: var(--color-trust-bg);
-            color: var(--color-trust-green);
-            border: 1px solid #b7ebd6;
-            font-weight: 700;
+        .table-hover tbody tr:hover {
+            background-color: rgba(140, 74, 39, 0.035);
+        }
+
+        /* Badge Trạng Thái */
+        .badge {
+            border-radius: var(--squircle-sm);
+            padding: 5px 10px;
+            font-weight: 600;
             font-size: 11.5px;
-            padding: 3px 8px;
-            border-radius: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-cond-high {
+            background-color: #E8F5E9;
+            color: #1B5E20;
+            border: 1px solid rgba(76, 175, 80, 0.3);
         }
 
         .badge-cond-med {
-            background-color: #fef9c3;
-            color: #a16207;
-            border: 1px solid #fef08a;
-            font-weight: 700;
-            font-size: 11.5px;
-            padding: 3px 8px;
-            border-radius: 4px;
+            background-color: #FFF8E1;
+            color: #B78103;
+            border: 1px solid rgba(255, 193, 7, 0.35);
         }
 
-        .badge-cond-low {
-            background-color: #ffedd5;
-            color: #c2410c;
-            border: 1px solid #fed7aa;
-            font-weight: 700;
-            font-size: 11.5px;
-            padding: 3px 8px;
-            border-radius: 4px;
+        /* Modal Dialog & Content - Liquid Glass */
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(232, 222, 200, 0.85);
+            border-radius: 18px;
+            box-shadow: 0 25px 60px rgba(45, 24, 15, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+            color: var(--admin-text-main);
         }
 
-        .badge-rare {
-            background-color: #fdf4ff;
-            color: #86198f;
-            border: 1px solid #f0abfc;
-            font-weight: 700;
-            font-size: 11.5px;
-            padding: 3px 8px;
-            border-radius: 4px;
+        .modal-header {
+            border-bottom: 1px solid rgba(232, 222, 200, 0.7);
+            background: var(--glass-bg-subtle);
+            border-radius: 18px 18px 0 0;
+            padding: 18px 24px;
         }
 
-        /* =====================================================================
-           PAGINATION & BREADCRUMBS
-           ===================================================================== */
+        .modal-footer {
+            border-top: 1px solid rgba(232, 222, 200, 0.7);
+            background: var(--glass-bg-subtle);
+            border-radius: 0 0 18px 18px;
+            padding: 14px 24px;
+        }
+
+        /* Phân Trang (Pagination) */
+        .pagination {
+            gap: 4px;
+        }
+
         .page-link {
-            color: var(--color-text-main);
-            background-color: #faf8f5;
-            border: 1px solid #dcd7ce;
-            padding: 8px 14px;
-            font-weight: 600;
+            border-radius: var(--squircle-sm) !important;
+            border: 1px solid rgba(232, 222, 200, 0.8);
+            background-color: rgba(255, 255, 255, 0.8);
+            color: var(--admin-text-main);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 12px;
+            transition: all 0.2s ease;
         }
 
         .page-link:hover {
-            color: var(--color-fire);
-            background-color: var(--color-fire-light);
-            border-color: var(--color-border);
+            background-color: #FFFFFF;
+            border-color: var(--admin-primary);
+            color: var(--admin-primary);
         }
 
         .page-item.active .page-link {
-            background-color: var(--color-fire) !important;
-            border-color: var(--color-fire) !important;
-            color: #ffffff !important;
-            font-weight: 700;
+            background-color: var(--admin-primary);
+            border-color: var(--admin-primary);
+            color: #FFFFFF;
+            box-shadow: 0 3px 10px rgba(140, 74, 39, 0.25);
         }
 
-        .breadcrumb-item a {
-            color: var(--color-fire);
-            font-weight: 600;
+        /* Alerts */
+        .alert {
+            border-radius: var(--squircle-md);
+            border: 1px solid rgba(232, 222, 200, 0.8);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 15px rgba(45, 24, 15, 0.05);
         }
 
-        .breadcrumb-item.active {
-            color: var(--color-text-light);
+        /* Footer */
+        .admin-footer {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-top: var(--glass-border);
+            padding: 16px 28px;
+            text-align: center;
+            color: var(--admin-text-muted);
+            font-size: 12.5px;
         }
 
-        /* Responsive Mobile Sidebar */
+        /* Toast Container */
+        .toast {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(232, 222, 200, 0.85);
+            border-radius: var(--squircle-lg);
+            box-shadow: 0 16px 36px rgba(45, 24, 15, 0.16);
+            overflow: hidden;
+        }
+
+        .toast-header {
+            background: linear-gradient(135deg, var(--admin-wood-dark) 0%, var(--admin-wood-black) 100%);
+            color: #ffffff;
+            border-bottom: 1px solid rgba(232, 222, 200, 0.15);
+            padding: 10px 14px;
+        }
+
+        .toast-body {
+            padding: 14px;
+            color: var(--admin-text-main);
+        }
+
         @media (max-width: 992px) {
             #adminSidebar {
-                margin-left: -260px;
+                margin-left: -270px;
             }
             #adminSidebar.show-mobile {
                 margin-left: 0;
@@ -657,53 +700,70 @@
 </head>
 <body>
 
-    <!-- 1. SIDEBAR VINTAGE ESPRESSO LEATHER -->
+    <!-- ===================================================================
+         1. SIDEBAR (GỖ GỤ CỔ ĐIỂN - NỀN SÁCH CŨ ẤM ÁP)
+         =================================================================== -->
     <aside id="adminSidebar">
         <a th:href="@{/admin/books}" class="sidebar-brand">
-            <img th:src="@{/images/logo-books-badge.png}" alt="Chuỗi Sách Cũ" class="sidebar-brand-img">
+            <div class="sidebar-brand-icon">
+                <i class="fa-solid fa-book-bookmark"></i>
+            </div>
             <div class="sidebar-brand-text">
                 <h5>CHUỖI SÁCH CŨ</h5>
-                <span class="sidebar-portal-badge"><i class="fa-solid fa-shield-halved me-1"></i>ADMIN PORTAL</span>
+                <small>Admin &amp; Manager Portal</small>
             </div>
         </a>
 
         <ul class="sidebar-menu">
-            <li class="sidebar-heading">Quản Lý Chuỗi Kho &amp; Sách</li>
+            <li class="sidebar-heading">
+                <i class="fa-solid fa-layer-group text-warning opacity-75" style="font-size: 10px;"></i>
+                <span>Kho &amp; Sách Cũ</span>
+            </li>
             
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/books')} ? 'active' : ''">
                 <a th:href="@{/admin/books}">
-                    <i class="fa-solid fa-book-open"></i>
-                    <span>Kho Sách Cũ &amp; Bìa Thật</span>
+                    <i class="fa-solid fa-book"></i>
+                    <span>Quản Lý Sách Cũ</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/categories')} ? 'active' : ''">
+                <a th:href="@{/admin/categories}">
+                    <i class="fa-solid fa-tags"></i>
+                    <span>Danh Mục Thể Loại</span>
                 </a>
             </li>
 
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory'} ? 'active' : ''">
                 <a th:href="@{/admin/inventory}">
                     <i class="fa-solid fa-boxes-stacked"></i>
-                    <span>Tồn Kho 5 Chi Nhánh</span>
+                    <span>Tồn Kho Chi Nhánh</span>
                 </a>
             </li>
 
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory/transfer'} ? 'active' : ''">
                 <a th:href="@{/admin/inventory/transfer}">
                     <i class="fa-solid fa-dolly"></i>
-                    <span>Điều Chuyển Nội Bộ</span>
+                    <span>Điều Chuyển Kho</span>
                 </a>
             </li>
 
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/stores')} ? 'active' : ''">
                 <a th:href="@{/admin/stores}">
                     <i class="fa-solid fa-store"></i>
-                    <span>Chuỗi Cửa Hàng TP.HCM</span>
+                    <span>Chuỗi Chi Nhánh</span>
                 </a>
             </li>
 
-            <li class="sidebar-heading">Đơn Hàng &amp; Dịch Vụ Ký Gửi</li>
+            <li class="sidebar-heading">
+                <i class="fa-solid fa-cart-shopping text-warning opacity-75" style="font-size: 10px;"></i>
+                <span>Đơn Hàng &amp; Ký Gửi</span>
+            </li>
 
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/orders')} ? 'active' : ''">
                 <a th:href="@{/admin/orders}">
                     <i class="fa-solid fa-clipboard-list"></i>
-                    <span>Quản Lý Đơn Hàng</span>
+                    <span>Xử Lý Đơn Hàng</span>
                 </a>
             </li>
 
@@ -717,23 +777,26 @@
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/shipper')} ? 'active' : ''">
                 <a th:href="@{/shipper/orders}">
                     <i class="fa-solid fa-motorcycle"></i>
-                    <span>Cổng Giao Nhận Shipper</span>
+                    <span>Phân Hệ Shipper</span>
                 </a>
             </li>
 
-            <li class="sidebar-heading">Hệ Thống, Khuyến Mãi &amp; Báo Cáo</li>
+            <li class="sidebar-heading">
+                <i class="fa-solid fa-sliders text-warning opacity-75" style="font-size: 10px;"></i>
+                <span>Hệ Thống &amp; Báo Cáo</span>
+            </li>
 
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/users')} ? 'active' : ''">
                 <a th:href="@{/admin/users}">
                     <i class="fa-solid fa-users-gear"></i>
-                    <span>Tài Khoản &amp; Phân Quyền</span>
+                    <span>Người Dùng &amp; Quyền</span>
                 </a>
             </li>
 
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/vouchers')} ? 'active' : ''">
                 <a th:href="@{/admin/vouchers}">
                     <i class="fa-solid fa-ticket"></i>
-                    <span>Mã Giảm Giá (Vouchers)</span>
+                    <span>Mã Giảm Giá</span>
                 </a>
             </li>
 
@@ -747,111 +810,110 @@
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/reports')} ? 'active' : ''">
                 <a th:href="@{/admin/reports}">
                     <i class="fa-solid fa-chart-pie"></i>
-                    <span>Thống Kê Doanh Thu &amp; POI</span>
+                    <span>Thống Kê Báo Cáo</span>
                 </a>
             </li>
 
-            <li class="sidebar-heading">Lối Tắt Sàn Mua Bán</li>
+            <li class="sidebar-heading">
+                <i class="fa-solid fa-compass text-warning opacity-75" style="font-size: 10px;"></i>
+                <span>Lối Tắt</span>
+            </li>
 
             <li class="sidebar-item">
                 <a th:href="@{/}" target="_blank">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    <span>Xem Trang Sàn Khách Hàng</span>
+                    <span>Xem Trang Khách Hàng</span>
                 </a>
             </li>
         </ul>
+
+        <div class="sidebar-footer-info">
+            <span class="text-white-50">HCMUTE • Đề Tài 14</span>
+            <div class="text-warning-emphasis fw-semibold mt-0.5">Sách Cũ 5 Chi Nhánh</div>
+        </div>
     </aside>
 
-    <!-- 2. MAIN CONTENT WRAPPER -->
+    <!-- ===================================================================
+         2. MAIN CONTENT (TOPBAR LIQUID GLASS & BODY CONTENT)
+         =================================================================== -->
     <div id="adminMain">
-        <!-- TOP NAVBAR FROSTED LIQUID GLASS -->
+        <!-- TOP NAVBAR (APPLE FROSTED GLASS) -->
         <header class="admin-navbar">
             <div class="d-flex align-items-center gap-3">
-                <button type="button" class="navbar-toggle-btn" id="toggleSidebarBtn" title="Thu gọn / Mở rộng menu">
+                <button type="button" class="navbar-toggle-btn" id="toggleSidebarBtn" title="Thu gọn / Mở rộng Sidebar">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-                <div class="store-status-pill d-none d-sm-inline-flex">
-                    <span class="store-status-dot"></span>
-                    <span>Hệ Thống Chuỗi 5 Chi Nhánh TP.HCM</span>
+                <div class="branch-badge d-none d-sm-inline-flex gap-2">
+                    <i class="fa-solid fa-store text-danger"></i>
+                    <span class="fw-semibold">Hệ Thống Chuỗi 5 Chi Nhánh TP.HCM</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle py-1 px-2" style="font-size: 10px;">Hoạt Động</span>
                 </div>
             </div>
 
             <div class="d-flex align-items-center gap-3">
-                <!-- NÚT XEM SÀN KHÁCH HÀNG (LIÊN KẾT NHANH) -->
-                <a th:href="@{/}" target="_blank" class="btn-view-store d-none d-md-inline-flex">
-                    <i class="fa-solid fa-store" style="color: var(--color-fire);"></i>
-                    <span>Về Sàn Sách Cũ</span>
-                </a>
-
-                <!-- CHUÔNG THÔNG BÁO WEBSOCKET REAL-TIME -->
+                <!-- Chuông thông báo WebSocket STOMP -->
                 <div class="dropdown">
-                    <button class="btn-notif-bell" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Thông báo đơn hàng mới">
-                        <i class="fa-solid fa-bell"></i>
-                        <span class="notif-badge-bubble" id="notifIndicator" style="display:none;">1</span>
+                    <button class="btn glass-btn position-relative rounded-pill px-3 py-2" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Thông báo đơn hàng thời gian thực">
+                        <i class="fa-solid fa-bell text-secondary"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle notif-pulse" id="notifIndicator" style="display:none; width: 10px; height: 10px;"></span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" aria-labelledby="notifDropdown" style="width: 320px; border-radius: 8px; border: 1px solid var(--color-border) !important;">
-                        <li class="d-flex justify-content-between align-items-center px-2 py-1">
-                            <strong class="text-dark" style="font-size: 13px;"><i class="fa-solid fa-bolt text-warning me-1"></i>Thông báo thời gian thực</strong>
-                            <span class="badge" style="background: var(--color-fire-light); color: var(--color-fire); font-size: 10px;">WebSocket STOMP</span>
-                        </li>
-                        <li><hr class="dropdown-divider my-1"></li>
-                        <li id="emptyNotifMsg" class="text-center text-muted py-3 small">
-                            <i class="fa-regular fa-bell-slash d-block mb-1 fs-5 text-secondary"></i>Chưa có đơn hàng phát sinh
-                        </li>
+                    <div class="dropdown-menu dropdown-menu-end glass-dropdown-menu shadow-lg border-0 p-3 mt-2" aria-labelledby="notifDropdown" style="width: 320px;">
+                        <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
+                            <span class="fw-bold text-dark small"><i class="fa-solid fa-bolt text-warning me-1"></i>Thông báo thời gian thực</span>
+                            <span class="badge bg-light text-muted border" style="font-size: 10px;">WebSocket</span>
+                        </div>
+                        <div id="emptyNotifMsg" class="text-center text-muted py-3 small">
+                            <i class="fa-regular fa-bell-slash d-block mb-1 fs-5 opacity-50"></i>
+                            Chưa có thông báo mới
+                        </div>
                         <ul id="notifList" class="list-unstyled mb-0 small"></ul>
-                    </ul>
+                    </div>
                 </div>
 
-                <!-- USER AVATAR & DROPDOWN MENU -->
+                <!-- User Dropdown -->
                 <div class="dropdown">
-                    <div class="user-menu-pill" id="userMenuBtn" data-bs-toggle="dropdown">
-                        <img th:src="@{/images/avatars/avatar-admin.png}" onerror="this.src='/images/avatars/avatar-cuong.png'" alt="Avatar" class="user-avatar-mini">
-                        <span sec:authentication="name">cuong_admin</span>
+                    <button class="btn glass-btn d-flex align-items-center gap-2 rounded-pill px-3 py-1.5" type="button" id="userMenuBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; background: rgba(140, 74, 39, 0.15); color: #8C4A27;">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                        <span class="fw-semibold small text-dark" sec:authentication="name">cuong_admin</span>
                         <i class="fa-solid fa-chevron-down text-muted" style="font-size: 10px;"></i>
-                    </div>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="border-radius: 8px; border: 1px solid var(--color-border) !important; min-width: 190px;">
-                        <li class="px-3 py-2 border-bottom">
-                            <div class="fw-bold small text-dark" sec:authentication="name">Thái Duy Cường</div>
-                            <small class="text-muted" style="font-size: 11px;">Quản Trị Viên Hệ Thống</small>
-                        </li>
-                        <li><a class="dropdown-item small py-2" th:href="@{/user/account/profile}"><i class="fa-solid fa-id-badge me-2 text-muted"></i>Hồ sơ tài khoản</a></li>
-                        <li><a class="dropdown-item small py-2" th:href="@{/}" target="_blank"><i class="fa-solid fa-globe me-2 text-muted"></i>Sàn mua bán khách</a></li>
-                        <li><hr class="dropdown-divider my-1"></li>
-                        <li><a class="dropdown-item small py-2 text-danger fw-bold" th:href="@{/logout}"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Đăng xuất</a></li>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end glass-dropdown-menu shadow-lg border-0 mt-2">
+                        <li><a class="dropdown-item small" th:href="@{/user/account/profile}"><i class="fa-solid fa-id-badge me-2 text-primary"></i>Tài khoản cá nhân</a></li>
+                        <li><a class="dropdown-item small" th:href="@{/}" target="_blank"><i class="fa-solid fa-globe me-2 text-success"></i>Xem Website Cửa Hàng</a></li>
+                        <li><hr class="dropdown-divider my-1 border-secondary-subtle"></li>
+                        <li><a class="dropdown-item small text-danger fw-semibold" th:href="@{/logout}"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Đăng xuất</a></li>
                     </ul>
                 </div>
             </div>
         </header>
 
-        <!-- FLASH MESSAGES (THÔNG BÁO THÀNH CÔNG HOẶC THẤT BẠI) -->
+        <!-- BODY CONTENT -->
         <main class="admin-content-body">
-            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert" style="background-color: var(--color-trust-bg); color: var(--color-trust-green); border-left: 4px solid var(--color-trust-green) !important; border-radius: 6px;">
-                <div class="d-flex align-items-center">
-                    <i class="fa-solid fa-circle-check fs-5 me-2"></i>
-                    <strong th:text="${successMessage}">Thao tác thành công!</strong>
-                </div>
+            <!-- Thông báo thành công hoặc lỗi -->
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i><span th:text="${successMessage}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-            
-            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert" style="background-color: #fee2e2; color: #b91c1c; border-left: 4px solid #b91c1c !important; border-radius: 6px;">
-                <div class="d-flex align-items-center">
-                    <i class="fa-solid fa-circle-exclamation fs-5 me-2"></i>
-                    <strong th:text="${errorMessage}">Đã xảy ra lỗi!</strong>
-                </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-exclamation me-2"></i><span th:text="${errorMessage}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
 
-            <!-- NỘI DUNG TỪNG TRANG ADMIN -->
+            <!-- NỘI DUNG TỪNG TRANG -->
             <div th:replace="${content}"></div>
         </main>
 
-        <!-- FOOTER ĐỒNG BỘ VINTAGE PARCHMENT -->
-        <footer class="py-3 px-4 text-center small" style="background: #FAF6F0; border-top: 1px solid var(--color-border); color: var(--color-text-light);">
-            <span>&copy; 2026 Chuỗi Cửa Hàng Sách Cũ TP.HCM &mdash; Hệ Thống Quản Trị &amp; Điều Phối Đa Chi Nhánh.</span>
+        <!-- FOOTER -->
+        <footer class="admin-footer">
+            <div class="container-fluid">
+                <span>&copy; 2026 Đề tài 14 - Quản Lý Chuỗi Cửa Hàng Sách Cũ HCMUTE. SVTH: Thái Duy Cường &amp; Nguyễn Song Hoàng Phúc.</span>
+            </div>
         </footer>
     </div>
 
-    <!-- TOAST CONTAINER CHO THÔNG BÁO WEBSOCKET THỜI GIAN THỰC (APPLE GLASS TOAST) -->
+    <!-- TOAST CONTAINER CHO THÔNG BÁO WEBSOCKET THỜI GIAN THỰC -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1090;" id="wsToastContainer"></div>
 
     <!-- Bootstrap 5 JS Bundle -->
@@ -862,30 +924,49 @@
 
     <script>
         // Toggle Sidebar Script
-        const toggleBtn = document.getElementById('toggleSidebarBtn');
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', function() {
-                const sidebar = document.getElementById('adminSidebar');
-                const main = document.getElementById('adminMain');
-                if (window.innerWidth <= 992) {
-                    sidebar.classList.toggle('show-mobile');
-                } else {
-                    sidebar.classList.toggle('collapsed');
-                    main.classList.toggle('expanded');
+        document.getElementById('toggleSidebarBtn').addEventListener('click', function() {
+            var sidebar = document.getElementById('adminSidebar');
+            var main = document.getElementById('adminMain');
+            if (window.innerWidth <= 992) {
+                sidebar.classList.toggle('show-mobile');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                main.classList.toggle('expanded');
+            }
+        });
+
+        // Tự động kích hoạt active sidebar item theo URL hiện tại (bổ trợ cho Thymeleaf)
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+            const sidebarLinks = document.querySelectorAll('.sidebar-item a');
+            let matched = false;
+            sidebarLinks.forEach(link => {
+                const href = (link.getAttribute('href') || '').replace(/\/$/, '');
+                if (href === currentPath || (href === '/admin/reports' && (currentPath === '/admin' || currentPath === '/admin/dashboard'))) {
+                    link.parentElement.classList.add('active');
+                    matched = true;
+                } else if (href && href !== '/admin' && href !== '/' && currentPath.startsWith(href)) {
+                    link.parentElement.classList.add('active');
+                    matched = true;
                 }
             });
-        }
+            if (!matched && (currentPath === '/admin' || currentPath === '/admin/dashboard')) {
+                const reportItem = document.querySelector('a[href*="/admin/reports"]');
+                if (reportItem) reportItem.parentElement.classList.add('active');
+            }
+        });
 
         // =====================================================================
-        // WEBSOCKET STOMP REAL-TIME NOTIFICATIONS
+        // WEBSOCKET STOMP REAL-TIME NOTIFICATIONS (THÔNG BÁO THỜI GIAN THỰC)
         // =====================================================================
         let stompClient = null;
         function connectWebSocket() {
             try {
                 const socket = new SockJS('/ws');
                 stompClient = Stomp.over(socket);
-                stompClient.debug = null; // Tắt debug log rác console
+                stompClient.debug = null; // Tắt debug console
                 stompClient.connect({}, function (frame) {
+                    console.log('WebSocket STOMP connected to /ws');
                     stompClient.subscribe('/topic/admin-orders', function (messageOutput) {
                         try {
                             const notif = JSON.parse(messageOutput.body);
@@ -903,7 +984,7 @@
         }
 
         function showOrderNotification(notif) {
-            // 1. Bật chấm đỏ thông báo
+            // 1. Bật chấm đỏ chuông thông báo
             const indicator = document.getElementById('notifIndicator');
             if (indicator) indicator.style.display = 'block';
 
@@ -914,11 +995,11 @@
             const list = document.getElementById('notifList');
             if (list) {
                 const li = document.createElement('li');
-                li.className = 'border-bottom py-2 px-2';
+                li.className = 'border-bottom py-2 px-1';
                 li.innerHTML = `
                     <div class="d-flex justify-content-between align-items-start mb-1">
-                        <strong style="color: var(--color-fire);">${notif.orderCode || 'Đơn hàng'}</strong>
-                        <span class="badge" style="background: ${notif.type === 'NEW_ORDER' ? '#ee4d2d' : '#0284c7'}; color: #fff; font-size:9px;">${notif.type === 'NEW_ORDER' ? 'MỚI' : 'CẬP NHẬT'}</span>
+                        <strong class="text-primary">${notif.orderCode || 'Đơn hàng mới'}</strong>
+                        <span class="badge ${notif.type === 'NEW_ORDER' ? 'bg-danger' : 'bg-info text-dark'}" style="font-size:9px;">${notif.type === 'NEW_ORDER' ? 'MỚI' : 'CẬP NHẬT'}</span>
                     </div>
                     <div class="text-dark small">${notif.message}</div>
                     <div class="text-muted" style="font-size:10px;">${notif.createdAt || ''} • ${notif.storeName || ''}</div>
@@ -926,26 +1007,23 @@
                 list.insertBefore(li, list.firstChild);
             }
 
-            // 3. Hiển thị Toast nổi góc màn hình phong cách Apple Liquid Glass
+            // 3. Hiển thị Toast nổi góc màn hình phong cách Liquid Glass
             const container = document.getElementById('wsToastContainer');
             if (container) {
                 const toastDiv = document.createElement('div');
-                toastDiv.className = 'toast show shadow border mb-2';
+                toastDiv.className = 'toast show border-0 mb-3';
                 toastDiv.setAttribute('role', 'alert');
-                toastDiv.style.borderRadius = '10px';
-                toastDiv.style.overflow = 'hidden';
-                toastDiv.style.borderColor = 'var(--color-border)';
                 toastDiv.innerHTML = `
-                    <div class="toast-header text-white" style="background: #27140b;">
+                    <div class="toast-header">
                         <i class="fa-solid fa-bell text-warning me-2"></i>
-                        <strong class="me-auto" style="font-size: 13px;">Thông Báo Đơn Hàng Mới</strong>
-                        <small class="text-light" style="font-size: 11px;">${notif.createdAt || 'Vừa xong'}</small>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                        <strong class="me-auto text-white">Thông Báo Chuỗi Sách Cũ</strong>
+                        <small class="text-light opacity-75">${notif.createdAt || 'Vừa xong'}</small>
+                        <button type="button" class="btn-close btn-close-white ms-2" data-bs-dismiss="toast"></button>
                     </div>
-                    <div class="toast-body bg-white text-dark p-3">
-                        <div class="fw-bold mb-1" style="color: var(--color-text-main);">${notif.message}</div>
-                        <div class="small text-muted mb-2"><i class="fa-solid fa-store me-1 text-secondary"></i>Chi nhánh: ${notif.storeName}</div>
-                        <a href="/admin/orders" class="btn btn-sm btn-theme py-1 px-3" style="font-size: 11.5px;">Xem chi tiết đơn hàng</a>
+                    <div class="toast-body">
+                        <div class="fw-bold text-dark mb-1">${notif.message}</div>
+                        <div class="small text-muted mb-2"><i class="fa-solid fa-store text-danger me-1"></i>Chi nhánh: ${notif.storeName}</div>
+                        <a href="/admin/orders" class="btn btn-sm btn-theme py-1 px-3" style="font-size:11.5px;"><i class="fa-solid fa-arrow-right me-1"></i>Xem đơn hàng</a>
                     </div>
                 `;
                 container.appendChild(toastDiv);

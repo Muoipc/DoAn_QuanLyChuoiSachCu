@@ -3,13 +3,17 @@ package vn.iotstar.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpServletRequest;
 import vn.iotstar.entity.*;
 import vn.iotstar.repository.*;
 import vn.iotstar.security.CustomUserDetails;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,7 +51,7 @@ public class OrderHistoryController {
         if (userDetails != null && userDetails.getId() != null) {
             return userDetails.getId();
         }
-        return DEFAULT_GUEST_USER_ID;
+        throw new IllegalStateException("Yêu cầu đăng nhập trước khi thực hiện thao tác này!");
     }
 
     /**
@@ -55,10 +59,19 @@ public class OrderHistoryController {
      * URL: /orders
      */
     @GetMapping("/orders")
+    @Transactional(readOnly = true)
     public String orderHistoryView(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(value = "status", required = false) String statusStr,
+            HttpServletRequest request,
             Model model) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            String uri = request.getRequestURI();
+            String qs = request.getQueryString();
+            String fullUrl = (qs != null && !qs.isBlank()) ? (uri + "?" + qs) : uri;
+            return "redirect:/login?redirectURL=" + URLEncoder.encode(fullUrl, StandardCharsets.UTF_8);
+        }
 
         Long userId = resolveUserId(userDetails);
 
@@ -76,9 +89,10 @@ public class OrderHistoryController {
             statusStr = "ALL";
         }
 
-        // Lấy danh sách ID các cuốn sách mà user đã đánh giá theo từng đơn hàng
+        // Lấy danh sách ID các cuốn sách mà user đã đánh giá theo từng đơn hàng (kiểm tra null an toàn tránh NullPointerException)
         List<Review> userReviews = reviewRepository.findByUserIdOrderByCreatedAtDesc(userId);
         Set<String> reviewedKeySet = userReviews.stream()
+                .filter(r -> r.getOrder() != null && r.getOrder().getId() != null && r.getBook() != null && r.getBook().getId() != null)
                 .map(r -> r.getOrder().getId() + "_" + r.getBook().getId())
                 .collect(Collectors.toSet());
 
@@ -112,17 +126,26 @@ public class OrderHistoryController {
      * Hỗ trợ cả 2 URL: /orders/{orderRef} và /user/purchase/order/{orderRef}
      */
     @GetMapping({"/orders/{orderRef}", "/user/purchase/order/{orderRef}"})
+    @Transactional(readOnly = true)
     public String orderDetailView(
             @PathVariable("orderRef") String orderRef,
             @RequestParam(value = "type", required = false) String type,
             @AuthenticationPrincipal CustomUserDetails userDetails,
+            HttpServletRequest request,
             Model model) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            String uri = request.getRequestURI();
+            String qs = request.getQueryString();
+            String fullUrl = (qs != null && !qs.isBlank()) ? (uri + "?" + qs) : uri;
+            return "redirect:/login?redirectURL=" + URLEncoder.encode(fullUrl, StandardCharsets.UTF_8);
+        }
 
         Optional<Order> orderOpt = orderRepository.findByOrderCodeWithDetails(orderRef);
         if (orderOpt.isEmpty()) {
             try {
                 Long orderId = Long.parseLong(orderRef);
-                orderOpt = orderRepository.findById(orderId);
+                orderOpt = orderRepository.findByIdWithDetails(orderId);
             } catch (NumberFormatException ignored) {}
         }
 
@@ -149,10 +172,15 @@ public class OrderHistoryController {
      * URL: POST /orders/cancel/{orderCode}
      */
     @PostMapping("/orders/cancel/{orderCode}")
+    @Transactional
     public String cancelOrder(
             @PathVariable("orderCode") String orderCode,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/orders";
+        }
 
         Optional<Order> orderOpt = orderRepository.findByOrderCodeWithDetails(orderCode);
         if (orderOpt.isPresent()) {
@@ -180,47 +208,6 @@ public class OrderHistoryController {
             } else {
                 redirectAttributes.addFlashAttribute("errorMessage", "Không thể hủy đơn hàng vì chi nhánh đã xác nhận đóng gói hoặc đang vận chuyển!");
             }
-        }
-
-        return "redirect:/orders";
-    }
-
-    /**
-     * Khách hàng gửi đánh giá & nhận xét chất lượng sách cũ đã nhận.
-     * URL: POST /reviews/create
-     */
-    @PostMapping("/reviews/create")
-    public String submitReview(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestParam("orderId") Long orderId,
-            @RequestParam("bookId") Long bookId,
-            @RequestParam("rating") Integer rating,
-            @RequestParam("comment") String comment,
-            RedirectAttributes redirectAttributes) {
-
-        Long userId = resolveUserId(userDetails);
-
-        // Kiểm tra xem đã đánh giá chưa
-        if (reviewRepository.existsByUserIdAndBookIdAndOrderId(userId, bookId, orderId)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Bạn đã đánh giá cuốn sách này trong đơn hàng rồi!");
-            return "redirect:/orders";
-        }
-
-        User user = userRepository.findById(userId).orElse(null);
-        Book book = bookRepository.findById(bookId).orElse(null);
-        Order order = orderRepository.findById(orderId).orElse(null);
-
-        if (user != null && book != null && order != null) {
-            Review review = new Review();
-            review.setUser(user);
-            review.setBook(book);
-            review.setOrder(order);
-            review.setRating(Math.max(1, Math.min(5, rating)));
-            review.setComment(comment != null ? comment.trim() : "Sách đúng mô tả.");
-            review.setMediaType(Review.MediaType.NONE);
-            reviewRepository.save(review);
-
-            redirectAttributes.addFlashAttribute("successMessage", "Cảm ơn bạn đã gửi đánh giá chất lượng sách cũ! Đánh giá đã được ghi nhận.");
         }
 
         return "redirect:/orders";

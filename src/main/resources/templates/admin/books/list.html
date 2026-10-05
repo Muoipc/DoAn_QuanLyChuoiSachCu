@@ -7,40 +7,419 @@
 <body>
 <div th:fragment="content">
 
-    <!-- PAGE HEADER -->
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
-        <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-book text-warning me-2"></i>Quản Lý Danh Mục Sách Cũ</h4>
-            <p class="text-muted small mb-0">Quản lý kho sách cũ, kiểm định chất lượng độ mới 80% - 99% và bộ ảnh góc cạnh.</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a th:href="@{/admin/inventory/transfer}" class="btn btn-outline-secondary">
-                <i class="fa-solid fa-dolly me-1"></i>Điều Chuyển Kho
-            </a>
-            <a th:href="@{/admin/books/create}" class="btn btn-theme">
-                <i class="fa-solid fa-plus me-1"></i>Thêm Sách Cũ Mới
-            </a>
-        </div>
-    </div>
+    <style>
+        /* Apple Liquid Glass Design System */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.72);
+            --glass-bg-hover: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.85);
+            --glass-blur: blur(28px) saturate(190%) brightness(102%);
+            --wood-primary: #8C4A27;
+            --wood-dark: #683418;
+            --orange-burnt: #EE4D2D;
+            --ink-dark: #1E293B;
+            --ink-muted: #64748B;
+        }
 
-    <!-- FILTER & SEARCH CARD -->
-    <div class="card card-custom mb-4">
-        <div class="card-body p-3">
+        .ambient-canvas-wrapper {
+            position: relative;
+        }
+
+        /* Card Liquid Glass */
+        .card-liquid-glass {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 22px;
+            box-shadow: 
+                0 16px 38px -6px rgba(45, 24, 15, 0.08),
+                0 4px 14px -2px rgba(0, 0, 0, 0.03),
+                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 1px 0 rgba(0, 0, 0, 0.02);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card-liquid-glass:hover {
+            box-shadow: 
+                0 20px 48px -6px rgba(45, 24, 15, 0.12),
+                0 6px 18px -2px rgba(0, 0, 0, 0.04),
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1);
+        }
+
+        .card-liquid-header {
+            background: rgba(255, 255, 255, 0.5);
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.7);
+            padding: 18px 26px;
+            border-radius: 22px 22px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Buttons Liquid Glass */
+        .btn-liquid-primary {
+            background: linear-gradient(135deg, #8C4A27 0%, #A0522D 45%, #EE4D2D 100%);
+            color: #ffffff !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: 9999px;
+            padding: 10px 22px;
+            font-weight: 600;
+            font-size: 13.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 
+                0 8px 24px rgba(140, 74, 39, 0.3),
+                inset 0 1.5px 1.5px rgba(255, 255, 255, 0.45);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+        }
+
+        .btn-liquid-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 14px 32px rgba(140, 74, 39, 0.42),
+                inset 0 2px 2px rgba(255, 255, 255, 0.7);
+            color: #ffffff !important;
+        }
+
+        .btn-liquid-secondary {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            color: var(--ink-dark) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border-radius: 9999px;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 13.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+        }
+
+        .btn-liquid-secondary:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(45, 24, 15, 0.09);
+        }
+
+        /* Filter Controls */
+        .glass-input, .glass-select {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+            border-radius: 12px !important;
+            padding: 9px 14px !important;
+            font-size: 13.5px !important;
+            color: var(--ink-dark) !important;
+            transition: all 0.2s ease;
+        }
+
+        .glass-input:focus, .glass-select:focus {
+            background: #ffffff !important;
+            border-color: #8C4A27 !important;
+            box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.15) !important;
+            outline: none;
+        }
+
+        .glass-btn-dark {
+            background: #1E293B;
+            color: #ffffff;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 9px 18px;
+            font-weight: 600;
+            font-size: 13.5px;
+            transition: all 0.2s ease;
+        }
+
+        .glass-btn-dark:hover {
+            background: #0F172A;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* Liquid Glass Table */
+        .table-liquid {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .table-liquid thead th {
+            background: rgba(248, 250, 252, 0.7);
+            border-bottom: 1.5px solid rgba(226, 232, 240, 0.8);
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #64748B;
+            padding: 14px 18px;
+            white-space: nowrap;
+        }
+
+        .table-liquid tbody tr {
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .table-liquid tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+
+        .table-liquid tbody td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(241, 245, 249, 0.8);
+            vertical-align: middle;
+        }
+
+        /* Book Cover Frame */
+        .book-cover-frame {
+            width: 52px;
+            height: 74px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 6px 14px rgba(45, 24, 15, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            flex-shrink: 0;
+            background: #f1f5f9;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .table-liquid tbody tr:hover .book-cover-frame {
+            transform: scale(1.05) rotate(-1deg);
+            box-shadow: 0 10px 20px rgba(45, 24, 15, 0.18);
+        }
+
+        .book-cover-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Tags 4px bo góc thanh lịch */
+        .tag-category-elegant {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 9px;
+            font-size: 11.5px;
+            font-weight: 600;
+            border-radius: 4px;
+            background: rgba(140, 74, 39, 0.08);
+            color: #78350F;
+            border: 1px solid rgba(140, 74, 39, 0.2);
+            white-space: nowrap;
+        }
+
+        .tag-condition-high {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            border-radius: 4px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #065F46;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            box-shadow: 0 1px 3px rgba(16, 185, 129, 0.08);
+        }
+
+        .tag-condition-med {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            border-radius: 4px;
+            background: rgba(245, 158, 11, 0.12);
+            color: #92400E;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            box-shadow: 0 1px 3px rgba(245, 158, 11, 0.08);
+        }
+
+        .tag-condition-low {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            border-radius: 4px;
+            background: rgba(100, 116, 139, 0.12);
+            color: #334155;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        /* Action Buttons */
+        .btn-glass-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            color: #334155;
+            font-size: 12.5px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-glass-action:hover {
+            background: #ffffff;
+            color: var(--wood-primary);
+            border-color: var(--wood-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(140, 74, 39, 0.15);
+        }
+
+        .btn-glass-action-danger {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(254, 242, 242, 0.85);
+            border: 1px solid rgba(254, 202, 202, 0.8);
+            color: #DC2626;
+            font-size: 12.5px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-glass-action-danger:hover {
+            background: #DC2626;
+            color: #ffffff;
+            border-color: #DC2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
+        }
+
+        /* Status Toggle Pill */
+        .btn-status-pill {
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            border: 1.5px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-status-pill.active {
+            background: rgba(16, 185, 129, 0.12);
+            color: #065F46;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-status-pill.active:hover {
+            background: #10B981;
+            color: #ffffff;
+        }
+
+        .btn-status-pill.inactive {
+            background: rgba(148, 163, 184, 0.15);
+            color: #64748B;
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+
+        .btn-status-pill.inactive:hover {
+            background: #64748B;
+            color: #ffffff;
+        }
+
+        /* Pagination Glass */
+        .pagination-glass .page-link {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(226, 232, 240, 0.8);
+            color: var(--ink-dark);
+            margin: 0 3px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 7px 14px;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-glass .page-link:hover {
+            background: #ffffff;
+            color: var(--wood-primary);
+            border-color: var(--wood-primary);
+            transform: translateY(-1px);
+        }
+
+        .pagination-glass .page-item.active .page-link {
+            background: linear-gradient(135deg, #8C4A27 0%, #EE4D2D 100%);
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);
+        }
+
+        .pagination-glass .page-item.disabled .page-link {
+            background: rgba(241, 245, 249, 0.5);
+            border-color: rgba(226, 232, 240, 0.5);
+            color: #94A3B8;
+        }
+    </style>
+
+    <div class="ambient-canvas-wrapper">
+        <!-- 1. PAGE HEADER -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <div class="p-2 rounded-3 text-white" style="background: linear-gradient(135deg, #8C4A27, #EE4D2D); box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);">
+                        <i class="fa-solid fa-book-bookmark fs-5"></i>
+                    </div>
+                    <h4 class="fw-bold mb-0 text-dark">Quản Lý Danh Mục Sách Cũ</h4>
+                    <span class="badge rounded-pill bg-light text-secondary border px-3 py-1 ms-2" style="font-size: 12px;">
+                        <i class="fa-solid fa-layer-group text-warning me-1"></i><span th:text="${totalElements}">0</span> cuốn sách
+                    </span>
+                </div>
+                <p class="text-muted small mb-0 ms-1">Hệ thống kiểm định chất lượng độ mới 80% - 99%, kho ảnh Cloudinary góc cạnh và đồng bộ giỏ hàng chuỗi 5 chi nhánh.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a th:href="@{/admin/inventory/transfer}" class="btn-liquid-secondary">
+                    <i class="fa-solid fa-dolly text-warning"></i>
+                    <span>Điều Chuyển Kho</span>
+                </a>
+                <a th:href="@{/admin/books/create}" class="btn-liquid-primary">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Thêm Sách Cũ Mới</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 2. FILTER & SEARCH LIQUID CARD -->
+        <div class="card-liquid-glass mb-4 p-3">
             <form th:action="@{/admin/books}" method="get" class="row g-2 align-items-center">
-                <div class="col-md-4">
+                <div class="col-lg-4 col-md-12">
                     <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
-                        <input type="text" name="keyword" class="form-control border-start-0 ps-0" th:value="${keyword}" placeholder="Tìm theo tên sách, tác giả, ISBN...">
+                        <span class="input-group-text bg-white border-end-0 rounded-start-3 text-muted" style="border: 1.5px solid rgba(226, 232, 240, 0.9);">
+                            <i class="fa-solid fa-magnifying-glass text-secondary"></i>
+                        </span>
+                        <input type="text" name="keyword" class="form-control border-start-0 ps-0 glass-input rounded-end-3" th:value="${keyword}" placeholder="Tìm theo tên sách, tác giả, ISBN...">
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <select name="categoryId" class="form-select">
+                <div class="col-lg-3 col-md-4">
+                    <select name="categoryId" class="form-select glass-select">
                         <option value="">-- Tất cả danh mục --</option>
                         <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.categoryName}" th:selected="${selectedCategoryId == cat.id}"></option>
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <select name="minCondition" class="form-select">
+                <div class="col-lg-2 col-md-3">
+                    <select name="minCondition" class="form-select glass-select">
                         <option value="">-- Mọi độ mới --</option>
                         <option value="95" th:selected="${selectedCondition == 95}">Độ mới &ge; 95% (Như mới)</option>
                         <option value="90" th:selected="${selectedCondition == 90}">Độ mới &ge; 90% (Rất tốt)</option>
@@ -48,96 +427,160 @@
                         <option value="80" th:selected="${selectedCondition == 80}">Độ mới &ge; 80% (Khá)</option>
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <select name="isActive" class="form-select">
+                <div class="col-lg-2 col-md-3">
+                    <select name="isActive" class="form-select glass-select">
                         <option value="">-- Trạng thái --</option>
                         <option value="true" th:selected="${selectedIsActive == true}">Đang bày bán</option>
                         <option value="false" th:selected="${selectedIsActive == false}">Đã ẩn / Tạm ngưng</option>
                     </select>
                 </div>
-                <div class="col-md-1 d-grid">
-                    <button type="submit" class="btn btn-dark">Lọc</button>
+                <div class="col-lg-1 col-md-2 d-grid">
+                    <button type="submit" class="glass-btn-dark">
+                        <i class="fa-solid fa-filter me-1"></i>Lọc
+                    </button>
                 </div>
             </form>
         </div>
-    </div>
 
-    <!-- BOOKS TABLE CARD -->
-    <div class="card card-custom">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <span class="fw-semibold">Danh sách sách cũ (<span th:text="${totalElements}">0</span> cuốn)</span>
-        </div>
-        <div class="card-body p-0">
+        <!-- 3. BOOKS TABLE LIQUID GLASS CARD -->
+        <div class="card-liquid-glass overflow-hidden mb-4">
+            <div class="card-liquid-header">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-table-list text-warning"></i>
+                    <span class="fw-bold text-dark">Danh Sách Sách Cũ Đang Quản Trị</span>
+                </div>
+                <span class="badge rounded-pill bg-white text-muted border px-3 py-1 shadow-sm" style="font-size: 12px;">
+                    Hiển thị trang <span class="fw-bold text-dark" th:text="${currentPage + 1}">1</span> / <span th:text="${totalPages > 0 ? totalPages : 1}">1</span>
+                </span>
+            </div>
+
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr class="small text-muted text-uppercase">
-                            <th class="ps-4">Sách / Tác giả</th>
+                <table class="table-liquid align-middle">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Sách &amp; Tác giả</th>
                             <th>Thể loại</th>
-                            <th class="text-center">Độ mới</th>
-                            <th class="text-end">Giá bán</th>
+                            <th class="text-center">Tình trạng (% mới)</th>
+                            <th class="text-end">Giá bán / Giá gốc</th>
                             <th class="text-center">Đã bán</th>
-                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Hiển thị</th>
                             <th class="text-center">Nổi bật</th>
                             <th class="text-end pe-4">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Trống -->
                         <tr th:if="${bookPage.empty}">
                             <td colspan="8" class="text-center py-5 text-muted">
-                                <i class="fa-solid fa-box-open fa-3x mb-3 text-secondary"></i>
-                                <p class="mb-0">Không tìm thấy cuốn sách nào phù hợp điều kiện lọc.</p>
+                                <div class="py-4">
+                                    <div class="mb-3">
+                                        <i class="fa-solid fa-box-archive fa-3x text-secondary opacity-50"></i>
+                                    </div>
+                                    <h6 class="fw-bold text-dark">Không tìm thấy cuốn sách nào</h6>
+                                    <p class="small text-muted mb-3">Vui lòng điều chỉnh lại bộ lọc tìm kiếm hoặc thêm sách mới vào hệ thống.</p>
+                                    <a th:href="@{/admin/books}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Xóa bộ lọc</a>
+                                </div>
                             </td>
                         </tr>
+
+                        <!-- Từng cuốn sách -->
                         <tr th:each="book : ${bookPage.content}">
                             <td class="ps-4">
                                 <div class="d-flex align-items-center gap-3">
-                                    <img th:src="${book.getPrimaryImageUrl()}" class="rounded shadow-sm" style="width: 48px; height: 68px; object-fit: cover;" alt="Bìa sách">
+                                    <div class="book-cover-frame">
+                                        <img th:src="${book.getPrimaryImageUrl()}" alt="Bìa sách" loading="lazy"
+                                             onerror="this.src='/images/books/book-1.jpg';">
+                                    </div>
                                     <div>
-                                        <a th:href="@{/admin/books/edit/{id}(id=${book.id})}" class="fw-bold text-dark text-decoration-none" th:text="${book.title}">Tên sách</a>
-                                        <div class="text-muted small">
-                                            <i class="fa-solid fa-feather-pointed me-1"></i><span th:text="${book.author}">Tác giả</span>
-                                            <span th:if="${book.publishYear}" th:text="' • Năm: ' + ${book.publishYear}"></span>
+                                        <a th:href="@{/admin/books/edit/{id}(id=${book.id})}" 
+                                           class="fw-bold text-dark text-decoration-none d-block mb-1 hover-wood" 
+                                           style="font-size: 14px; line-height: 1.3;"
+                                           th:text="${book.title}">Tên sách</a>
+                                        <div class="text-muted small d-flex align-items-center gap-1">
+                                            <i class="fa-solid fa-feather-pointed text-secondary" style="font-size: 11px;"></i>
+                                            <span th:text="${book.author}">Tác giả</span>
+                                            <span th:if="${book.publishYear}" class="text-secondary opacity-75" th:text="' • Năm ' + ${book.publishYear}"></span>
                                         </div>
-                                        <div th:if="${book.isbn}" class="text-muted" style="font-size: 11px;">ISBN: <span th:text="${book.isbn}"></span></div>
+                                        <div th:if="${book.isbn}" class="text-muted mt-1" style="font-size: 11px; font-family: monospace;">
+                                            <span class="badge bg-light text-secondary border px-1 py-0" style="font-size: 10px;">ISBN</span>
+                                            <span th:text="${book.isbn}"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </td>
+
+                            <!-- Thể loại: Tag bo góc 4px thanh lịch -->
                             <td>
-                                <span class="badge bg-light text-dark border" th:text="${book.category != null ? book.category.categoryName : 'Chưa phân loại'}">Văn học</span>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge" th:classappend="${book.conditionPercent >= 95 ? 'badge-cond-high' : (book.conditionPercent >= 90 ? 'badge-cond-med' : 'bg-secondary')}" th:text="${book.conditionPercent} + '%'">
-                                    95%
+                                <span class="tag-category-elegant">
+                                    <i class="fa-solid fa-bookmark" style="font-size: 9px;"></i>
+                                    <span th:text="${book.category != null ? book.category.categoryName : 'Chưa phân loại'}">Văn học</span>
                                 </span>
                             </td>
-                            <td class="text-end">
-                                <div class="fw-bold text-danger" th:text="${#numbers.formatDecimal(book.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">68,000 đ</div>
-                                <div th:if="${book.originalPrice != null and book.originalPrice > 0}" class="text-muted text-decoration-line-through small" th:text="${#numbers.formatDecimal(book.originalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">120,000 đ</div>
-                            </td>
+
+                            <!-- Tình trạng sách (% mới): Tag bo góc 4px thanh lịch -->
                             <td class="text-center">
-                                <span class="badge bg-light text-secondary border fw-normal" th:text="${book.totalSold}">0</span>
+                                <span th:if="${book.conditionPercent >= 95}" class="tag-condition-high">
+                                    <i class="fa-solid fa-circle-check" style="font-size: 10px;"></i>
+                                    <span th:text="${book.conditionPercent} + '% (Như mới)'">95%</span>
+                                </span>
+                                <span th:if="${book.conditionPercent >= 90 and book.conditionPercent < 95}" class="tag-condition-med">
+                                    <i class="fa-solid fa-star-half-stroke" style="font-size: 10px;"></i>
+                                    <span th:text="${book.conditionPercent} + '% (Rất tốt)'">90%</span>
+                                </span>
+                                <span th:if="${book.conditionPercent < 90}" class="tag-condition-low">
+                                    <i class="fa-solid fa-shield-halved" style="font-size: 10px;"></i>
+                                    <span th:text="${book.conditionPercent} + '% (Tốt)'">85%</span>
+                                </span>
                             </td>
+
+                            <!-- Giá bán -->
+                            <td class="text-end">
+                                <div class="fw-bold" style="color: #C2410C; font-size: 14.5px;" th:text="${#numbers.formatDecimal(book.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">68,000 đ</div>
+                                <div th:if="${book.originalPrice != null and book.originalPrice > 0}" 
+                                     class="text-muted text-decoration-line-through small" 
+                                     style="font-size: 11px;"
+                                     th:text="${#numbers.formatDecimal(book.originalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">120,000 đ</div>
+                            </td>
+
+                            <!-- Đã bán -->
+                            <td class="text-center">
+                                <span class="badge rounded-pill bg-light text-secondary border px-2 py-1 fw-semibold" style="font-size: 11.5px;">
+                                    <i class="fa-solid fa-bag-shopping text-muted me-1" style="font-size: 10px;"></i><span th:text="${book.totalSold}">0</span>
+                                </span>
+                            </td>
+
+                            <!-- Trạng thái hiển thị (Bày bán / Ẩn) -->
                             <td class="text-center">
                                 <form th:action="@{/admin/books/toggle-active/{id}(id=${book.id})}" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-sm" th:classappend="${book.isActive ? 'btn-success' : 'btn-outline-secondary'}" style="font-size: 11px; padding: 2px 8px;">
-                                        <span th:text="${book.isActive ? 'Hiển thị' : 'Đang ẩn'}">Hiển thị</span>
+                                    <button type="submit" class="btn-status-pill" th:classappend="${book.isActive ? 'active' : 'inactive'}" 
+                                            th:title="${book.isActive ? 'Bấm để ẩn khỏi website' : 'Bấm để hiển thị bán'}">
+                                        <i class="fa-solid me-1" th:classappend="${book.isActive ? 'fa-eye' : 'fa-eye-slash'}"></i>
+                                        <span th:text="${book.isActive ? 'Đang bán' : 'Đang ẩn'}">Đang bán</span>
                                     </button>
                                 </form>
                             </td>
+
+                            <!-- Nổi bật -->
                             <td class="text-center">
                                 <form th:action="@{/admin/books/toggle-featured/{id}(id=${book.id})}" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-sm btn-link p-0 text-decoration-none">
-                                        <i class="fa-solid fa-star fa-lg" th:classappend="${book.isFeatured ? 'text-warning' : 'text-black-50'}"></i>
+                                    <button type="submit" class="btn btn-sm btn-link p-0 text-decoration-none" title="Chuyển đổi trạng thái nổi bật">
+                                        <i class="fa-solid fa-star fa-lg transition-transform" 
+                                           th:classappend="${book.isFeatured ? 'text-warning' : 'text-black-50 opacity-25'}"
+                                           style="filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.3));"></i>
                                     </button>
                                 </form>
                             </td>
+
+                            <!-- Thao tác -->
                             <td class="text-end pe-4">
                                 <div class="d-inline-flex gap-1">
-                                    <a th:href="@{/admin/books/edit/{id}(id=${book.id})}" class="btn btn-sm btn-outline-primary" title="Chỉnh sửa">
+                                    <a th:href="@{/admin/books/edit/{id}(id=${book.id})}" class="btn-glass-action" title="Chỉnh sửa chi tiết">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
-                                    <a th:href="@{/admin/books/delete/{id}(id=${book.id})}" class="btn btn-sm btn-outline-danger" title="Xóa sách" onclick="return confirm('Bạn có chắc chắn muốn xóa cuốn sách này khỏi cơ sở dữ liệu? Toàn bộ ảnh và tồn kho liên quan cũng sẽ bị gỡ bỏ.');">
+                                    <a th:href="@{/admin/books/delete/{id}(id=${book.id})}" 
+                                       class="btn-glass-action-danger" 
+                                       title="Xóa cuốn sách này" 
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa cuốn sách này khỏi cơ sở dữ liệu? Toàn bộ ảnh và dữ liệu tồn kho liên quan cũng sẽ bị gỡ bỏ.');">
                                         <i class="fa-solid fa-trash-can"></i>
                                     </a>
                                 </div>
@@ -146,23 +589,30 @@
                     </tbody>
                 </table>
             </div>
-        </div>
 
-        <!-- PAGINATION -->
-        <div class="card-footer bg-white border-0 py-3" th:if="${totalPages > 1}">
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center mb-0">
-                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
-                        <a class="page-link" th:href="@{/admin/books(page=${currentPage - 1}, keyword=${keyword}, categoryId=${selectedCategoryId}, minCondition=${selectedCondition}, isActive=${selectedIsActive})}">&laquo; Trước</a>
-                    </li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${currentPage == i} ? 'active' : ''">
-                        <a class="page-link" th:href="@{/admin/books(page=${i}, keyword=${keyword}, categoryId=${selectedCategoryId}, minCondition=${selectedCondition}, isActive=${selectedIsActive})}" th:text="${i + 1}">1</a>
-                    </li>
-                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
-                        <a class="page-link" th:href="@{/admin/books(page=${currentPage + 1}, keyword=${keyword}, categoryId=${selectedCategoryId}, minCondition=${selectedCondition}, isActive=${selectedIsActive})}">Sau &raquo;</a>
-                    </li>
-                </ul>
-            </nav>
+            <!-- 4. PAGINATION LIQUID GLASS -->
+            <div class="card-liquid-header border-top border-bottom-0 py-3" th:if="${totalPages > 1}">
+                <div class="text-muted small">
+                    Hiển thị <strong class="text-dark" th:text="${bookPage.numberOfElements}">0</strong> / <strong class="text-dark" th:text="${totalElements}">0</strong> cuốn sách
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-glass mb-0">
+                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/admin/books(page=${currentPage - 1}, keyword=${keyword}, categoryId=${selectedCategoryId}, minCondition=${selectedCondition}, isActive=${selectedIsActive})}">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${currentPage == i} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/admin/books(page=${i}, keyword=${keyword}, categoryId=${selectedCategoryId}, minCondition=${selectedCondition}, isActive=${selectedIsActive})}" th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/admin/books(page=${currentPage + 1}, keyword=${keyword}, categoryId=${selectedCategoryId}, minCondition=${selectedCondition}, isActive=${selectedIsActive})}">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 

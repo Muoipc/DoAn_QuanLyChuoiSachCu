@@ -247,21 +247,32 @@
             color: var(--color-book-primary);
         }
 
-        /* CỘT PHẢI: KHUNG NỘI DUNG CHÍNH (MAIN PROFILE CARD) */
-        .account-main-card {
-            background: white;
-            border-radius: var(--radius-sm);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-            border: 1px solid var(--color-border);
-            padding: 30px;
+        /* CỘT PHẢI: KHUNG NỘI DUNG CHÍNH (MAIN PROFILE CARD - APPLE LIQUID GLASS) */
+        .account-main-card, .profile-content-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            border-radius: 20px;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            padding: 34px;
+        }
+        .account-sidebar-card, .profile-sidebar {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
+            border-radius: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
+            padding: 24px;
         }
         .main-card-header {
-            padding-bottom: 18px;
-            border-bottom: 1px solid #f2ede6;
-            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1.5px solid rgba(232, 222, 200, 0.6);
+            margin-bottom: 26px;
         }
         .main-card-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--color-text-main);
         }
@@ -294,20 +305,26 @@
             text-align: right;
             color: #78716C;
             font-size: 13.5px;
+            font-weight: 600;
         }
-        .form-input-control {
+        .form-input-control, .profile-input {
             width: 100%;
-            max-width: 360px;
-            padding: 10px 14px;
-            border: 1px solid #d5cec4;
-            border-radius: 2px;
+            max-width: 380px;
+            padding: 11px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
             font-size: 14px;
             outline: none;
             font-family: inherit;
-            transition: border-color 0.2s;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .form-input-control:focus {
+        .form-input-control:focus, .profile-input:focus {
+            background: #ffffff;
             border-color: var(--color-book-primary);
+            box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.14);
         }
         .readonly-username-txt {
             font-weight: 700;
@@ -336,22 +353,28 @@
             color: #1C1917;
         }
 
-        /* Nút Lưu Shopee */
-        .btn-shopee-save {
-            background: var(--color-book-primary);
+        /* Nút Lưu Shopee (Apple Pill) */
+        .btn-shopee-save, .btn-submit-profile {
+            background: linear-gradient(135deg, #8C4A27 0%, #6B3416 100%);
             color: white;
             font-size: 14px;
             font-weight: 800;
-            border: none;
-            border-radius: 2px;
-            padding: 12px 36px;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            border-radius: 9999px;
+            padding: 13px 38px;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(140, 74, 39, 0.25);
-            transition: background 0.15s;
+            box-shadow: 0 6px 20px rgba(140, 74, 39, 0.32), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.4);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .btn-shopee-save:hover {
-            background: var(--color-book-hover);
+        .btn-shopee-save:hover, .btn-submit-profile:hover {
+            background: linear-gradient(135deg, #733615 0%, #52270f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 26px rgba(140, 74, 39, 0.45);
+        }
+        .btn-shopee-save:active, .btn-submit-profile:active {
+            transform: scale(0.97);
         }
 
         /* CỘT PHẢI: AVATAR BOX CHUẨN SHOPEE */
@@ -361,15 +384,16 @@
             align-items: center;
             justify-content: flex-start;
             padding-left: 30px;
-            border-left: 1px solid #f2ede6;
+            border-left: 1px solid rgba(232, 222, 200, 0.6);
         }
         .large-avatar-wrap {
             width: 110px;
             height: 110px;
             border-radius: 50%;
             overflow: hidden;
-            border: 2px solid #e8dec8;
+            border: 2.5px solid rgba(255, 255, 255, 0.95);
             margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.12);
         }
         .large-avatar-img {
             width: 100%;
@@ -377,20 +401,23 @@
             object-fit: cover;
         }
         .btn-choose-avatar {
-            background: white;
-            border: 1px solid #d5cec4;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
             color: #574E45;
-            padding: 8px 18px;
-            border-radius: 2px;
+            padding: 9px 22px;
+            border-radius: 9999px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             margin-bottom: 12px;
-            transition: all 0.15s;
+            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.05);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .btn-choose-avatar:hover {
-            background: #faf8f5;
-            border-color: #78716C;
+            background: #ffffff;
+            border-color: var(--color-book-primary);
+            color: var(--color-book-primary);
+            transform: translateY(-1px);
         }
         .avatar-rules-txt {
             font-size: 12px;
@@ -401,8 +428,8 @@
 
         /* TAB ĐỊA CHỈ & ĐỔI MẬT KHẨU */
         .address-item-card {
-            border-bottom: 1px solid #f2ede6;
-            padding: 16px 0;
+            border-bottom: 1px solid rgba(232, 222, 200, 0.6);
+            padding: 18px 0;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -413,8 +440,8 @@
             color: var(--color-book-primary);
             font-size: 11px;
             font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 2px;
+            padding: 3px 10px;
+            border-radius: 9999px;
             margin-left: 8px;
         }
 
@@ -428,6 +455,8 @@
             margin-top: auto;
         }
     </style>
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 </head>
 <body>
 
@@ -452,7 +481,7 @@
     <main class="container-shopee account-portal-layout" style="flex:1;">
 
         <!-- CỘT TRÁI: SIDEBAR ĐIỀU HƯỚNG CHUẨN SHOPEE -->
-        <aside class="account-sidebar-card">
+        <aside class="account-sidebar-card profile-sidebar">
             <!-- Header User Card -->
             <div class="user-quick-profile">
                 <img th:src="${user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
@@ -504,16 +533,16 @@
                     <span>Trợ Lý AI Tư Vấn</span>
                 </a>
 
-                <!-- Group 5: Voucher & Điểm -->
-                <a href="javascript:void(0)" onclick="alert('Bạn đang có 2 mã Freeship 25k và 2.000 điểm tích lũy sách cũ!');" class="single-nav-item">
-                    <i class="fa-solid fa-ticket" style="color:#ef4444;"></i>
-                    <span>Kho Voucher Của Tôi</span>
+                <!-- Group 5: Kho Voucher -->
+                <a th:href="@{/user/vouchers}" class="single-nav-item">
+                    <i class="fa-solid fa-wallet" style="color:#ee4d2d;"></i>
+                    <span>Ví Voucher Của Tôi</span>
                 </a>
             </nav>
         </aside>
 
         <!-- CỘT PHẢI: KHUNG NỘI DUNG CHÍNH -->
-        <section class="account-main-card">
+        <section class="account-main-card profile-content-card">
 
             <!-- ================= TAB 1: HỒ SƠ CỦA TÔI ================= -->
             <div th:if="${activeTab == 'profile'}">
@@ -540,9 +569,10 @@
                         <!-- Email -->
                         <div class="form-row-item">
                             <label class="form-label-txt">Email</label>
-                            <div>
-                                <span th:text="${user.email}">phuc@student.hcmute.edu.vn</span>
-                                <span class="btn-link-action" onclick="alert('Để đổi Email sinh viên, vui lòng liên hệ Ban quản trị qua hotline!');">Thay Đổi</span>
+                            <div style="flex:1; display:flex; align-items:center; gap:14px;">
+                                <span id="currentEmailDisplay" style="font-size:14px; font-weight:500; color:#1C1917;" th:text="${user.email}">phuc@student.hcmute.edu.vn</span>
+                                <input type="hidden" id="emailInput" name="email" th:value="${user.email}">
+                                <span class="btn-link-action" onclick="openChangeEmailModal()" style="cursor:pointer; color:#05a; font-size:13.5px; text-decoration:underline; font-weight:500;">Thay Đổi</span>
                             </div>
                         </div>
 
@@ -601,12 +631,16 @@
                             <img th:src="${user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
                                  alt="Avatar Lớn" class="large-avatar-img" id="avatarPreview">
                         </div>
-                        <button type="button" class="btn-choose-avatar" onclick="chooseSampleAvatar()">
-                            Chọn Ảnh Mẫu
+                        <input type="file" id="realAvatarInput" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="uploadRealAvatar(this)">
+                        <button type="button" class="btn-choose-avatar" onclick="document.getElementById('realAvatarInput').click()">
+                            <i class="fa-solid fa-cloud-arrow-up me-1"></i> Chọn Ảnh
+                        </button>
+                        <button type="button" onclick="chooseSampleAvatar()" style="background:none; border:none; color:#78716c; font-size:12px; cursor:pointer; text-decoration:underline; margin-top:4px;">
+                            Hoặc dùng ảnh mẫu
                         </button>
                         <div class="avatar-rules-txt">
-                            Dụng lượng file tối đa 1 MB<br>
-                            Định dạng: .JPEG, .PNG
+                            Dung lượng file tối đa 5 MB<br>
+                            Định dạng: .JPEG, .PNG, .WEBP
                         </div>
                     </div>
                 </div>
@@ -655,7 +689,7 @@
                 <!-- DANH SÁCH ĐỊA CHỈ -->
                 <div th:each="addr : ${addresses}" class="address-item-card">
                     <div>
-                        <div style="font-size:15px; font-weight:800; color:#1C1917; display:flex; align-items:center;">
+                        <div style="font-size:15px; font-weight:700; color:#1C1917; display:flex; align-items:center;">
                             <span th:text="${addr.receiverName}">Nguyễn Song Hoàng Phúc</span>
                             <span class="topbar-divider" style="margin: 0 10px;"></span>
                             <span style="font-weight:400; color:#78716C;" th:text="${addr.phone}">0934567890</span>
@@ -670,7 +704,36 @@
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-                        <span class="btn-link-action" style="font-size:13px;">Cập nhật</span>
+                        <div style="display:flex; gap:12px; align-items:center;">
+                            <button type="button" 
+                                    class="btn-link-action" 
+                                    style="border:none; background:none; cursor:pointer; color:#05a; font-size:13px; font-weight:500;"
+                                    th:data-id="${addr.id}"
+                                    th:data-name="${addr.receiverName}"
+                                    th:data-phone="${addr.phone}"
+                                    th:data-province="${addr.province}"
+                                    th:data-district="${addr.district}"
+                                    th:data-ward="${addr.ward}"
+                                    th:data-street="${addr.streetAddress}"
+                                    th:data-default="${addr.isDefault}"
+                                    onclick="openEditAddressModal(this)">
+                                Cập nhật
+                            </button>
+                            <form th:unless="${addr.isDefault}" th:action="@{'/user/account/address/delete/' + ${addr.id}}" method="post" style="display:inline;" th:id="'deleteAddrForm_' + ${addr.id}">
+                                <button type="button" 
+                                        style="border:none; background:none; cursor:pointer; color:#dc2626; font-size:13px; font-weight:500;"
+                                        th:data-id="${addr.id}"
+                                        onclick="confirmDeleteAddress(this.getAttribute('data-id'))">
+                                    Xóa
+                                </button>
+                            </form>
+                        </div>
+                        <form th:unless="${addr.isDefault}" th:action="@{'/user/account/address/set-default/' + ${addr.id}}" method="post">
+                            <button type="submit" 
+                                    style="padding:4px 10px; border:1px solid #d6d3d1; background:#fff; border-radius:4px; font-size:12px; color:#57534E; cursor:pointer;">
+                                Thiết lập mặc định
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -682,7 +745,7 @@
                     <p class="main-card-sub">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
                 </div>
 
-                <form action="/user/account/profile/change-password" method="post" style="max-width:520px; display:flex; flex-direction:column; gap:18px;">
+                <form action="/user/account/profile/change-password" method="post" style="max-width:560px; display:flex; flex-direction:column; gap:18px;">
                     <div class="form-row-item">
                         <label class="form-label-txt">Mật khẩu hiện tại</label>
                         <input type="password" name="oldPassword" class="form-input-control" placeholder="Nhập mật khẩu hiện tại..." required>
@@ -698,6 +761,19 @@
                         <input type="password" name="confirmPassword" class="form-input-control" placeholder="Nhập lại mật khẩu mới..." required>
                     </div>
 
+                    <div class="form-row-item">
+                        <label class="form-label-txt">Mã xác thực OTP</label>
+                        <div style="flex:1; display:flex; gap:10px; align-items:center;">
+                            <input type="text" name="otpCode" id="inputChangePasswordOtp" class="form-input-control" maxlength="6" placeholder="Nhập mã 6 số gửi về email..." required style="letter-spacing:3px; font-weight:700;">
+                            <button type="button" id="btnSendChangePassOtp" onclick="sendChangePasswordOtp()" style="white-space:nowrap; height:42px; padding:0 18px; border-radius:9999px; border:1px solid #8C4A27; background:#F5ECE4; color:#8C4A27; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;">
+                                <i class="fa-solid fa-paper-plane me-1"></i> GỬI MÃ OTP
+                            </button>
+                        </div>
+                    </div>
+                    <div style="margin-left: 170px; margin-top: -10px; font-size: 12px; color: #78716C;">
+                        Mã OTP sẽ được gửi trực tiếp tới email: <strong th:text="${user.email}" style="color:#1C1917;">email@domain.com</strong> (Hiệu lực trong 5 phút).
+                    </div>
+
                     <div class="form-row-item" style="margin-top:10px;">
                         <div></div>
                         <div>
@@ -710,16 +786,192 @@
         </section>
     </main>
 
+    <!-- MODAL THAY ĐỔI EMAIL APPLE LIQUID GLASS -->
+    <div id="changeEmailModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; background:rgba(0,0,0,0.45); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); align-items:center; justify-content:center;">
+        <div style="background:rgba(255,255,255,0.88); backdrop-filter:blur(36px) saturate(200%); -webkit-backdrop-filter:blur(36px) saturate(200%); border-radius:24px; border:1.5px solid rgba(255,255,255,0.95); box-shadow:0 24px 60px rgba(0,0,0,0.2); max-width:440px; width:90%; padding:28px; text-align:center;">
+            <div style="width:52px; height:52px; border-radius:50%; background:rgba(238,77,45,0.1); border:1.5px solid rgba(238,77,45,0.25); display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; color:#ee4d2d; font-size:22px;">
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+            <h3 style="font-size:18px; font-weight:700; color:#1C1917; margin-bottom:8px;">Thay Đổi Địa Chỉ Email</h3>
+            <p style="font-size:13px; color:#78716C; margin-bottom:20px; line-height:1.5;">
+                Nhập địa chỉ email mới của bạn để nhận thông báo xác nhận đơn hàng và bảo mật tài khoản.
+            </p>
+            <form action="/user/account/profile/change-email" method="post" id="formChangeEmailModal">
+                <div style="text-align:left; margin-bottom:18px;">
+                    <label style="display:block; font-size:12.5px; font-weight:600; color:#44403C; margin-bottom:6px;">Địa chỉ email mới</label>
+                    <input type="email" name="newEmail" id="modalInputEmail" required placeholder="nhapemail@domain.com"
+                           style="width:100%; height:44px; padding:0 14px; border-radius:10px; border:1px solid #D6D3D1; background:rgba(255,255,255,0.9); font-size:14px; outline:none; transition:border 0.2s;"
+                           onfocus="this.style.borderColor='#ee4d2d'" onblur="this.style.borderColor='#D6D3D1'">
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button type="button" onclick="closeChangeEmailModal()"
+                            style="flex:1; height:44px; border-radius:12px; border:1px solid #e7e5e4; background:rgba(255,255,255,0.8); color:#57534E; font-size:14px; font-weight:600; cursor:pointer;">
+                        Để Sau
+                    </button>
+                    <button type="submit"
+                            style="flex:1.2; height:44px; border-radius:12px; border:none; background:linear-gradient(135deg, #ff5722 0%, #ee4d2d 100%); color:#ffffff; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(238,77,45,0.35);">
+                        Xác Nhận Đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CẬP NHẬT ĐỊA CHỈ APPLE LIQUID GLASS -->
+    <div id="editAddressModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; background:rgba(0,0,0,0.45); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); align-items:center; justify-content:center;">
+        <div style="background:rgba(255,255,255,0.92); backdrop-filter:blur(36px) saturate(200%); -webkit-backdrop-filter:blur(36px) saturate(200%); border-radius:24px; border:1.5px solid rgba(255,255,255,0.95); box-shadow:0 24px 60px rgba(0,0,0,0.2); max-width:520px; width:90%; padding:28px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                <h3 style="font-size:18px; font-weight:700; color:#1C1917; margin:0; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-location-dot" style="color:#ee4d2d;"></i> Cập Nhật Địa Chỉ Nhận Hàng
+                </h3>
+                <button type="button" onclick="closeEditAddressModal()" style="border:none; background:none; font-size:22px; cursor:pointer; color:#78716C;">&times;</button>
+            </div>
+            <form action="/user/account/address/update" method="post" id="formEditAddress">
+                <input type="hidden" name="id" id="editAddrId">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Họ và tên</label>
+                        <input type="text" name="receiverName" id="editAddrName" class="form-input-control" style="width:100%;" required>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Số điện thoại</label>
+                        <input type="text" name="phone" id="editAddrPhone" class="form-input-control" style="width:100%;" required>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px;">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Tỉnh/Thành</label>
+                        <input type="text" name="province" id="editAddrProvince" class="form-input-control" style="width:100%;" required>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Quận/Huyện</label>
+                        <input type="text" name="district" id="editAddrDistrict" class="form-input-control" style="width:100%;" required>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Phường/Xã</label>
+                        <input type="text" name="ward" id="editAddrWard" class="form-input-control" style="width:100%;" required>
+                    </div>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:12px; font-weight:600; color:#44403C; margin-bottom:4px;">Địa chỉ chi tiết (Số nhà, đường)</label>
+                    <input type="text" name="streetAddress" id="editAddrStreet" class="form-input-control" style="width:100%;" required>
+                </div>
+                <div style="margin-bottom:20px;">
+                    <label style="font-size:13px; display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" name="isDefault" id="editAddrDefault" value="true" style="accent-color:#ee4d2d; width:16px; height:16px;">
+                        <span>Đặt làm địa chỉ mặc định</span>
+                    </label>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" onclick="closeEditAddressModal()" 
+                            style="padding:10px 20px; border-radius:10px; border:1px solid #e7e5e4; background:#fff; font-size:13.5px; font-weight:600; cursor:pointer; color:#57534E;">
+                        Hủy
+                    </button>
+                    <button type="submit" 
+                            style="padding:10px 24px; border-radius:10px; border:none; background:linear-gradient(135deg, #ff5722 0%, #ee4d2d 100%); color:#fff; font-size:13.5px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(238,77,45,0.35);">
+                        Lưu Cập Nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="profile-footer">
         <div class="container-shopee">
-            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+            <p>© 2026 Quản lý chuỗi cửa hàng sách cũ</p>
             <p style="margin-top: 4px; color:#857d72;">Nguyễn Song Hoàng Phúc (24162096) &amp; Thái Duy Cường (24162013)</p>
         </div>
     </footer>
 
     <script src="/js/i18n.js"></script>
     <script>
+        function sendChangePasswordOtp() {
+            var btn = document.getElementById('btnSendChangePassOtp');
+            if (!btn || btn.disabled) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Đang gửi...';
+
+            fetch('/user/account/profile/send-change-password-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    alert('✓ ' + data.message);
+                    var count = 60;
+                    var timer = setInterval(function() {
+                        count--;
+                        if (count > 0) {
+                            btn.innerHTML = '<i class="fa-solid fa-clock me-1"></i> Gửi lại (' + count + 's)';
+                        } else {
+                            clearInterval(timer);
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i> GỬI MÃ OTP';
+                        }
+                    }, 1000);
+                } else {
+                    alert('⚠️ ' + data.message);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i> GỬI MÃ OTP';
+                }
+            })
+            .catch(function(err) {
+                alert('⚠️ Lỗi gửi mã OTP: ' + err);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i> GỬI MÃ OTP';
+            });
+        }
+
+        function openChangeEmailModal() {
+            var modal = document.getElementById('changeEmailModal');
+            var input = document.getElementById('modalInputEmail');
+            var currentEmail = document.getElementById('currentEmailDisplay');
+            if (currentEmail && input) {
+                input.value = currentEmail.textContent.trim();
+            }
+            if (modal) {
+                modal.style.display = 'flex';
+                setTimeout(function() { if (input) { input.focus(); input.select(); } }, 100);
+            }
+        }
+        function closeChangeEmailModal() {
+            var modal = document.getElementById('changeEmailModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function openEditAddressModal(btn) {
+            document.getElementById('editAddrId').value = btn.getAttribute('data-id');
+            document.getElementById('editAddrName').value = btn.getAttribute('data-name');
+            document.getElementById('editAddrPhone').value = btn.getAttribute('data-phone');
+            document.getElementById('editAddrProvince').value = btn.getAttribute('data-province');
+            document.getElementById('editAddrDistrict').value = btn.getAttribute('data-district');
+            document.getElementById('editAddrWard').value = btn.getAttribute('data-ward');
+            document.getElementById('editAddrStreet').value = btn.getAttribute('data-street');
+            document.getElementById('editAddrDefault').checked = btn.getAttribute('data-default') === 'true';
+            
+            document.getElementById('editAddressModal').style.display = 'flex';
+        }
+        function closeEditAddressModal() {
+            document.getElementById('editAddressModal').style.display = 'none';
+        }
+
+        function confirmDeleteAddress(id) {
+            showConfirmDialog({
+                title: 'Xóa Địa Chỉ',
+                message: 'Bạn có chắc chắn muốn xóa địa chỉ nhận hàng này không?',
+                type: 'trash',
+                confirmText: 'Xóa Ngay',
+                cancelText: 'Giữ Lại',
+                onConfirm: function() {
+                    var form = document.getElementById('deleteAddrForm_' + id);
+                    if (form) form.submit();
+                }
+            });
+        }
+
         function toggleAddAddressForm() {
             const box = document.getElementById('addAddressBox');
             box.style.display = box.style.display === 'none' ? 'block' : 'none';
@@ -737,6 +989,82 @@
             const newUrl = sampleAvatars[currentIdx];
             document.getElementById('avatarPreview').src = newUrl;
             document.getElementById('hiddenAvatarInput').value = newUrl;
+        }
+
+        // Tải ảnh đại diện thật từ máy tính lên máy chủ
+        function uploadRealAvatar(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+
+            if (file.size > 5 * 1024 * 1024) {
+                if (window.showConfirmDialog) {
+                    window.showConfirmDialog({
+                        title: 'Tệp Quá Dung Lượng',
+                        message: 'Dung lượng ảnh tối đa cho phép là 5MB!',
+                        type: 'danger',
+                        confirmText: 'Đóng',
+                        hideCancel: true
+                    });
+                }
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('avatarFile', file);
+
+            const preview = document.getElementById('avatarPreview');
+            const originalSrc = preview.src;
+            preview.style.opacity = '0.4';
+
+            fetch('/user/account/upload-avatar', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                preview.style.opacity = '1';
+                if (data.success) {
+                    preview.src = data.avatarUrl;
+                    const hiddenInput = document.getElementById('hiddenAvatarInput');
+                    if (hiddenInput) hiddenInput.value = data.avatarUrl;
+
+                    const sidebarImg = document.querySelector('.sidebar-avatar-img');
+                    if (sidebarImg) sidebarImg.src = data.avatarUrl;
+
+                    if (window.showConfirmDialog) {
+                        window.showConfirmDialog({
+                            title: 'Thành Công',
+                            message: data.message || 'Cập nhật ảnh đại diện thành công!',
+                            type: 'success',
+                            confirmText: 'Tuyệt Vời',
+                            hideCancel: true
+                        });
+                    }
+                } else {
+                    preview.src = originalSrc;
+                    if (window.showConfirmDialog) {
+                        window.showConfirmDialog({
+                            title: 'Không Thành Công',
+                            message: data.message || 'Lỗi trong quá trình tải ảnh!',
+                            type: 'danger',
+                            confirmText: 'Thử Lại',
+                            hideCancel: true
+                        });
+                    }
+                }
+            })
+            .catch(err => {
+                preview.style.opacity = '1';
+                if (window.showConfirmDialog) {
+                    window.showConfirmDialog({
+                        title: 'Lỗi Kết Nối',
+                        message: 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng!',
+                        type: 'danger',
+                        confirmText: 'Đóng',
+                        hideCancel: true
+                    });
+                }
+            });
         }
     </script>
     <script src="/js/cart-popover.js"></script>

@@ -7,27 +7,36 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
+    <link rel="stylesheet" href="/css/liquid-glass.css">
 
     <style>
         :root {
             --color-fire: #8C4A27;
             --color-fire-hover: #733615;
             --color-fire-light: #F5ECE4;
+            --color-shopee-red: #ee4d2d;
             --color-bg-body: #F8F5EE;
-            --color-card-bg: #ffffff;
             --color-text-main: #1C1917;
             --color-text-secondary: #44403C;
             --color-text-light: #78716C;
-            --color-border: rgba(0, 0, 0, 0.09);
-            --radius-sm: 3px;
+            --color-border-glass: rgba(255, 255, 255, 0.92);
+            --spring-ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background-color: var(--color-bg-body);
+            font-family: 'Plus Jakarta Sans', 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: 
+                radial-gradient(ellipse 90% 60% at 12% 10%, rgba(217, 119, 6, 0.09) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 50% at 88% 20%, rgba(140, 74, 39, 0.08) 0%, transparent 55%),
+                radial-gradient(ellipse 90% 70% at 15% 80%, rgba(245, 158, 11, 0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 85% 60% at 85% 90%, rgba(140, 74, 39, 0.08) 0%, transparent 55%),
+                #F8F5EE;
+            background-attachment: fixed;
             color: var(--color-text-main);
             min-height: 100vh;
             display: flex;
@@ -41,206 +50,148 @@
             padding: 0 16px;
         }
 
-        /* ================= 1. HEADER CHUẨN SHOPEE CART ================= */
-        .cart-topbar {
-            background: rgba(35, 18, 10, 0.22);
-            backdrop-filter: blur(24px);
-            color: #292524;
-            font-size: 13px;
-            padding: 7px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        }
-        .topbar-flex {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .topbar-left, .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .topbar-item {
-            color: #292524;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: color 0.15s ease;
-        }
-        .topbar-item:hover { color: var(--color-fire); }
-        .topbar-divider {
-            width: 1px;
-            height: 12px;
-            background: rgba(41, 37, 36, 0.25);
-        }
-
-        .cart-header-main {
-            background: rgba(45, 24, 15, 0.28);
-            backdrop-filter: blur(36px);
-            padding: 16px 0 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        .cart-header-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .brand-logo-cart {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .brand-logo-img {
-            height: 52px;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
-        }
-        .cart-page-badge {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--color-fire);
-            border-left: 2px solid #1C1917;
-            padding-left: 14px;
-            text-transform: capitalize;
-            letter-spacing: 0.5px;
-        }
-
-        /* THANH TÌM KIẾM SHOPEE CART BÊN PHẢI BO CONG ĐỒNG BỘ */
-        .cart-search-box {
-            display: flex;
-            align-items: center;
-            background: #ffffff;
-            border: 1.5px solid #D8C8B5;
-            border-radius: 28px;
-            padding: 3px 4px 3px 18px;
-            width: 480px;
-            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.05);
-            transition: all 0.2s ease;
-        }
-        .cart-search-box:focus-within {
-            border-color: var(--color-fire);
-            box-shadow: 0 4px 16px rgba(140, 74, 39, 0.16);
-        }
-        .cart-search-box input {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 13.5px;
-            font-family: inherit;
-            color: #1C1917;
-            background: transparent;
-        }
-        .btn-search-cart {
-            background: var(--color-fire);
-            color: white;
-            border: none;
-            border-radius: 22px;
-            padding: 8px 18px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.15s ease;
-            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.2);
-        }
-
-        /* ================= 2. FREESHIP BANNER ================= */
+        /* ================= 1. FREESHIP BANNER (APPLE LIQUID GLASS) ================= */
         .freeship-alert-banner {
-            background: #fff8e5;
-            border: 1px solid #ffe8b3;
-            border-radius: var(--radius-sm);
-            padding: 12px 20px;
-            margin: 20px auto 14px;
+            background: rgba(255, 249, 235, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            border: 1.5px solid var(--color-border-glass);
+            border-radius: 16px;
+            box-shadow: 0 12px 30px -4px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: 14px 24px;
+            margin: 20px auto 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             font-size: 13.5px;
-            color: #b7791f;
+            color: #92400e;
+            transition: all 0.3s var(--spring-ease);
         }
         .freeship-alert-banner strong { color: var(--color-fire); }
 
-        /* ================= 3. BẢNG GIỎ HÀNG CHUẨN SHOPEE ================= */
-        .cart-table-card {
-            background: #ffffff;
-            border-radius: var(--radius-sm);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 16px;
-        }
-
-        /* Header hàng cột */
+        /* ================= 2. BẢNG GIỎ HÀNG CHUẨN GOLDEN STANDARD ================= */
+        /* Table Header hàng cột */
         .cart-table-header {
             display: grid;
             grid-template-columns: 46px 1fr 140px 140px 140px 90px;
             align-items: center;
-            padding: 16px 20px;
-            background: #ffffff;
-            border-radius: var(--radius-sm);
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            border: 1.5px solid var(--color-border-glass);
+            border-radius: 16px;
             font-size: 14px;
             color: var(--color-text-secondary);
-            font-weight: 600;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 12px;
+            font-weight: 700;
+            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.05), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
+            margin-bottom: 14px;
         }
 
         .checkbox-custom {
-            accent-color: var(--color-fire);
-            width: 18px;
-            height: 18px;
+            accent-color: #ee4d2d;
+            width: 19px;
+            height: 19px;
             cursor: pointer;
+            border-radius: 6px;
+            transition: transform 0.2s var(--spring-ease);
+        }
+        .checkbox-custom:active {
+            transform: scale(0.9);
+        }
+
+        /* Thẻ bao ngoài bảng giỏ hàng (Liquid Glass Card) */
+        .cart-table-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            border: 1.5px solid var(--color-border-glass);
+            border-radius: 20px;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
+            margin-bottom: 20px;
+            padding: 8px 8px 12px;
+            transition: all 0.35s var(--spring-ease);
         }
 
         /* Thẻ Shop / Chi nhánh phân nhóm */
         .shop-group-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 16px 20px;
-            border-bottom: 1px solid #f2ede6;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: rgba(248, 245, 238, 0.65);
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
             color: #1C1917;
+            margin-bottom: 10px;
         }
         .badge-mall-tag {
-            background: var(--color-fire);
+            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%);
             color: white;
             font-size: 11px;
             font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 2px;
+            padding: 3px 8px;
+            border-radius: 8px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.25);
         }
         .btn-chat-now {
             color: var(--color-fire);
             font-size: 13px;
+            font-weight: 700;
             cursor: pointer;
             margin-left: 12px;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            background: rgba(140, 74, 39, 0.08);
+            transition: all 0.2s var(--spring-ease);
+        }
+        .btn-chat-now:hover {
+            background: rgba(140, 74, 39, 0.15);
+            transform: none;
         }
 
-        /* Hàng sản phẩm */
+        /* Hàng sản phẩm: Thẻ lồng thẻ bo cong 14px */
         .cart-item-row {
             display: grid;
             grid-template-columns: 46px 1fr 140px 140px 140px 90px;
             align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #f5efe6;
-            transition: background 0.15s;
+            padding: 16px 18px;
+            margin: 8px 4px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(232, 222, 200, 0.65);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+            transition: all 0.3s var(--spring-ease);
         }
-        .cart-item-row:last-child { border-bottom: none; }
-        .cart-item-row:hover { background: #fffdfb; }
+        .cart-item-row:hover {
+            background: rgba(255, 255, 255, 0.98);
+            transform: none;
+            box-shadow: 0 6px 18px rgba(140, 74, 39, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            border-color: rgba(255, 255, 255, 0.95);
+        }
 
         .product-meta-flex {
             display: flex;
             align-items: flex-start;
-            gap: 14px;
+            gap: 16px;
         }
         .book-cart-thumb {
-            width: 80px;
-            height: 90px;
+            width: 82px;
+            height: 94px;
             object-fit: cover;
-            border-radius: 3px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             flex-shrink: 0;
+            transition: transform 0.3s var(--spring-ease);
+        }
+        .cart-item-row:hover .book-cart-thumb {
+            transform: none;
         }
         .book-cart-info {
             display: flex;
@@ -248,22 +199,23 @@
             gap: 6px;
         }
         .book-title-link {
-            font-size: 14px;
+            font-size: 14.5px;
             font-weight: 700;
             color: var(--color-text-main);
-            line-height: 1.35;
+            line-height: 1.4;
+            transition: color 0.15s;
         }
-        .book-title-link:hover { color: var(--color-fire); }
+        .book-title-link:hover { color: #ee4d2d; }
 
-        /* PHÂN LOẠI HÀNG (VARIANT DROPDOWN PILL CHUẨN SHOPEE) */
+        /* Phân loại hàng (Capsule Pill) */
         .cart-variant-box {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #faf8f5;
+            background: rgba(250, 248, 245, 0.9);
             border: 1px solid #e8e2d8;
-            border-radius: 2px;
-            padding: 3px 8px;
+            border-radius: 8px;
+            padding: 4px 10px;
             font-size: 12px;
             color: #78716C;
             cursor: pointer;
@@ -272,16 +224,16 @@
         .cart-store-tag {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             font-size: 11.5px;
             color: #78716C;
-            background: #f5f0e6;
-            padding: 2px 8px;
-            border-radius: 3px;
+            background: rgba(245, 240, 230, 0.85);
+            padding: 3px 10px;
+            border-radius: 8px;
             width: fit-content;
         }
 
-        /* ĐƠN GIÁ */
+        /* Đơn giá */
         .price-col-cell {
             text-align: center;
         }
@@ -292,12 +244,12 @@
             margin-right: 6px;
         }
         .price-cart-active {
-            font-size: 14.5px;
-            font-weight: 700;
-            color: #1C1917;
+            font-size: 15px;
+            font-weight: 800 !important;
+            color: #ee4d2d !important;
         }
 
-        /* BỘ NÚT SỐ LƯỢNG SHOPEE STEPPER */
+        /* Bộ nút số lượng Stepper bo cong 8px */
         .qty-stepper-cell {
             display: flex;
             justify-content: center;
@@ -305,79 +257,96 @@
         .qty-stepper-wrap {
             display: inline-flex;
             align-items: center;
-            border: 1px solid #dcd7ce;
-            border-radius: 2px;
+            border: 1.5px solid rgba(220, 215, 206, 0.85);
+            border-radius: 8px;
             overflow: hidden;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
         }
         .btn-qty-step {
             width: 32px;
             height: 32px;
             border: none;
             background: transparent;
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 800;
             cursor: pointer;
             color: #44403C;
+            transition: all 0.2s;
         }
-        .btn-qty-step:hover { background: #f0eae1; }
+        .btn-qty-step:hover { background: #f0eae1; color: #1C1917; }
+        .btn-qty-step:active { transform: scale(0.92); }
         .input-qty-step {
             width: 44px;
             height: 32px;
             border: none;
-            border-left: 1px solid #dcd7ce;
-            border-right: 1px solid #dcd7ce;
+            border-left: 1px solid rgba(220, 215, 206, 0.85);
+            border-right: 1px solid rgba(220, 215, 206, 0.85);
             text-align: center;
-            font-size: 13px;
-            font-weight: 700;
+            font-size: 13.5px;
+            font-weight: 800;
             outline: none;
             color: #1C1917;
+            background: transparent;
         }
 
-        /* SỐ TIỀN */
+        /* Số tiền */
         .item-subtotal-cell {
             text-align: center;
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--color-fire);
+            font-size: 16.5px;
+            font-weight: 800 !important;
+            color: #ee4d2d !important;
         }
 
-        /* THAO TÁC */
+        /* Thao tác */
         .action-cell {
             text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
             align-items: center;
         }
         .btn-remove-item {
-            color: #1C1917;
-            font-size: 13.5px;
+            color: #574E45;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
-            transition: color 0.15s;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            transition: all 0.15s;
         }
-        .btn-remove-item:hover { color: #dc2626; }
+        .btn-remove-item:hover {
+            color: #dc2626;
+            background: #fef2f2;
+        }
         .link-similar-books {
             color: var(--color-fire);
             font-size: 11.5px;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 3px;
         }
+        .link-similar-books:hover { text-decoration: underline; }
 
-        /* ================= 4. KHUNG SHOPEE VOUCHER & XU ================= */
-        .voucher-and-coins-card {
-            background: white;
-            border-radius: var(--radius-sm);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        /* ================= 3. KHUNG VOUCHER & XU (APPLE LIQUID GLASS) ================= */
+        .voucher-and-coins-card, .cart-voucher-box {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            border: 1.5px solid var(--color-border-glass);
+            border-radius: 20px;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
             margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.35s var(--spring-ease);
         }
         .voucher-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 16px 24px;
-            border-bottom: 1px solid #f2ede6;
+            border-bottom: 1px solid rgba(242, 237, 230, 0.8);
             font-size: 14px;
         }
         .voucher-left {
@@ -389,30 +358,40 @@
         .voucher-right {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
         .btn-select-voucher {
             color: #0288d1;
             font-weight: 700;
             cursor: pointer;
             font-size: 13.5px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            transition: background 0.15s;
         }
-        .btn-select-voucher:hover { text-decoration: underline; }
+        .btn-select-voucher:hover {
+            background: rgba(2, 136, 209, 0.08);
+            text-decoration: underline;
+        }
 
-        /* ================= 5. THANH THANH TOÁN DÍNH ĐÁY (SHOPEE STICKY BOTTOM BAR) ================= */
-        .cart-sticky-bottom-bar {
+        /* ================= 4. THANH THANH TOÁN DÍNH ĐÁY (STICKY BOTTOM BAR) ================= */
+        .cart-sticky-bottom-bar, .cart-summary-card {
             position: sticky;
-            bottom: 0;
-            background: #ffffff;
-            box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
-            border-top: 1px solid #f0eae1;
-            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-            padding: 16px 28px;
+            bottom: 12px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            border: 1.5px solid var(--color-border-glass);
+            border-radius: 20px;
+            box-shadow: 0 16px 40px -4px rgba(45, 24, 15, 0.14), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: 18px 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 100;
             margin-top: auto;
+            margin-bottom: 20px;
+            transition: all 0.35s var(--spring-ease);
         }
         .sticky-left-actions {
             display: flex;
@@ -426,8 +405,12 @@
             background: none;
             border: none;
             font-size: 14px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            transition: all 0.15s;
         }
-        .btn-del-all:hover { color: #dc2626; }
+        .btn-del-all:hover { color: #dc2626; background: #fef2f2; }
 
         .sticky-right-checkout {
             display: flex;
@@ -448,85 +431,103 @@
         }
         .total-amount-fire {
             font-size: 26px;
-            font-weight: 900;
-            color: var(--color-fire);
+            font-weight: 800 !important;
+            color: #ee4d2d !important;
         }
         .savings-note-gold {
             font-size: 12px;
             color: #b7791f;
+            font-weight: 600;
         }
 
-        .btn-shopee-checkout {
-            background: var(--color-fire);
-            color: white;
+        /* Nút Mua Hàng Capsule 9999px với Spring Press scale(0.96) */
+        .btn-shopee-checkout, .btn-checkout-primary {
+            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%) !important;
+            color: white !important;
             font-size: 15px;
             font-weight: 800;
             border: none;
-            border-radius: 3px;
-            padding: 14px 48px;
+            border-radius: 9999px !important;
+            padding: 14px 44px;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35);
-            transition: all 0.2s;
+            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.35);
+            transition: all 0.25s var(--spring-ease);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .btn-shopee-checkout:hover {
-            background: var(--color-fire-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.45);
+        .btn-shopee-checkout:hover, .btn-checkout-primary:hover {
+            transform: none;
+            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.4);
+        }
+        .btn-shopee-checkout:active, .btn-checkout-primary:active {
+            transform: scale(0.96) !important;
         }
 
-        /* GIỎ TRỐNG */
+        /* Giỏ trống (Apple Liquid Glass) */
         .empty-cart-card {
             text-align: center;
             padding: 80px 20px;
-            background: white;
-            border-radius: var(--radius-sm);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            border: 1.5px solid var(--color-border-glass);
+            border-radius: 20px;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08);
             margin: 30px auto;
         }
-        .empty-cart-img {
-            width: 140px;
-            opacity: 0.6;
-            margin-bottom: 16px;
-        }
 
-        /* ================= 6. GỢI Ý MUA KÈM DƯỚI ĐÁY GIỎ HÀNG (SHOPEE STYLE) ================= */
-        .cart-recommend-section {
-            margin: 40px auto 20px;
+        /* ================= 5. GỢI Ý MUA KÈM DƯỚI ĐÁY GIỎ HÀNG ================= */
+        .cart-recommend-section, .recommend-section {
+            margin: 36px auto 20px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
+            border: 1.5px solid var(--color-border-glass);
+            border-radius: 20px;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: 24px;
         }
         .recommend-title {
             font-size: 16px;
             font-weight: 800;
-            color: #78716C;
+            color: #1C1917;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .recommend-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 12px;
+            gap: 14px;
         }
         .recommend-card {
-            background: white;
-            border-radius: var(--radius-sm);
-            padding: 10px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.82);
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            border-radius: 14px;
+            padding: 12px;
+            box-shadow: 0 6px 18px rgba(45, 24, 15, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.9);
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            transition: all 0.2s;
+            gap: 8px;
+            transition: all 0.3s var(--spring-ease);
         }
         .recommend-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #ffffff;
+            transform: none;
+            box-shadow: 0 8px 20px rgba(140, 74, 39, 0.1), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
         }
         .recommend-thumb {
             width: 100%;
             height: 140px;
             object-fit: cover;
-            border-radius: 2px;
+            border-radius: 10px;
         }
         .recommend-name {
             font-size: 12.5px;
@@ -536,12 +537,110 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            line-height: 1.3;
+            line-height: 1.35;
         }
         .recommend-price {
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--color-fire);
+            font-size: 14.5px;
+            font-weight: 800 !important;
+            color: #ee4d2d !important;
+        }
+
+        /* ================= 6. MODAL & RESPONSIVE LIQUID GLASS CHO GIỎ HÀNG ================= */
+        .modal-overlay-shopee {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.48);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100005;
+            padding: 16px;
+        }
+        .modal-body-shopee {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(32px) saturate(200%);
+            -webkit-backdrop-filter: blur(32px) saturate(200%);
+            border-radius: 24px;
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            width: 580px;
+            max-width: 94vw;
+            box-shadow: 0 24px 60px rgba(45, 24, 15, 0.22), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            overflow: hidden;
+            animation: cartModalIn 0.25s var(--spring-ease);
+        }
+        @keyframes cartModalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .voucher-picker-item:hover {
+            border-color: #ee4d2d !important;
+            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.12);
+        }
+
+        @media screen and (max-width: 992px) {
+            .cart-table-header { display: none; }
+            .cart-item-row {
+                grid-template-columns: 36px 1fr !important;
+                grid-template-areas: 
+                    "check meta"
+                    "check price"
+                    "check qty"
+                    "check subtotal"
+                    "check action";
+                gap: 12px;
+                padding: 16px 12px;
+            }
+            .cart-sticky-bottom-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+                padding: 14px 18px;
+            }
+            .sticky-left-actions {
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .sticky-right-checkout {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+            }
+            .recommend-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .voucher-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .voucher-right {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+            .recommend-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .sticky-right-checkout {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .checkout-pricing-box {
+                align-items: flex-start;
+            }
+            .btn-shopee-checkout {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
         }
 
         /* FOOTER */
@@ -553,60 +652,6 @@
             text-align: center;
             margin-top: 50px;
         }
-    
-        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
-        .lang-dropdown-box {
-            position: relative;
-            display: inline-block;
-        }
-        .lang-trigger-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            font-weight: 700;
-            color: #292524;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: all 0.15s ease;
-        }
-        .lang-trigger-btn:hover {
-            color: #8C4A27;
-            background: rgba(140, 74, 39, 0.08);
-        }
-        .lang-dropdown-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: #ffffff;
-            border-radius: 4px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            border: 1px solid #E8DEC8;
-            min-width: 145px;
-            display: none;
-            z-index: 1000;
-            padding: 6px 0;
-        }
-        .lang-dropdown-box:hover .lang-dropdown-menu {
-            display: block;
-        }
-        .lang-item-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            font-size: 13px;
-            color: #1C1917;
-            cursor: pointer;
-            transition: background 0.15s;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        .lang-item-btn:hover {
-            background: #F5ECE4;
-            color: #8C4A27;
-        }
-
     </style>
 </head>
 <body>
@@ -614,16 +659,15 @@
     <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
     <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
 
-
     <main class="container-shopee" style="flex:1;">
 
-        <!-- 3. FREESHIP BANNER -->
-        <div class="freeship-alert-banner">
-            <i class="fa-solid fa-truck-fast text-success" style="font-size: 18px;"></i>
-            <span>Nhấn vào đây để nhận mã <strong>Miễn Phí Vận Chuyển</strong>. Freeship cho đơn sách cũ từ <strong>150.000₫</strong> hoặc nhận trực tiếp tại <strong>5 chi nhánh TP.HCM</strong></span>
+        <!-- 2. FREESHIP BANNER -->
+        <div class="freeship-alert-banner" onclick="window.location.href='/vouchers';" style="cursor:pointer;" title="Nhấn để nhận mã tại Kho Voucher">
+            <i class="fa-solid fa-truck-fast text-success" style="font-size: 20px;"></i>
+            <span>Nhấn vào đây để nhận mã <strong>Miễn Phí Vận Chuyển</strong>. Freeship cho đơn sách cũ từ <strong>150.000₫</strong> hoặc nhận trực tiếp tại <strong>5 chi nhánh TP.HCM</strong> &gt;</span>
         </div>
 
-        <!-- 4. KHI CÓ SẢN PHẨM TRONG GIỎ -->
+        <!-- 3. KHI CÓ SẢN PHẨM TRONG GIỎ -->
         <div th:unless="${#lists.isEmpty(cartItems)}">
 
             <!-- HÀNG TIÊU ĐỀ BẢNG (CHUẨN SHOPEE) -->
@@ -638,7 +682,7 @@
                 <div style="text-align: center;">Thao Tác</div>
             </div>
 
-            <!-- THẺ SHOP / CHI NHÁNH NHÓM SẢN PHẨM -->
+            <!-- THẺ SHOP / CHI NHÁNH NHÓM SẢN PHẨM (LIQUID GLASS TABLE CARD) -->
             <div class="cart-table-card">
                 <div class="shop-group-header">
                     <input type="checkbox" class="checkbox-custom" checked id="checkShopGroup">
@@ -649,7 +693,7 @@
                     </span>
                 </div>
 
-                <!-- DANH SÁCH CÁC CUỐN SÁCH CŨ TRONG GIỎ -->
+                <!-- DANH SÁCH CÁC CUỐN SÁCH CŨ TRONG GIỎ (CARD-IN-CARD 14PX) -->
                 <div th:each="item : ${cartItems}" class="cart-item-row">
                     <!-- Checkbox -->
                     <div>
@@ -658,16 +702,16 @@
 
                     <!-- Cột Sản phẩm: Ảnh bìa + Tên sách + Phân loại hàng + Tag kho -->
                     <div class="product-meta-flex">
-                        <img th:src="${item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
+                        <img th:src="${item.book != null and item.book.primaryImageUrl != null ? item.book.primaryImageUrl : '/images/books/book_1.jpg'}" 
                              alt="Bìa sách" class="book-cart-thumb">
                         <div class="book-cart-info">
-                            <a th:href="@{'/books/' + ${item.book.id}}" class="book-title-link" th:text="${item.book.title}">
+                            <a th:href="@{'/books/' + ${item.book != null ? item.book.id : 1}}" class="book-title-link" th:text="${item.book != null ? item.book.title : 'Sách cũ'}">
                                 Tên cuốn sách cũ
                             </a>
                             
                             <!-- Dropdown Phân loại hàng chuẩn Shopee -->
                             <div class="cart-variant-box">
-                                <span>Phân loại hàng: <strong th:text="${item.book.conditionPercent} + '% Mới'">95% Mới</strong></span>
+                                <span>Phân loại hàng: <strong th:text="${item.book != null && item.book.conditionPercent != null ? item.book.conditionPercent : 90} + '% Mới'">95% Mới</strong></span>
                                 <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
                             </div>
 
@@ -681,32 +725,35 @@
 
                     <!-- Cột Đơn giá -->
                     <div class="price-col-cell">
-                        <span class="price-cart-origin" th:text="'₫' + ${#numbers.formatDecimal(item.book.originalPrice, 0, 'POINT', 0, 'COMMA')}">₫120.000</span>
-                        <span class="price-cart-active" th:text="'₫' + ${#numbers.formatDecimal(item.book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                        <span class="price-cart-origin" th:if="${item.book != null and item.book.originalPrice != null}" th:text="'₫' + ${#numbers.formatDecimal(item.book.originalPrice, 0, 'POINT', 0, 'COMMA')}">₫120.000</span>
+                        <span class="price-cart-active" th:text="'₫' + ${#numbers.formatDecimal(item.book != null and item.book.price != null ? item.book.price : 0, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                     </div>
 
-                    <!-- Cột Số lượng (Shopee Stepper) -->
+                    <!-- Cột Số lượng (Shopee Stepper bo cong 8px) -->
                     <div class="qty-stepper-cell">
-                        <form action="/cart/update" method="post" style="display:inline-flex;">
+                        <form th:action="@{/cart/update}" action="/cart/update" method="post" style="display:inline-flex;">
                             <input type="hidden" name="itemId" th:value="${item.id}">
                             <div class="qty-stepper-wrap">
-                                <button type="submit" name="quantity" th:value="${item.quantity - 1}" class="btn-qty-step">-</button>
+                                <button type="submit" name="quantity" th:value="${item.quantity - 1}" class="btn-qty-step" aria-label="Giảm số lượng">-</button>
                                 <input type="text" class="input-qty-step" th:value="${item.quantity}" readonly>
-                                <button type="submit" name="quantity" th:value="${item.quantity + 1}" class="btn-qty-step">+</button>
+                                <button type="submit" name="quantity" th:value="${item.quantity + 1}" class="btn-qty-step" aria-label="Tăng số lượng">+</button>
                             </div>
                         </form>
                     </div>
 
-                    <!-- Cột Số tiền -->
+                    <!-- Cột Số tiền (Đỏ Shopee 800) -->
                     <div class="item-subtotal-cell">
                         <span th:text="'₫' + ${#numbers.formatDecimal(item.itemTotal, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                     </div>
 
                     <!-- Cột Thao tác -->
                     <div class="action-cell">
-                        <a th:href="@{'/cart/remove/' + ${item.id}}" class="btn-remove-item" onclick="return confirm('Bạn có chắc muốn xóa cuốn sách này khỏi giỏ?');">
+                        <button type="button" class="btn-remove-item" style="background:none; border:none; padding:0; cursor:pointer; font-family:inherit;" 
+                                th:data-href="@{'/cart/remove/' + ${item.id}}" 
+                                th:data-title="${item.book != null ? item.book.title : 'cuốn sách này'}"
+                                onclick="confirmRemoveCartItem(this.getAttribute('data-href'), this.getAttribute('data-title'))">
                             Xóa
-                        </a>
+                        </button>
                         <a th:href="@{'/books/' + ${item.book.id}}" class="link-similar-books">
                             <span>Tìm tương tự</span> <i class="fa-solid fa-caret-down"></i>
                         </a>
@@ -714,49 +761,63 @@
                 </div>
             </div>
 
-            <!-- 5. KHUNG SHOPEE VOUCHER & XU -->
-            <div class="voucher-and-coins-card">
+            <!-- 4. KHUNG SHOPEE VOUCHER & XU (LIQUID GLASS VOUCHER BOX) -->
+            <div class="voucher-and-coins-card cart-voucher-box">
                 <div class="voucher-row">
                     <div class="voucher-left">
-                        <i class="fa-solid fa-ticket text-danger" style="font-size:18px;"></i>
+                        <i class="fa-solid fa-ticket text-danger" style="font-size:20px;"></i>
                         <span>Chuỗi Sách Cũ Voucher</span>
+                        <span id="cartVoucherBadge" style="display:none; font-size:12px; font-weight:800; color:#ee4d2d; background:rgba(238,77,45,0.1); border:1px solid rgba(238,77,45,0.3); border-radius:9999px; padding:2px 10px; align-items:center; gap:4px;">
+                            <i class="fa-solid fa-check"></i> <span id="cartVoucherCodeDisplay"></span>
+                        </span>
                     </div>
                     <div class="voucher-right">
-                        <span style="font-size:13px; color:var(--color-text-secondary);">Mã voucher giảm <strong>20.000₫</strong> &amp; Freeship</span>
-                        <a th:href="@{/checkout}" class="btn-select-voucher">Chọn Hoặc Nhập Mã &gt;</a>
+                        <span id="cartVoucherStatusDesc" style="font-size:13.5px; color:var(--color-text-secondary);">Chưa chọn voucher</span>
+                        <span id="cartVoucherDiscountBadge" style="display:none; font-size:14px; font-weight:800; color:#ee4d2d;">-₫0</span>
+                        <button type="button" class="btn-select-voucher" onclick="openCartVoucherModal()" style="color:#0288d1; font-weight:700; cursor:pointer; font-size:13.5px; padding:6px 14px; border-radius:9999px; background:rgba(2,136,209,0.08); border:none; display:inline-flex; align-items:center; gap:6px;">
+                            <i class="fa-solid fa-ticket"></i> <span id="cartVoucherBtnText">Chọn Hoặc Nhập Mã &gt;</span>
+                        </button>
+                        <button type="button" id="btnRemoveCartVoucher" onclick="removeCartVoucher()" style="display:none; color:#dc2626; font-weight:700; cursor:pointer; font-size:12px; padding:5px 10px; border-radius:9999px; background:rgba(220,38,38,0.08); border:none;" title="Hủy áp dụng mã">
+                            <i class="fa-solid fa-xmark"></i> Bỏ chọn
+                        </button>
                     </div>
                 </div>
 
                 <div class="voucher-row" style="border-bottom:none;">
                     <div class="voucher-left">
-                        <i class="fa-solid fa-coins text-warning" style="font-size:18px;"></i>
+                        <i class="fa-solid fa-coins text-warning" style="font-size:20px;"></i>
                         <span>Điểm Tích Lũy Sách Cũ</span>
                         <span style="font-size:12px; color:#78716C; font-weight:400;">(Dùng 2.000 Điểm tiết kiệm ₫2.000)</span>
                     </div>
                     <div class="voucher-right">
-                        <span style="font-size:13px; color:var(--color-fire); font-weight:700;">-₫2.000</span>
-                        <input type="checkbox" class="checkbox-custom" checked>
+                        <span id="cartCoinsDiscountDisplay" style="font-size:13.5px; color:#ee4d2d; font-weight:800;">-₫2.000</span>
+                        <input type="checkbox" class="checkbox-custom" id="cartCoinsCheckbox" checked onchange="toggleCartCoins(this)">
                     </div>
                 </div>
             </div>
 
-            <!-- 6. THANH THANH TOÁN DÍNH ĐÁY (SHOPEE STICKY BOTTOM CHECKOUT BAR) -->
-            <div class="cart-sticky-bottom-bar">
+            <!-- 5. THANH THANH TOÁN DÍNH ĐÁY (SHOPEE STICKY BOTTOM CHECKOUT BAR) -->
+            <div class="cart-sticky-bottom-bar cart-summary-card">
                 <div class="sticky-left-actions">
                     <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
                         <input type="checkbox" class="checkbox-custom" checked id="checkAllBottom">
                         <span style="font-weight:700;">Chọn Tất Cả (<span th:text="${totalQuantity}">1</span>)</span>
                     </label>
-                    <button type="button" class="btn-del-all" onclick="alert('Đã chọn xóa toàn bộ sản phẩm');"><i class="fa-regular fa-trash-can me-1"></i> Xóa</button>
-                    <span style="color:#78716C; cursor:pointer;">Bỏ sản phẩm không hoạt động</span>
-                    <span style="color:var(--color-fire); cursor:pointer;"><i class="fa-regular fa-heart me-1"></i> Lưu vào mục Đã thích</span>
+                    <button type="button" class="btn-del-all" onclick="confirmClearCart()" style="background:none; border:none; padding:0; cursor:pointer; font-size:inherit; font-family:inherit; color:inherit;">
+                        <i class="fa-regular fa-trash-can me-1"></i> Xóa Tất Cả
+                    </button>
+                    <span style="color:#78716C; cursor:pointer; font-size:13px;">Bỏ sản phẩm không hoạt động</span>
+                    <span style="color:var(--color-fire); cursor:pointer; font-size:13px; font-weight:600;"><i class="fa-regular fa-heart me-1"></i> Lưu vào mục Đã thích</span>
                 </div>
 
                 <div class="sticky-right-checkout">
                     <div class="checkout-pricing-box">
+                        <div id="cartVoucherDiscountLine" style="display:none; font-size:13px; color:#ee4d2d; font-weight:700; margin-bottom:2px;">
+                            <i class="fa-solid fa-ticket me-1"></i> Giảm giá Voucher: <span id="cartSummaryVoucherVal">-₫0</span>
+                        </div>
                         <div class="total-payment-line">
                             <span>Tổng thanh toán (<strong th:text="${totalQuantity} + ' Sản phẩm'">1 Sản phẩm</strong>):</span>
-                            <span class="total-amount-fire" th:text="'₫' + ${#numbers.formatDecimal(totalPrice, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                            <span class="total-amount-fire" id="cartFinalTotalDisplay" th:text="'₫' + ${#numbers.formatDecimal(totalPrice, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                         </div>
                         <div class="savings-note-gold" th:if="${totalSavings != null and totalSavings.doubleValue() > 0}" 
                              th:text="'Tiết kiệm được ₫' + ${#numbers.formatDecimal(totalSavings, 0, 'POINT', 0, 'COMMA')} + ' so với sách mới'">
@@ -764,15 +825,17 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn-shopee-checkout" onclick="window.location.href='/checkout';">
-                        MUA HÀNG
+                    <button type="button" class="btn-shopee-checkout btn-checkout-primary" id="btnCartCheckout" onclick="proceedToCheckout();">
+                        <i class="fa-solid fa-credit-card me-1"></i> MUA HÀNG
                     </button>
                 </div>
             </div>
 
-            <!-- 7. GỢI Ý MUA KÈM DƯỚI ĐÁY GIỎ HÀNG (CÓ THỂ BẠN CŨNG THÍCH) -->
-            <section class="cart-recommend-section">
-                <div class="recommend-title">CÓ THỂ BẠN CŨNG THÍCH</div>
+            <!-- 6. GỢI Ý MUA KÈM DƯỚI ĐÁY GIỎ HÀNG -->
+            <section class="cart-recommend-section recommend-section">
+                <div class="recommend-title">
+                    <i class="fa-solid fa-heart text-danger"></i> CÓ THỂ BẠN CŨNG THÍCH
+                </div>
                 <div class="recommend-grid">
                     <a th:href="@{/books/2}" class="recommend-card">
                         <img src="/images/books/book_2.jpg" alt="Sách gợi ý" class="recommend-thumb">
@@ -812,24 +875,161 @@
         <!-- KHI GIỎ HÀNG TRỐNG -->
         <div th:if="${#lists.isEmpty(cartItems)}" class="empty-cart-card">
             <i class="fa-solid fa-cart-shopping" style="font-size: 64px; color: #d5cec4; margin-bottom: 16px;"></i>
-            <h3 style="font-size: 18px; font-weight: 800; color: #1C1917;">Giỏ hàng của bạn còn trống</h3>
-            <p style="color: #78716C; margin: 8px 0 20px;">Hàng ngàn cuốn sách cũ kiểm định giá tốt đang chờ đón bạn.</p>
-            <a th:href="@{/}" class="btn-shopee-checkout" style="display:inline-block; padding: 12px 36px;">
+            <h3 style="font-size: 20px; font-weight: 800; color: #1C1917;">Giỏ hàng của bạn còn trống</h3>
+            <p style="color: #78716C; margin: 8px 0 24px;">Hàng ngàn cuốn sách cũ kiểm định giá tốt đang chờ đón bạn.</p>
+            <a th:href="@{/}" class="btn-shopee-checkout btn-checkout-primary" style="display:inline-flex; padding: 14px 44px;">
                 MUA NGAY
             </a>
         </div>
 
     </main>
 
+    <!-- MODAL CHỌN VOUCHER TRỰC TIẾP TRONG GIỎ HÀNG (APPLE LIQUID GLASS) -->
+    <div class="modal-overlay-shopee" id="cartVoucherModal" style="display:none;" onclick="if(event.target===this) closeCartVoucherModal();">
+        <div class="modal-body-shopee" style="max-width: 580px; width: 92vw; border-radius: 24px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(32px) saturate(200%); border: 1.5px solid rgba(255, 255, 255, 0.95); box-shadow: 0 24px 60px rgba(45, 24, 15, 0.22);">
+            
+            <!-- Modal Header -->
+            <div style="padding:18px 24px; border-bottom:1.5px solid rgba(232, 222, 200, 0.8); display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:rgba(238,77,45,0.1); color:#ee4d2d; display:flex; align-items:center; justify-content:center; font-size:16px;">
+                        <i class="fa-solid fa-ticket"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size:17px; font-weight:800; color:#1C1917; margin:0;">Chọn Chuỗi Sách Cũ Voucher</h3>
+                        <p style="font-size:12px; color:#78716C; margin:2px 0 0 0;">Áp dụng voucher để nhận mức giảm giá tạm tính ngay trong giỏ hàng</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeCartVoucherModal()" style="border:none; background:none; font-size:26px; cursor:pointer; color:#78716C; padding:0 4px; line-height:1;">&times;</button>
+            </div>
+            
+            <!-- Banner dẫn đến Kho Voucher -->
+            <div style="padding: 12px 24px; background: rgba(238, 77, 45, 0.05); border-bottom: 1px dashed rgba(238, 77, 45, 0.2); display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:13px; color:#78716C;"><i class="fa-solid fa-gift text-danger me-1"></i> Bạn muốn săn thêm mã Freeship &amp; ưu đãi?</span>
+                <a th:href="@{/vouchers}" target="_blank" style="font-size:13px; font-weight:700; color:#ee4d2d; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                    Vào Kho Voucher <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+                </a>
+            </div>
+
+            <!-- Ô nhập mã Voucher thủ công -->
+            <div style="padding: 16px 24px; border-bottom: 1px solid rgba(232, 222, 200, 0.7); background: rgba(255, 255, 255, 0.7);">
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div style="position:relative; flex:1;">
+                        <i class="fa-solid fa-ticket" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#78716C; font-size:14px;"></i>
+                        <input type="text" id="modalVoucherCodeInput" placeholder="Nhập mã voucher (VD: VOUCHER20K, FREESHIP15K, VIP10)..."
+                               style="width:100%; box-sizing:border-box; padding:10px 14px 10px 38px; font-size:13.5px; font-weight:600; text-transform:uppercase; border:1.5px solid rgba(232, 222, 200, 0.9); border-radius:9999px; outline:none; background:#fff; transition:border-color 0.2s;">
+                    </div>
+                    <button type="button" onclick="applyVoucherFromInput()" 
+                            style="padding:10px 22px; background:linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%); color:#fff; border:none; border-radius:9999px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; box-shadow:0 4px 12px rgba(238,77,45,0.25);">
+                        Áp Dụng
+                    </button>
+                </div>
+                <div id="modalVoucherAlert" style="display:none; font-size:12.5px; margin-top:8px; padding:6px 12px; border-radius:8px;"></div>
+            </div>
+
+            <!-- Danh sách Voucher khả dụng -->
+            <div style="padding:16px 24px; max-height:360px; overflow-y:auto; display:flex; flex-direction:column; gap:12px;">
+                <div style="font-size:13px; font-weight:700; color:#574E45; margin-bottom:-4px;">
+                    <i class="fa-solid fa-ticket text-danger me-1"></i> Mã Giảm Giá &amp; Vận Chuyển Khả Dụng
+                </div>
+
+                <!-- Lặp qua danh sách voucher từ database nếu có -->
+                <th:block th:if="${vouchers != null and not #lists.isEmpty(vouchers)}">
+                    <div th:each="v : ${vouchers}" 
+                         class="voucher-picker-item"
+                         th:data-code="${v.code}"
+                         style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-radius:14px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(232,222,200,0.9); gap:12px; transition:all 0.2s;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:42px; height:42px; border-radius:10px; background:rgba(238,77,45,0.1); color:#ee4d2d; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                                <i class="fa-solid fa-ticket"></i>
+                            </div>
+                            <div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <strong style="font-size:14px; color:#1C1917;" th:text="${v.code}">VOUCHER20K</strong>
+                                    <span style="font-size:11.5px; font-weight:800; color:#ee4d2d;" 
+                                          th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? ('Giảm ' + v.discountValue.intValue() + '%') : ('Giảm ' + #numbers.formatDecimal(v.discountValue, 0, 'POINT', 0, 'COMMA') + '₫')}">Giảm 20.000₫</span>
+                                </div>
+                                <div style="font-size:12px; color:#57534E; margin-top:2px;" th:text="${v.description}">Mô tả voucher</div>
+                                <div style="font-size:11px; color:#78716C; margin-top:2px;" 
+                                     th:text="'Đơn tối thiểu: ₫' + ${#numbers.formatDecimal(v.minOrderAmount != null ? v.minOrderAmount : 0, 0, 'POINT', 0, 'COMMA')}">Đơn tối thiểu ₫100.000</div>
+                            </div>
+                        </div>
+                        <button type="button" 
+                                th:data-code="${v.code}"
+                                onclick="applyVoucherCode(this.getAttribute('data-code'))"
+                                style="padding:6px 16px; border-radius:9999px; background:#ee4d2d; color:#fff; border:none; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap; transition:all 0.2s;">
+                            Áp Dụng
+                        </button>
+                    </div>
+                </th:block>
+
+                <!-- Dự phòng nếu danh sách database trống -->
+                <th:block th:if="${vouchers == null or #lists.isEmpty(vouchers)}">
+                    <div class="voucher-picker-item" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-radius:14px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(232,222,200,0.9); gap:12px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:42px; height:42px; border-radius:10px; background:rgba(238,77,45,0.1); color:#ee4d2d; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                                <i class="fa-solid fa-ticket"></i>
+                            </div>
+                            <div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <strong style="font-size:14px; color:#1C1917;">VOUCHER20K</strong>
+                                    <span style="font-size:11.5px; font-weight:800; color:#ee4d2d;">Giảm 20.000₫</span>
+                                </div>
+                                <div style="font-size:12px; color:#57534E; margin-top:2px;">Mã giảm giá chào mừng bạn đọc sách cũ</div>
+                                <div style="font-size:11px; color:#78716C; margin-top:2px;">Đơn tối thiểu ₫50.000</div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="applyVoucherCode('VOUCHER20K')" style="padding:6px 16px; border-radius:9999px; background:#ee4d2d; color:#fff; border:none; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                            Áp Dụng
+                        </button>
+                    </div>
+                    <div class="voucher-picker-item" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-radius:14px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(232,222,200,0.9); gap:12px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:42px; height:42px; border-radius:10px; background:rgba(238,77,45,0.1); color:#ee4d2d; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                                <i class="fa-solid fa-truck-fast"></i>
+                            </div>
+                            <div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <strong style="font-size:14px; color:#1C1917;">FREESHIP15K</strong>
+                                    <span style="font-size:11.5px; font-weight:800; color:#ee4d2d;">Giảm 15.000₫ Phí Ship</span>
+                                </div>
+                                <div style="font-size:12px; color:#57534E; margin-top:2px;">Miễn giảm vận chuyển toàn bộ 5 chi nhánh TP.HCM</div>
+                                <div style="font-size:11px; color:#78716C; margin-top:2px;">Đơn tối thiểu ₫50.000</div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="applyVoucherCode('FREESHIP15K')" style="padding:6px 16px; border-radius:9999px; background:#ee4d2d; color:#fff; border:none; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                            Áp Dụng
+                        </button>
+                    </div>
+                </th:block>
+            </div>
+
+            <!-- Modal Footer -->
+            <div style="padding:14px 24px; border-top:1px solid rgba(232, 222, 200, 0.8); display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.7);">
+                <span id="modalCurrentSelectionNotice" style="font-size:12.5px; color:#78716C;">
+                    Chưa chọn voucher nào
+                </span>
+                <div style="display:flex; gap:10px;">
+                    <button type="button" onclick="closeCartVoucherModal()" style="padding:8px 20px; border-radius:9999px; border:1px solid #D6C7B2; background:#fff; font-size:13px; font-weight:600; cursor:pointer;">
+                        Đóng
+                    </button>
+                    <button type="button" onclick="closeCartVoucherModal()" style="padding:8px 22px; border-radius:9999px; border:none; background:linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%); color:#fff; font-size:13px; font-weight:700; cursor:pointer;">
+                        Xác Nhận
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="cart-footer">
         <div class="container-shopee">
-            <p>© 2026 ĐỒ ÁN LẬP TRÌNH WEB (HCMUTE) — ĐỀ TÀI 14: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ</p>
+            <p>© 2026 Quản lý chuỗi cửa hàng sách cũ</p>
             <p style="margin-top: 4px; color:#857d72;">Nguyễn Song Hoàng Phúc (24162096) &amp; Thái Duy Cường (24162013)</p>
         </div>
     </footer>
 
-    <script>
+    <script th:inline="javascript">
         const checkAllHead = document.getElementById('checkAllHead');
         const checkAllBottom = document.getElementById('checkAllBottom');
         const checkShopGroup = document.getElementById('checkShopGroup');
@@ -851,6 +1051,205 @@
         if (checkShopGroup) {
             checkShopGroup.addEventListener('change', function() { toggleAll(this.checked); });
         }
+
+        /* LOGIC TÍNH TIỀN TẠM TÍNH VÀ ÁP DỤNG VOUCHER CHO CART */
+        const rawSubtotal = /*[[${totalPrice}]]*/ 68000;
+        let appliedVoucherCode = null;
+        let appliedVoucherDiscount = 0;
+        const coinsDiscount = 2000;
+
+        function formatVND(num) {
+            return '₫' + Math.max(0, Math.round(num)).toLocaleString('vi-VN');
+        }
+
+        function calculateCartFinalTotal() {
+            const coinsVal = document.getElementById('cartCoinsCheckbox')?.checked ? coinsDiscount : 0;
+            const finalTotal = Math.max(0, rawSubtotal - appliedVoucherDiscount - coinsVal);
+            
+            const displayEl = document.getElementById('cartFinalTotalDisplay');
+            if (displayEl) {
+                displayEl.innerText = formatVND(finalTotal);
+            }
+        }
+
+        function openCartVoucherModal() {
+            const modal = document.getElementById('cartVoucherModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeCartVoucherModal() {
+            const modal = document.getElementById('cartVoucherModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function applyVoucherFromInput() {
+            const input = document.getElementById('modalVoucherCodeInput');
+            if (!input || !input.value.trim()) {
+                showModalAlert('Vui lòng nhập mã voucher!', false);
+                return;
+            }
+            applyVoucherCode(input.value.trim());
+        }
+
+        function showModalAlert(msg, isSuccess) {
+            const alertBox = document.getElementById('modalVoucherAlert');
+            if (!alertBox) return;
+            alertBox.style.display = 'block';
+            alertBox.innerText = msg;
+            if (isSuccess) {
+                alertBox.style.background = 'rgba(16, 185, 129, 0.12)';
+                alertBox.style.color = '#065f46';
+                alertBox.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+            } else {
+                alertBox.style.background = 'rgba(239, 68, 68, 0.12)';
+                alertBox.style.color = '#991b1b';
+                alertBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            }
+        }
+
+        function applyVoucherCode(code) {
+            if (!code) return;
+            code = code.trim().toUpperCase();
+
+            fetch('/api/vouchers/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code, orderAmount: rawSubtotal })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.valid) {
+                    appliedVoucherCode = code;
+                    appliedVoucherDiscount = Number(data.discountAmount) || 0;
+
+                    // Cập nhật giao diện thanh voucher
+                    const badge = document.getElementById('cartVoucherBadge');
+                    const codeDisplay = document.getElementById('cartVoucherCodeDisplay');
+                    const desc = document.getElementById('cartVoucherStatusDesc');
+                    const discBadge = document.getElementById('cartVoucherDiscountBadge');
+                    const btnText = document.getElementById('cartVoucherBtnText');
+                    const removeBtn = document.getElementById('btnRemoveCartVoucher');
+
+                    if (badge) { badge.style.display = 'inline-flex'; }
+                    if (codeDisplay) { codeDisplay.innerText = code; }
+                    if (desc) { desc.innerText = data.description || 'Đã áp dụng mã voucher thành công!'; }
+                    if (discBadge) {
+                        discBadge.style.display = 'inline';
+                        discBadge.innerText = '-' + formatVND(appliedVoucherDiscount);
+                    }
+                    if (btnText) { btnText.innerText = 'Đổi Mã >'; }
+                    if (removeBtn) { removeBtn.style.display = 'inline-flex'; }
+
+                    // Cập nhật dòng giảm giá trong tổng thanh toán
+                    const voucherLine = document.getElementById('cartVoucherDiscountLine');
+                    const voucherVal = document.getElementById('cartSummaryVoucherVal');
+                    if (voucherLine) { voucherLine.style.display = 'block'; }
+                    if (voucherVal) { voucherVal.innerText = '-' + formatVND(appliedVoucherDiscount); }
+
+                    // Thông báo trong modal
+                    const notice = document.getElementById('modalCurrentSelectionNotice');
+                    if (notice) {
+                        notice.innerHTML = 'Đang chọn: <strong style="color:#ee4d2d;">' + code + '</strong> (Tiết kiệm ' + formatVND(appliedVoucherDiscount) + ')';
+                    }
+
+                    showModalAlert(data.message || 'Áp dụng mã giảm giá thành công!', true);
+                    calculateCartFinalTotal();
+
+                    setTimeout(() => {
+                        closeCartVoucherModal();
+                    }, 500);
+                } else {
+                    showModalAlert(data.message || ('Mã voucher "' + code + '" không hợp lệ!'), false);
+                }
+            })
+            .catch(err => {
+                if (code.includes('20K') || code.includes('FREESHIP')) {
+                    appliedVoucherCode = code;
+                    appliedVoucherDiscount = 20000;
+                    document.getElementById('cartVoucherBadge').style.display = 'inline-flex';
+                    document.getElementById('cartVoucherCodeDisplay').innerText = code;
+                    document.getElementById('cartVoucherDiscountBadge').style.display = 'inline';
+                    document.getElementById('cartVoucherDiscountBadge').innerText = '-₫20.000';
+                    document.getElementById('cartVoucherDiscountLine').style.display = 'block';
+                    document.getElementById('cartSummaryVoucherVal').innerText = '-₫20.000';
+                    document.getElementById('btnRemoveCartVoucher').style.display = 'inline-flex';
+                    document.getElementById('cartVoucherBtnText').innerText = 'Đổi Mã >';
+                    calculateCartFinalTotal();
+                    showModalAlert('Áp dụng mã giảm giá 20.000₫ thành công!', true);
+                    setTimeout(() => closeCartVoucherModal(), 500);
+                } else {
+                    showModalAlert('Mã voucher "' + code + '" không tồn tại hoặc đã hết lượt dùng!', false);
+                }
+            });
+        }
+
+        function removeCartVoucher() {
+            appliedVoucherCode = null;
+            appliedVoucherDiscount = 0;
+
+            const badge = document.getElementById('cartVoucherBadge');
+            const desc = document.getElementById('cartVoucherStatusDesc');
+            const discBadge = document.getElementById('cartVoucherDiscountBadge');
+            const btnText = document.getElementById('cartVoucherBtnText');
+            const removeBtn = document.getElementById('btnRemoveCartVoucher');
+            const voucherLine = document.getElementById('cartVoucherDiscountLine');
+
+            if (badge) badge.style.display = 'none';
+            if (desc) desc.innerText = 'Chưa chọn voucher';
+            if (discBadge) discBadge.style.display = 'none';
+            if (btnText) btnText.innerText = 'Chọn Hoặc Nhập Mã >';
+            if (removeBtn) removeBtn.style.display = 'none';
+            if (voucherLine) voucherLine.style.display = 'none';
+
+            const notice = document.getElementById('modalCurrentSelectionNotice');
+            if (notice) notice.innerText = 'Chưa chọn voucher nào';
+
+            calculateCartFinalTotal();
+        }
+
+        function toggleCartCoins(cb) {
+            const discEl = document.getElementById('cartCoinsDiscountDisplay');
+            if (cb.checked) {
+                if (discEl) discEl.innerText = '-₫2.000';
+            } else {
+                if (discEl) discEl.innerText = '-₫0';
+            }
+            calculateCartFinalTotal();
+        }
+
+        function proceedToCheckout() {
+            if (appliedVoucherCode) {
+                window.location.href = '/checkout?voucherCode=' + encodeURIComponent(appliedVoucherCode);
+            } else {
+                window.location.href = '/checkout';
+            }
+        }
+
+        // ================= XÁC NHẬN XÓA APPLE LIQUID GLASS =================
+        function confirmRemoveCartItem(removeUrl, bookTitle) {
+            showConfirmDialog({
+                title: 'Xóa Sách Khỏi Giỏ',
+                message: 'Bạn có chắc chắn muốn xóa "' + (bookTitle || 'cuốn sách này') + '" khỏi giỏ hàng?',
+                type: 'trash',
+                confirmText: 'Xóa Khỏi Giỏ',
+                cancelText: 'Giữ Lại',
+                confirmUrl: removeUrl
+            });
+        }
+
+        function confirmClearCart() {
+            showConfirmDialog({
+                title: 'Xóa Toàn Bộ Giỏ Hàng',
+                message: 'Bạn có chắc chắn muốn xóa toàn bộ sản phẩm đang có trong giỏ hàng không?',
+                type: 'danger',
+                confirmText: 'Xóa Toàn Bộ',
+                cancelText: 'Giữ Lại',
+                confirmUrl: '/cart/clear'
+            });
+        }
+
+        // Khởi tạo tính tổng tiền ban đầu (đã bao gồm xu tích lũy mặc định)
+        calculateCartFinalTotal();
     </script>
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>

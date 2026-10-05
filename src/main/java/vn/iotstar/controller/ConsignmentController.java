@@ -68,9 +68,9 @@ public class ConsignmentController {
     }
 
     /**
-     * GET /consignments: Trang giới thiệu quy trình ký gửi và Form đăng ký định giá sách cũ
+     * GET /consignments, /consignments/, /consignments/create: Trang giới thiệu quy trình ký gửi và Form đăng ký định giá sách cũ
      */
-    @GetMapping
+    @GetMapping({"", "/", "/create"})
     public String index(Model model, Authentication authentication) {
         User currentUser = getCurrentUser(authentication);
         List<Store> stores = storeRepository.findByIsActiveTrue();

@@ -143,4 +143,21 @@ function applyClientTranslations() {
     }
 }
 
+// ================= DROPDOWN NGÔN NGỮ: CLICK-TO-TOGGLE & CHỐNG MẤT BẢNG =================
+document.addEventListener('click', function(e) {
+    const trigger = e.target.closest('.lang-trigger-btn');
+    const box = e.target.closest('.lang-dropdown-box');
+    
+    if (trigger) {
+        e.preventDefault();
+        e.stopPropagation();
+        const parentBox = trigger.closest('.lang-dropdown-box');
+        if (parentBox) {
+            parentBox.classList.toggle('active');
+        }
+    } else if (!box) {
+        document.querySelectorAll('.lang-dropdown-box.active').forEach(b => b.classList.remove('active'));
+    }
+});
+
 document.addEventListener('DOMContentLoaded', applyClientTranslations);

@@ -7,149 +7,590 @@
 <body>
 <div th:fragment="content">
 
-    <!-- PAGE HEADER -->
+    <style>
+        /* Apple Liquid Glass Design System */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.72);
+            --glass-bg-hover: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.85);
+            --glass-blur: blur(28px) saturate(190%) brightness(102%);
+            --wood-primary: #8C4A27;
+            --wood-dark: #683418;
+            --orange-burnt: #EE4D2D;
+            --ink-dark: #1E293B;
+            --ink-muted: #64748B;
+        }
+
+        /* Card Liquid Glass */
+        .card-liquid-glass {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 22px;
+            box-shadow: 
+                0 16px 38px -6px rgba(45, 24, 15, 0.07),
+                0 4px 14px -2px rgba(0, 0, 0, 0.03),
+                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 1px 0 rgba(0, 0, 0, 0.02);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card-liquid-glass:hover {
+            box-shadow: 
+                0 20px 48px -6px rgba(45, 24, 15, 0.11),
+                0 6px 18px -2px rgba(0, 0, 0, 0.04),
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1);
+        }
+
+        .card-liquid-header {
+            background: rgba(255, 255, 255, 0.55);
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.7);
+            padding: 18px 24px;
+            border-radius: 22px 22px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Nút Điều Chuyển Kho Dạng Liquid Glass Đặc Trưng */
+        .btn-liquid-transfer {
+            background: linear-gradient(135deg, rgba(140, 74, 39, 0.92) 0%, rgba(180, 60, 25, 0.95) 50%, rgba(238, 77, 45, 0.92) 100%);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            color: #ffffff !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            border-radius: 9999px;
+            padding: 11px 24px;
+            font-weight: 700;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 
+                0 12px 30px rgba(140, 74, 39, 0.32),
+                inset 0 1.5px 2px rgba(255, 255, 255, 0.75),
+                inset 0 -1.5px 2px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-liquid-transfer:hover {
+            transform: translateY(-3px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 
+                0 18px 40px rgba(140, 74, 39, 0.45),
+                inset 0 2px 3px rgba(255, 255, 255, 0.95);
+            color: #ffffff !important;
+        }
+
+        /* Thẻ Chi Nhánh Chuỗi 5 Cửa Hàng TP.HCM */
+        .store-pill-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255, 255, 255, 0.8);
+            border-radius: 18px;
+            padding: 16px 18px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            color: var(--ink-dark);
+            display: block;
+            position: relative;
+            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.85);
+            height: 100%;
+        }
+
+        .store-pill-card:hover {
+            background: rgba(255, 255, 255, 0.92);
+            border-color: rgba(140, 74, 39, 0.35);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(45, 24, 15, 0.1), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            color: var(--ink-dark);
+        }
+
+        .store-pill-card.active {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 247, 242, 0.92) 100%);
+            border: 2px solid #8C4A27;
+            box-shadow: 
+                0 14px 34px rgba(140, 74, 39, 0.18),
+                inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        .store-badge-active {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            background: #8C4A27;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.3);
+        }
+
+        /* Stat Counter Liquid Glass Cards */
+        .stat-glass-card {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 28px rgba(45, 24, 15, 0.05), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-glass-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .stat-icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Controls & Inputs */
+        .glass-input-sm {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+            border-radius: 10px !important;
+            padding: 6px 12px !important;
+            font-size: 13px !important;
+            color: var(--ink-dark) !important;
+        }
+
+        .glass-input-sm:focus {
+            background: #ffffff !important;
+            border-color: #8C4A27 !important;
+            box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.15) !important;
+            outline: none;
+        }
+
+        /* Tags 4px bo góc thanh lịch */
+        .tag-category-elegant {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 9px;
+            font-size: 11.5px;
+            font-weight: 600;
+            border-radius: 4px;
+            background: rgba(140, 74, 39, 0.08);
+            color: #78350F;
+            border: 1px solid rgba(140, 74, 39, 0.2);
+            white-space: nowrap;
+        }
+
+        .tag-condition-high {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            border-radius: 4px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #065F46;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .tag-condition-med {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            border-radius: 4px;
+            background: rgba(245, 158, 11, 0.12);
+            color: #92400E;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        /* Stock Status Pills */
+        .stock-pill {
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 11.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stock-pill-out {
+            background: rgba(239, 68, 68, 0.12);
+            color: #B91C1C;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .stock-pill-low {
+            background: rgba(245, 158, 11, 0.15);
+            color: #B45309;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .stock-pill-normal {
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        /* Table Liquid */
+        .table-liquid {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .table-liquid thead th {
+            background: rgba(248, 250, 252, 0.7);
+            border-bottom: 1.5px solid rgba(226, 232, 240, 0.8);
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #64748B;
+            padding: 14px 18px;
+            white-space: nowrap;
+        }
+
+        .table-liquid tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .table-liquid tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+
+        .table-liquid tbody td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(241, 245, 249, 0.8);
+            vertical-align: middle;
+        }
+
+        .book-thumb-frame {
+            width: 44px;
+            height: 64px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(45, 24, 15, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            flex-shrink: 0;
+            background: #f1f5f9;
+        }
+
+        .book-thumb-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    </style>
+
+    <!-- 1. PAGE HEADER & LIQUID GLASS TRANSFER BUTTON -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-boxes-stacked text-warning me-2"></i>Quản Lý Tồn Kho Chi Nhánh</h4>
-            <p class="text-muted small mb-0">Theo dõi số lượng tồn kho, cảnh báo sách sắp hết và điều phối hàng hóa giữa các kho trong chuỗi.</p>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <div class="p-2 rounded-3 text-white" style="background: linear-gradient(135deg, #8C4A27, #EE4D2D); box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);">
+                    <i class="fa-solid fa-boxes-stacked fs-5"></i>
+                </div>
+                <h4 class="fw-bold mb-0 text-dark">Quản Lý Tồn Kho Chuỗi 5 Chi Nhánh</h4>
+                <span class="badge rounded-pill bg-light text-secondary border px-3 py-1 ms-2" style="font-size: 12px;">
+                    <i class="fa-solid fa-map-pin text-danger me-1"></i>Hệ Thống TP.HCM
+                </span>
+            </div>
+            <p class="text-muted small mb-0 ms-1">Giám sát mức tồn thực tế theo từng kho, cảnh báo sách cạn đáy và điều phối luân chuyển linh hoạt giữa các chi nhánh.</p>
         </div>
-        <a th:href="@{/admin/inventory/transfer(fromStoreId=${currentStoreId})}" class="btn btn-theme">
-            <i class="fa-solid fa-dolly me-1"></i>Điều Chuyển Sách Giữa Các Kho
+
+        <!-- Nút Điều Chuyển Sách Chuẩn Liquid Glass -->
+        <a th:href="@{/admin/inventory/transfer(fromStoreId=${currentStoreId})}" class="btn-liquid-transfer">
+            <i class="fa-solid fa-dolly fs-5"></i>
+            <span>Điều Chuyển Sách Giữa Các Kho</span>
         </a>
     </div>
 
-    <!-- STATS COUNTERS (VINTAGE BOOKSTORE DESIGN TOKENS) -->
+    <!-- 2. THẺ THỐNG KÊ SỐ LƯỢNG TỒN THEO TỪNG CỬA HÀNG TẠI TP.HCM (THỦ ĐỨC, Q1, LÀNG ĐH, PHÚ NHUẬN...) -->
+    <div class="mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-store text-warning"></i>
+                <span>Chuỗi 5 Chi Nhánh Sách Cũ TP.HCM (Bấm để chuyển kho theo dõi)</span>
+            </h6>
+            <span class="small text-muted">
+                Kho đang chọn: <strong class="text-dark" th:each="st : ${stores}" th:if="${st.id == currentStoreId}" th:text="${st.storeName}">Thủ Đức</strong>
+            </span>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-lg col-md-4 col-sm-6" th:each="st : ${stores}">
+                <a th:href="@{/admin/inventory(storeId=${st.id}, keyword=${keyword})}" 
+                   class="store-pill-card" 
+                   th:classappend="${currentStoreId == st.id} ? 'active' : ''">
+                    
+                    <!-- Badge Đang Chọn -->
+                    <span th:if="${currentStoreId == st.id}" class="store-badge-active">
+                        <i class="fa-solid fa-circle-check me-1"></i>Đang chọn
+                    </span>
+
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <div class="rounded-circle p-2 d-flex align-items-center justify-content-center"
+                             th:style="${currentStoreId == st.id ? 'background: rgba(140, 74, 39, 0.15); color: #8C4A27;' : 'background: rgba(0, 0, 0, 0.05); color: #64748B;'}">
+                            <i class="fa-solid fa-store" style="font-size: 13px;"></i>
+                        </div>
+                        <strong class="text-dark" style="font-size: 13.5px;" th:text="${st.storeName}">Chi nhánh</strong>
+                    </div>
+
+                    <div class="text-secondary small mb-1 text-truncate" style="font-size: 12px;">
+                        <i class="fa-solid fa-location-dot text-danger opacity-75 me-1" style="font-size: 11px;"></i>
+                        <span th:text="${st.district}">Quận Thủ Đức</span>
+                    </div>
+
+                    <div class="text-muted" style="font-size: 11px;">
+                        <i class="fa-solid fa-phone me-1 text-secondary opacity-50" style="font-size: 10px;"></i>
+                        <span th:text="${st.phone}">028.3896...</span>
+                    </div>
+
+                    <!-- Chỉ số tồn kho nhanh khi được chọn -->
+                    <div th:if="${currentStoreId == st.id}" class="mt-2 pt-2 border-top border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
+                        <span class="small text-muted" style="font-size: 11px;">Số đầu sách:</span>
+                        <span class="badge bg-dark rounded-pill" th:text="${inventoryList.size()}">0</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. CÁC THẺ BÁO CÁO MỨC ĐỘ TỒN KHO TẠI CHI NHÁNH ĐANG CHỌN -->
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card card-custom p-3" style="border-left: 4px solid #dc2626 !important;">
+        <!-- Hết Hàng (0 Cuốn) -->
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-glass-card" style="border-left: 4px solid #EF4444;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="small fw-bold" style="color: var(--color-text-secondary);">Hết Hàng (0 Cuốn)</div>
-                        <h3 class="fw-bold mb-0 mt-1" style="color: #dc2626;" th:text="${outOfStockCount}">0</h3>
+                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Hết Hàng (0 Cuốn)</div>
+                        <h3 class="fw-bold text-danger mb-0 mt-1" th:text="${outOfStockCount}">0</h3>
                     </div>
-                    <div class="p-3 rounded-circle" style="background: #fee2e2; color: #b91c1c;">
-                        <i class="fa-solid fa-circle-exclamation fa-lg"></i>
+                    <div class="stat-icon-circle bg-danger-subtle text-danger">
+                        <i class="fa-solid fa-circle-exclamation"></i>
                     </div>
                 </div>
+                <div class="small text-muted mt-2" style="font-size: 11.5px;">Cần nhập thêm hoặc điều chuyển gấp</div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card card-custom p-3" style="border-left: 4px solid var(--color-discount-gold) !important;">
+
+        <!-- Sắp Hết Hàng (1 - 3 Cuốn) -->
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-glass-card" style="border-left: 4px solid #F59E0B;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="small fw-bold" style="color: var(--color-text-secondary);">Sắp Hết Hàng (1 - 3 Cuốn)</div>
-                        <h3 class="fw-bold mb-0 mt-1" style="color: var(--color-gold-text);" th:text="${lowStockCount}">0</h3>
+                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Sắp Hết (1 - 3 Cuốn)</div>
+                        <h3 class="fw-bold text-warning mb-0 mt-1" th:text="${lowStockCount}">0</h3>
                     </div>
-                    <div class="p-3 rounded-circle" style="background: #fef9c3; color: var(--color-gold-text);">
-                        <i class="fa-solid fa-triangle-exclamation fa-lg"></i>
+                    <div class="stat-icon-circle bg-warning-subtle text-warning">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                 </div>
+                <div class="small text-muted mt-2" style="font-size: 11.5px;">Đầu sách có nguy cơ đứt gãy hàng</div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card card-custom p-3" style="border-left: 4px solid var(--color-trust-green) !important;">
+
+        <!-- Tồn Kho Đủ (> 3 Cuốn) -->
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-glass-card" style="border-left: 4px solid #10B981;">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="small fw-bold" style="color: var(--color-text-secondary);">Tồn Kho Đủ (&gt; 3 Cuốn)</div>
-                        <h3 class="fw-bold mb-0 mt-1" style="color: var(--color-trust-green);" th:text="${normalStockCount}">0</h3>
+                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Tồn Kho Đủ (&gt; 3 Cuốn)</div>
+                        <h3 class="fw-bold text-success mb-0 mt-1" th:text="${normalStockCount}">0</h3>
                     </div>
-                    <div class="p-3 rounded-circle" style="background: var(--color-trust-bg); color: var(--color-trust-green);">
-                        <i class="fa-solid fa-boxes-packing fa-lg"></i>
+                    <div class="stat-icon-circle bg-success-subtle text-success">
+                        <i class="fa-solid fa-boxes-packing"></i>
                     </div>
                 </div>
+                <div class="small text-muted mt-2" style="font-size: 11.5px;">Nguồn cung ổn định cho khách mua</div>
+            </div>
+        </div>
+
+        <!-- Tổng Đầu Sách Trong Kho -->
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-glass-card" style="border-left: 4px solid #8C4A27;">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Tổng Đầu Sách Kho Này</div>
+                        <h3 class="fw-bold mb-0 mt-1" style="color: #8C4A27;" th:text="${inventoryList.size()}">0</h3>
+                    </div>
+                    <div class="stat-icon-circle text-white" style="background: linear-gradient(135deg, #8C4A27, #EE4D2D);">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                </div>
+                <div class="small text-muted mt-2" style="font-size: 11.5px;">Đang bày bán hoặc lưu kho vật lý</div>
             </div>
         </div>
     </div>
 
-    <!-- BRANCH NAV TABS & SEARCH -->
-    <div class="card card-custom mb-4">
-        <div class="card-body p-3">
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                <!-- Chọn chi nhánh xem kho -->
-                <ul class="nav nav-pills gap-1">
-                    <li class="nav-item" th:each="st : ${stores}">
-                        <a class="nav-link small fw-semibold" 
-                           th:classappend="${currentStoreId == st.id} ? 'active bg-dark' : 'text-dark'" 
-                           th:href="@{/admin/inventory(storeId=${st.id}, keyword=${keyword})}" 
-                           th:text="${st.storeName}">Chi nhánh</a>
-                    </li>
-                </ul>
-
-                <!-- Tìm kiếm sách trong kho -->
-                <form th:action="@{/admin/inventory}" method="get" class="d-flex gap-2" style="min-width: 280px;">
-                    <input type="hidden" name="storeId" th:value="${currentStoreId}">
-                    <input type="text" name="keyword" class="form-control form-control-sm" th:value="${keyword}" placeholder="Tìm sách trong kho này...">
-                    <button type="submit" class="btn btn-sm btn-dark"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <a th:if="${keyword != null and !keyword.isEmpty()}" th:href="@{/admin/inventory(storeId=${currentStoreId})}" class="btn btn-sm btn-outline-secondary">Xóa</a>
-                </form>
+    <!-- 4. SEARCH & FILTER CARD -->
+    <div class="card-liquid-glass mb-4 p-3">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-filter text-secondary"></i>
+                <span class="small fw-bold text-dark">Lọc sách trong kho hiện tại:</span>
             </div>
+
+            <!-- Form tìm kiếm sách trong kho -->
+            <form th:action="@{/admin/inventory}" method="get" class="d-flex align-items-center gap-2" style="min-width: 320px;">
+                <input type="hidden" name="storeId" th:value="${currentStoreId}">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0 rounded-start-pill text-muted" style="border: 1.5px solid rgba(226, 232, 240, 0.9);">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" name="keyword" class="form-control border-start-0 ps-0 glass-input-sm rounded-end-pill" 
+                           th:value="${keyword}" placeholder="Tìm theo tên sách, tác giả, ISBN...">
+                </div>
+                <button type="submit" class="btn btn-sm btn-dark rounded-pill px-3 py-2 fw-semibold">
+                    <span>Tìm</span>
+                </button>
+                <a th:if="${keyword != null and !keyword.isEmpty()}" 
+                   th:href="@{/admin/inventory(storeId=${currentStoreId})}" 
+                   class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-2">
+                    Xóa
+                </a>
+            </form>
         </div>
     </div>
 
-    <!-- INVENTORY TABLE -->
-    <div class="card card-custom">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <span class="fw-semibold">Tồn kho chi nhánh: <strong class="text-primary" th:each="st : ${stores}" th:if="${st.id == currentStoreId}" th:text="${st.storeName}"></strong></span>
-            <span class="badge bg-light text-dark border"><span th:text="${inventoryList.size()}">0</span> đầu sách</span>
+    <!-- 5. INVENTORY TABLE LIQUID GLASS -->
+    <div class="card-liquid-glass overflow-hidden mb-4">
+        <div class="card-liquid-header">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-warehouse text-warning"></i>
+                <span class="fw-bold text-dark">
+                    Chi tiết kho sách: <strong class="text-primary" th:each="st : ${stores}" th:if="${st.id == currentStoreId}" th:text="${st.storeName}"></strong>
+                </span>
+            </div>
+            <span class="badge rounded-pill bg-white text-secondary border px-3 py-1 shadow-sm" style="font-size: 12px;">
+                <i class="fa-solid fa-book me-1 text-muted"></i><span th:text="${inventoryList.size()}">0</span> đầu sách
+            </span>
         </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr class="small text-muted text-uppercase">
-                            <th class="ps-4">Sách cũ</th>
-                            <th>Thể loại</th>
-                            <th class="text-center">Độ mới</th>
-                            <th class="text-center">Số lượng tồn</th>
-                            <th class="text-center">Tình trạng kho</th>
-                            <th class="text-end pe-4">Cập nhật tồn kho</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:if="${inventoryList.empty}">
-                            <td colspan="6" class="text-center py-5 text-muted">
-                                <i class="fa-solid fa-box-open fa-3x mb-3 text-secondary"></i>
-                                <p class="mb-0">Kho hàng chi nhánh này hiện chưa có sách nào.</p>
-                            </td>
-                        </tr>
-                        <tr th:each="inv : ${inventoryList}">
-                            <td class="ps-4">
-                                <div class="d-flex align-items-center gap-3">
-                                    <img th:src="${inv.book.getPrimaryImageUrl()}" class="rounded shadow-sm" style="width: 42px; height: 60px; object-fit: cover;">
-                                    <div>
-                                        <a th:href="@{/admin/books/edit/{id}(id=${inv.book.id})}" class="fw-bold text-dark text-decoration-none" th:text="${inv.book.title}">Tên sách</a>
-                                        <div class="text-muted small" th:text="${inv.book.author}">Tác giả</div>
+
+        <div class="table-responsive">
+            <table class="table-liquid align-middle">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Sách cũ &amp; Tác giả</th>
+                        <th>Thể loại</th>
+                        <th class="text-center">Độ mới</th>
+                        <th class="text-center">Số lượng tồn</th>
+                        <th class="text-center">Tình trạng kho</th>
+                        <th class="text-end pe-4">Cập nhật nhanh số lượng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Trống -->
+                    <tr th:if="${inventoryList.empty}">
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <div class="py-4">
+                                <i class="fa-solid fa-box-open fa-3x text-secondary opacity-50 mb-3"></i>
+                                <h6 class="fw-bold text-dark">Kho hàng chi nhánh này hiện chưa có dữ liệu sách</h6>
+                                <p class="small text-muted mb-0">Bạn có thể dùng nút "Điều chuyển sách" để chuyển sách từ kho khác sang chi nhánh này.</p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Từng hàng tồn kho -->
+                    <tr th:each="inv : ${inventoryList}">
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="book-thumb-frame">
+                                    <img th:src="${inv.book.getPrimaryImageUrl()}" alt="Bìa sách" loading="lazy"
+                                         onerror="this.src='/images/books/book-1.jpg';">
+                                </div>
+                                <div>
+                                    <a th:href="@{/admin/books/edit/{id}(id=${inv.book.id})}" 
+                                       class="fw-bold text-dark text-decoration-none d-block mb-1" 
+                                       style="font-size: 14px;"
+                                       th:text="${inv.book.title}">Tên sách</a>
+                                    <div class="text-muted small">
+                                        <i class="fa-solid fa-feather-pointed me-1" style="font-size: 10px;"></i>
+                                        <span th:text="${inv.book.author}">Tác giả</span>
                                     </div>
                                 </div>
-                            </td>
-                            <td>
-                                <span class="badge bg-light text-dark border" th:text="${inv.book.category != null ? inv.book.category.categoryName : '-'}">Văn học</span>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge" th:classappend="${inv.book.conditionPercent >= 95 ? 'badge-cond-high' : 'badge-cond-med'}" th:text="${inv.book.conditionPercent} + '%'">90%</span>
-                            </td>
-                            <td class="text-center">
-                                <span class="fw-bold fs-5" th:classappend="${inv.quantity == 0 ? 'text-danger' : (inv.quantity <= 3 ? 'text-warning' : 'text-success')}" th:text="${inv.quantity}">5</span>
-                            </td>
-                            <td class="text-center">
-                                <span th:if="${inv.quantity == 0}" class="badge bg-danger">Hết hàng</span>
-                                <span th:if="${inv.quantity > 0 and inv.quantity <= 3}" class="badge bg-warning text-dark">Sắp hết hàng</span>
-                                <span th:if="${inv.quantity > 3}" class="badge bg-success">Còn hàng</span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <form th:action="@{/admin/inventory/update-quantity}" method="post" class="d-inline-flex align-items-center gap-1">
-                                    <input type="hidden" name="storeId" th:value="${currentStoreId}">
-                                    <input type="hidden" name="bookId" th:value="${inv.book.id}">
-                                    <input type="number" name="quantity" min="0" th:value="${inv.quantity}" class="form-control form-control-sm text-center" style="width: 70px;">
-                                    <button type="submit" class="btn btn-sm btn-outline-primary" title="Lưu số lượng">
-                                        <i class="fa-solid fa-check"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                            </div>
+                        </td>
+
+                        <!-- Thể loại: Tag bo góc 4px thanh lịch -->
+                        <td>
+                            <span class="tag-category-elegant">
+                                <i class="fa-solid fa-bookmark" style="font-size: 9px;"></i>
+                                <span th:text="${inv.book.category != null ? inv.book.category.categoryName : '-'}">Văn học</span>
+                            </span>
+                        </td>
+
+                        <!-- Độ mới: Tag bo góc 4px thanh lịch -->
+                        <td class="text-center">
+                            <span th:if="${inv.book.conditionPercent >= 95}" class="tag-condition-high">
+                                <i class="fa-solid fa-circle-check" style="font-size: 10px;"></i>
+                                <span th:text="${inv.book.conditionPercent} + '%'">95%</span>
+                            </span>
+                            <span th:if="${inv.book.conditionPercent < 95}" class="tag-condition-med">
+                                <i class="fa-solid fa-shield-halved" style="font-size: 10px;"></i>
+                                <span th:text="${inv.book.conditionPercent} + '%'">90%</span>
+                            </span>
+                        </td>
+
+                        <!-- Số lượng tồn -->
+                        <td class="text-center">
+                            <span class="fw-bold fs-5" 
+                                  th:classappend="${inv.quantity == 0 ? 'text-danger' : (inv.quantity <= 3 ? 'text-warning' : 'text-success')}" 
+                                  th:text="${inv.quantity}">5</span>
+                            <span class="small text-muted ms-1">cuốn</span>
+                        </td>
+
+                        <!-- Tình trạng kho -->
+                        <td class="text-center">
+                            <span th:if="${inv.quantity == 0}" class="stock-pill stock-pill-out">
+                                <i class="fa-solid fa-circle-xmark"></i> Hết hàng
+                            </span>
+                            <span th:if="${inv.quantity > 0 and inv.quantity <= 3}" class="stock-pill stock-pill-low">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Sắp hết
+                            </span>
+                            <span th:if="${inv.quantity > 3}" class="stock-pill stock-pill-normal">
+                                <i class="fa-solid fa-circle-check"></i> Còn hàng
+                            </span>
+                        </td>
+
+                        <!-- Cập nhật tồn kho nhanh -->
+                        <td class="text-end pe-4">
+                            <form th:action="@{/admin/inventory/update-quantity}" method="post" class="d-inline-flex align-items-center justify-content-end gap-2">
+                                <input type="hidden" name="storeId" th:value="${currentStoreId}">
+                                <input type="hidden" name="bookId" th:value="${inv.book.id}">
+                                <input type="number" name="quantity" min="0" th:value="${inv.quantity}" 
+                                       class="form-control form-control-sm text-center fw-bold glass-input-sm" 
+                                       style="width: 75px;">
+                                <button type="submit" class="btn btn-sm btn-outline-primary rounded-circle d-flex align-items-center justify-content-center" 
+                                        style="width: 32px; height: 32px;" title="Lưu số lượng mới">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

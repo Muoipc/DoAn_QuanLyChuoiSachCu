@@ -2,137 +2,422 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
 <head>
-    <title th:text="${isEdit ? 'Chỉnh Sửa Sách Cũ' : 'Thêm Sách Cũ Mới'}">Quản Lý Sách Cũ</title>
+    <title th:text="${isEdit ? 'Chỉnh Sửa Sách Cũ - ' + book.title : 'Thêm Sách Cũ Mới - Chuỗi Sách Cũ'}">Quản Lý Sách Cũ</title>
 </head>
 <body>
 <div th:fragment="content">
 
-    <!-- PAGE HEADER -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <style>
+        /* Apple Liquid Glass Design System */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-bg-hover: rgba(255, 255, 255, 0.90);
+            --glass-border: rgba(255, 255, 255, 0.85);
+            --glass-blur: blur(28px) saturate(190%) brightness(102%);
+            --wood-primary: #8C4A27;
+            --wood-dark: #683418;
+            --orange-burnt: #EE4D2D;
+            --ink-dark: #1E293B;
+            --ink-muted: #64748B;
+        }
+
+        /* Card Liquid Glass */
+        .card-liquid-glass {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 22px;
+            box-shadow: 
+                0 16px 38px -6px rgba(45, 24, 15, 0.07),
+                0 4px 14px -2px rgba(0, 0, 0, 0.03),
+                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 1px 0 rgba(0, 0, 0, 0.02);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-bottom: 24px;
+        }
+
+        .card-liquid-glass:hover {
+            box-shadow: 
+                0 20px 48px -6px rgba(45, 24, 15, 0.11),
+                0 6px 18px -2px rgba(0, 0, 0, 0.04),
+                inset 0 2px 2px 0 rgba(255, 255, 255, 1);
+        }
+
+        .card-liquid-header {
+            background: rgba(255, 255, 255, 0.55);
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.7);
+            padding: 18px 24px;
+            border-radius: 22px 22px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 14.5px;
+            color: var(--ink-dark);
+        }
+
+        /* Form Controls Liquid Glass */
+        .glass-input, .glass-select, .glass-textarea {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+            border-radius: 12px !important;
+            padding: 10px 14px !important;
+            font-size: 13.5px !important;
+            color: var(--ink-dark) !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-input:focus, .glass-select:focus, .glass-textarea:focus {
+            background: #ffffff !important;
+            border-color: #8C4A27 !important;
+            box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.15) !important;
+            outline: none;
+        }
+
+        /* Primary Submit Button: Warm Wood Brown & Burnt Orange */
+        .btn-liquid-save {
+            background: linear-gradient(135deg, #8C4A27 0%, #A0522D 45%, #EE4D2D 100%);
+            color: #ffffff !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.45);
+            border-radius: 9999px;
+            padding: 12px 28px;
+            font-weight: 700;
+            font-size: 14.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 
+                0 10px 28px rgba(140, 74, 39, 0.35),
+                inset 0 1.5px 1.5px rgba(255, 255, 255, 0.5);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .btn-liquid-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 16px 36px rgba(140, 74, 39, 0.45),
+                inset 0 2px 2px rgba(255, 255, 255, 0.7);
+            color: #ffffff !important;
+        }
+
+        .btn-liquid-cancel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(226, 232, 240, 0.85);
+            border-radius: 9999px;
+            padding: 11px 24px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ink-dark) !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            width: 100%;
+        }
+
+        .btn-liquid-cancel:hover {
+            background: #ffffff;
+            color: #1E293B !important;
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+        }
+
+        /* AI Action Buttons */
+        .btn-ai-sparkle {
+            background: linear-gradient(135deg, rgba(140, 74, 39, 0.12) 0%, rgba(238, 77, 45, 0.15) 100%);
+            border: 1.5px solid rgba(140, 74, 39, 0.3);
+            border-radius: 9999px;
+            color: #8C4A27;
+            font-weight: 600;
+            font-size: 12px;
+            padding: 5px 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-ai-sparkle:hover {
+            background: linear-gradient(135deg, #8C4A27 0%, #EE4D2D 100%);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* Cloudinary Drag & Drop Zone */
+        .cloudinary-dropzone {
+            border: 2px dashed rgba(140, 74, 39, 0.35);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .cloudinary-dropzone:hover, .cloudinary-dropzone.dragover {
+            border-color: #EE4D2D;
+            background: rgba(238, 77, 45, 0.05);
+            transform: scale(1.01);
+            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.12);
+        }
+
+        .cloudinary-dropzone-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(140, 74, 39, 0.15) 0%, rgba(238, 77, 45, 0.2) 100%);
+            color: #8C4A27;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.1);
+        }
+
+        .cloudinary-badge-pill {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            background: rgba(59, 130, 246, 0.12);
+            color: #1D4ED8;
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preview-img-frame {
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 24px rgba(45, 24, 15, 0.14);
+            background: #ffffff;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        /* Angle Photos Box */
+        .angle-item-glass {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1.5px solid rgba(226, 232, 240, 0.8);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .angle-item-glass:hover {
+            background: #ffffff;
+            border-color: rgba(140, 74, 39, 0.3);
+            box-shadow: 0 6px 16px rgba(45, 24, 15, 0.06);
+        }
+
+        /* Condition Range Slider */
+        .glass-range-slider {
+            accent-color: #8C4A27;
+            height: 7px;
+            border-radius: 9999px;
+        }
+    </style>
+
+    <!-- 1. PAGE HEADER -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1" th:text="${isEdit ? 'Chỉnh Sửa Sách Cũ: ' + book.title : 'Thêm Sách Cũ Vào Hệ Thống'}">Thêm Sách Cũ Mới</h4>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <a th:href="@{/admin/books}" class="text-decoration-none text-muted me-1" title="Quay lại">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <h4 class="fw-bold mb-0 text-dark" th:text="${isEdit ? 'Chỉnh Sửa Sách Cũ: ' + book.title : 'Thêm Sách Cũ Vào Hệ Thống'}">Thêm Sách Cũ Mới</h4>
+                <span class="badge rounded-pill bg-light text-secondary border px-3 py-1 ms-2" style="font-size: 12px;">
+                    <i class="fa-solid fa-stamp text-warning me-1"></i>Hệ thống thẩm định HCMUTE
+                </span>
+            </div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a th:href="@{/admin/books}">Sách Cũ</a></li>
-                    <li class="breadcrumb-item active" th:text="${isEdit ? 'Chỉnh sửa' : 'Thêm mới'}">Thêm mới</li>
+                    <li class="breadcrumb-item"><a th:href="@{/admin/books}" class="text-decoration-none text-secondary">Sách Cũ</a></li>
+                    <li class="breadcrumb-item active text-dark fw-semibold" th:text="${isEdit ? 'Chỉnh sửa' : 'Thêm mới'}">Thêm mới</li>
                 </ol>
             </nav>
         </div>
-        <a th:href="@{/admin/books}" class="btn btn-outline-secondary">
-            <i class="fa-solid fa-arrow-left me-1"></i>Quay lại danh sách
+        <a th:href="@{/admin/books}" class="btn-liquid-cancel" style="width: auto; padding: 8px 18px;">
+            <i class="fa-solid fa-list me-1"></i>Quay lại danh sách
         </a>
     </div>
 
-    <!-- MAIN FORM -->
-    <form th:action="@{/admin/books/save}" th:object="${bookDto}" method="post" enctype="multipart/form-data">
+    <!-- 2. MAIN FORM -->
+    <form th:action="@{/admin/books/save}" th:object="${bookDto}" method="post" enctype="multipart/form-data" id="bookForm">
         <input type="hidden" th:field="*{id}">
 
         <div class="row g-4">
-            <!-- CỘT TRÁI: THÔNG TIN CƠ BẢN & ĐỘ MỚI SÁCH -->
+            <!-- CỘT TRÁI: THÔNG TIN CƠ BẢN, KIỂM ĐỊNH & TỒN KHO 5 CHI NHÁNH (8 COLS) -->
             <div class="col-lg-8">
+                
                 <!-- CARD 1: THÔNG TIN SÁCH -->
-                <div class="card card-custom">
-                    <div class="card-header">
-                        <i class="fa-solid fa-circle-info text-primary me-2"></i>Thông Tin Cơ Bản
+                <div class="card-liquid-glass">
+                    <div class="card-liquid-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-primary"></i>
+                            <span>Thông Tin Cơ Bản Sách Cũ</span>
+                        </div>
+                        <span class="badge rounded-pill bg-light text-secondary border fw-normal" style="font-size: 11px;">Mục bắt buộc *</span>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Tên Sách Cũ <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" th:field="*{title}" id="bookTitle" placeholder="Ví dụ: Yêu Những Điều Không Hoàn Hảo" required>
+                            <label class="form-label fw-bold text-dark" for="bookTitle">
+                                Tên Sách Cũ <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control glass-input" th:field="*{title}" id="bookTitle" 
+                                   placeholder="Ví dụ: Yêu Những Điều Không Hoàn Hảo (Bìa Mềm)" required>
                             <div class="text-danger small mt-1" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
                         </div>
 
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Thể Loại / Danh Mục <span class="text-danger">*</span></label>
-                                <select class="form-select" th:field="*{categoryId}" id="bookCategoryId" required>
+                                <label class="form-label fw-bold text-dark" for="bookCategoryId">
+                                    Thể Loại / Danh Mục <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select glass-select" th:field="*{categoryId}" id="bookCategoryId" required>
                                     <option value="">-- Chọn danh mục --</option>
                                     <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.categoryName}"></option>
                                 </select>
                                 <div class="text-danger small mt-1" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Tác Giả <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" th:field="*{author}" id="bookAuthor" placeholder="Tên tác giả hoặc dịch giả" required>
+                                <label class="form-label fw-bold text-dark" for="bookAuthor">
+                                    Tác Giả <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control glass-input" th:field="*{author}" id="bookAuthor" 
+                                       placeholder="Tên tác giả hoặc nhóm dịch giả" required>
                                 <div class="text-danger small mt-1" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
                             </div>
                         </div>
 
                         <div class="row g-3 mb-3">
                             <div class="col-md-4">
-                                <label class="form-label">Nhà Xuất Bản</label>
-                                <input type="text" class="form-control" th:field="*{publisher}" placeholder="NXB Trẻ, NXB Kim Đồng...">
+                                <label class="form-label fw-semibold text-secondary small text-uppercase">Nhà Xuất Bản</label>
+                                <input type="text" class="form-control glass-input" th:field="*{publisher}" placeholder="NXB Trẻ, NXB Kim Đồng...">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Năm Xuất Bản</label>
-                                <input type="number" class="form-control" th:field="*{publishYear}" id="bookPublishYear" placeholder="2018">
+                                <label class="form-label fw-semibold text-secondary small text-uppercase">Năm Xuất Bản</label>
+                                <input type="number" class="form-control glass-input" th:field="*{publishYear}" id="bookPublishYear" placeholder="2019">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Mã ISBN</label>
-                                <input type="text" class="form-control" th:field="*{isbn}" placeholder="978-604-...">
+                                <label class="form-label fw-semibold text-secondary small text-uppercase">Mã ISBN</label>
+                                <input type="text" class="form-control glass-input" th:field="*{isbn}" placeholder="978-604-...">
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <label class="form-label fw-semibold mb-0">Mô Tả Nội Dung Sách</label>
-                                <button type="button" class="btn btn-sm py-1 px-3 fw-bold" id="btnAiDescription" onclick="handleAiDescription(this)" style="font-size: 11.5px; border: 1px solid var(--color-border); color: var(--color-fire); background: var(--color-fire-light); border-radius: 6px;">
-                                    <i class="fa-solid fa-wand-magic-sparkles me-1" style="color: var(--color-fire);"></i>AI Soạn Mô Tả Chuẩn Sách Cũ
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label fw-bold text-dark mb-0">Mô Tả Nội Dung Sách &amp; Lời Đề Tặng</label>
+                                <button type="button" class="btn-ai-sparkle" id="btnAiDescription" onclick="handleAiDescription(this)">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    <span>AI Soạn Mô Tả Chuẩn Sách Cũ</span>
                                 </button>
                             </div>
-                            <textarea class="form-control" th:field="*{description}" id="bookDescription" rows="6" placeholder="Tóm tắt tác phẩm, trích dẫn hay, ý nghĩa cuốn sách..."></textarea>
-                            <small class="text-muted">Bấm nút "AI Soạn Mô Tả" để tự động sinh bài giới thiệu, đánh giá tình trạng và cam kết chuỗi.</small>
+                            <textarea class="form-control glass-textarea" th:field="*{description}" id="bookDescription" rows="6" 
+                                      placeholder="Tóm tắt tác phẩm, trích dẫn hay, ý nghĩa cuốn sách và cam kết chất lượng của chuỗi cửa hàng..."></textarea>
+                            <small class="text-muted d-block mt-1">
+                                <i class="fa-solid fa-circle-question me-1 text-secondary"></i>Nhấn nút "AI Soạn Mô Tả" để tự động sinh bài giới thiệu hấp dẫn, lồng ghép đánh giá tình trạng sách và chính sách chuỗi.
+                            </small>
                         </div>
                     </div>
                 </div>
 
-                <!-- CARD 2: KIỂM ĐỊNH ĐỘ MỚI SÁCH CŨ (ĐẶC THÙ ĐỒ ÁN SÁCH CŨ) -->
-                <div class="card card-custom">
-                    <div class="card-header bg-light">
-                        <i class="fa-solid fa-stamp text-warning me-2"></i>Kiểm Định Chất Lượng & Độ Mới Sách Cũ
+                <!-- CARD 2: KIỂM ĐỊNH ĐỘ MỚI SÁCH CŨ -->
+                <div class="card-liquid-glass">
+                    <div class="card-liquid-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-stamp text-warning"></i>
+                            <span>Kiểm Định Chất Lượng &amp; Độ Mới Sách Cũ</span>
+                        </div>
+                        <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning" style="font-size: 11px;">
+                            Đặc thù Chuỗi Sách Cũ
+                        </span>
                     </div>
                     <div class="card-body p-4">
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <label class="form-label fw-semibold mb-0">Độ mới thực tế (%): <span id="conditionDisplay" class="badge bg-success fs-6" th:text="*{conditionPercent} + '%'">90%</span></label>
-                                <small class="text-muted">Thang đo tiêu chuẩn: 80% (Khá) đến 99% (Như mới xuất xưởng)</small>
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label fw-bold text-dark mb-0">
+                                    Độ Mới Thực Tế: 
+                                    <span id="conditionDisplay" class="badge rounded-pill px-3 py-1 fs-6 ms-1" 
+                                          style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #ffffff;"
+                                          th:text="*{conditionPercent} + '%'">90%</span>
+                                </label>
+                                <span class="text-muted small">Thang đo: 80% (Khá) &rarr; 99% (Như mới tinh)</span>
                             </div>
-                            <input type="range" class="form-range" min="80" max="99" step="1" th:field="*{conditionPercent}" id="conditionRange" oninput="document.getElementById('conditionDisplay').innerText = this.value + '%'">
+                            <input type="range" class="form-range glass-range-slider w-100" min="80" max="99" step="1" 
+                                   th:field="*{conditionPercent}" id="conditionRange" 
+                                   oninput="document.getElementById('conditionDisplay').innerText = this.value + '%'">
                             <div class="text-danger small mt-1" th:if="${#fields.hasErrors('conditionPercent')}" th:errors="*{conditionPercent}"></div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Ghi Chú Thẩm Định Tình Trạng Sách</label>
-                            <textarea class="form-control" th:field="*{conditionNotes}" id="conditionNotes" rows="3" placeholder="Ví dụ: Bìa sách nguyên vẹn không rách, ruột sách sạch không gạch chân viết bút, mép giấy hơi ngả vàng nhẹ theo thời gian, có chữ ký tác giả..."></textarea>
+                        <div class="mb-1">
+                            <label class="form-label fw-bold text-dark" for="conditionNotes">
+                                Ghi Chú Thẩm Định Tình Trạng Chi Tiết
+                            </label>
+                            <textarea class="form-control glass-textarea" th:field="*{conditionNotes}" id="conditionNotes" rows="3" 
+                                      placeholder="Ví dụ: Bìa sách nguyên vẹn không quăn mép, ruột sách sạch sẽ không gạch chân bút mực, mép giấy hơi ngả màu thời gian tự nhiên, gáy chỉ may chắc chắn..."></textarea>
+                            <small class="text-muted d-block mt-1">Thông tin này được hiển thị công khai trên trang chi tiết sách để người mua an tâm.</small>
                         </div>
                     </div>
                 </div>
 
-                <!-- CARD 3: TỒN KHO BAN ĐẦU CHUỖI 5 CHI NHÁNH -->
-                <div class="card card-custom">
-                    <div class="card-header">
-                        <i class="fa-solid fa-warehouse text-info me-2"></i>Số Lượng Tồn Kho Tại Các Chi Nhánh
+                <!-- CARD 3: TỒN KHO BAN ĐẦU CHUỖI 5 CHI NHÁNH TP.HCM -->
+                <div class="card-liquid-glass">
+                    <div class="card-liquid-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-boxes-stacked text-info"></i>
+                            <span>Phân Bổ Tồn Kho Chuỗi 5 Chi Nhánh TP.HCM</span>
+                        </div>
+                        <span class="badge rounded-pill bg-light text-secondary border fw-normal" style="font-size: 11px;">Đồng bộ đa điểm</span>
                     </div>
                     <div class="card-body p-4">
-                        <p class="text-muted small mb-3">Nhập số lượng sách cũ thực tế đang có sẵn tại từng cửa hàng trong chuỗi để hệ thống đồng bộ giỏ hàng và hỗ trợ khách chọn lấy tại chi nhánh.</p>
+                        <p class="text-muted small mb-3">
+                            <i class="fa-solid fa-circle-info text-info me-1"></i>Nhập số lượng sách cũ thực tế đang có sẵn tại từng chi nhánh để hệ thống tính toán tồn kho giỏ hàng và gợi ý khách đến nhận gần nhất.
+                        </p>
                         <div class="table-responsive">
-                            <table class="table table-bordered align-middle">
-                                <thead class="table-light">
-                                    <tr class="small">
-                                        <th>Chi Nhánh</th>
-                                        <th>Địa Chỉ</th>
-                                        <th style="width: 160px;" class="text-center">Số Lượng Tồn</th>
+                            <table class="table table-liquid align-middle">
+                                <thead>
+                                    <tr>
+                                        <th class="ps-3">Chi Nhánh</th>
+                                        <th>Địa Chỉ &amp; Quận</th>
+                                        <th style="width: 170px;" class="text-center pe-3">Số Lượng Tồn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:each="store : ${stores}">
-                                        <td>
-                                            <strong th:text="${store.storeName}">Chi nhánh</strong>
-                                            <div class="text-muted small" th:text="'ĐT: ' + ${store.phone}"></div>
+                                        <td class="ps-3">
+                                            <div class="fw-bold text-dark d-flex align-items-center gap-2">
+                                                <i class="fa-solid fa-store text-secondary" style="font-size: 12px;"></i>
+                                                <span th:text="${store.storeName}">Chi nhánh</span>
+                                            </div>
+                                            <div class="text-muted small mt-1">
+                                                <i class="fa-solid fa-phone me-1" style="font-size: 10px;"></i><span th:text="${store.phone}">028...</span>
+                                            </div>
                                         </td>
-                                        <td class="small text-muted" th:text="${store.address} + ', ' + ${store.district}">Địa chỉ</td>
-                                        <td>
-                                            <input type="number" min="0" class="form-control text-center" 
+                                        <td class="small text-secondary" th:text="${store.address} + ', ' + ${store.district}">
+                                            Số 1 Võ Văn Ngân, TP. Thủ Đức
+                                        </td>
+                                        <td class="pe-3 text-center">
+                                            <input type="number" min="0" class="form-control glass-input text-center fw-bold text-dark mx-auto" 
+                                                   style="max-width: 120px;"
                                                    th:name="'storeQuantities[' + ${store.id} + ']'" 
                                                    th:value="${bookDto.storeQuantities != null and bookDto.storeQuantities.containsKey(store.id) ? bookDto.storeQuantities.get(store.id) : 0}">
                                         </td>
@@ -142,130 +427,281 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
-            <!-- CỘT PHẢI: GIÁ CẢ, ẢNH CLOUDINARY & TRẠNG THÁI -->
+            <!-- CỘT PHẢI: GIÁ CẢ, ẢNH CLOUDINARY & NÚT LƯU NỔI BẬT (4 COLS) -->
             <div class="col-lg-4">
+                
                 <!-- CARD 4: GIÁ BÁN & KHUYẾN MÃI -->
-                <!-- CARD 4: GIÁ BÁN & KHUYẾN MÃI (TÍCH HỢP AI ĐỊNH GIÁ) -->
-                <div class="card card-custom">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div class="fw-bold"><i class="fa-solid fa-tag text-success me-2"></i>Định Giá Sách Cũ</div>
-                        <button type="button" class="btn btn-sm btn-theme py-1 px-3" id="btnAiValuation" onclick="handleAiValuation(this)" style="font-size: 11.5px;">
-                            <i class="fa-solid fa-calculator me-1"></i>AI Gợi Ý Giá Bán
+                <div class="card-liquid-glass">
+                    <div class="card-liquid-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-tags text-success"></i>
+                            <span>Định Giá &amp; Khuyến Mãi</span>
+                        </div>
+                        <button type="button" class="btn-ai-sparkle" id="btnAiValuation" onclick="handleAiValuation(this)" style="font-size: 11px; padding: 4px 10px;">
+                            <i class="fa-solid fa-calculator"></i>
+                            <span>AI Định Giá</span>
                         </button>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Giá Bán Sách Cũ (VNĐ) <span class="text-danger">*</span></label>
-                            <input type="number" min="0" step="1000" class="form-control fw-bold fs-5" style="color: var(--color-fire-deep);" th:field="*{price}" id="bookPrice" placeholder="68000" required>
+                            <label class="form-label fw-bold text-dark" for="bookPrice">
+                                Giá Bán Sách Cũ (VNĐ) <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" min="0" step="1000" class="form-control glass-input fw-bold text-danger fs-5" 
+                                       th:field="*{price}" id="bookPrice" placeholder="68000" required>
+                                <span class="input-group-text bg-white border-start-0 rounded-end-3 text-muted fw-semibold">đ</span>
+                            </div>
                             <div class="text-danger small mt-1" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Giá Bìa Sách Mới Gốc (VNĐ)</label>
-                            <input type="number" min="0" step="1000" class="form-control" th:field="*{originalPrice}" id="bookOriginalPrice" placeholder="120000">
-                            <small class="text-muted">Dùng để AI tính mức khấu hao và phần trăm tiết kiệm so với sách mới.</small>
+                            <label class="form-label fw-semibold text-secondary small text-uppercase" for="bookOriginalPrice">
+                                Giá Bìa Sách Mới Gốc (VNĐ)
+                            </label>
+                            <div class="input-group">
+                                <input type="number" min="0" step="1000" class="form-control glass-input" 
+                                       th:field="*{originalPrice}" id="bookOriginalPrice" placeholder="120000">
+                                <span class="input-group-text bg-white border-start-0 rounded-end-3 text-muted">đ</span>
+                            </div>
+                            <small class="text-muted d-block mt-1">Dùng để AI tính toán mức khấu hao và % tiết kiệm cho độc giả.</small>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Giá Ưu Đãi / Khuyến Mãi (VNĐ)</label>
-                            <input type="number" min="0" step="1000" class="form-control" th:field="*{discountPrice}" id="bookDiscountPrice" placeholder="0">
+                            <label class="form-label fw-semibold text-secondary small text-uppercase" for="bookDiscountPrice">
+                                Giá Ưu Đãi Khuyến Mãi (VNĐ)
+                            </label>
+                            <div class="input-group">
+                                <input type="number" min="0" step="1000" class="form-control glass-input" 
+                                       th:field="*{discountPrice}" id="bookDiscountPrice" placeholder="0">
+                                <span class="input-group-text bg-white border-start-0 rounded-end-3 text-muted">đ</span>
+                            </div>
                         </div>
 
-                        <!-- KHUNG HIỂN THỊ KẾT QUẢ ĐỊNH GIÁ AI PHONG CÁCH VINTAGE -->
-                        <div id="aiValuationResult" class="d-none p-3 small mt-3" style="background: #fff8f6; border: 1px dashed var(--color-fire); border-radius: 6px;">
-                            <div class="fw-bold mb-1" style="color: var(--color-fire);"><i class="fa-solid fa-robot me-1"></i>Phân Tích Định Giá AI:</div>
-                            <div id="aiValuationRationale" style="color: var(--color-text-secondary); white-space: pre-line;"></div>
+                        <!-- KHUNG KẾT QUẢ AI ĐỊNH GIÁ -->
+                        <div id="aiValuationResult" class="d-none alert alert-light border border-success rounded-3 p-3 mt-3 shadow-sm">
+                            <div class="fw-bold text-success mb-1 d-flex align-items-center gap-1">
+                                <i class="fa-solid fa-robot"></i>
+                                <span>Phân Tích Định Giá AI Thông Minh:</span>
+                            </div>
+                            <div id="aiValuationRationale" class="text-secondary small" style="white-space: pre-line; line-height: 1.4;"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- CARD 5: BỘ ẢNH CHỤP GÓC CẠNH (CLOUDINARY) -->
-                <div class="card card-custom">
-                    <div class="card-header">
-                        <i class="fa-solid fa-cloud-arrow-up text-primary me-2"></i>Ảnh Chụp Thật (Cloudinary)
+                <!-- CARD 5: BỘ ẢNH CHỤP THẬT (CLOUDINARY) -->
+                <div class="card-liquid-glass">
+                    <div class="card-liquid-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up text-primary"></i>
+                            <span>Bộ Ảnh Sách (Cloudinary)</span>
+                        </div>
+                        <span class="cloudinary-badge-pill">
+                            <i class="fa-solid fa-bolt"></i>CDN Tối Ưu
+                        </span>
                     </div>
                     <div class="card-body p-4">
-                        <!-- Ảnh bìa chính -->
+                        <!-- Khu vực ảnh bìa chính trực quan kéo thả -->
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Ảnh Bìa Chính</label>
-                            <div th:if="${isEdit and book.primaryImageUrl != null}" class="mb-2 text-center">
-                                <img th:src="${book.primaryImageUrl}" class="rounded border shadow-sm" style="max-height: 160px; object-fit: contain;">
+                            <label class="form-label fw-bold text-dark d-flex justify-content-between align-items-center">
+                                <span>Ảnh Bìa Chính</span>
+                                <span class="text-muted small fw-normal">Ưu tiên tỷ lệ 2:3</span>
+                            </label>
+
+                            <!-- Ảnh hiện có (nếu là sửa) -->
+                            <div th:if="${isEdit and book.primaryImageUrl != null}" class="mb-3 text-center">
+                                <div class="preview-img-frame p-2">
+                                    <img th:src="${book.primaryImageUrl}" class="rounded" style="max-height: 180px; object-fit: contain;" alt="Ảnh bìa hiện tại">
+                                    <div class="small text-muted mt-1 fw-semibold"><i class="fa-solid fa-image me-1"></i>Ảnh bìa đang lưu trên Cloudinary</div>
+                                </div>
                             </div>
-                            <input type="file" class="form-control" th:field="*{primaryImage}" accept="image/*">
-                            <small class="text-muted">Tự động tối ưu hóa và upload lên đám mây Cloudinary.</small>
+
+                            <!-- Vùng kéo thả Cloudinary trực quan -->
+                            <div class="cloudinary-dropzone" id="primaryDropzone" onclick="document.getElementById('primaryImageInput').click()">
+                                <div class="cloudinary-dropzone-icon">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1">Kéo &amp; Thả ảnh vào đây</h6>
+                                <p class="text-muted small mb-2">Hoặc <span class="text-primary text-decoration-underline fw-semibold">bấm để chọn file từ máy tính</span></p>
+                                <div class="text-secondary" style="font-size: 11px;">Hỗ trợ JPG, PNG, WEBP tối đa 10MB</div>
+                                
+                                <!-- File input ẩn được trigger khi click -->
+                                <input type="file" th:field="*{primaryImage}" id="primaryImageInput" accept="image/*" style="display: none;" onchange="handlePrimaryImagePreview(this)">
+                                
+                                <!-- Preview tạm thời khi chọn file mới -->
+                                <div id="primaryPreviewContainer" class="d-none mt-3">
+                                    <div class="preview-img-frame p-1">
+                                        <img id="primaryPreviewImg" class="rounded" style="max-height: 140px; object-fit: contain;">
+                                    </div>
+                                    <div class="small text-success mt-1 fw-semibold" id="primaryPreviewFilename">
+                                        <i class="fa-solid fa-circle-check me-1"></i>Đã chọn ảnh mới
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <hr>
+                        <hr class="border-secondary opacity-10 my-3">
 
-                        <!-- Danh sách ảnh góc cạnh hiện có (nếu là sửa) -->
+                        <!-- Các góc chụp đã lưu (khi sửa) -->
                         <div th:if="${isEdit and book.images != null and !book.images.empty}" class="mb-3">
-                            <label class="form-label fw-semibold small text-uppercase text-muted">Các góc chụp đã lưu:</label>
+                            <label class="form-label fw-bold text-dark small text-uppercase">Các góc ảnh bổ sung đã lưu:</label>
                             <div class="row g-2 mb-2">
                                 <div class="col-6 position-relative" th:each="img : ${book.images}" th:if="${!img.isPrimary}">
-                                    <div class="border rounded p-1 text-center bg-light">
+                                    <div class="border rounded-3 p-1 text-center bg-white shadow-sm">
                                         <img th:src="${img.imageUrl}" class="rounded" style="width: 100%; height: 90px; object-fit: cover;">
-                                        <div class="small text-truncate mt-1" th:text="${img.angleDescription}">Gáy sách</div>
-                                        <form th:action="@{/admin/books/images/delete/{id}(id=${img.id})}" method="post" class="mt-1" onsubmit="return confirm('Bạn muốn xóa ảnh này?');">
+                                        <div class="small text-truncate mt-1 text-secondary" th:text="${img.angleDescription}">Gáy sách</div>
+                                        <form th:action="@{/admin/books/images/delete/{id}(id=${img.id})}" method="post" class="mt-1" onsubmit="return confirm('Bạn muốn xóa ảnh này khỏi Cloudinary?');">
                                             <input type="hidden" name="bookId" th:value="${book.id}">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 10px;">Xóa</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2 rounded-pill" style="font-size: 10px;">
+                                                <i class="fa-solid fa-trash me-1"></i>Xóa
+                                            </button>
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Thêm các ảnh góc cạnh mới -->
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Thêm Bộ Ảnh Góc Cạnh</label>
-                            <p class="small text-muted mb-2">Chụp gáy sách, bìa sau, trang ruột để khách hàng yên tâm về tình trạng thật của sách cũ.</p>
+                        <!-- Thêm các góc ảnh mới trực quan -->
+                        <div class="mb-2">
+                            <label class="form-label fw-bold text-dark d-flex justify-content-between align-items-center">
+                                <span>Thêm Bộ Ảnh Góc Cạnh Mới</span>
+                            </label>
+                            <p class="small text-muted mb-2">Chụp gáy sách, bìa sau, trang ruột để khách hàng thẩm định tình trạng thật.</p>
                             
                             <div id="anglesContainer">
-                                <div class="border rounded p-2 mb-2 bg-light angle-item">
-                                    <input type="file" class="form-control form-control-sm mb-1" name="angleImages" accept="image/*">
-                                    <input type="text" class="form-control form-control-sm" name="angleDescriptions" placeholder="Góc chụp: Bìa sau / Gáy sách / Trang in...">
+                                <div class="angle-item-glass angle-item">
+                                    <input type="file" class="form-control form-control-sm glass-input mb-2" name="angleImages" accept="image/*">
+                                    <input type="text" class="form-control form-control-sm glass-input" name="angleDescriptions" 
+                                           placeholder="Góc chụp: Bìa sau / Gáy sách / Trang in...">
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-sm btn-outline-secondary w-100" id="btnAddAngle">
-                                <i class="fa-solid fa-plus me-1"></i>Thêm góc ảnh khác
+                            <button type="button" class="btn btn-sm btn-outline-secondary w-100 rounded-pill py-2" id="btnAddAngle">
+                                <i class="fa-solid fa-plus me-1"></i>Thêm góc ảnh chụp khác
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- CARD 6: CÀI ĐẶT TRẠNG THÁI -->
-                <div class="card card-custom">
-                    <div class="card-header">
-                        <i class="fa-solid fa-toggle-on text-secondary me-2"></i>Trạng Thái Hiển Thị
+                <!-- CARD 6: TRẠNG THÁI & NÚT LƯU NỔI BẬT NÂU GỖ - CAM ĐỎ -->
+                <div class="card-liquid-glass">
+                    <div class="card-liquid-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-toggle-on text-secondary"></i>
+                            <span>Trạng Thái &amp; Hoàn Tất</span>
+                        </div>
                     </div>
                     <div class="card-body p-4">
-                        <div class="form-check form-switch mb-3">
-                            <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="activeSwitch">
-                            <label class="form-check-label fw-semibold" for="activeSwitch">Hiển thị bày bán trên website</label>
-                        </div>
-                        <div class="form-check form-switch mb-4">
-                            <input class="form-check-input" type="checkbox" th:field="*{isFeatured}" id="featuredSwitch">
-                            <label class="form-check-label fw-semibold" for="featuredSwitch">Gắn nhãn Sách Nổi Bật</label>
+                        <div class="form-check form-switch mb-3 ps-5">
+                            <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="activeSwitch" style="cursor: pointer; transform: scale(1.2);">
+                            <label class="form-check-label fw-bold text-dark ms-2" for="activeSwitch" style="cursor: pointer;">
+                                Bày bán công khai trên website
+                            </label>
+                            <div class="small text-muted ms-2">Bật để khách hàng có thể tìm kiếm và đặt mua.</div>
                         </div>
 
+                        <div class="form-check form-switch mb-4 ps-5">
+                            <input class="form-check-input" type="checkbox" th:field="*{isFeatured}" id="featuredSwitch" style="cursor: pointer; transform: scale(1.2);">
+                            <label class="form-check-label fw-bold text-dark ms-2" for="featuredSwitch" style="cursor: pointer;">
+                                Đánh dấu Sách Nổi Bật
+                            </label>
+                            <div class="small text-muted ms-2">Xuất hiện tại banner và mục tuyển chọn trang chủ.</div>
+                        </div>
+
+                        <!-- NÚT LƯU NỔI BẬT TONE NÂU GỖ & CAM ĐỎ -->
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-theme py-2 fw-semibold">
-                                <i class="fa-solid fa-floppy-disk me-2"></i><span th:text="${isEdit ? 'Cập Nhật Sách' : 'Lưu Sách Cũ Vào Hệ Thống'}">Lưu</span>
+                            <button type="submit" class="btn-liquid-save" id="btnSubmitForm">
+                                <i class="fa-solid fa-cloud-arrow-up fs-5"></i>
+                                <span th:text="${isEdit ? 'Lưu Thay Đổi Sách Cũ' : 'Lưu Sách Cũ Vào Hệ Thống'}">Lưu Sách Cũ</span>
                             </button>
-                            <a th:href="@{/admin/books}" class="btn btn-light py-2">Hủy bỏ</a>
+                            <a th:href="@{/admin/books}" class="btn-liquid-cancel mt-1">
+                                <span>Hủy bỏ &amp; Quay lại</span>
+                            </a>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </form>
 
-    <!-- SCRIPT TÍNH NĂNG AI & UPLOAD ẢNH (NẰM TRONG FRAGMENT CONTENT ĐỂ THYMELEAF KHÔNG BỎ QUA) -->
+    <!-- SCRIPT TÍNH NĂNG AI, DRAG-AND-DROP CLOUDINARY & GÓC ẢNH -->
     <script>
-        console.log('[AI Book Manager] Script loaded successfully inside content fragment');
+        console.log('[Apple Liquid Glass Form] Initialized inside content fragment');
 
+        // 1. PREVIEW ẢNH BÌA CHÍNH KHI CHỌN HOẶC KÉO THẢ
+        function handlePrimaryImagePreview(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = document.getElementById('primaryPreviewContainer');
+                    const img = document.getElementById('primaryPreviewImg');
+                    const label = document.getElementById('primaryPreviewFilename');
+                    if (container && img) {
+                        img.src = e.target.result;
+                        if (label) label.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> ${file.name} (${(file.size / 1024).toFixed(0)} KB)`;
+                        container.classList.remove('d-none');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 2. KÉO THẢ FILE VÀO CLOUDINARY DROPZONE
+        const dropzone = document.getElementById('primaryDropzone');
+        if (dropzone) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.add('dragover');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.remove('dragover');
+                }, false);
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files && files.length > 0) {
+                    const fileInput = document.getElementById('primaryImageInput');
+                    if (fileInput) {
+                        fileInput.files = files;
+                        handlePrimaryImagePreview(fileInput);
+                    }
+                }
+            }, false);
+        }
+
+        // 3. THÊM GÓC ẢNH CHỤP MỚI
+        document.getElementById('btnAddAngle')?.addEventListener('click', function() {
+            var container = document.getElementById('anglesContainer');
+            var div = document.createElement('div');
+            div.className = 'angle-item-glass angle-item';
+            div.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="small fw-semibold text-secondary"><i class="fa-solid fa-camera me-1"></i>Góc ảnh chụp bổ sung:</span>
+                    <button type="button" class="btn btn-sm btn-link text-danger p-0 text-decoration-none" onclick="this.closest('.angle-item').remove()">
+                        <i class="fa-solid fa-xmark me-1"></i>Gỡ
+                    </button>
+                </div>
+                <input type="file" class="form-control form-control-sm glass-input mb-2" name="angleImages" accept="image/*">
+                <input type="text" class="form-control form-control-sm glass-input" name="angleDescriptions" placeholder="Góc chụp: Bìa sau / Gáy sách / Trang in...">
+            `;
+            container.appendChild(div);
+        });
+
+        // 4. TIỆN ÍCH LẤY & GÁN GIÁ TRỊ FORM
         function getFieldValue(nameOrId) {
             const el = document.getElementById(nameOrId) 
                     || document.querySelector(`[name="${nameOrId}"]`) 
@@ -280,26 +716,11 @@
             if (el) el.value = value;
         }
 
-        document.getElementById('btnAddAngle')?.addEventListener('click', function() {
-            var container = document.getElementById('anglesContainer');
-            var div = document.createElement('div');
-            div.className = 'border rounded p-2 mb-2 bg-light angle-item';
-            div.innerHTML = `
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <span class="small text-muted">Góc ảnh bổ sung:</span>
-                    <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="this.closest('.angle-item').remove()">Xóa</button>
-                </div>
-                <input type="file" class="form-control form-control-sm mb-1" name="angleImages" accept="image/*">
-                <input type="text" class="form-control form-control-sm" name="angleDescriptions" placeholder="Góc chụp: Bìa sau / Gáy sách / Trang in...">
-            `;
-            container.appendChild(div);
-        });
-
-        // 1. TÍNH NĂNG AI: GỢI Ý ĐỊNH GIÁ SÁCH CŨ
+        // 5. TÍNH NĂNG AI: GỢI Ý ĐỊNH GIÁ SÁCH CŨ
         window.handleAiValuation = async function(btn) {
             console.log('[AI Valuation] Button clicked via handleAiValuation');
             const targetBtn = btn || document.getElementById('btnAiValuation');
-            const originalText = targetBtn ? targetBtn.innerHTML : 'AI Định Giá Nhanh';
+            const originalText = targetBtn ? targetBtn.innerHTML : 'AI Định Giá';
             
             const title = getFieldValue('title').trim();
             const author = getFieldValue('author').trim();
@@ -320,7 +741,7 @@
 
             if (targetBtn) {
                 targetBtn.disabled = true;
-                targetBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Đang tính toán...';
+                targetBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Đang tính...';
             }
 
             try {
@@ -361,7 +782,7 @@
             }
         };
 
-        // 2. TÍNH NĂNG AI: AUTO-WRITER SOẠN MÔ TẢ & CAM KẾT CHUỖI
+        // 6. TÍNH NĂNG AI: SOẠN MÔ TẢ TỰ ĐỘNG
         window.handleAiDescription = async function(btn) {
             console.log('[AI Auto-Writer] Button clicked via handleAiDescription');
             const targetBtn = btn || document.getElementById('btnAiDescription');
@@ -385,7 +806,7 @@
 
             if (targetBtn) {
                 targetBtn.disabled = true;
-                targetBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>AI đang viết bài...';
+                targetBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>AI đang viết...';
             }
 
             try {
@@ -417,10 +838,6 @@
                 }
             }
         };
-
-        // Gắn listener dự phòng
-        document.getElementById('btnAiValuation')?.addEventListener('click', function() { window.handleAiValuation(this); });
-        document.getElementById('btnAiDescription')?.addEventListener('click', function() { window.handleAiDescription(this); });
     </script>
 </div>
 </body>
