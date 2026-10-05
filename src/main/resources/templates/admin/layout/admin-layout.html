@@ -744,14 +744,21 @@
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory/transfer'} ? 'active' : ''">
                 <a th:href="@{/admin/inventory/transfer}">
                     <i class="fa-solid fa-dolly"></i>
-                    <span>Điều Chuyển Kho</span>
+                    <span>Tạo Chuyển Kho</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/inventory/transfers')} ? 'active' : ''">
+                <a th:href="@{/admin/inventory/transfers}">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Duyệt Điều Chuyển' : 'Tiến Độ Chuyển Kho'}">Duyệt Điều Chuyển</span>
                 </a>
             </li>
 
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/stores')} ? 'active' : ''">
                 <a th:href="@{/admin/stores}">
                     <i class="fa-solid fa-store"></i>
-                    <span>Chuỗi Chi Nhánh</span>
+                    <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Chuỗi Chi Nhánh' : 'Chi Nhánh Của Bạn'}">Chuỗi Chi Nhánh</span>
                 </a>
             </li>
 
@@ -845,7 +852,8 @@
                 </button>
                 <div class="branch-badge d-none d-sm-inline-flex gap-2">
                     <i class="fa-solid fa-store text-danger"></i>
-                    <span class="fw-semibold">Hệ Thống Chuỗi 5 Chi Nhánh TP.HCM</span>
+                    <span class="fw-semibold" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Hệ Thống Chuỗi 5 Chi Nhánh TP.HCM</span>
+                    <span class="fw-semibold" th:unless="${#authorization.expression('hasRole(''ADMIN'')')}">Cổng Quản Lý Chi Nhánh Cửa Hàng</span>
                     <span class="badge bg-success-subtle text-success border border-success-subtle py-1 px-2" style="font-size: 10px;">Hoạt Động</span>
                 </div>
             </div>

@@ -311,23 +311,45 @@
                 <div class="p-2 rounded-3 text-white" style="background: linear-gradient(135deg, #8C4A27, #EE4D2D); box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);">
                     <i class="fa-solid fa-boxes-stacked fs-5"></i>
                 </div>
-                <h4 class="fw-bold mb-0 text-dark">Quản Lý Tồn Kho Chuỗi 5 Chi Nhánh</h4>
-                <span class="badge rounded-pill bg-light text-secondary border px-3 py-1 ms-2" style="font-size: 12px;">
+                <h4 class="fw-bold mb-0 text-dark" th:text="${isAdmin ? 'Quản Lý Tồn Kho Chuỗi 5 Chi Nhánh' : 'Quản Lý Tồn Kho - ' + (managedStore != null ? managedStore.storeName : 'Chi Nhánh')}">Quản Lý Tồn Kho</h4>
+                <span class="badge rounded-pill bg-light text-secondary border px-3 py-1 ms-2" style="font-size: 12px;" th:if="${isAdmin}">
                     <i class="fa-solid fa-map-pin text-danger me-1"></i>Hệ Thống TP.HCM
                 </span>
+                <span class="badge rounded-pill bg-primary-subtle text-primary border px-3 py-1 ms-2" style="font-size: 12px;" th:unless="${isAdmin}">
+                    <i class="fa-solid fa-store me-1"></i>Chi Nhánh Của Bạn
+                </span>
             </div>
-            <p class="text-muted small mb-0 ms-1">Giám sát mức tồn thực tế theo từng kho, cảnh báo sách cạn đáy và điều phối luân chuyển linh hoạt giữa các chi nhánh.</p>
+            <p class="text-muted small mb-0 ms-1" th:if="${isAdmin}">Giám sát mức tồn thực tế theo từng kho, cảnh báo sách cạn đáy và điều phối luân chuyển linh hoạt giữa các chi nhánh.</p>
+            <p class="text-muted small mb-0 ms-1" th:unless="${isAdmin}">Quản lý số lượng tồn thực tế của các đầu sách cũ tại kho chi nhánh do bạn trực tiếp phụ trách.</p>
         </div>
 
-        <!-- Nút Điều Chuyển Sách Chuẩn Liquid Glass -->
-        <a th:href="@{/admin/inventory/transfer(fromStoreId=${currentStoreId})}" class="btn-liquid-transfer">
-            <i class="fa-solid fa-dolly fs-5"></i>
-            <span>Điều Chuyển Sách Giữa Các Kho</span>
-        </a>
+        <!-- Nút Điều Chuyển Sách & Quản lý phiếu -->
+        <div class="d-flex align-items-center gap-2">
+            <a th:href="@{/admin/inventory/transfers}" class="btn btn-outline-secondary d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm" style="font-weight: 600;">
+                <i class="fa-solid fa-list-check text-primary"></i>
+                <span th:text="${isAdmin ? 'Duyệt Điều Chuyển' : 'Phiếu Điều Chuyển'}">Phiếu Điều Chuyển</span>
+                <span th:if="${pendingTransferCount != null and pendingTransferCount > 0}" class="badge bg-danger rounded-pill" th:text="${pendingTransferCount}">1</span>
+            </a>
+            <a th:href="@{/admin/inventory/transfer(fromStoreId=${currentStoreId})}" class="btn-liquid-transfer">
+                <i class="fa-solid fa-dolly fs-5"></i>
+                <span>Yêu Cầu Chuyển Kho</span>
+            </a>
+        </div>
     </div>
 
-    <!-- 2. THẺ THỐNG KÊ SỐ LƯỢNG TỒN THEO TỪNG CỬA HÀNG TẠI TP.HCM (THỦ ĐỨC, Q1, LÀNG ĐH, PHÚ NHUẬN...) -->
-    <div class="mb-4">
+    <!-- THÔNG BÁO CHO QUẢN LÝ CHI NHÁNH -->
+    <div class="mb-4" th:if="${!isAdmin}">
+        <div class="alert alert-info py-2 px-3 rounded-4 border-0 shadow-sm d-flex align-items-center justify-content-between">
+            <div>
+                <i class="fa-solid fa-user-shield me-2 text-primary"></i>
+                <span>Bạn đang đăng nhập với quyền <strong>Quản lý chi nhánh</strong>: <strong class="text-dark" th:text="${managedStore != null ? managedStore.storeName : ''}">Thủ Đức</strong>. Hệ thống chỉ cho phép xem và cập nhật kho tại chi nhánh của bạn.</span>
+            </div>
+            <span class="badge bg-primary px-3 py-1 rounded-pill"><i class="fa-solid fa-lock me-1"></i>Đã Khóa Chi Nhánh</span>
+        </div>
+    </div>
+
+    <!-- 2. THẺ THỐNG KÊ SỐ LƯỢNG TỒN THEO TỪNG CỬA HÀNG TẠI TP.HCM (CHỈ HIỂN THỊ ĐỦ CHO ADMIN) -->
+    <div class="mb-4" th:if="${isAdmin}">
         <div class="d-flex align-items-center justify-content-between mb-3">
             <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
                 <i class="fa-solid fa-store text-warning"></i>

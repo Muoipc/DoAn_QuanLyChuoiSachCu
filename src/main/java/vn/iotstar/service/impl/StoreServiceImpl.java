@@ -52,4 +52,12 @@ public class StoreServiceImpl implements IStoreService {
     public long countTotalStores() {
         return storeRepository.count();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Store findByManagerId(Long managerId) {
+        if (managerId == null) return null;
+        List<Store> stores = storeRepository.findByManagerId(managerId);
+        return stores.isEmpty() ? null : stores.get(0);
+    }
 }
