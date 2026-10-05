@@ -8,10 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import vn.iotstar.entity.Role;
 import vn.iotstar.entity.User;
 import vn.iotstar.repository.RoleRepository;
 import vn.iotstar.repository.UserRepository;
+import vn.iotstar.security.CustomUserDetails;
 
 @Controller
 @RequestMapping("/admin/users")
@@ -24,15 +26,22 @@ public class AdminUserController {
     private RoleRepository roleRepository;
 
     /**
-     * Danh sách tài khoản người dùng và phân quyền (Admin, Store Manager, Customer, Shipper)
+     * Danh sách tài khoản người dùng và phân quyền (CHỈ DÀNH RIÊNG CHO QUẢN TRỊ VIÊN - ADMIN)
      */
     @GetMapping({"", "/"})
     public String listUsers(
             @RequestParam(name = "keyword", required = false) String keyword,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect,
             Model model
     ) {
+        if (userDetails == null || !"ROLE_ADMIN".equals(userDetails.getRoleName())) {
+            redirect.addFlashAttribute("errorMessage", "Chỉ Quản trị viên hệ thống (Admin) mới có quyền truy cập Quản lý Người dùng & Phân quyền!");
+            return "redirect:/admin";
+        }
+
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<User> userPage;
         if (keyword != null && !keyword.trim().isEmpty()) {
@@ -52,14 +61,20 @@ public class AdminUserController {
     }
 
     /**
-     * Đổi vai trò người dùng (Phân quyền Admin, Store Manager, Shipper, Customer)
+     * Đổi vai trò người dùng (CHỈ DÀNH RIÊNG CHO ADMIN)
      */
     @PostMapping("/{id}/change-role")
     public String changeRole(
             @PathVariable("id") Long id,
             @RequestParam("roleId") Integer roleId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             RedirectAttributes redirect
     ) {
+        if (userDetails == null || !"ROLE_ADMIN".equals(userDetails.getRoleName())) {
+            redirect.addFlashAttribute("errorMessage", "Chỉ Quản trị viên (Admin) mới có quyền phân quyền vai trò người dùng!");
+            return "redirect:/admin";
+        }
+
         try {
             User user = userRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng"));
@@ -75,10 +90,19 @@ public class AdminUserController {
     }
 
     /**
-     * Kích hoạt hoặc Khóa tài khoản
+     * Kích hoạt hoặc Khóa tài khoản (CHỈ DÀNH RIÊNG CHO ADMIN)
      */
     @PostMapping("/{id}/toggle-enabled")
-    public String toggleEnabled(@PathVariable("id") Long id, RedirectAttributes redirect) {
+    public String toggleEnabled(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect
+    ) {
+        if (userDetails == null || !"ROLE_ADMIN".equals(userDetails.getRoleName())) {
+            redirect.addFlashAttribute("errorMessage", "Chỉ Quản trị viên (Admin) mới có quyền khóa hoặc mở khóa tài khoản!");
+            return "redirect:/admin";
+        }
+
         try {
             User user = userRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng"));

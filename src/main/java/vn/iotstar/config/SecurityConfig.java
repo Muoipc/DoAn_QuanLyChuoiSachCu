@@ -78,6 +78,7 @@ public class SecurityConfig {
                     "/ai-assistant", "/ai-assistant/**", "/help", "/help/**"
                 ).permitAll()
                 // Phân quyền phân hệ nghiệp vụ nội bộ
+                .requestMatchers("/admin/users", "/admin/users/**").hasRole("ADMIN")
                 .requestMatchers("/admin/**").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/store-manager/**").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/shipper/**").hasAnyRole("ADMIN", "SHIPPER")
@@ -97,6 +98,14 @@ public class SecurityConfig {
             )
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    String uri = request.getRequestURI();
+                    if (uri != null && uri.startsWith("/admin")) {
+                        response.sendRedirect("/admin?error=access_denied");
+                    } else {
+                        response.sendRedirect("/?error=access_denied");
+                    }
+                })
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")

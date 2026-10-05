@@ -793,7 +793,7 @@
                 <span>Hệ Thống &amp; Báo Cáo</span>
             </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/users')} ? 'active' : ''">
+            <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/users')} ? 'active' : ''">
                 <a th:href="@{/admin/users}">
                     <i class="fa-solid fa-users-gear"></i>
                     <span>Người Dùng &amp; Quyền</span>
@@ -904,8 +904,9 @@
                 <i class="fa-solid fa-circle-check me-2"></i><span th:text="${successMessage}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-                <i class="fa-solid fa-circle-exclamation me-2"></i><span th:text="${errorMessage}"></span>
+            <div th:if="${errorMessage != null or (param.error != null and #strings.contains(param.error, 'access_denied'))}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>
+                <span th:text="${errorMessage != null ? errorMessage : 'Bạn không có quyền truy cập chức năng này! Chức năng Quản lý Người dùng &amp; Phân quyền chỉ dành riêng cho Quản trị viên (Admin).'}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
 
