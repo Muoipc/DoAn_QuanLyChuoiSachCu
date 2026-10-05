@@ -834,8 +834,6 @@
         <div class="container-shopee topbar-content">
             <div class="topbar-nav">
                 <a th:href="@{/consignments}"><i class="fa-solid fa-recycle me-1" style="color:#10b981;"></i> Ký Gửi Sách Cũ</a>
-                <span class="topbar-divider"></span>
-                <a href="javascript:void(0)" onclick="openStoreModal()"><i class="fa-solid fa-store me-1" style="color:#8C4A27;"></i> Hệ Thống Cửa Hàng TP.HCM</a>
             </div>
 
             <div class="topbar-links">
@@ -1006,126 +1004,6 @@
             </div>
         </div>
     </header>
-
-    <!-- MODAL HỆ THỐNG CỬA HÀNG TP.HCM -->
-    <div class="modal-stores-backdrop" id="storeModal" onclick="closeStoreModal(event)">
-        <div class="modal-stores-content" onclick="event.stopPropagation()" style="max-width:850px; max-height:85vh; overflow-y:auto;">
-            <button type="button" class="modal-close-btn" onclick="closeStoreModal()"><i class="fa-solid fa-xmark"></i></button>
-
-            <h3 style="font-size: 18px; font-weight: 900; color: #1C1917; display:flex; align-items:center; gap:8px;">
-                <i class="fa-solid fa-shop" style="color:#8C4A27;"></i>
-                <span>HỆ THỐNG CÁC HIỆU SÁCH CŨ UY TÍN TẠI TP. HỒ CHÍ MINH</span>
-            </h3>
-            <p style="font-size: 13px; color: #574E45; margin-top: 4px;">
-                Quý khách có thể ghé đọc thử, nhận sách Click &amp; Collect trong 2h hoặc ký gửi trực tiếp tại quầy:
-            </p>
-
-            <div class="modal-store-grid" style="grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:12px;">
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Bá Tân – Sách Cũ Thư Viện (Thủ Đức)
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Gian số 10, Đường Sách Thủ Đức, 2 Hồ Thị Tư, P. Hiệp Phú
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>0962.936.310</strong>
-                    </p>
-                    <a th:href="@{/stores/1}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Little Cats Bookstore – Đường Sách Q1
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Đường Sách Nguyễn Văn Bình, P. Bến Nghé, Quận 1
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>028.3822.9988</strong>
-                    </p>
-                    <a th:href="@{/stores/2}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Sách Cũ Bảo Khang – Làng ĐHQG TP.HCM
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Tòa Nhà Công Vụ ĐHQG-HCM, Đường Nguyễn Du, TP. Thủ Đức
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>0908.123.456</strong>
-                    </p>
-                    <a th:href="@{/stores/3}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Sách Cũ Tổng Hợp 160 – Trần Huy Liệu
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 160 Trần Huy Liệu, P. 15, Q. Phú Nhuận
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>028.3847.9924</strong>
-                    </p>
-                    <a th:href="@{/stores/4}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Hiệu Sách Cũ Tấn Phương – Trần Nhân Tôn
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 29 Trần Nhân Tôn, P. 9, Quận 5
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 07:30 - 21:30 | Hotline: <strong>028.3835.1122</strong>
-                    </p>
-                    <a th:href="@{/stores/5}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Tiệm Sách Ngoại Văn Momo – Phú Nhuận
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 205 Trần Huy Liệu, P. 15, Q. Phú Nhuận
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 09:00 - 20:30 | Hotline: <strong>0938.556.789</strong>
-                    </p>
-                    <a th:href="@{/stores/6}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Kho Sách Cũ ABC – Sài Gòn
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 35 Đường Tám Danh, P. 4, Quận 8
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>028.3855.4433</strong>
-                    </p>
-                    <a th:href="@{/stores/7}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Hiệu Sách Cũ Khải Vinh – Trần Nhân Tôn
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 43 Trần Nhân Tôn, P. 9, Quận 5
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>028.3833.6677</strong>
-                    </p>
-                    <a th:href="@{/stores/8}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-            </div>
-
-            <div style="margin-top:16px; text-align:center;">
-                <a th:href="@{/stores}" style="display:inline-flex; align-items:center; gap:6px; background:#ee4d2d; color:#ffffff; padding:10px 24px; border-radius:6px; font-size:13.5px; font-weight:700; text-decoration:none; box-shadow:0 4px 12px rgba(238,77,45,0.2);">
-                    <i class="fa-solid fa-store"></i> Xem Bản Đồ &amp; Danh Sách 8 Chi Nhánh &gt;
-                </a>
-            </div>
-        </div>
-    </div>
 
     <!-- TOAST CONTAINER APPLE LIQUID GLASS TOÀN CỤC -->
     <div id="universalToastContainer"></div>
@@ -1755,7 +1633,7 @@
                 <div>
                     <div style="font-weight:700; font-size:14px; line-height:1.2;">Trợ Lý AI Chuỗi Sách Cũ</div>
                     <div style="font-size:11px; opacity:0.9; display:flex; align-items:center; gap:4px; margin-top:2px;">
-                        <span style="width:7px; height:7px; border-radius:50%; background:#10b981; display:inline-block;"></span> 5 chi nhánh TP.HCM
+                        <span style="width:7px; height:7px; border-radius:50%; background:#10b981; display:inline-block;"></span> Kho Sách Cũ TP.HCM
                     </div>
                 </div>
             </div>
@@ -1777,16 +1655,16 @@
                     <i class="fa-solid fa-robot"></i>
                 </div>
                 <div style="background:#f5f0eb; padding:10px 14px; border-radius:16px; border-top-left-radius:4px; color:#292524; line-height:1.5; max-width:85%;">
-                    Chào bạn! Em là <strong>Trợ lý AI</strong> của Chuỗi Sách Cũ TP.HCM. Em có thể tư vấn sách, kiểm tra tồn kho tại 5 chi nhánh hoặc giải đáp phí ship và chính sách đồng kiểm ạ!
+                    Chào bạn! Em là <strong>Trợ lý AI</strong> của Nhà Sách Cũ TP.HCM. Em có thể tư vấn chọn sách, kiểm tra tồn kho, giá bán hoặc giải đáp phí ship và chính sách đồng kiểm ạ!
                 </div>
             </div>
 
             <!-- Gợi ý nhanh (Quick Chips) -->
             <div style="display:flex; flex-wrap:wrap; gap:6px; margin: 4px 0 4px 36px;">
-                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Các chi nhánh ở đâu?')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">📍 5 Chi nhánh</button>
-                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Gợi ý sách chữa lành')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">🌱 Sách chữa lành</button>
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Gợi ý sách hay nên đọc')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">📚 Gợi ý sách hay</button>
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Gợi ý sách chữa lành tâm hồn')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">🌱 Sách chữa lành</button>
                 <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Sách sinh viên giá rẻ dưới 50k')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">💰 Sách dưới 50K</button>
-                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Phí vận chuyển bao nhiêu?')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">🚚 Phí ship</button>
+                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Chính sách đồng kiểm và phí ship')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">🚚 Phí ship &amp; Đồng kiểm</button>
             </div>
         </div>
 

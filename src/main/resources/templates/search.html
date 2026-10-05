@@ -743,20 +743,7 @@
                         </label>
                     </div>
 
-                    <!-- 3. Chi nhánh kho còn hàng -->
-                    <div class="filter-group">
-                        <div class="filter-group-title">Chi Nhánh Sẵn Hàng</div>
-                        <label class="filter-item-label">
-                            <input type="radio" name="store" value="" th:checked="${selectedStore == null}" onchange="this.form.submit()">
-                            <span>Toàn bộ 5 chi nhánh</span>
-                        </label>
-                        <label class="filter-item-label" th:each="s : ${stores}">
-                            <input type="radio" name="store" th:value="${s.id}" th:checked="${selectedStore == s.id}" onchange="this.form.submit()">
-                            <span th:text="${s.storeName}">CN Thủ Đức</span>
-                        </label>
-                    </div>
-
-                    <!-- 4. Khoảng giá -->
+                    <!-- 3. Khoảng giá -->
                     <div class="filter-group" style="border-bottom:none;">
                         <div class="filter-group-title">Khoảng Giá (₫)</div>
                         <div class="price-inputs-row">

@@ -48,6 +48,9 @@ public class BookController {
     @Autowired
     private vn.iotstar.repository.StoreRepository storeRepository;
 
+    @Autowired
+    private vn.iotstar.repository.VoucherRepository voucherRepository;
+
     /**
      * Xem chi tiết sách theo ID.
      * URL: /books/{id} (Ví dụ: /books/1)
@@ -166,6 +169,7 @@ public class BookController {
         model.addAttribute("bestSellerBooks", otherStoreBooks);
         model.addAttribute("isLiked", isLiked);
         model.addAttribute("likesCount", likesCount);
+        model.addAttribute("vouchers", voucherRepository.findByIsActiveTrue());
         model.addAttribute("pageTitle", book.getTitle() + " - Chuỗi Sách Cũ");
 
         return "book-detail";

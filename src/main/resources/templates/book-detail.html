@@ -1364,10 +1364,19 @@
                 <div class="attribute-row">
                     <div class="attr-label">Mã Giảm Giá Của Shop</div>
                     <div class="voucher-tags-list">
-                        <span class="voucher-tag-pill">Giảm 15kđ</span>
-                        <span class="voucher-tag-pill">Giảm 20kđ</span>
-                        <span class="voucher-tag-pill">Giảm 10%</span>
-                        <a th:href="@{/vouchers}" class="link-view-all-vouchers">Xem tất cả &gt;</a>
+                        <th:block th:if="${vouchers != null and !vouchers.isEmpty()}">
+                            <span th:each="v, iter : ${vouchers}" 
+                                  th:if="${iter.index < 3}"
+                                  class="voucher-tag-pill" 
+                                  onclick="openBookVoucherModal()"
+                                  th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? ('Giảm ' + v.discountValue.intValue() + '%') : ('Giảm ' + #numbers.formatDecimal(v.discountValue, 0, 'POINT', 0, 'COMMA') + '₫')}">Giảm 20.000₫</span>
+                        </th:block>
+                        <th:block th:unless="${vouchers != null and !vouchers.isEmpty()}">
+                            <span class="voucher-tag-pill" onclick="openBookVoucherModal()">Giảm 15kđ</span>
+                            <span class="voucher-tag-pill" onclick="openBookVoucherModal()">Giảm 20kđ</span>
+                            <span class="voucher-tag-pill" onclick="openBookVoucherModal()">Giảm 10%</span>
+                        </th:block>
+                        <a href="javascript:void(0)" onclick="openBookVoucherModal()" class="link-view-all-vouchers">Xem tất cả &gt;</a>
                     </div>
                 </div>
 
@@ -1511,76 +1520,6 @@
             </div>
 
         </div>
-
-        <!-- 3.5. THÔNG TIN SHOP / CHI NHÁNH CỬA HÀNG (CHUẨN SHOPEE PDP STOREFRONT) -->
-        <section class="shopee-shop-card">
-            <div class="shop-card-left">
-                <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1}, categoryId=${book.category != null ? book.category.id : 1}, entryPoint='ShopByPDP', itemId=${book.id})}" class="shop-avatar-link" style="text-decoration:none;">
-                    <div class="shop-avatar-box">
-                        <img th:src="${store != null && store.image != null ? store.image : '/images/logo-books-badge.png'}" 
-                             onerror="this.src='/images/logo-books-badge.png'" 
-                             alt="Shop Avatar" class="shop-avatar-img">
-                        <span class="shop-badge-official">Yêu Thích+</span>
-                    </div>
-                </a>
-                <div class="shop-meta-info">
-                    <h3 class="shop-name-title">
-                        <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1}, categoryId=${book.category != null ? book.category.id : 1}, entryPoint='ShopByPDP', itemId=${book.id})}" 
-                           th:text="${store != null ? store.storeName : 'Chi Nhánh 1: Thủ Đức (Gần HCMUTE)'}">
-                           Chi Nhánh 1: Thủ Đức (Gần HCMUTE)
-                        </a>
-                    </h3>
-                    <div class="shop-online-status">
-                        <span class="online-indicator-dot"></span>
-                        <span>Online 5 Phút Trước</span>
-                        <span class="status-sep">|</span>
-                        <span th:text="${store != null ? store.district : 'TP. Thủ Đức'}">TP. Thủ Đức</span>
-                    </div>
-                    <div class="shop-action-buttons">
-                        <button type="button" class="btn-shop-chat" onclick="document.querySelector('.mini-chatbot-fab')?.click()">
-                            <i class="fa-solid fa-comments"></i> Chat Ngay
-                        </button>
-                        <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1}, categoryId=${book.category != null ? book.category.id : 1}, entryPoint='ShopByPDP', itemId=${book.id})}" class="btn-shop-view">
-                            <i class="fa-solid fa-store"></i> Xem Shop
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 6 THỐNG KÊ CHI NHÁNH CHUẨN SHOPEE -->
-            <div class="shop-card-right-stats">
-                <div class="shop-stat-col">
-                    <div class="shop-stat-item">
-                        <span class="stat-label">Đánh Giá:</span>
-                        <span class="stat-val highlight">4.9k</span>
-                    </div>
-                    <div class="shop-stat-item">
-                        <span class="stat-label">Sản Phẩm:</span>
-                        <span class="stat-val highlight" th:text="${totalStock != null ? totalStock + '+' : '185+'}">185+</span>
-                    </div>
-                </div>
-                <div class="shop-stat-col">
-                    <div class="shop-stat-item">
-                        <span class="stat-label">Tỉ Lệ Phản Hồi:</span>
-                        <span class="stat-val highlight">99%</span>
-                    </div>
-                    <div class="shop-stat-item">
-                        <span class="stat-label">Thời Gian Phản Hồi:</span>
-                        <span class="stat-val highlight">trong vài phút</span>
-                    </div>
-                </div>
-                <div class="shop-stat-col">
-                    <div class="shop-stat-item">
-                        <span class="stat-label">Tham Gia:</span>
-                        <span class="stat-val">3 Năm Trước</span>
-                    </div>
-                    <div class="shop-stat-item">
-                        <span class="stat-label">Người Theo Dõi:</span>
-                        <span class="stat-val">12.8k</span>
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <!-- 4. THÔNG TIN CHI TIẾT SÁCH (SPECS & DESCRIPTION CHUẨN SHOPEE) -->
         <section class="product-specs-section">
@@ -1807,12 +1746,12 @@
             </div>
         </section>
 
-        <!-- 6. KHỐI CÁC SẢN PHẨM KHÁC CỦA SHOP (KHỚP 100% ẢNH SHOPEE IMAGE_B955DC.PNG) -->
+        <!-- 6. KHỐI CÁC SẢN PHẨM GỢI Ý CÙNG THỂ LOẠI -->
         <section class="product-shelf-section" th:if="${otherStoreBooks != null && !otherStoreBooks.isEmpty()}" 
                  style="margin-top:20px; background:#fff; border-radius:4px; border:1px solid rgba(0,0,0,0.08); padding:20px 24px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-                <h2 style="font-size:16px; font-weight:700; color:#1C1917; text-transform:uppercase; margin:0; letter-spacing:0.5px;">CÁC SẢN PHẨM KHÁC CỦA SHOP</h2>
-                <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1})}" 
+                <h2 style="font-size:16px; font-weight:700; color:#1C1917; text-transform:uppercase; margin:0; letter-spacing:0.5px;">CÁC TỰA SÁCH GỢI Ý CÙNG THỂ LOẠI</h2>
+                <a th:href="@{/search(category=${book.category != null ? book.category.id : ''})}" 
                    style="font-size:13px; font-weight:600; color:#ee4d2d; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
                     Xem Tất Cả <i class="fa-solid fa-chevron-right fa-xs"></i>
                 </a>
@@ -1890,6 +1829,58 @@
                  style="max-width:92%; max-height:88vh; object-fit:contain; border-radius:14px; box-shadow:0 25px 60px rgba(0,0,0,0.6); border:2px solid rgba(255,255,255,0.2);">
         </div>
 
+        <!-- MODAL MÃ GIẢM GIÁ CỦA SHOP (SHOPEE VOUCHER POPUP LIQUID GLASS) -->
+        <div class="modal-overlay-shopee" id="bookVoucherModal" onclick="closeBookVoucherModal(event)" 
+             style="display:none; position:fixed; inset:0; background:rgba(15,10,5,0.65); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:999999; align-items:center; justify-content:center; padding:20px;">
+            <div class="modal-body-shopee" onclick="event.stopPropagation()" style="background:#ffffff; border-radius:18px; width:100%; max-width:540px; box-shadow:0 24px 60px rgba(0,0,0,0.25); overflow:hidden; border:1.5px solid rgba(255,255,255,0.9);">
+                <div style="padding:16px 20px; border-bottom:1px solid #f0eae1; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-ticket" style="color:var(--color-fire); font-size:18px;"></i>
+                        <h3 style="font-size:16px; font-weight:800; color:#1C1917; margin:0;">Mã Giảm Giá Của Shop</h3>
+                    </div>
+                    <button type="button" onclick="closeBookVoucherModal()" style="border:none; background:none; font-size:24px; cursor:pointer; color:#78716C; line-height:1;">&times;</button>
+                </div>
+                
+                <div style="padding:10px 20px; background:rgba(238, 77, 45, 0.05); border-bottom:1px dashed rgba(238, 77, 45, 0.2); font-size:12.5px; color:#78716C; display:flex; justify-content:space-between; align-items:center;">
+                    <span>Lưu mã vào ví để được áp dụng khi thanh toán</span>
+                    <a th:href="@{/vouchers}" target="_blank" style="font-size:12px; font-weight:700; color:var(--color-fire); text-decoration:none;">Kho Voucher &gt;</a>
+                </div>
+
+                <div style="padding:16px 20px; max-height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:12px;">
+                    <div th:each="v : ${vouchers}" 
+                         style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:12px; background:#fffcfb; border:1.5px dashed rgba(238,77,45,0.35); gap:12px; transition:all 0.2s;">
+                        <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+                            <div style="width:42px; height:42px; border-radius:8px; background:rgba(238,77,45,0.1); color:var(--color-fire); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                                <i class="fa-solid fa-ticket"></i>
+                            </div>
+                            <div style="min-width:0;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <strong style="font-size:13.5px; color:#1C1917;" th:text="${v.code}">SACHCU20K</strong>
+                                    <span style="font-size:11px; font-weight:800; color:var(--color-fire); background:#fff0ed; padding:1px 6px; border-radius:4px;" 
+                                          th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? ('Giảm ' + v.discountValue.intValue() + '%') : ('Giảm ' + #numbers.formatDecimal(v.discountValue, 0, 'POINT', 0, 'COMMA') + '₫')}">Giảm 20.000₫</span>
+                                </div>
+                                <div style="font-size:12px; color:#57534E; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" th:text="${v.description}">Mô tả voucher</div>
+                                <div style="font-size:11px; color:#78716C; margin-top:2px;" 
+                                     th:text="'Đơn tối thiểu: ₫' + ${#numbers.formatDecimal(v.minOrderAmount != null ? v.minOrderAmount : 0, 0, 'POINT', 0, 'COMMA')}">Đơn tối thiểu ₫100.000</div>
+                            </div>
+                        </div>
+                        <button type="button" 
+                                th:data-code="${v.code}"
+                                onclick="saveBookVoucher(this.dataset.code, this)"
+                                style="border:1.5px solid var(--color-fire); background:var(--color-fire); color:#ffffff; font-size:12px; font-weight:700; padding:6px 16px; border-radius:9999px; cursor:pointer; flex-shrink:0; transition:all 0.2s;">
+                            Lưu
+                        </button>
+                    </div>
+                </div>
+
+                <div style="padding:12px 20px; background:#f9f6f0; border-top:1px solid #f0eae1; text-align:right;">
+                    <button type="button" onclick="closeBookVoucherModal()" style="background:#ffffff; border:1px solid #d5cec4; color:#57534E; font-size:12.5px; font-weight:600; padding:6px 18px; border-radius:9999px; cursor:pointer;">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- FOOTER -->
@@ -1902,6 +1893,64 @@
 
     <!-- SCRIPT TƯƠNG TÁC CHUẨN SHOPEE -->
     <script>
+        // ================= CHAT NGAY VỚI SHOP QUA MINI CHATBOT =================
+        function chatWithStoreFromBook(storeName, bookTitle) {
+            if (typeof toggleAiMiniChat === 'function') {
+                var widget = document.getElementById('aiMiniChatWidget');
+                if (!widget || widget.style.display === 'none' || widget.style.display === '') {
+                    toggleAiMiniChat();
+                }
+            }
+            var prompt = 'Dạ em muốn hỏi ' + (storeName || 'chi nhánh') + ' về tình trạng và tồn kho của cuốn sách "' + (bookTitle || '') + '" ạ!';
+            if (typeof sendMiniChatPrompt === 'function') {
+                sendMiniChatPrompt(prompt);
+            }
+        }
+
+        // ================= VOUCHER POPUP MODAL =================
+        function openBookVoucherModal() {
+            const modal = document.getElementById('bookVoucherModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeBookVoucherModal(e) {
+            if (e && e.target !== e.currentTarget && !e.target.closest('button')) return;
+            const modal = document.getElementById('bookVoucherModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function saveBookVoucher(code, btn) {
+            fetch('/api/vouchers/save-ajax?code=' + encodeURIComponent(code), { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.textContent = 'Đã Lưu';
+                        btn.style.background = '#e7e5e4';
+                        btn.style.borderColor = '#d6d3d1';
+                        btn.style.color = '#78716c';
+                        btn.disabled = true;
+                        if (typeof showLiquidToast === 'function') {
+                            showLiquidToast('Đã lưu mã ' + code + ' vào ví voucher của bạn!', 'success');
+                        } else {
+                            alert('Đã lưu mã ' + code + ' vào ví voucher của bạn!');
+                        }
+                    } else if (data.requireLogin) {
+                        if (confirm('Vui lòng đăng nhập để lưu mã giảm giá vào ví cá nhân!\nBạn có muốn chuyển đến trang Đăng nhập ngay không?')) {
+                            window.location.href = '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search);
+                        }
+                    } else {
+                        alert(data.message || 'Không thể lưu voucher');
+                    }
+                })
+                .catch(err => {
+                    btn.textContent = 'Đã Lưu';
+                    btn.style.background = '#e7e5e4';
+                    btn.style.borderColor = '#d6d3d1';
+                    btn.style.color = '#78716c';
+                    btn.disabled = true;
+                });
+        }
+
         function shareSocial(network) {
             var url = window.location.href;
             var title = document.title;

@@ -274,12 +274,12 @@
 
         /* HINT TÀI KHOẢN MẪU TEST DÙNG FLEXIBLE */
         .test-accounts-box {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1.5px dashed rgba(140, 74, 39, 0.3);
+            border: 1.5px dashed rgba(140, 74, 39, 0.35);
             border-radius: 14px;
-            padding: 12px 14px;
+            padding: 14px 16px;
             margin-top: 20px;
             font-size: 12px;
             color: var(--color-text-secondary);
@@ -287,27 +287,34 @@
         .test-acc-btn-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 6px;
+            gap: 8px;
+            margin-top: 10px;
         }
         .test-acc-btn {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(213, 206, 196, 0.8);
-            padding: 5px 12px;
+            background: #ffffff;
+            border: 1px solid rgba(213, 206, 196, 0.9);
+            padding: 6px 14px;
             border-radius: 9999px;
-            font-size: 11.5px;
-            font-weight: 700;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1C1917;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            transition: all 0.2s;
+            gap: 6px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
         .test-acc-btn:hover {
-            border-color: var(--color-fire);
-            color: var(--color-fire);
-            background: #ffffff;
+            border-color: #ee4d2d;
+            color: #ee4d2d;
+            background: #fff5f2;
             transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(238, 77, 45, 0.15);
+        }
+        .test-acc-btn:active {
+            transform: scale(0.96);
         }
 
         /* FOOTER LINKS FLEXIBLE */
@@ -590,11 +597,23 @@
 
                     <!-- TÀI KHOẢN MẪU DÀNH CHO THẦY CÔ & BẠN BÈ TEST -->
                     <div class="test-accounts-box">
-                        <strong style="color:#1C1917;"><i class="fa-solid fa-key me-1 text-warning"></i> Tài khoản mẫu dùng nhanh:</strong>
+                        <strong style="color:#1C1917; display:flex; align-items:center; gap:6px;">
+                            <i class="fa-solid fa-key text-warning"></i>
+                            <span>Tài khoản mẫu dùng nhanh:</span>
+                        </strong>
                         <div class="test-acc-btn-group">
-                            <span class="test-acc-btn" onclick="fillTestAcc('phuc_customer', '123456')">Khách hàng (Phúc)</span>
-                            <span class="test-acc-btn" onclick="fillTestAcc('admin', '123456')">Quản trị viên</span>
-                            <span class="test-acc-btn" onclick="fillTestAcc('manager_thuduc', '123456')">Thủ kho Thủ Đức</span>
+                            <span class="test-acc-btn" onclick="fillTestAcc('phuc_customer', '123456')">
+                                <i class="fa-regular fa-user text-muted"></i> Khách hàng (Phúc)
+                            </span>
+                            <span class="test-acc-btn" onclick="fillTestAcc('admin', '123456')">
+                                <i class="fa-solid fa-shield-halved text-danger"></i> Quản trị viên
+                            </span>
+                            <span class="test-acc-btn" onclick="fillTestAcc('manager_td', '123456')">
+                                <i class="fa-solid fa-warehouse text-primary"></i> Thủ kho Thủ Đức
+                            </span>
+                            <span class="test-acc-btn" onclick="fillTestAcc('shipper_hung', '123456')">
+                                <i class="fa-solid fa-truck-fast text-success"></i> Shipper (Hùng)
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -613,8 +632,18 @@
 
     <script>
         function fillTestAcc(user, pass) {
-            document.getElementById('loginUsername').value = user;
-            document.getElementById('loginPassword').value = pass;
+            const userInput = document.getElementById('loginUsername');
+            const passInput = document.getElementById('loginPassword');
+            if (userInput && passInput) {
+                userInput.value = user;
+                passInput.value = pass;
+                userInput.style.borderColor = '#ee4d2d';
+                passInput.style.borderColor = '#ee4d2d';
+                setTimeout(function() {
+                    userInput.style.borderColor = '';
+                    passInput.style.borderColor = '';
+                }, 600);
+            }
         }
     </script>
     <script src="/js/i18n.js"></script>
