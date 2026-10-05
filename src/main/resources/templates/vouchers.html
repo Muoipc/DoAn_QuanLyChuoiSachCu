@@ -1067,7 +1067,7 @@
                     </div>
                     <span class="stub-badge-label" th:text="${v.categorySlug == 'shipping' ? 'FREESHIP' : (v.categorySlug == 'exclusive' ? 'ĐỘC QUYỀN' : 'SÁCH CŨ')}">FREESHIP</span>
                     <div class="stub-discount-amount" th:text="${v.discountDisplay}">15K</div>
-                    <div class="stub-sub-text" th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? 'GIẢM GIÁ' : 'TỐI ĐA'}">GIẢM GIÁ</div>
+                    <div class="stub-sub-text" th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? 'GIẢM GIÁ' : (v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).FREE_SHIPPING ? 'VẬN CHUYỂN' : 'TỐI ĐA')}">GIẢM GIÁ</div>
                 </div>
 
                 <!-- Răng cưa / Vết khuyết tròn (Notches) ở hai đầu đường nét đứt chia tách -->

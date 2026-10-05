@@ -44,6 +44,7 @@
                         <li class="mb-1"><i class="fa-solid fa-phone me-2 text-primary"></i>Hotline: <strong class="text-dark" th:text="${store.phone}">028 3722 1223</strong></li>
                         <li class="mb-1" th:if="${store.email}"><i class="fa-solid fa-envelope me-2 text-primary"></i>Email: <span th:text="${store.email}">thuduc@oldbookstore.vn</span></li>
                         <li class="mb-1"><i class="fa-solid fa-clock me-2 text-warning"></i>Giờ mở cửa: <span th:text="${store.openTime} + ' - ' + ${store.closeTime}">08:00 - 21:30</span></li>
+                        <li class="mb-1"><i class="fa-solid fa-percent me-2 text-danger"></i>Chiết khấu App: <strong class="text-danger" th:text="${store.commissionRate != null ? store.commissionRate + '%' : '10.0%'}">10.0%</strong></li>
                         <li class="mb-1" th:if="${store.manager != null}"><i class="fa-solid fa-user-tie me-2 text-info"></i>Quản lý: <span class="text-dark fw-semibold" th:text="${store.manager.fullName}">Nguyễn Văn A</span></li>
                     </ul>
 

@@ -49,6 +49,9 @@ public class Store {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
+    @Column(name = "commission_rate", precision = 5, scale = 2)
+    private java.math.BigDecimal commissionRate = new java.math.BigDecimal("10.00");
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -81,6 +84,8 @@ public class Store {
     public void setImage(String image) { this.image = image; }
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public java.math.BigDecimal getCommissionRate() { return commissionRate; }
+    public void setCommissionRate(java.math.BigDecimal commissionRate) { this.commissionRate = commissionRate; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

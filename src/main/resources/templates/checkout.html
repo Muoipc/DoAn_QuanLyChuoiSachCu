@@ -1052,7 +1052,7 @@
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <strong style="font-size:14px; color:#1C1917;" th:text="${v.code}">FREESHIP15K</strong>
                                 <span style="font-size:11.5px; font-weight:800; color:#ee4d2d;" 
-                                      th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? ('Giảm ' + v.discountValue.intValue() + '%') : ('Giảm ' + #numbers.formatDecimal(v.discountValue, 0, 'POINT', 0, 'COMMA') + '₫')}">Giảm 20.000₫</span>
+                                      th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? ('Giảm ' + v.discountValue.intValue() + '%') : (v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).FREE_SHIPPING ? 'Freeship Vận Chuyển' : ('Giảm ' + #numbers.formatDecimal(v.discountValue, 0, 'POINT', 0, 'COMMA') + '₫'))}">Giảm 20.000₫</span>
                             </div>
                             <div style="font-size:12px; color:#57534E; margin-top:2px;" th:text="${v.description}">Mô tả voucher</div>
                             <div style="font-size:11px; color:#78716C; margin-top:2px;" 
