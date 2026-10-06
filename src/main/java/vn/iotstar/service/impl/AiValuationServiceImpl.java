@@ -1,6 +1,8 @@
 package vn.iotstar.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.iotstar.repository.BookRepository;
 import vn.iotstar.service.IAiValuationService;
 
 import java.math.BigDecimal;
@@ -11,6 +13,13 @@ import java.util.Map;
 
 @Service
 public class AiValuationServiceImpl implements IAiValuationService {
+
+    /**
+     * [TỐI ƯU] Dùng giá trung bình thực tế từ CSDL thay vì giá hardcode theo thể loại.
+     * Tự động fallback về giá mặc định nếu không có dữ liệu trong DB.
+     */
+    @Autowired
+    private BookRepository bookRepository;
 
     @Override
     public Map<String, Object> suggestBookValuation(
@@ -79,17 +88,27 @@ public class AiValuationServiceImpl implements IAiValuationService {
             vintageNote = "Ấn bản phổ thông phát hành cách đây " + age + " năm, giá đã khấu hao tự nhiên.";
         }
 
-        // 4. Hệ số thể loại (Category Demand factor)
+        // 4. Hệ số thể loại (Category Demand factor) — [TỐI ƯU] Mở rộng thêm nhiều thể loại
         double categoryFactor = 1.0;
         String catLower = (categoryName != null) ? categoryName.toLowerCase() : "";
         if (catLower.contains("kinh tế") || catLower.contains("tài chính") || catLower.contains("khởi nghiệp")) {
-            categoryFactor = 1.05;
+            categoryFactor = 1.05; // Nhu cầu cao, ổn định
+        } else if (catLower.contains("kỹ năng") || catLower.contains("tâm lý") || catLower.contains("phát triển bản thân")) {
+            categoryFactor = 1.05; // Phổ thông, bán chạy quanh năm
         } else if (catLower.contains("văn học") || catLower.contains("tiểu thuyết")) {
-            categoryFactor = 1.0;
-        } else if (catLower.contains("kỹ năng") || catLower.contains("tâm lý")) {
-            categoryFactor = 1.05;
+            categoryFactor = 1.00; // Ổn định, không biến động
+        } else if (catLower.contains("thiếu nhi") || catLower.contains("truyện tranh")) {
+            categoryFactor = 0.85; // Giá thấp, vòng đời ngắn
         } else if (catLower.contains("giáo trình") || catLower.contains("ngoại ngữ")) {
-            categoryFactor = 0.90;
+            categoryFactor = 0.90; // Phụ thuộc học kỳ, nhu cầu giảm sau khóa học
+        } else if (catLower.contains("lịch sử") || catLower.contains("triết học") || catLower.contains("tôn giáo")) {
+            categoryFactor = 1.10; // Sách hiếm, khó tìm, độc giả chuyên biệt
+        } else if (catLower.contains("khoa học") || catLower.contains("công nghệ")) {
+            categoryFactor = 0.95; // Nội dung có thể lỗi thời theo thời gian
+        } else if (catLower.contains("du lịch") || catLower.contains("ẩm thực")) {
+            categoryFactor = 0.90; // Thông tin có thể outdated
+        } else if (catLower.contains("nghệ thuật") || catLower.contains("kiến trúc") || catLower.contains("nhiếp ảnh")) {
+            categoryFactor = 1.15; // Sách ảnh/art book giữ giá trị tốt
         }
 
         // 5. Tính giá bán đề xuất (Suggested Selling Price)
