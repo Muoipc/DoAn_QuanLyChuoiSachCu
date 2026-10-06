@@ -1018,7 +1018,7 @@
             background: transparent;
         }
 
-        /* 1 ẢNH NỀN 3D MINH HỌA SÁCH CỔ ĐIỂN - CO GIÃN THÔNG MINH KHÔNG BỊ CẮT CẠNH */
+        /* 1 ẢNH NỀN 3D MINH HỌA SÁCH CỔ ĐIỂN - PHỦ KÍN 100% KHÔNG BỊ HỤT ĐÁY HAY MẤT CẠNH */
         .chotot-unified-backdrop {
             position: absolute;
             top: 0;
@@ -1027,17 +1027,11 @@
             height: 100%;
             background-color: #3E2314;
             background-image: url('/images/vintage-book-hero-bg.png');
-            background-position: center top;
+            background-position: center center;
             background-repeat: no-repeat;
-            background-size: 100% auto; /* Khóa 100% chiều ngang: không bao giờ bị cắt mất 2 cạnh trái và phải khi co giãn */
+            background-size: cover; /* Phủ kín 100% toàn bộ khung, không bao giờ bị hụt hay thiếu mảng nền */
             z-index: 1;
             pointer-events: none;
-        }
-        @media (min-width: 1440px) {
-            .chotot-unified-backdrop {
-                background-size: cover;
-                background-position: center top;
-            }
         }
 
         .chotot-hero-wrapper {

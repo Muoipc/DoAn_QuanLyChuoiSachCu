@@ -230,15 +230,35 @@ public class AiValuationServiceImpl implements IAiValuationService {
         return result;
     }
 
+    /**
+     * [TỐI ƯU] Ước tính giá bìa gốc dựa trên giá trung bình THỰC TẾ từ CSDL theo thể loại.
+     * Fallback về giá mặc định theo thể loại nếu DB chưa có đủ dữ liệu.
+     */
     private BigDecimal estimateBasePriceByCategory(String categoryName) {
         if (categoryName == null) return BigDecimal.valueOf(110000);
+
+        // [TỐI ƯU] Ưu tiên giá trung bình từ CSDL — phản ánh thực tế thị trường
+        try {
+            BigDecimal dbAvg = bookRepository.findAvgOriginalPriceByCategory(categoryName);
+            if (dbAvg != null && dbAvg.compareTo(BigDecimal.valueOf(10000)) > 0) {
+                return roundToThousand(dbAvg);
+            }
+        } catch (Exception ignored) {
+            // Fallback xuống giá mặc định nếu lỗi DB
+        }
+
+        // Fallback: Giá mặc định theo thể loại (khi DB chưa đủ dữ liệu)
         String lower = categoryName.toLowerCase();
-        if (lower.contains("kinh tế") || lower.contains("tài chính")) return BigDecimal.valueOf(150000);
-        if (lower.contains("kỹ năng") || lower.contains("tâm lý")) return BigDecimal.valueOf(120000);
-        if (lower.contains("ngoại ngữ") || lower.contains("công nghệ")) return BigDecimal.valueOf(180000);
+        if (lower.contains("kinh tế") || lower.contains("tài chính") || lower.contains("khởi nghiệp")) return BigDecimal.valueOf(150000);
+        if (lower.contains("kỹ năng") || lower.contains("tâm lý") || lower.contains("phát triển bản thân")) return BigDecimal.valueOf(120000);
+        if (lower.contains("ngoại ngữ")) return BigDecimal.valueOf(180000);
+        if (lower.contains("công nghệ") || lower.contains("lập trình")) return BigDecimal.valueOf(200000);
         if (lower.contains("thiếu nhi") || lower.contains("truyện tranh")) return BigDecimal.valueOf(60000);
+        if (lower.contains("lịch sử") || lower.contains("triết học")) return BigDecimal.valueOf(130000);
+        if (lower.contains("nghệ thuật") || lower.contains("kiến trúc")) return BigDecimal.valueOf(250000);
         return BigDecimal.valueOf(100000);
     }
+
 
     private BigDecimal roundToThousand(BigDecimal amount) {
         long val = amount.setScale(0, RoundingMode.HALF_UP).longValue();

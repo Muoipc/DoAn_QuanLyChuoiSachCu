@@ -543,6 +543,14 @@
         const chatInput = document.getElementById('chatInput');
         const typingIndicator = document.getElementById('typingIndicator');
 
+        /**
+         * [TỐI ƯU - CONVERSATION HISTORY]
+         * Lưu lịch sử hội thoại local để gửi kèm mỗi request — giúp AI nhớ ngữ cảnh.
+         * Giới hạn 20 tin nhắn (10 cặp user/assistant) để tránh payload quá lớn.
+         */
+        const MAX_LOCAL_HISTORY = 20;
+        let conversationHistory = [];
+
         function sendQuickPrompt(promptText) {
             chatInput.value = promptText;
             sendUserMessage();
@@ -552,23 +560,32 @@
             const text = chatInput.value.trim();
             if (!text) return;
 
-            // Render tin nhắn của User
             appendUserMessage(text);
             chatInput.value = '';
-
-            // Hiện typing
             showTyping(true);
 
-            // Gửi API đến backend
+            // [TỐI ƯU] Gửi kèm lịch sử hội thoại trong request body
             fetch('/ai-assistant/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text })
+                body: JSON.stringify({
+                    message: text,
+                    history: conversationHistory
+                })
             })
             .then(res => res.json())
             .then(data => {
                 showTyping(false);
                 appendAiMessage(data.reply, data.suggestedBooks);
+
+                // [TỐI ƯU] Lưu cặp user/assistant vào lịch sử hội thoại
+                conversationHistory.push({ role: 'user', content: text });
+                conversationHistory.push({ role: 'assistant', content: data.reply });
+
+                // Giới hạn độ dài lịch sử để tránh payload quá lớn
+                if (conversationHistory.length > MAX_LOCAL_HISTORY) {
+                    conversationHistory = conversationHistory.slice(-MAX_LOCAL_HISTORY);
+                }
             })
             .catch(err => {
                 showTyping(false);
