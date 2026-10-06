@@ -705,15 +705,15 @@
             margin-left: 8px;
         }
 
-        /* CARD TRỢ LÝ AI HIỆN ĐẠI (ENCLOSED PILL CARD - CHUẨN GEN AI) */
+        /* CARD TRỢ LÝ AI NHỎ GỌN TINH TẾ (COMPACT GEN AI CARD) */
         .ai-overview-card {
             background: #FAFAF9;
             border: 1px solid #ECE7DE;
-            border-radius: 14px;
-            margin: 12px 14px 10px 14px;
-            padding: 13px 16px 14px 16px;
+            border-radius: 12px;
+            margin: 10px 12px 8px 12px;
+            padding: 10px 14px 12px 14px;
             text-align: left !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
             animation: aiCardSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes aiCardSlide {
@@ -724,59 +724,59 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 9px;
+            margin-bottom: 6px;
         }
         .ai-gen-label-wrap {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 3px 10px;
+            gap: 4px;
+            padding: 2px 7px;
             border-radius: 9999px;
-            background: linear-gradient(135deg, #FFF7ED 0%, #FEF3C7 100%);
-            border: 1px solid rgba(217, 119, 6, 0.25);
-            color: #B45309;
-            font-size: 11.5px;
-            font-weight: 700;
-            letter-spacing: 0.2px;
+            background: #FFF7ED;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+            color: #9A3412;
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: 0.1px;
         }
         .ai-sparkle-dot {
             color: #D97706;
-            font-size: 12px;
+            font-size: 10.5px;
         }
         .btn-clear-ai-overview {
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(0, 0, 0, 0.04);
             border: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             color: #78716C;
-            font-size: 12px;
+            font-size: 10.5px;
             line-height: 1;
             padding: 0;
             transition: all 0.15s ease;
         }
         .btn-clear-ai-overview:hover {
             color: #1C1917;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.09);
         }
 
         /* HIỆU ỨNG 3 CHẤM GEN AI ĐANG SOẠN CÂU TRẢ LỜI (SIGNATURE AI TYPING DOTS) */
         .ai-overview-loading {
-            padding: 4px 2px;
+            padding: 2px 0;
         }
         .ai-gen-dots {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 4px 0;
+            gap: 4px;
+            padding: 2px 0;
         }
         .ai-gen-dots .dot {
-            width: 7px;
-            height: 7px;
+            width: 5.5px;
+            height: 5.5px;
             background: #D97706;
             border-radius: 50%;
             animation: aiTypingWave 1.4s infinite ease-in-out both;
@@ -799,8 +799,8 @@
         /* CON TRỎ STREAMING THANH MẢNH ĐẶC TRƯNG CỦA GEN AI */
         .ai-stream-cursor {
             display: inline-block;
-            width: 2px;
-            height: 14px;
+            width: 1.5px;
+            height: 13px;
             background: #D97706;
             margin-left: 2px;
             vertical-align: -2px;
@@ -814,10 +814,10 @@
 
         /* AI Overview Content CANH TRÁI & PHÂN CẤP RÕ RÀNG */
         .ai-overview-content {
-            font-size: 13.5px;
-            line-height: 1.6;
+            font-size: 12.5px;
+            line-height: 1.55;
             color: #1C1917;
-            max-height: 180px;
+            max-height: 160px;
             overflow-y: auto;
             text-align: left !important;
             direction: ltr !important;
@@ -832,16 +832,16 @@
             font-weight: 700;
         }
         .ai-overview-content p, .ai-overview-content ul {
-            margin: 0 0 6px 0;
+            margin: 0 0 4px 0;
             text-align: left !important;
         }
 
         /* AI Overview Book Cards Carousel Compact */
         .ai-overview-books {
             display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            padding-top: 8px;
+            gap: 6px;
+            margin-top: 8px;
+            padding-top: 6px;
             border-top: 1px solid #ECE7DE;
             overflow-x: auto;
             padding-bottom: 2px;
@@ -849,7 +849,7 @@
         }
         .ai-overview-books::-webkit-scrollbar { display: none; }
         .ai-book-mini-card {
-            flex: 0 0 115px;
+            flex: 0 0 105px;
             background: #fff;
             border: 1px solid #ECE7DE;
             border-radius: 8px;
@@ -865,14 +865,14 @@
         }
         .ai-book-mini-card img {
             width: 100%;
-            height: 70px;
+            height: 64px;
             object-fit: cover;
         }
         .ai-book-mini-info {
-            padding: 4px 6px;
+            padding: 3px 5px;
         }
         .ai-book-mini-info .mini-title {
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 700;
             line-height: 1.3;
             display: -webkit-box;
@@ -881,10 +881,10 @@
             overflow: hidden;
         }
         .ai-book-mini-info .mini-price {
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 800;
             color: #EE4D2D;
-            margin-top: 2px;
+            margin-top: 1px;
         }
         .ai-book-mini-card img {
             width: 100%;
