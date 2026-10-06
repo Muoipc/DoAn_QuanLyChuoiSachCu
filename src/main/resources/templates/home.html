@@ -1350,67 +1350,70 @@
             margin-left: 8px;
         }
 
-        /* AI OVERVIEW CARD COMPACT */
+        /* AI OVERVIEW CARD ULTRA-COMPACT */
         .ai-overview-card {
             background: #FAF8F5;
             border-bottom: 1px solid #ECE7DE;
-            padding: 10px 14px;
+            padding: 8px 12px;
+            position: relative;
             animation: aiCardSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes aiCardSlide {
             from { opacity: 0; transform: translateY(-3px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .ai-overview-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-        .ai-overview-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 800;
-            color: #8C4A27;
-        }
         .btn-clear-ai-overview {
+            position: absolute;
+            top: 6px;
+            right: 8px;
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1;
             color: #A8A29E;
-            padding: 0 4px;
+            padding: 2px 4px;
             border-radius: 4px;
             transition: all 0.15s;
+            z-index: 2;
         }
         .btn-clear-ai-overview:hover {
             color: #1C1917;
             background: #EFEAE2;
         }
 
-        /* Loading / Pulse state */
+        /* HIỆU ỨNG ĐANG GEN AI (GENERATIVE SHIMMER STREAM) - KHÔNG CẦN CHỮ */
         .ai-overview-loading {
-            padding: 6px 0;
+            padding: 6px 4px;
         }
-        .ai-loading-text {
-            font-size: 12px;
-            color: #8C4A27;
-            font-weight: 600;
+        .ai-gen-wave-wrap {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .ai-gen-shimmer-bar {
+            height: 7px;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #F0E8DF 0%, #F59E0B 35%, #EE4D2D 50%, #8C4A27 65%, #F0E8DF 100%);
+            background-size: 250% 100%;
+            animation: aiGenFlow 1.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        .ai-gen-shimmer-bar.bar-1 { width: 88%; }
+        .ai-gen-shimmer-bar.bar-2 { width: 68%; animation-delay: 0.15s; }
+        .ai-gen-shimmer-bar.bar-3 { width: 45%; animation-delay: 0.3s; }
+        @keyframes aiGenFlow {
+            0% { background-position: 250% 0; }
+            100% { background-position: -50% 0; }
         }
 
         /* AI Overview Content */
         .ai-overview-content {
             font-size: 12.5px;
-            line-height: 1.5;
+            line-height: 1.45;
             color: #292524;
-            max-height: 150px;
+            max-height: 140px;
             overflow-y: auto;
+            padding-right: 20px;
             scrollbar-width: thin;
             scrollbar-color: #D7CCC8 #FAF8F5;
         }
@@ -1806,20 +1809,16 @@
 
                     <!-- OMNIBOX DROPDOWN (FLOATING CARD GỢI Ý & TRỢ LÝ AI TỰ ĐỘNG) -->
                     <div class="google-omnibox-dropdown" id="googleOmniboxDropdown" style="display:none;">
-                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI (SIÊU TINH GỌN) -->
+                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI (TỐI GIẢN TỐI ĐA - ZERO CHỮ THỪA) -->
                         <div class="ai-overview-card" id="aiOverviewCard" style="display:none;">
-                            <div class="ai-overview-header">
-                                <div class="ai-overview-badge">
-                                    <span style="font-size: 13px; color: #D97706;">✨</span>
-                                    <span>Gợi ý từ AI</span>
-                                </div>
-                                <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
-                            </div>
+                            <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
 
-                            <!-- Trạng thái Loading / Pulse -->
+                            <!-- HIỆU ỨNG ĐANG GEN AI (GENERATIVE SHIMMER STREAM) -->
                             <div class="ai-overview-loading" id="aiOverviewLoading" style="display:none;">
-                                <div class="ai-loading-text">
-                                    <i class="fa-solid fa-spinner fa-spin me-2" style="color:#8C4A27;"></i>Đang tìm sách phù hợp...
+                                <div class="ai-gen-wave-wrap">
+                                    <div class="ai-gen-shimmer-bar bar-1"></div>
+                                    <div class="ai-gen-shimmer-bar bar-2"></div>
+                                    <div class="ai-gen-shimmer-bar bar-3"></div>
                                 </div>
                             </div>
 
