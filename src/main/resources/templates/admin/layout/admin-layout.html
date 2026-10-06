@@ -741,6 +741,27 @@
                 </a>
             </li>
 
+            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory/transfer'} ? 'active' : ''">
+                <a th:href="@{/admin/inventory/transfer}">
+                    <i class="fa-solid fa-dolly"></i>
+                    <span>Tạo Chuyển Kho</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/inventory/transfers')} ? 'active' : ''">
+                <a th:href="@{/admin/inventory/transfers}">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Duyệt Điều Chuyển' : 'Tiến Độ Chuyển Kho'}">Duyệt Điều Chuyển</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/stores')} ? 'active' : ''">
+                <a th:href="@{/admin/stores}">
+                    <i class="fa-solid fa-store"></i>
+                    <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Chuỗi Chi Nhánh' : 'Chi Nhánh Của Bạn'}">Chuỗi Chi Nhánh</span>
+                </a>
+            </li>
+
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/chat')} ? 'active' : ''">
                 <a th:href="@{/admin/chat}">
                     <i class="fa-solid fa-comments text-warning"></i>
@@ -764,6 +785,9 @@
                 <a th:href="@{/admin/consignments}">
                     <i class="fa-solid fa-hand-holding-dollar"></i>
                     <span>Thẩm Định Ký Gửi</span>
+                    <span class="badge bg-danger rounded-pill ms-auto" id="sidebarConsignmentBadge"
+                          th:if="${pendingConsignmentCount != null and pendingConsignmentCount > 0}"
+                          th:text="${pendingConsignmentCount}">0</span>
                 </a>
             </li>
 
@@ -779,7 +803,7 @@
                 <span>Hệ Thống &amp; Báo Cáo</span>
             </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/users')} ? 'active' : ''">
+            <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/users')} ? 'active' : ''">
                 <a th:href="@{/admin/users}">
                     <i class="fa-solid fa-users-gear"></i>
                     <span>Người Dùng &amp; Quyền</span>
@@ -838,28 +862,54 @@
                 </button>
                 <div class="branch-badge d-none d-sm-inline-flex gap-2">
                     <i class="fa-solid fa-store text-danger"></i>
-                    <span class="fw-semibold">Hệ Thống Chuỗi 5 Chi Nhánh TP.HCM</span>
+                    <span class="fw-semibold" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Hệ Thống Chuỗi 5 Chi Nhánh TP.HCM</span>
+                    <span class="fw-semibold" th:unless="${#authorization.expression('hasRole(''ADMIN'')')}">Cổng Quản Lý Chi Nhánh Cửa Hàng</span>
                     <span class="badge bg-success-subtle text-success border border-success-subtle py-1 px-2" style="font-size: 10px;">Hoạt Động</span>
                 </div>
             </div>
 
             <div class="d-flex align-items-center gap-3">
-                <!-- Chuông thông báo WebSocket STOMP -->
+                <!-- Chuông thông báo WebSocket STOMP & Hệ thống -->
                 <div class="dropdown">
-                    <button class="btn glass-btn position-relative rounded-pill px-3 py-2" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Thông báo đơn hàng thời gian thực">
+                    <button class="btn glass-btn position-relative rounded-pill px-3 py-2" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Thông báo hệ thống">
                         <i class="fa-solid fa-bell text-secondary"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle notif-pulse" id="notifIndicator" style="display:none; width: 10px; height: 10px;"></span>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light"
+                              id="notifBadge"
+                              th:style="${unreadNotifCount != null and unreadNotifCount > 0} ? 'display:inline-block; font-size:10px;' : 'display:none; font-size:10px;'"
+                              th:text="${unreadNotifCount != null ? unreadNotifCount : 0}">0</span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-end glass-dropdown-menu shadow-lg border-0 p-3 mt-2" aria-labelledby="notifDropdown" style="width: 320px;">
-                        <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
-                            <span class="fw-bold text-dark small"><i class="fa-solid fa-bolt text-warning me-1"></i>Thông báo thời gian thực</span>
-                            <span class="badge bg-light text-muted border" style="font-size: 10px;">WebSocket</span>
+                    <div class="dropdown-menu dropdown-menu-end glass-dropdown-menu shadow-lg border-0 p-3 mt-2" aria-labelledby="notifDropdown" style="width: 350px; max-height: 480px; overflow-y: auto;">
+                        <div class="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
+                            <span class="fw-bold text-dark small"><i class="fa-solid fa-bell text-warning me-1"></i>Thông báo (<span id="unreadCountDisplay" th:text="${unreadNotifCount != null ? unreadNotifCount : 0}">0</span> chưa đọc)</span>
+                            <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 text-muted small" onclick="markAllNotificationsAsRead()" title="Đánh dấu tất cả đã đọc" style="font-size: 11px;">
+                                <i class="fa-solid fa-check-double me-1"></i>Đọc tất cả
+                            </button>
                         </div>
-                        <div id="emptyNotifMsg" class="text-center text-muted py-3 small">
+                        <div id="emptyNotifMsg" class="text-center text-muted py-3 small"
+                             th:style="${adminNotifications != null and !adminNotifications.isEmpty()} ? 'display:none;' : 'display:block;'">
                             <i class="fa-regular fa-bell-slash d-block mb-1 fs-5 opacity-50"></i>
                             Chưa có thông báo mới
                         </div>
-                        <ul id="notifList" class="list-unstyled mb-0 small"></ul>
+                        <ul id="notifList" class="list-unstyled mb-0 small">
+                            <li th:each="n : ${adminNotifications}" class="border-bottom py-2 px-1 notif-item" th:classappend="${!n.isRead} ? 'bg-light-subtle' : ''">
+                                <a th:href="@{${n.targetUrl != null ? n.targetUrl : '#'}}" class="text-decoration-none text-dark d-block" th:onclick="|markNotificationAsRead(${n.id})|">
+                                    <div class="d-flex justify-content-between align-items-start mb-1">
+                                        <div class="d-flex align-items-center gap-1.5">
+                                            <i th:if="${n.type.name() == 'CONSIGNMENT'}" class="fa-solid fa-hand-holding-dollar text-warning"></i>
+                                            <i th:if="${n.type.name() == 'ORDER'}" class="fa-solid fa-bag-shopping text-primary"></i>
+                                            <i th:if="${n.type.name() == 'STOCK_TRANSFER'}" class="fa-solid fa-boxes-stacked text-info"></i>
+                                            <strong class="text-truncate" style="max-width: 190px;" th:text="${n.title}">Thông báo</strong>
+                                        </div>
+                                        <span class="badge" th:classappend="${n.type.name() == 'CONSIGNMENT'} ? 'bg-warning text-dark' : 'bg-danger'" style="font-size:9px;" th:text="${n.type.name() == 'CONSIGNMENT' ? 'KÝ GỬI' : 'ĐƠN HÀNG'}">MỚI</span>
+                                    </div>
+                                    <div class="text-dark small text-break mb-1" style="font-size: 11.5px; line-height: 1.35;" th:text="${n.message}">Nội dung</div>
+                                    <div class="text-muted d-flex justify-content-between align-items-center" style="font-size:10px;">
+                                        <span th:text="${#temporals.format(n.createdAt, 'HH:mm dd/MM')}">12:00 05/10</span>
+                                        <span th:if="${n.store != null}" class="badge bg-secondary-subtle text-secondary" style="font-size:9px;" th:text="${n.store.storeName}">Chi nhánh</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
@@ -889,8 +939,9 @@
                 <i class="fa-solid fa-circle-check me-2"></i><span th:text="${successMessage}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-                <i class="fa-solid fa-circle-exclamation me-2"></i><span th:text="${errorMessage}"></span>
+            <div th:if="${errorMessage != null or (param.error != null and #strings.contains(param.error, 'access_denied'))}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>
+                <span th:text="${errorMessage != null ? errorMessage : 'Bạn không có quyền truy cập chức năng này! Chức năng Quản lý Người dùng &amp; Phân quyền chỉ dành riêng cho Quản trị viên (Admin).'}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
 
@@ -950,6 +1001,12 @@
         });
 
         // =====================================================================
+        // BIẾN PHÂN QUYỀN VÀ CHI NHÁNH TỪ SERVER
+        // =====================================================================
+        window.isAdmin = /*[[${isCurrentAdmin}]]*/ false;
+        window.currentStoreId = /*[[${currentManagedStore != null ? currentManagedStore.id : null}]]*/ null;
+
+        // =====================================================================
         // WEBSOCKET STOMP REAL-TIME NOTIFICATIONS (THÔNG BÁO THỜI GIAN THỰC)
         // =====================================================================
         let stompClient = null;
@@ -960,12 +1017,36 @@
                 stompClient.debug = null; // Tắt debug console
                 stompClient.connect({}, function (frame) {
                     console.log('WebSocket STOMP connected to /ws');
+
+                    // 1. Kênh thông báo Ký gửi sách mới cho Admin & Quản lý
+                    stompClient.subscribe('/topic/admin-consignments', function (msg) {
+                        try {
+                            const notif = JSON.parse(msg.body);
+                            handleConsignmentNotification(notif);
+                        } catch (e) {
+                            console.error('Error parsing consignment notification', e);
+                        }
+                    });
+
+                    // 2. Kênh thông báo hệ thống chung
+                    stompClient.subscribe('/topic/admin-notifications', function (msg) {
+                        try {
+                            const notif = JSON.parse(msg.body);
+                            if (notif.type === 'NEW_CONSIGNMENT') {
+                                handleConsignmentNotification(notif);
+                            }
+                        } catch (e) {
+                            console.error('Error parsing notification', e);
+                        }
+                    });
+
+                    // 3. Kênh thông báo đơn hàng
                     stompClient.subscribe('/topic/admin-orders', function (messageOutput) {
                         try {
                             const notif = JSON.parse(messageOutput.body);
                             showOrderNotification(notif);
                         } catch (e) {
-                            console.error('Error parsing notification', e);
+                            console.error('Error parsing order notification', e);
                         }
                     });
                 }, function (error) {
@@ -976,10 +1057,131 @@
             }
         }
 
+        // Âm thanh chuông báo tinh tế bằng Web Audio API
+        function playNotificationChime() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.35);
+            } catch(e) {}
+        }
+
+        // Xử lý khi có khách hàng vừa ký gửi sách mới
+        function handleConsignmentNotification(notif) {
+            // Nếu là Manager và thông báo thuộc chi nhánh khác thì không hiển thị
+            if (!window.isAdmin && window.currentStoreId && notif.storeId && notif.storeId !== window.currentStoreId) {
+                return;
+            }
+
+            // 1. Tăng badge chuông thông báo
+            const badge = document.getElementById('notifBadge');
+            const unreadDisplay = document.getElementById('unreadCountDisplay');
+            if (badge) {
+                let current = parseInt(badge.textContent || '0') + 1;
+                badge.textContent = current;
+                badge.style.display = 'inline-block';
+                if (unreadDisplay) unreadDisplay.textContent = current;
+            }
+
+            // 2. Tăng badge menu "Thẩm Định Ký Gửi" ở sidebar
+            const sidebarBadge = document.getElementById('sidebarConsignmentBadge');
+            if (sidebarBadge) {
+                let count = parseInt(sidebarBadge.textContent || '0') + 1;
+                sidebarBadge.textContent = count;
+                sidebarBadge.style.display = 'inline-block';
+            }
+
+            // 3. Ẩn thông báo trống và thêm vào danh sách dropdown
+            const emptyMsg = document.getElementById('emptyNotifMsg');
+            if (emptyMsg) emptyMsg.style.display = 'none';
+
+            const list = document.getElementById('notifList');
+            if (list) {
+                const li = document.createElement('li');
+                li.className = 'border-bottom py-2 px-1 bg-light-subtle notif-item';
+                li.innerHTML = `
+                    <a href="${notif.targetUrl || '/admin/consignments'}" class="text-decoration-none text-dark d-block">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <div class="d-flex align-items-center gap-1.5">
+                                <i class="fa-solid fa-hand-holding-dollar text-warning"></i>
+                                <strong class="text-truncate" style="max-width: 190px;">${notif.bookTitle || 'Sách ký gửi mới'}</strong>
+                            </div>
+                            <span class="badge bg-warning text-dark" style="font-size:9px;">KÝ GỬI MỚI</span>
+                        </div>
+                        <div class="text-dark small text-break mb-1" style="font-size: 11.5px; line-height: 1.35;">${notif.message}</div>
+                        <div class="text-muted d-flex justify-content-between align-items-center" style="font-size:10px;">
+                            <span>${notif.createdAt || 'Vừa xong'}</span>
+                            <span class="badge bg-danger-subtle text-danger" style="font-size:9px;">${notif.storeName || ''}</span>
+                        </div>
+                    </a>
+                `;
+                list.insertBefore(li, list.firstChild);
+            }
+
+            // 4. Phát âm thanh chuông báo
+            playNotificationChime();
+
+            // 5. Hiển thị Popup Toast phong cách Liquid Glass nổi bật
+            const container = document.getElementById('wsToastContainer');
+            if (container) {
+                const toastDiv = document.createElement('div');
+                toastDiv.className = 'toast show border-0 mb-3';
+                toastDiv.setAttribute('role', 'alert');
+                toastDiv.style.cssText = 'box-shadow: 0 12px 35px rgba(45, 24, 15, 0.25); border-radius: 12px; overflow: hidden;';
+                toastDiv.innerHTML = `
+                    <div class="toast-header bg-warning text-dark fw-bold border-bottom-0 py-2">
+                        <i class="fa-solid fa-book-bookmark me-2 fs-6"></i>
+                        <strong class="me-auto text-dark">YÊU CẦU KÝ GỬI MỚI!</strong>
+                        <small class="text-dark opacity-75">${notif.createdAt || 'Vừa xong'}</small>
+                        <button type="button" class="btn-close ms-2" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body p-3 bg-white">
+                        <div class="fw-bold text-dark mb-1" style="font-size:14px;">
+                            <i class="fa-solid fa-book text-muted me-1"></i>${notif.bookTitle || 'Sách cũ'} 
+                            <span class="badge bg-success-subtle text-success border border-success-subtle ms-1" style="font-size:10px;">Độ mới ${notif.conditionPercent || 90}%</span>
+                        </div>
+                        <div class="small text-muted mb-1"><i class="fa-solid fa-user me-1 text-primary"></i>Khách hàng: <strong class="text-dark">${notif.customerName || 'Khách vãng lai'}</strong></div>
+                        <div class="small text-muted mb-2"><i class="fa-solid fa-store me-1 text-danger"></i>Chi nhánh nhận: <strong class="text-danger">${notif.storeName || ''}</strong></div>
+                        <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
+                            <div>
+                                <small class="text-muted d-block" style="font-size:10px;">Giá khách đề xuất:</small>
+                                <span class="fw-bold text-danger">${Number(notif.proposedPrice || 0).toLocaleString('vi-VN')} đ</span>
+                            </div>
+                            <a href="${notif.targetUrl || '/admin/consignments'}" class="btn btn-sm btn-dark py-1.5 px-3 rounded-pill fw-semibold" style="font-size:11.5px;">
+                                <i class="fa-solid fa-magnifying-glass me-1 text-warning"></i>Thẩm định ngay
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(toastDiv);
+                setTimeout(() => {
+                    toastDiv.classList.remove('show');
+                    setTimeout(() => toastDiv.remove(), 500);
+                }, 10000);
+            }
+        }
+
         function showOrderNotification(notif) {
-            // 1. Bật chấm đỏ chuông thông báo
-            const indicator = document.getElementById('notifIndicator');
-            if (indicator) indicator.style.display = 'block';
+            // 1. Tăng badge chuông thông báo
+            const badge = document.getElementById('notifBadge');
+            const unreadDisplay = document.getElementById('unreadCountDisplay');
+            if (badge) {
+                let current = parseInt(badge.textContent || '0') + 1;
+                badge.textContent = current;
+                badge.style.display = 'inline-block';
+                if (unreadDisplay) unreadDisplay.textContent = current;
+            }
 
             // 2. Thêm vào dropdown list
             const emptyMsg = document.getElementById('emptyNotifMsg');
@@ -988,7 +1190,7 @@
             const list = document.getElementById('notifList');
             if (list) {
                 const li = document.createElement('li');
-                li.className = 'border-bottom py-2 px-1';
+                li.className = 'border-bottom py-2 px-1 bg-light-subtle notif-item';
                 li.innerHTML = `
                     <div class="d-flex justify-content-between align-items-start mb-1">
                         <strong class="text-primary">${notif.orderCode || 'Đơn hàng mới'}</strong>
@@ -1025,6 +1227,27 @@
                     setTimeout(() => toastDiv.remove(), 500);
                 }, 8000);
             }
+        }
+
+        // Đánh dấu 1 thông báo là đã đọc
+        function markNotificationAsRead(id) {
+            if (!id) return;
+            fetch('/admin/notifications/' + id + '/read', { method: 'POST' }).catch(() => {});
+        }
+
+        // Đánh dấu tất cả thông báo là đã đọc
+        function markAllNotificationsAsRead() {
+            fetch('/admin/notifications/mark-all-read', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const badge = document.getElementById('notifBadge');
+                        if (badge) { badge.textContent = '0'; badge.style.display = 'none'; }
+                        const unreadDisplay = document.getElementById('unreadCountDisplay');
+                        if (unreadDisplay) unreadDisplay.textContent = '0';
+                        document.querySelectorAll('.notif-item').forEach(el => el.classList.remove('bg-light-subtle'));
+                    }
+                }).catch(() => {});
         }
 
         document.addEventListener('DOMContentLoaded', connectWebSocket);

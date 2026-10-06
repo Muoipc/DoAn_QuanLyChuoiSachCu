@@ -10,10 +10,14 @@
     <!-- PAGE HEADER -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-store text-warning me-2"></i>Hệ Thống Chuỗi Chi Nhánh Cửa Hàng</h4>
-            <p class="text-muted small mb-0">Quản lý mạng lưới 5 chi nhánh phục vụ Click & Collect và vận chuyển sách cũ tại TP. Hồ Chí Minh.</p>
+            <h4 class="fw-bold mb-1">
+                <i class="fa-solid fa-store text-warning me-2"></i>
+                <span th:text="${isAdmin ? 'Hệ Thống Chuỗi Chi Nhánh Cửa Hàng' : 'Chi Nhánh Của Bạn'}">Chi Nhánh</span>
+            </h4>
+            <p class="text-muted small mb-0" th:if="${isAdmin}">Quản lý mạng lưới 5 chi nhánh phục vụ Click & Collect và vận chuyển sách cũ tại TP. Hồ Chí Minh.</p>
+            <p class="text-muted small mb-0" th:unless="${isAdmin}">Quản lý và cập nhật thông tin cửa hàng, hotline, giờ mở cửa chi nhánh của bạn.</p>
         </div>
-        <a th:href="@{/admin/stores/create}" class="btn btn-theme">
+        <a th:if="${isAdmin}" th:href="@{/admin/stores/create}" class="btn btn-theme">
             <i class="fa-solid fa-plus me-1"></i>Thêm Chi Nhánh Mới
         </a>
     </div>
@@ -44,6 +48,7 @@
                         <li class="mb-1"><i class="fa-solid fa-phone me-2 text-primary"></i>Hotline: <strong class="text-dark" th:text="${store.phone}">028 3722 1223</strong></li>
                         <li class="mb-1" th:if="${store.email}"><i class="fa-solid fa-envelope me-2 text-primary"></i>Email: <span th:text="${store.email}">thuduc@oldbookstore.vn</span></li>
                         <li class="mb-1"><i class="fa-solid fa-clock me-2 text-warning"></i>Giờ mở cửa: <span th:text="${store.openTime} + ' - ' + ${store.closeTime}">08:00 - 21:30</span></li>
+                        <li class="mb-1"><i class="fa-solid fa-percent me-2 text-danger"></i>Chiết khấu App: <strong class="text-danger" th:text="${store.commissionRate != null ? store.commissionRate + '%' : '10.0%'}">10.0%</strong></li>
                         <li class="mb-1" th:if="${store.manager != null}"><i class="fa-solid fa-user-tie me-2 text-info"></i>Quản lý: <span class="text-dark fw-semibold" th:text="${store.manager.fullName}">Nguyễn Văn A</span></li>
                     </ul>
 

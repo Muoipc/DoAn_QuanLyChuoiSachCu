@@ -124,6 +124,10 @@ public class OrderServiceImpl implements IOrderService {
                         if (v.getMaxDiscount() != null && discountAmount.compareTo(v.getMaxDiscount()) > 0) {
                             discountAmount = v.getMaxDiscount();
                         }
+                    } else if (v.getDiscountType() == Voucher.DiscountType.FREE_SHIPPING) {
+                        BigDecimal maxShipDiscount = (v.getDiscountValue() != null && v.getDiscountValue().compareTo(BigDecimal.ZERO) > 0)
+                                ? v.getDiscountValue() : shippingFee;
+                        discountAmount = shippingFee.min(maxShipDiscount);
                     }
                     // Tăng số lượt đã sử dụng của voucher
                     v.setUsedCount((v.getUsedCount() != null ? v.getUsedCount() : 0) + 1);
@@ -308,6 +312,10 @@ public class OrderServiceImpl implements IOrderService {
                                 && discountAmount.compareTo(v.getMaxDiscount()) > 0) {
                             discountAmount = v.getMaxDiscount();
                         }
+                    } else if (v.getDiscountType() == Voucher.DiscountType.FREE_SHIPPING) {
+                        BigDecimal maxShipDiscount = (v.getDiscountValue() != null && v.getDiscountValue().compareTo(BigDecimal.ZERO) > 0)
+                                ? v.getDiscountValue() : shippingFee;
+                        discountAmount = shippingFee.min(maxShipDiscount);
                     }
                     if (discountAmount.compareTo(subtotal) > 0) {
                         discountAmount = subtotal;

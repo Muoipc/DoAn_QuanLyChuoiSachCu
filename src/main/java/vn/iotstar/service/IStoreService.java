@@ -10,4 +10,5 @@ public interface IStoreService {
     Store save(Store store);
     void toggleActive(Long id);
     long countTotalStores();
+    Store findByManagerId(Long managerId);
 }

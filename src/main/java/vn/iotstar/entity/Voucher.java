@@ -47,7 +47,7 @@ public class Voucher {
     private Boolean isActive = true;
 
     public enum DiscountType {
-        PERCENT, FIXED_AMOUNT
+        PERCENT, FIXED_AMOUNT, FREE_SHIPPING
     }
 
     public Voucher() {}

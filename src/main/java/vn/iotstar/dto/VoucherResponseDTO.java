@@ -284,6 +284,7 @@ public class VoucherResponseDTO {
     }
 
     public String getCategorySlug() {
+        if (discountType == Voucher.DiscountType.FREE_SHIPPING) return "shipping";
         if (code == null) return "book";
         String c = code.toUpperCase();
         String d = (description != null) ? description.toLowerCase() : "";
@@ -308,6 +309,13 @@ public class VoucherResponseDTO {
     public String getDiscountDisplay() {
         if (discountType == Voucher.DiscountType.PERCENT) {
             return (discountValue != null ? discountValue.stripTrailingZeros().toPlainString() : "0") + "%";
+        }
+        if (discountType == Voucher.DiscountType.FREE_SHIPPING) {
+            if (discountValue != null && discountValue.compareTo(BigDecimal.ZERO) > 0) {
+                long val = discountValue.longValue();
+                return (val >= 1000 && val % 1000 == 0) ? "FS " + (val / 1000) + "K" : "FS " + String.format("%,dđ", val);
+            }
+            return "FREE";
         }
         if (discountValue == null) return "0đ";
         long val = discountValue.longValue();

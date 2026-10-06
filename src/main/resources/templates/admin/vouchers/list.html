@@ -45,8 +45,9 @@
                             </td>
                             <td class="small" th:text="${v.description}">Mô tả</td>
                             <td>
-                                <strong class="text-success" th:if="${v.discountType.name() == 'PERCENT'}" th:text="'-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + '%'">-10%</strong>
-                                <strong class="text-success" th:if="${v.discountType.name() == 'FIXED_AMOUNT'}" th:text="'-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + ' đ'">-20,000 đ</strong>
+                                <strong class="text-success" th:if="${v.discountType != null and v.discountType.name() == 'PERCENT'}" th:text="'-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + '%'">-10%</strong>
+                                <strong class="text-success" th:if="${v.discountType != null and v.discountType.name() == 'FIXED_AMOUNT'}" th:text="'-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + ' đ'">-20,000 đ</strong>
+                                <strong class="text-primary" th:if="${v.discountType != null and v.discountType.name() == 'FREE_SHIPPING'}"><i class="fa-solid fa-truck-fast me-1"></i>Freeship <span th:if="${v.discountValue != null and v.discountValue > 0}" th:text="'(-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + ' đ)'"></span></strong>
                             </td>
                             <td class="small" th:text="${#numbers.formatDecimal(v.minOrderAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">100,000 đ</td>
                             <td class="small text-muted">

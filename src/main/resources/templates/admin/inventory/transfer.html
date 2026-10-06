@@ -34,9 +34,15 @@
                                 <label class="form-label fw-semibold text-danger">
                                     <i class="fa-solid fa-arrow-up-from-bracket me-1"></i>Chi Nhánh Xuất Hàng (Kho Nguồn) <span class="text-danger">*</span>
                                 </label>
-                                <select class="form-select border-danger" name="fromStoreId" id="fromStoreSelect" required>
+                                <select class="form-select border-danger" name="fromStoreId" id="fromStoreSelect" required
+                                        th:disabled="${!isAdmin}">
                                     <option th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${fromStoreId == st.id}"></option>
                                 </select>
+                                <!-- Nếu là Manager, thêm hidden input để form submit đúng fromStoreId khi select bị disabled -->
+                                <input th:if="${!isAdmin}" type="hidden" name="fromStoreId" th:value="${fromStoreId}">
+                                <div class="form-text small text-muted" th:if="${!isAdmin}">
+                                    <i class="fa-solid fa-lock text-secondary me-1"></i>Bạn đang xuất hàng từ chi nhánh bạn trực tiếp quản lý.
+                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -79,15 +85,20 @@
                             <textarea class="form-control" name="notes" rows="3" placeholder="Ví dụ: Bổ sung kho Làng Đại Học phục vụ sinh viên mùa thi, khách yêu cầu gom đơn..."></textarea>
                         </div>
 
-                        <div class="alert alert-info py-2 small">
-                            <i class="fa-solid fa-circle-info me-1"></i>Hệ thống sẽ tự động trừ số lượng sách tại kho nguồn và cộng tương ứng vào kho đích một cách an toàn và đồng bộ.
+                        <div class="alert alert-warning py-2 small">
+                            <i class="fa-solid fa-shield-halved me-1"></i><strong>Quy trình phê duyệt:</strong> Phiếu điều chuyển sau khi gửi sẽ chuyển sang trạng thái <strong>Chờ Admin duyệt</strong>. Khi Quản trị viên (Admin) phê duyệt, sách mới chính thức được trừ từ kho nguồn và nhập vào kho đích.
                         </div>
 
-                        <div class="d-flex justify-content-end gap-2 pt-2">
-                            <a th:href="@{/admin/inventory}" class="btn btn-light px-4">Hủy bỏ</a>
-                            <button type="submit" class="btn btn-theme px-4" id="btnSubmitTransfer">
-                                <i class="fa-solid fa-paper-plane me-1"></i>Xác Nhận Chuyển Kho
-                            </button>
+                        <div class="d-flex justify-content-between align-items-center pt-2">
+                            <a th:href="@{/admin/inventory/transfers}" class="btn btn-outline-info">
+                                <i class="fa-solid fa-list-check me-1"></i>Xem danh sách phiếu điều chuyển
+                            </a>
+                            <div class="d-flex gap-2">
+                                <a th:href="@{/admin/inventory}" class="btn btn-light px-4">Hủy bỏ</a>
+                                <button type="submit" class="btn btn-theme px-4" id="btnSubmitTransfer">
+                                    <i class="fa-solid fa-paper-plane me-1"></i>Gửi Yêu Cầu Điều Chuyển
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>

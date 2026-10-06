@@ -253,6 +253,13 @@ public class VoucherServiceImpl implements IVoucherService {
             if (discount.compareTo(orderAmount) > 0) {
                 discount = orderAmount;
             }
+        } else if (voucher.getDiscountType() == Voucher.DiscountType.FREE_SHIPPING) {
+            // Giảm phí vận chuyển (nếu có định mức giảm thì lấy discountValue, ngược lại mặc định phí ship phổ biến 25.000₫)
+            discount = (voucher.getDiscountValue() != null && voucher.getDiscountValue().compareTo(BigDecimal.ZERO) > 0)
+                    ? voucher.getDiscountValue() : new BigDecimal("25000.00");
+            if (discount.compareTo(orderAmount) > 0) {
+                discount = orderAmount;
+            }
         }
 
         // Làm tròn 2 chữ số thập phân phù hợp định dạng tiền tệ lưu trữ trong cơ sở dữ liệu

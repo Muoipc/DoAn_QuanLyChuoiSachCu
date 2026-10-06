@@ -77,12 +77,24 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Quản Lý Chi Nhánh (Store Manager)</label>
-                            <select class="form-select" th:field="*{manager}">
-                                <option value="">-- Chưa chỉ định quản lý --</option>
-                                <option th:each="user : ${managers}" th:value="${user.id}" th:text="${user.fullName + ' (' + user.username + ')'}"></option>
-                            </select>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Quản Lý Chi Nhánh (Store Manager)</label>
+                                <select class="form-select" th:field="*{manager}" th:disabled="${!isAdmin}">
+                                    <option value="">-- Chưa chỉ định quản lý --</option>
+                                    <option th:each="user : ${managers}" th:value="${user.id}" th:text="${user.fullName + ' (' + user.username + ')'}"></option>
+                                </select>
+                                <small class="text-muted" th:if="${!isAdmin}"><i class="fa-solid fa-lock text-secondary me-1"></i>Chỉ Admin có quyền chỉ định quản lý.</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Chiết Khấu Sàn / App (%) <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="number" step="0.1" min="0" max="100" class="form-control" th:field="*{commissionRate}" placeholder="10.0" th:disabled="${!isAdmin}" required>
+                                    <span class="input-group-text fw-bold">%</span>
+                                </div>
+                                <small class="text-muted" th:if="${isAdmin}">Tỷ lệ chiết khấu app áp dụng thu trên doanh thu bán hàng của shop.</small>
+                                <small class="text-muted" th:unless="${isAdmin}"><i class="fa-solid fa-lock text-secondary me-1"></i>Chỉ Admin có quyền điều chỉnh chiết khấu sàn.</small>
+                            </div>
                         </div>
 
                         <div class="mb-4">
@@ -95,7 +107,7 @@
                         </div>
 
                         <div class="form-check form-switch mb-4">
-                            <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="activeSwitch">
+                            <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="activeSwitch" th:disabled="${!isAdmin}">
                             <label class="form-check-label fw-semibold" for="activeSwitch">Chi nhánh đang mở cửa hoạt động</label>
                         </div>
 
