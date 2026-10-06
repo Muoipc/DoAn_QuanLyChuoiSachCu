@@ -26,8 +26,6 @@
 
 /* ================= 1. TOÀN BỘ KHUNG & CONTAINER LỚN TRÊN MỌI TRANG ================= */
 .shopee-shortcuts-section,
-.shopee-flash-sale,
-.shopee-categories-section,
 .stores-locator-section,
 .filter-sidebar,
 .detail-main-card,
@@ -324,15 +322,9 @@
   background: transparent !important;
 }
 
-/* ================= 8. NỀN ÁNH SÁNG KHUẾCH TÁN CỐ ĐỊNH ================= */
+/* ================= 8. NỀN TRẮNG TINH TẾ TOÀN BỘ TRANG (CLEAN WHITE THEME) ================= */
 body {
-  background: 
-    radial-gradient(ellipse 90% 60% at 12% 10%, rgba(217, 119, 6, 0.09) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 50% at 88% 20%, rgba(140, 74, 39, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 70% at 15% 80%, rgba(245, 158, 11, 0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 85% 60% at 85% 90%, rgba(140, 74, 39, 0.08) 0%, transparent 55%),
-    #F8F5EE !important;
-  background-attachment: fixed !important;
+  background: #ffffff !important;
   min-height: 100vh;
 }
 
@@ -1192,7 +1184,11 @@ img, video {
   transform: scale(0.96) !important;
 }
 
-/* ================= 15. NÚT TRỢ LÝ AI NỔI APPLE LIQUID GLASS (FAB) ================= */
+/* ================= 15. NÚT TRỢ LÝ AI NỔI APPLE LIQUID GLASS (FAB) & CỬA SỔ CHAT ================= */
+#aiMiniChatWidget {
+  z-index: 999990 !important;
+}
+
 #aiFloatingBtn,
 .ai-floating-widget-btn {
   position: fixed !important;

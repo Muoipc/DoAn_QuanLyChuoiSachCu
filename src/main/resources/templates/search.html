@@ -14,16 +14,16 @@
         :root {
             --color-fire: #ee4d2d;
             --color-fire-hover: #f05d40;
-            --color-bg-body: #f7f5f0;
+            --color-bg-body: #ffffff;
             --color-text-main: #1C1917;
             --color-text-secondary: #44403C;
             --color-text-light: #78716C;
-            --color-border: rgba(45, 24, 15, 0.12);
-            --color-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --color-border: #ECE7DE;
+            --color-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            background-color: var(--color-bg-body);
+            background-color: var(--color-bg-body) !important;
             color: var(--color-text-main);
             font-family: "Roboto", sans-serif;
             font-size: 14px;
@@ -33,653 +33,612 @@
             width: 1200px;
             max-width: 100%;
             margin: 0 auto;
-        }
-        @media (max-width: 1220px) {
-            .container-shopee {
-                width: 100%;
-                padding: 0 12px;
-            }
+            padding: 0 16px;
         }
 
-        /* MAIN SEARCH LAYOUT */
-        .search-layout {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 24px;
-            margin: 24px auto 60px;
+        /* ================= KHỐI ĐẦU TRANG ĐỒNG BỘ 1 ẢNH LIỀN MẠCH (HEADER + BANNER CHỢ TỐT) ================= */
+        .chotot-unified-top-wrapper {
+            position: relative;
+            background: transparent;
         }
 
-        /* SIDEBAR FILTERS (SHOPEE FILTER WITH APPLE LIQUID GLASS) */
-        .filter-sidebar {
-            background: rgba(255, 255, 255, 0.78);
-            backdrop-filter: blur(24px) saturate(190%) brightness(103%);
-            -webkit-backdrop-filter: blur(24px) saturate(190%) brightness(103%);
-            border-radius: 20px;
-            border: 1.5px solid rgba(255, 255, 255, 0.92);
-            padding: 20px;
-            box-shadow: 0 10px 28px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
-            align-self: start;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        /* 1 ẢNH NỀN VÀNG DUY NHẤT CHẠY TỪ ĐỈNH HEADER ĐẾN 50% THANH SEARCH */
+        .chotot-unified-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: calc(100% - 36px); /* Dừng đúng 50% trục ngang giữa thanh tìm kiếm cao 72px */
+            background-color: #FFBA01;
+            background-image: url('/images/chotot-banner.png'), linear-gradient(180deg, #FFBA01 0%, #FFDB3A 54.33%, #FFE62F 100%);
+            background-position: center bottom, center center;
+            background-repeat: no-repeat, no-repeat;
+            background-size: cover, cover;
+            z-index: 1;
+            pointer-events: none;
         }
-        .filter-header-title {
-            font-size: 15px;
-            font-weight: 800;
-            text-transform: uppercase;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(240, 234, 225, 0.8);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+
+        .chotot-hero-wrapper {
+            position: relative;
+            z-index: 10;
+            background: transparent !important;
+            padding: 12px 0 0 0 !important;
+            border-bottom: none !important;
+            text-align: center;
+        }
+
+        .chotot-hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .chotot-hero-content {
+            text-align: center;
+            max-width: 760px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .chotot-hero-title {
+            font-size: 24px;
+            font-weight: 900;
             color: #1C1917;
+            letter-spacing: -0.5px;
+            line-height: 1.25;
+            margin-bottom: 4px;
         }
-        .filter-group {
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 1px dashed rgba(237, 232, 225, 0.8);
-        }
-        .filter-group-title {
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #1C1917;
-        }
-        .filter-item-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--color-text-secondary);
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: color 0.15s ease;
-        }
-        .filter-item-label:hover {
-            color: #ee4d2d;
-        }
-        .filter-item-label input { accent-color: #ee4d2d; }
 
-        .price-inputs-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 8px;
+        .chotot-hero-desc {
+            font-size: 13.5px;
+            color: #382C05;
+            line-height: 1.4;
+            margin: 0 auto;
+            font-weight: 600;
         }
-        .input-price, .filter-price-input {
-            width: 88px;
-            padding: 8px 10px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 12px;
-            outline: none;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            box-sizing: border-box;
-        }
-        .input-price:focus, .filter-price-input:focus {
-            border-color: rgba(238, 77, 45, 0.5);
-            background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.12);
-        }
-        .btn-apply-filter {
-            background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%);
-            color: white;
-            border: none;
-            border-radius: 9999px;
-            padding: 10px 16px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
+
+        /* ================= THANH TÌM KIẾM TO TRÒN CHUẨN CHỢ TỐT ================= */
+        .chotot-search-form-card {
+            max-width: 940px;
             width: 100%;
-            margin-top: 12px;
-            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3);
+            height: 72px;
+            margin: 14px auto 0 auto !important;
+            transform: none !important;
+            position: relative;
+            z-index: 30;
+            background: #ffffff;
+            border-radius: 20px; /* Chuẩn Chợ Tốt: 20px */
+            padding: 12px 16px 12px 24px;
+            box-shadow: 0 4px 16px rgba(34, 34, 34, 0.12); /* Chuẩn Chợ Tốt: rgba(34,34,34,0.12) 0px 4px 16px */
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-sizing: border-box;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .chotot-search-form-card:focus-within {
+            box-shadow: 0 8px 24px rgba(34, 34, 34, 0.18), 0 2px 6px rgba(0, 0, 0, 0.05);
+            transform: translateY(-1px) !important;
+        }
+
+        .chotot-input-field-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            overflow: hidden;
+        }
+
+        .chotot-lens-svg {
+            color: #8C8C8C;
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+        }
+
+        .chotot-native-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 16px;
+            line-height: 1.4;
+            font-weight: 400;
+            color: #1C1917;
+            font-family: inherit;
+        }
+        .chotot-native-input::placeholder {
+            color: #8C8C8C;
+            font-weight: 400;
+        }
+
+        .chotot-form-actions-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* Nút chọn khu vực chuẩn Chợ Tốt */
+        .chotot-location-button-wrap {
+            height: 48px;
+            border: 1px solid #DADADA;
+            border-radius: 12px; /* Chuẩn Chợ Tốt: 12px */
+            background: #FFFFFF;
+            color: #1C1917;
+            padding: 0 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s ease;
+        }
+        .chotot-location-button-wrap:hover {
+            border-color: #FFAE00;
+            background: #FFFDF8;
+        }
+
+        .location-pin-svg {
+            color: #EE4D2D;
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+        }
+
+        .chotot-location-select {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1C1917;
+            cursor: pointer;
+            padding: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: inherit;
+        }
+
+        .chevron-down-svg {
+            color: #222222;
+            flex-shrink: 0;
+            pointer-events: none;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Nút Tìm kiếm chuẩn Chợ Tốt */
+        .chotot-submit-button {
+            height: 48px;
+            min-width: 104px;
+            border: none;
+            outline: none;
+            border-radius: 8px; /* Chuẩn Chợ Tốt: 8px */
+            background: #FFD400 !important;
+            color: #222222 !important;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 0 20px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-        }
-        .btn-apply-filter:hover {
-            transform: none;
-            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.4);
-        }
-        .btn-apply-filter:active {
-            transform: scale(0.96);
-        }
-        .btn-clear-filter {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            color: var(--color-text-secondary);
-            border: 1.5px solid rgba(255, 255, 255, 0.92);
-            border-radius: 9999px;
-            padding: 9px 16px;
-            font-weight: 700;
-            font-size: 13px;
             cursor: pointer;
-            width: 100%;
-            margin-top: 8px;
-            text-align: center;
-            display: block;
-            box-sizing: border-box;
-            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
         }
-        .btn-clear-filter:hover {
-            border-color: rgba(238, 77, 45, 0.4);
-            color: #ee4d2d;
-            background: #ffffff;
-            transform: none;
-            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.12);
+        .chotot-submit-button:hover {
+            background: #F2AE00 !important;
+            transform: scale(1.02);
         }
-        .btn-clear-filter:active {
-            transform: scale(0.96);
+        .chotot-submit-button:active {
+            transform: scale(0.98);
         }
 
-        /* ================= APPLE LIQUID GLASS SORT BAR & MINI PAGINATION ================= */
+        /* ================= THANH SẮP XẾP TINH GỌN PHẲNG CHỢ TỐT ================= */
         .shopee-sort-bar {
-            position: relative !important;
-            z-index: 80 !important;
-            overflow: visible !important;
-            background: rgba(255, 255, 255, 0.78) !important;
-            backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
-            padding: 12px 18px;
-            border-radius: 16px !important;
-            border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
-            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
+            background: transparent;
+            border: none;
+            padding: 10px 0;
             display: flex;
             align-items: center;
-            height: 60px;
+            justify-content: space-between;
+            margin-top: 6px;
+            margin-bottom: 16px;
             box-sizing: border-box;
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: #555555;
             user-select: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .shopee-sort-bar:hover {
-            z-index: 100 !important;
+        .sort-left-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-
         .sort-label {
-            margin-right: 15px;
-            color: #574E45;
+            color: #78716C;
+            font-size: 13.5px;
             font-weight: 600;
             white-space: nowrap;
         }
 
         .btn-sort-tab {
-            height: 36px;
-            min-width: 92px;
-            padding: 0 16px;
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            border-radius: 10px !important;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
+            height: 34px;
+            padding: 0 14px;
+            border: 1px solid #E5E0D8;
+            border-radius: 8px;
+            background: #ffffff;
             color: #292524;
-            margin-right: 10px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            font-size: 13.5px;
-            font-weight: 650;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.15s ease;
             white-space: nowrap;
         }
         .btn-sort-tab:hover {
-            background: #ffffff !important;
-            border-color: rgba(238, 77, 45, 0.3) !important;
-            color: #ee4d2d !important;
-            transform: none;
-            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.12), inset 0 1px 1px #ffffff !important;
+            background: #ffffff;
+            border-color: #8C4A27;
+            color: #8C4A27;
         }
         .btn-sort-tab.active {
-            background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%) !important;
-            color: #ffffff !important;
-            border-color: transparent !important;
-            font-weight: 750;
-            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
-        }
-        .btn-sort-tab:active {
-            transform: scale(0.96) !important;
+            background: #8C4A27;
+            color: #ffffff;
+            border-color: #8C4A27;
+            font-weight: 700;
         }
 
-        /* Hộp Chọn Giá Dropdown */
         .select-price-box {
-            position: relative !important;
-            height: 36px;
-            width: 200px;
-            margin-right: 10px;
-            z-index: 120 !important;
+            position: relative;
+            height: 34px;
+            width: 170px;
         }
-        .select-price-box:hover {
-            z-index: 150 !important;
+        .select-price-box:hover .select-price-menu {
+            display: block;
         }
         .select-price-trigger {
             height: 100%;
             width: 100%;
-            background: rgba(255, 255, 255, 0.90);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.92);
-            border-radius: 10px !important;
+            background: #ffffff;
+            border: 1px solid #E5E0D8;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 14px;
+            padding: 0 12px;
             color: #292524;
-            font-size: 13.5px;
-            font-weight: 650;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             box-sizing: border-box;
-        }
-        .select-price-trigger:hover {
-            background: #ffffff;
-            border-color: rgba(238, 77, 45, 0.3);
-            color: #ee4d2d;
-            box-shadow: 0 6px 14px rgba(238, 77, 45, 0.12);
+            transition: all 0.15s ease;
         }
         .select-price-box.active .select-price-trigger {
-            color: #ee4d2d;
-            font-weight: 750;
-            border-color: rgba(238, 77, 45, 0.4);
+            border-color: #8C4A27;
+            color: #8C4A27;
+            font-weight: 700;
         }
-        .select-price-icon {
-            font-size: 11px;
-            color: #78716C;
-            transition: transform 0.25s ease;
-        }
-        .select-price-box:hover .select-price-icon {
-            transform: rotate(180deg);
-            color: #ee4d2d;
-        }
-
-        /* Vùng đệm hover bridge giúp chuột di chuyển xuống không bao giờ bị tắt */
-        .select-price-box::after {
-            content: '';
+        .select-price-menu {
+            display: none;
             position: absolute;
-            top: 100%;
+            top: calc(100% + 4px);
             left: 0;
             width: 100%;
-            height: 12px;
-            background: transparent;
-            pointer-events: auto;
-        }
-
-        .select-price-menu {
-            position: absolute !important;
-            top: calc(100% + 6px) !important;
-            left: 0 !important;
-            width: 100% !important;
-            background: rgba(255, 255, 255, 0.96) !important;
-            backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
-            border-radius: 14px !important;
-            box-shadow: 0 18px 40px -4px rgba(45, 24, 15, 0.22), 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 1) !important;
-            border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
-            padding: 6px !important;
-            display: none;
-            z-index: 9999 !important;
-            animation: applePopoverFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            box-sizing: border-box !important;
-        }
-        .select-price-box:hover .select-price-menu {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 2px !important;
+            background: #ffffff;
+            border: 1px solid #ECE7DE;
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+            overflow: hidden;
         }
         .select-price-item {
-            display: flex !important;
-            align-items: center !important;
-            height: 36px !important;
-            padding: 0 12px !important;
-            font-size: 13px !important;
-            color: #292524 !important;
-            text-decoration: none !important;
-            transition: all 0.15s ease !important;
-            font-weight: 650 !important;
-            border-radius: 8px !important;
-            box-sizing: border-box !important;
-            white-space: nowrap !important;
+            display: block;
+            padding: 8px 12px;
+            font-size: 13px;
+            color: #292524;
+            text-decoration: none;
+            transition: background 0.15s ease;
         }
         .select-price-item:hover {
-            color: #ee4d2d !important;
-            background: rgba(238, 77, 45, 0.08) !important;
-            transform: none !important;
+            background: #FAF8F5;
+            color: #8C4A27;
         }
         .select-price-item.selected {
-            color: #ee4d2d !important;
-            font-weight: 750 !important;
-            background: rgba(238, 77, 45, 0.08) !important;
+            color: #8C4A27;
+            font-weight: 700;
+            background: #FAF6F0;
         }
 
-        /* Phân Trang Mini Góc Phải */
-        .pagination-mini {
-            margin-left: auto;
+        /* ================= THANH TABS CHỢ TỐT ĐỒNG BỘ ================= */
+        .chotot-feed-tabs-bar {
             display: flex;
             align-items: center;
-            gap: 16px;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            border-bottom: 2px solid #F0ECE4;
+            padding-bottom: 0px;
+        }
+
+        .chotot-feed-tabs {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .chotot-feed-tab {
+            font-size: 15px;
+            font-weight: 700;
+            color: #78716C;
+            text-decoration: none;
+            padding-bottom: 10px;
+            position: relative;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chotot-feed-tab:hover {
+            color: #1C1917;
+        }
+
+        .chotot-feed-tab.active {
+            color: #1C1917;
+            font-weight: 800;
+        }
+
+        .chotot-feed-tab.active::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #1C1917;
+            border-radius: 9999px;
+        }
+
+        .pagination-mini {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .page-num-mini {
-            color: #292524;
-            font-size: 14px;
+            font-size: 13px;
+            color: #78716C;
             font-weight: 600;
         }
         .page-current-mini {
-            color: #ee4d2d;
+            color: #8C4A27;
             font-weight: 800;
         }
         .page-nav-mini {
             display: flex;
             gap: 4px;
-            background: transparent;
         }
         .page-btn-mini {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            border-radius: 10px !important;
+            background: #ffffff;
+            border: 1px solid #E5E0D8;
+            border-radius: 6px;
             color: #574E45;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.9);
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .page-btn-mini:first-child {
-            border-right: 1px solid rgba(255, 255, 255, 0.9);
+            transition: all 0.15s ease;
         }
         .page-btn-mini.disabled {
-            background: rgba(255, 255, 255, 0.45);
-            color: #c4bbb0;
+            background: #F5F5F5;
+            color: #D6D3D1;
             cursor: not-allowed;
             pointer-events: none;
-            box-shadow: none;
         }
         .page-btn-mini:not(.disabled):hover {
-            background: #ffffff;
-            color: #ee4d2d;
-            border-color: rgba(238, 77, 45, 0.3);
-            transform: none;
-            box-shadow: 0 4px 10px rgba(238, 77, 45, 0.12);
-        }
-        .page-btn-mini:not(.disabled):active {
-            transform: scale(0.94);
+            border-color: #8C4A27;
+            color: #8C4A27;
         }
 
-        /* PRODUCT GRID (5 COLS) */
+        /* ================= LƯỚI SẢN PHẨM 5 CỘT TOÀN DIỆN ================= */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-            position: relative;
-            z-index: 10;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-top: 12px;
         }
+
         .book-card {
-            background: rgba(255, 255, 255, 0.78);
-            backdrop-filter: blur(20px) saturate(185%);
-            -webkit-backdrop-filter: blur(20px) saturate(185%);
-            border: 1.5px solid rgba(255, 255, 255, 0.9);
-            border-radius: 16px;
-            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid #ECE7DE;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.95);
-            padding: 10px;
-            box-sizing: border-box;
+            text-decoration: none;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
         .book-card:hover {
-            background: #ffffff;
-            border-color: rgba(255, 255, 255, 1);
-            transform: none;
-            box-shadow: 0 8px 24px -4px rgba(140, 74, 39, 0.1), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            border-color: rgba(140, 74, 39, 0.35);
+            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.09);
+            transform: translateY(-3px);
+            z-index: 2;
         }
+
         .card-thumb {
-            height: 180px;
-            background: linear-gradient(180deg, rgba(248, 245, 238, 0.65) 0%, rgba(232, 222, 200, 0.35) 100%);
-            backdrop-filter: blur(14px);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.75);
-            box-shadow: inset 0 1px 3px rgba(45, 24, 15, 0.04);
+            position: relative;
+            height: 200px;
+            width: 100%;
+            background: #FAF8F5;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
             overflow: hidden;
         }
         .card-thumb img {
-            max-height: 90%;
-            max-width: 90%;
+            max-height: 92%;
+            max-width: 92%;
             object-fit: contain;
-            border-radius: 10px;
+            transition: transform 0.2s ease;
         }
         .book-card:hover .card-thumb img {
-            transform: none;
+            transform: scale(1.02);
         }
 
-        /* Nút Mua Ngay Nhanh trên Thẻ Sách */
-        .btn-card-buy-now {
-            margin-top: 8px;
-            background: #ee4d2d;
+        .tag-cond {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(28, 25, 23, 0.85);
             color: #ffffff;
-            border: 1px solid #ee4d2d;
-            border-radius: 9999px;
-            padding: 6px 12px;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 800;
+            padding: 2.5px 7px;
+            border-radius: 6px;
+            line-height: 1.2;
             letter-spacing: 0.3px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            width: 100%;
-            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.25);
-            transition: background-color 0.15s ease, border-color 0.15s ease;
         }
-        .btn-card-buy-now:hover {
-            background: #d73211;
-            border-color: #d73211;
-            transform: none !important;
-        }
-        .btn-card-buy-now:active {
-            transform: scale(0.96) !important;
-        }
+
         .card-body {
-            padding: 10px 2px 2px 2px;
+            padding: 12px 14px;
             display: flex;
             flex-direction: column;
+            gap: 6px;
             flex: 1;
-            justify-content: space-between;
         }
+
         .book-title {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
             color: #1C1917;
+            line-height: 1.35;
+            height: 38px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            height: 35px;
-            margin-bottom: 6px;
+            margin: 0;
+            transition: color 0.15s ease;
+        }
+        .book-card:hover .book-title {
+            color: var(--color-fire);
+        }
+
+        .book-author-meta {
+            font-size: 11.5px;
+            color: #78716C;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .book-store-tag {
+            font-size: 11px;
+            font-weight: 600;
+            color: #8C4A27;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: auto;
+            padding-top: 4px;
         }
         .price-text {
             font-size: 16px;
-            font-weight: 800;
-            color: #ee4d2d !important;
+            font-weight: 900;
+            color: #EE4D2D !important;
         }
-        .tag-cond {
-            position: absolute;
-            bottom: 6px; left: 6px;
-            background: rgba(0, 122, 87, 0.92);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            color: white; font-size: 10px; font-weight: 800;
-            padding: 2.5px 8px; border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 122, 87, 0.25);
+        .sold-text {
+            font-size: 11.5px;
+            color: #78716C;
         }
 
-        /* ================= RESPONSIVE FLUID CHO SEARCH & BỘ LỌC ================= */
-        .btn-sidebar-quick-price {
-            padding: 4px 8px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #574E45;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(232, 222, 200, 0.9);
-            border-radius: 9999px;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .btn-sidebar-quick-price:hover {
-            color: #ee4d2d;
-            border-color: #ee4d2d;
-            background: #fff;
-        }
-        
+        /* Phân trang dưới đáy */
         .btn-pagination {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #ffffff;
+            border: 1px solid #ECE7DE;
             color: #78716C;
             text-decoration: none;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            transition: all 0.2s;
+            transition: all 0.15s ease;
+            font-size: 13px;
         }
         .btn-pagination:hover {
-            background: #f8f9fa;
-            color: #ee4d2d;
+            border-color: #8C4A27;
+            color: #8C4A27;
         }
         .btn-pagination-number {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 40px;
-            height: 40px;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 10px;
             border-radius: 8px;
-            background: transparent;
-            color: #78716C;
+            background: #ffffff;
+            border: 1px solid #ECE7DE;
+            color: #1C1917;
             text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.15s ease;
         }
         .btn-pagination-number:hover {
-            color: #ee4d2d;
+            border-color: #8C4A27;
+            color: #8C4A27;
         }
         .btn-pagination-number.active {
-            background: #ee4d2d;
-            color: white;
-            box-shadow: 0 4px 10px rgba(238, 77, 45, 0.2);
+            background: #8C4A27;
+            color: #ffffff;
+            border-color: #8C4A27;
+            font-weight: 700;
         }
 
-        @media screen and (max-width: 992px) {
-            .search-layout {
-                grid-template-columns: 1fr;
-                gap: 16px;
-                margin: 16px auto 40px;
-            }
-            .filter-sidebar {
-                border-radius: 16px;
-                padding: 14px 18px;
-            }
+        @media (max-width: 1024px) {
             .product-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 12px;
-            }
-            .shopee-sort-bar {
-                height: auto;
-                flex-wrap: wrap;
-                gap: 10px;
-                padding: 12px 14px;
-            }
-            .pagination-mini {
-                margin-left: 0;
-                width: 100%;
-                justify-content: flex-end;
-            }
-            .quick-filter-chips-list {
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                padding-bottom: 4px;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-            }
-            .quick-filter-chips-list::-webkit-scrollbar {
-                display: none;
-            }
-            .filter-collapse-content {
-                display: none;
-                padding-top: 12px;
-                border-top: 1px solid rgba(0,0,0,0.05);
-                margin-top: 12px;
-            }
-            .filter-sidebar.expanded .filter-collapse-content {
-                display: block;
+                grid-template-columns: repeat(4, 1fr);
             }
         }
-
-        @media screen and (max-width: 768px) {
+        @media (max-width: 768px) {
             .product-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
+            }
+            .chotot-search-form-card {
+                flex-wrap: wrap;
+                height: auto;
+                border-radius: 16px;
+                padding: 10px 14px;
+                gap: 8px;
+            }
+            .chotot-form-actions-group {
+                width: 100%;
+                justify-content: space-between;
             }
             .card-thumb {
-                height: 150px;
-            }
-            .book-title {
-                font-size: 12px;
-                height: 32px;
-            }
-            .price-text {
-                font-size: 14px;
-            }
-            .btn-sort-tab {
-                min-width: 76px;
-                padding: 0 10px;
-                font-size: 12.5px;
-            }
-            .select-price-box {
-                width: 150px;
-            }
-            .quick-filter-label {
-                min-width: auto;
-                font-size: 12px;
-            }
-            .quick-filter-chip {
-                padding: 5px 10px !important;
-                font-size: 11.5px !important;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .sort-label {
-                display: none;
-            }
-            .btn-sort-tab {
-                min-width: 66px;
-                padding: 0 6px;
-                font-size: 11.5px;
-            }
-            .select-price-box {
-                width: 125px;
-            }
-            .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
+                height: 160px;
             }
         }
     </style>
@@ -688,220 +647,180 @@
 </head>
 <body>
 
-    <!-- KẾ THỪA 100% TOPBAR & HEADER TỪ TRANG HOME -->
-    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+    <!-- KHỐI ĐẦU TRANG ĐỒNG BỘ 1 ẢNH LIỀN MẠCH (HEADER + BANNER CHỢ TỐT TỪ ĐỈNH ĐẾN 50% THANH SEARCH) -->
+    <div class="chotot-unified-top-wrapper">
+        <div class="chotot-unified-backdrop"></div>
 
-    <!-- CONTENT -->
-    <div class="container-shopee">
-        <div class="search-layout">
+        <!-- 1. HEADER TRONG SUỐT TRÊN NỀN ẢNH BANNER -->
+        <th:block th:with="isHome=true">
+            <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+        </th:block>
 
-            <!-- SIDEBAR BỘ LỌC SHOPEE -->
-            <aside class="filter-sidebar">
-                <div class="filter-header-title" style="justify-content:space-between; cursor:pointer;" onclick="toggleMobileSidebar()">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <i class="fa-solid fa-filter text-danger"></i>
-                        <span>Bộ Lọc Tìm Kiếm</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-down" id="sidebarCollapseArrow" style="font-size:12px; color:#78716C;"></i>
+        <!-- 2. HERO BANNER CHUẨN CHỢ TỐT VỚI HÌNH NỀN MASCOT & DẢI VÀNG 3D -->
+        <section class="chotot-hero-wrapper">
+            <div class="chotot-hero-container">
+                <!-- Slogan trung tâm -->
+                <div class="chotot-hero-content">
+                    <h1 class="chotot-hero-title">Giá tốt, gần bạn, chốt nhanh!</h1>
+                    <p class="chotot-hero-desc">
+                        Hơn 10.000 đầu sách kiểm định chất lượng tại 5 chi nhánh TP.HCM · Định giá tự động &amp; Giao nhanh 2H
+                    </p>
                 </div>
 
-                <form th:action="@{/search}" method="get" id="filterForm" class="filter-collapse-content">
-                    <input type="hidden" name="q" th:if="${selectedQuery != null and selectedQuery != ''}" th:value="${selectedQuery}">
-                    <input type="hidden" name="sort" th:if="${selectedSort != null and selectedSort != ''}" th:value="${selectedSort}">
-
-                    <!-- 1. Danh mục thể loại -->
-                    <div class="filter-group">
-                        <div class="filter-group-title">Danh Mục Sách</div>
-                        <label class="filter-item-label">
-                            <input type="radio" name="cat" value="" th:checked="${selectedCat == null}" onchange="this.form.submit()">
-                            <span>Tất cả thể loại</span>
-                        </label>
-                        <label class="filter-item-label" th:each="cat : ${categories}">
-                            <input type="radio" name="cat" th:value="${cat.id}" th:checked="${selectedCat == cat.id}" onchange="this.form.submit()">
-                            <span th:text="${cat.categoryName}">Văn Học</span>
-                        </label>
+                <!-- THANH TÌM KIẾM TO TRÒN CHUẨN CHỢ TỐT (72PX, BO GÓC 20PX, ĐÈ 50% GIỮA NỀN BANNER VÀ TRẮNG) -->
+                <form th:action="@{/search}" method="get" class="chotot-search-form-card" id="smartSearchForm">
+                    <!-- 1. Search Icon & Input Field -->
+                    <div class="chotot-input-field-wrap">
+                        <svg class="chotot-lens-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none">
+                            <path d="M18.2798 11.4399C18.2797 7.66239 15.2175 4.6001 11.4399 4.6001C7.66244 4.60018 4.60018 7.66244 4.6001 11.4399C4.6001 15.2175 7.66239 18.2797 11.4399 18.2798C15.2176 18.2798 18.2798 15.2176 18.2798 11.4399ZM20.2798 11.4399C20.2798 13.5439 19.5432 15.4748 18.3159 16.9927L21.0952 19.6812C21.4922 20.1438 21.4786 20.7232 21.1187 21.0952C20.7586 21.4674 20.1798 21.5 19.7817 21.186L16.8901 18.396C15.3881 19.5745 13.4972 20.2798 11.4399 20.2798C6.55782 20.2797 2.6001 16.3221 2.6001 11.4399C2.60018 6.55787 6.55787 2.60018 11.4399 2.6001C16.3221 2.6001 20.2797 6.55782 20.2798 11.4399Z" fill="currentColor"></path>
+                        </svg>
+                        <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm sản phẩm, tên sách cũ, tác giả, giáo trình..." class="chotot-native-input" autocomplete="off">
                     </div>
 
-                    <!-- 2. Độ mới thẩm định -->
-                    <div class="filter-group">
-                        <div class="filter-group-title">Độ Mới Thẩm Định</div>
-                        <label class="filter-item-label">
-                            <input type="radio" name="cond" value="" th:checked="${selectedCond == null}" onchange="this.form.submit()">
-                            <span>Tất cả độ mới</span>
-                        </label>
-                        <label class="filter-item-label">
-                            <input type="radio" name="cond" value="95" th:checked="${selectedCond == 95}" onchange="this.form.submit()">
-                            <span>Mới 95% trở lên (Như mới)</span>
-                        </label>
-                        <label class="filter-item-label">
-                            <input type="radio" name="cond" value="90" th:checked="${selectedCond == 90}" onchange="this.form.submit()">
-                            <span>Mới 90% trở lên (Rất tốt)</span>
-                        </label>
-                        <label class="filter-item-label">
-                            <input type="radio" name="cond" value="80" th:checked="${selectedCond == 80}" onchange="this.form.submit()">
-                            <span>Mới 80% trở lên (Khá tốt)</span>
-                        </label>
-                    </div>
-
-                    <!-- 3. Khoảng giá -->
-                    <div class="filter-group" style="border-bottom:none;">
-                        <div class="filter-group-title">Khoảng Giá (₫)</div>
-                        <div class="price-inputs-row">
-                            <input type="number" name="minPrice" class="input-price filter-price-input" placeholder="₫ TỪ" th:value="${selectedMinPrice}">
-                            <span>-</span>
-                            <input type="number" name="maxPrice" class="input-price filter-price-input" placeholder="₫ ĐẾN" th:value="${selectedMaxPrice}">
+                    <!-- 2. Right Actions: Location Dropdown + Search Button -->
+                    <div class="chotot-form-actions-group">
+                        <!-- Location Selector Button (Khớp ảnh Chợ Tốt) -->
+                        <div class="chotot-location-button-wrap">
+                            <svg class="location-pin-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M20.0005 10.0439C20.0004 11.4492 19.4826 12.8887 18.7915 14.2021C18.0937 15.5284 17.1749 16.8075 16.2759 17.9131C15.3742 19.0219 14.4755 19.9768 13.8032 20.6533C13.4666 20.992 13.1851 21.2623 12.9868 21.4492C12.8876 21.5427 12.8088 21.6161 12.7544 21.666L12.0005 22.3418L11.2466 21.666C11.1921 21.6161 11.1134 21.5427 11.0142 21.4492C10.8158 21.2623 10.5344 20.992 10.1978 20.6533C9.52545 19.9768 8.62674 19.0219 7.7251 17.9131C6.82612 16.8075 5.90731 15.5284 5.20947 14.2021C4.51839 12.8887 4.0006 11.4492 4.00049 10.0439C4.00049 5.6075 7.57638 2 12.0005 2C16.4246 2 20.0005 5.6075 20.0005 10.0439ZM12.0005 13C13.7936 13 15.2368 11.5391 15.2368 9.75C15.2367 7.96099 13.7935 6.5 12.0005 6.5C10.2076 6.50015 8.76521 7.96108 8.76514 9.75C8.76514 11.539 10.2075 12.9998 12.0005 13Z" fill="#EE4D2D"></path>
+                            </svg>
+                            <select name="store" class="chotot-location-select" onchange="document.getElementById('smartSearchForm').submit()">
+                                <option value="">Toàn TP.HCM (5 Shop)</option>
+                                <option th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStore == st.id}">Thủ Đức (HCMUTE)</option>
+                            </select>
+                            <svg class="chevron-down-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none">
+                                <path d="M12.4495 14.8316C12.2013 15.0561 11.7987 15.0561 11.5505 14.8316L6.18623 9.98133C6.0044 9.81692 5.95001 9.56967 6.04841 9.35486C6.14682 9.14006 6.37864 9 6.63578 9L17.3642 9C17.6214 9 17.8532 9.14006 17.9516 9.35487C18.05 9.56967 17.9956 9.81693 17.8138 9.98133L12.4495 14.8316Z" fill="currentColor"></path>
+                            </svg>
                         </div>
-                        <button type="submit" class="btn-apply-filter">ÁP DỤNG</button>
-                    </div>
 
-                    <a th:href="@{/search(q=${selectedQuery != null ? selectedQuery : ''})}" class="btn-clear-filter">XÓA BỘ LỌC</a>
+                        <!-- Preserve cat & sort -->
+                        <input type="hidden" name="cat" th:if="${selectedCat != null}" th:value="${selectedCat}">
+                        <input type="hidden" name="sort" th:if="${selectedSort != null and selectedSort != ''}" th:value="${selectedSort}">
+
+                        <!-- Search Submit Button -->
+                        <button type="submit" class="chotot-submit-button">
+                            <span>Tìm kiếm</span>
+                        </button>
+                    </div>
                 </form>
-            </aside>
-
-            <!-- KẾT QUẢ TÌM KIẾM & SẮP XẾP -->
-            <main>
-                <!-- THANH SẮP XẾP VÀ PHÂN TRANG MINI CHUẨN SHOPEE (KHỚP 100% ẢNH IMAGE_BB8D8C.PNG) -->
-                <div class="shopee-sort-bar">
-                    <span class="sort-label">Sắp xếp theo</span>
-
-                    <!-- Tab Phổ Biến -->
-                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort='popular')}" 
-                       class="btn-sort-tab" th:classappend="${selectedSort == 'popular' or selectedSort == null} ? 'active' : ''">Phổ Biến</a>
-
-                    <!-- Tab Mới Nhất -->
-                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort='latest')}" 
-                       class="btn-sort-tab" th:classappend="${selectedSort == 'latest'} ? 'active' : ''">Mới Nhất</a>
-
-                    <!-- Tab Bán Chạy -->
-                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort='sales')}" 
-                       class="btn-sort-tab" th:classappend="${selectedSort == 'sales'} ? 'active' : ''">Bán Chạy</a>
-
-                    <!-- Menu Thả Xuống: Giá -->
-                    <div class="select-price-box" th:classappend="${selectedSort == 'price-asc' or selectedSort == 'price-desc'} ? 'active' : ''">
-                        <div class="select-price-trigger">
-                            <span th:if="${selectedSort == 'price-asc'}">Giá: Thấp đến Cao</span>
-                            <span th:if="${selectedSort == 'price-desc'}">Giá: Cao đến Thấp</span>
-                            <span th:if="${selectedSort != 'price-asc' and selectedSort != 'price-desc'}">Giá</span>
-                            <i class="fa-solid fa-chevron-down select-price-icon"></i>
-                        </div>
-                        <div class="select-price-menu">
-                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort='price-asc')}" 
-                               class="select-price-item" th:classappend="${selectedSort == 'price-asc'} ? 'selected' : ''">
-                               Giá: Thấp đến Cao
-                            </a>
-                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort='price-desc')}" 
-                               class="select-price-item" th:classappend="${selectedSort == 'price-desc'} ? 'selected' : ''">
-                               Giá: Cao đến Thấp
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Cụm Phân Trang Mini Góc Phải -->
-                    <div class="pagination-mini">
-                        <div class="page-num-mini">
-                            <span class="page-current-mini" th:text="${currentPage != null ? currentPage : 1}">1</span>/<span th:text="${totalPages != null ? totalPages : 1}">7</span>
-                        </div>
-                        <div class="page-nav-mini">
-                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage != null and currentPage > 1 ? currentPage - 1 : 1})}"
-                               class="page-btn-mini" th:classappend="${!hasPrev} ? 'disabled' : ''" th:attr="aria-disabled=${!hasPrev}, tabindex=${!hasPrev ? '-1' : '0'}" aria-label="Trang trước">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </a>
-                            <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage != null and currentPage < totalPages ? currentPage + 1 : totalPages})}"
-                               class="page-btn-mini" th:classappend="${!hasNext} ? 'disabled' : ''" th:attr="aria-disabled=${!hasNext}, tabindex=${!hasNext ? '-1' : '0'}" aria-label="Trang sau">
-                                <i class="fa-solid fa-chevron-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- LƯỚI SẢN PHẨM -->
-                <div th:if="${totalFound > 0}" class="product-grid">
-                    <a th:each="book : ${books}" th:href="@{'/books/' + ${book.id}}" class="book-card">
-                        <div class="card-thumb">
-                            <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" alt="Bìa sách">
-                            <span class="tag-cond" th:text="'Từ ' + ${book.conditionPercent} + '% Mới'">95% Mới</span>
-                        </div>
-                        <div class="card-body">
-                            <h4 class="book-title" th:text="${book.title}">Tên sách</h4>
-                            <div style="font-size:11px; color:#78716C; margin-bottom: 4px;">
-                                <i class="fa-solid fa-pen-nib me-1"></i> <span th:text="${book.author != null && !#strings.isEmpty(book.author) ? book.author : 'Đang cập nhật'}">Tác giả</span>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:auto;">
-                                <span class="price-text" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
-                                <span style="font-size:11px; color:#78716C;" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
-                            </div>
-                            <button type="button" class="btn-card-buy-now" 
-                                    th:attr="onclick=|quickBuyNow(event, '${book.id}')|">
-                                <i class="fa-solid fa-bolt-lightning"></i> Mua Ngay
-                            </button>
-                        </div>
-                    </a>
-                </div>
-                
-                <!-- Thanh Phân Trang (Bottom Pagination) -->
-                <div th:if="${totalPages > 1}" class="shopee-pagination-bar" style="display:flex; justify-content:center; align-items:center; gap:12px; margin-top: 40px; margin-bottom: 20px;">
-                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage - 1})}"
-                       th:if="${hasPrev}"
-                       class="btn-pagination">
-                       <i class="fa-solid fa-chevron-left"></i>
-                    </a>
-                    
-                    <a th:each="i : ${#numbers.sequence(1, totalPages)}"
-                       th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort}, page=${i})}"
-                       class="btn-pagination-number" th:classappend="${currentPage == i} ? 'active' : ''" th:text="${i}">1</a>
-
-                    <a th:href="@{/search(q=${selectedQuery}, cat=${selectedCat}, cond=${selectedCond}, minPrice=${selectedMinPrice}, maxPrice=${selectedMaxPrice}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage + 1})}"
-                       th:if="${hasNext}"
-                       class="btn-pagination">
-                       <i class="fa-solid fa-chevron-right"></i>
-                    </a>
-                </div>
-
-                <!-- NẾU KHÔNG CÓ KẾT QUẢ -->
-                <div th:unless="${totalFound > 0}" style="text-align:center; padding: 60px 0; background:white; border-radius:8px;">
-                    <i class="fa-solid fa-magnifying-glass" style="font-size:48px; color:#d5cec4; margin-bottom:14px;"></i>
-                    <h3 style="font-size:16px; font-weight:700;">Không tìm thấy cuốn sách nào phù hợp</h3>
-                    <p style="color:#78716C; margin-top:4px;">Hãy thử điều chỉnh bộ lọc hoặc tìm kiếm từ khóa khác.</p>
-                </div>
-            </main>
-
-        </div>
+            </div>
+        </section>
     </div>
 
-    <!-- JAVASCRIPT XỬ LÝ MUA NGAY, BỘ LỌC & POPOVER -->
-    <script>
-        function quickBuyNow(event, bookId) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            window.location.href = '/checkout?buyNow=true&bookId=' + encodeURIComponent(bookId) + '&quantity=1';
-        }
+    <!-- CONTENT CHÍNH DƯỚI NỀN TRẮNG THUẦN KHIẾT (CÁCH MÉP SEARCH BAR 24PX) -->
+    <div class="container-shopee" style="padding-top: 24px;">
 
-        function setQuickPrice(min, max) {
-            const minInput = document.querySelector('input[name="minPrice"]');
-            const maxInput = document.querySelector('input[name="maxPrice"]');
-            if (minInput) minInput.value = (min !== '' && min !== null) ? min : '';
-            if (maxInput) maxInput.value = (max !== '' && max !== null) ? max : '';
-            const form = document.getElementById('filterForm');
-            if (form) form.submit();
-        }
+        <!-- Tiêu đề Thể loại nếu đang duyệt theo category -->
+        <div th:if="${selectedCat != null}" style="margin: 12px 0 16px 0; display:flex; align-items:baseline; gap:10px;">
+            <h1 style="font-size: 21px; font-weight: 800; color: #1C1917; margin: 0;">
+                <th:block th:each="c : ${categories}">
+                    <span th:if="${c.id == selectedCat}" th:text="${c.categoryName}">Kinh Tế &amp; Quản Trị</span>
+                </th:block>
+            </h1>
+            <span style="font-size: 13.5px; color: #78716C; font-weight: 500;" th:text="'(' + ${totalFound} + ' sách cũ tại TP.HCM)'">(24 sách cũ tại TP.HCM)</span>
+            <a th:href="@{/search(keyword=${selectedQuery}, store=${selectedStore}, sort=${selectedSort})}" style="margin-left: 10px; font-size: 13px; color: #8C4A27; font-weight: 600; text-decoration: none;" onmouseover="this.style.color='#EE4D2D'" onmouseout="this.style.color='#8C4A27'">&times; Bỏ lọc thể loại</a>
+        </div>
 
-        function toggleMobileSidebar() {
-            const sidebar = document.querySelector('.filter-sidebar');
-            const arrow = document.getElementById('sidebarCollapseArrow');
-            if (sidebar) {
-                sidebar.classList.toggle('expanded');
-                if (arrow) {
-                    if (sidebar.classList.contains('expanded')) {
-                        arrow.style.transform = 'rotate(180deg)';
-                    } else {
-                        arrow.style.transform = 'rotate(0deg)';
-                    }
-                }
-            }
-        }
-    </script>
+        <!-- Tiêu đề Từ khóa nếu tìm kiếm không theo category -->
+        <div th:if="${selectedCat == null and selectedQuery != null and selectedQuery != ''}" style="margin: 4px 0 14px 0; display:flex; align-items:baseline; gap:10px;">
+            <h1 style="font-size: 20px; font-weight: 800; color: #1C1917; margin: 0;" th:text="'Kết quả tìm kiếm cho: &quot;' + ${selectedQuery} + '&quot;'">Kết quả tìm kiếm</h1>
+            <span style="font-size: 13.5px; color: #78716C; font-weight: 500;" th:text="'(' + ${totalFound} + ' sách cũ)'">(12 sách cũ)</span>
+        </div>
+
+        <!-- THANH TAB SẮP XẾP TINH GỌN CHUẨN CHỢ TỐT -->
+        <div class="chotot-feed-tabs-bar">
+            <div class="chotot-feed-tabs">
+                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='popular')}" 
+                   class="chotot-feed-tab" th:classappend="${selectedSort == 'popular' or selectedSort == null} ? 'active' : ''">Phổ Biến</a>
+                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='latest')}" 
+                   class="chotot-feed-tab" th:classappend="${selectedSort == 'latest'} ? 'active' : ''">Mới Nhất</a>
+                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='sales')}" 
+                   class="chotot-feed-tab" th:classappend="${selectedSort == 'sales'} ? 'active' : ''">Bán Chạy Nhất</a>
+                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='price-asc')}" 
+                   class="chotot-feed-tab" th:classappend="${selectedSort == 'price-asc'} ? 'active' : ''">Giá Thấp &rarr; Cao</a>
+                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='price-desc')}" 
+                   class="chotot-feed-tab" th:classappend="${selectedSort == 'price-desc'} ? 'active' : ''">Giá Cao &rarr; Thấp</a>
+            </div>
+
+            <!-- Cụm Phân Trang Mini Góc Phải -->
+            <div class="pagination-mini" th:if="${totalPages != null and totalPages > 1}">
+                <div class="page-num-mini">
+                    <span class="page-current-mini" th:text="${currentPage != null ? currentPage : 1}">1</span>/<span th:text="${totalPages != null ? totalPages : 1}">1</span>
+                </div>
+                <div class="page-nav-mini">
+                    <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage != null and currentPage > 1 ? currentPage - 1 : 1})}"
+                       class="page-btn-mini" th:classappend="${!hasPrev} ? 'disabled' : ''" aria-label="Trang trước">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                    <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage != null and currentPage < totalPages ? currentPage + 1 : totalPages})}"
+                       class="page-btn-mini" th:classappend="${!hasNext} ? 'disabled' : ''" aria-label="Trang sau">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- LƯỚI SẢN PHẨM 5 CỘT TOÀN DIỆN -->
+        <main>
+            <div th:if="${totalFound > 0}" class="product-grid">
+                <a th:each="book : ${books}" th:href="@{'/books/' + ${book.id}}" class="book-card">
+                    <div class="card-thumb">
+                        <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" alt="Bìa sách">
+                        <span class="tag-cond" th:text="'TỪ ' + ${book.conditionPercent} + '% MỚI'">95% MỚI</span>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="book-title" th:text="${book.title}">Tên sách</h4>
+                        
+                        <div class="book-author-meta">
+                            <i class="fa-solid fa-pen-nib me-1"></i>
+                            <span th:text="${book.author != null && !#strings.isEmpty(book.author) ? book.author : 'Đang cập nhật'}">Tác giả</span>
+                        </div>
+
+                        <div class="book-store-tag">
+                            <i class="fa-solid fa-location-dot text-danger"></i>
+                            <span>Có tại: 5 Chi Nhánh</span>
+                        </div>
+
+                        <div class="price-row">
+                            <span class="price-text" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                            <span class="sold-text" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Phân Trang Dưới Đáy (Bottom Pagination) -->
+            <div th:if="${totalPages > 1}" style="display:flex; justify-content:center; align-items:center; gap:8px; margin-top:40px; margin-bottom:30px;">
+                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage - 1})}"
+                   th:if="${hasPrev}"
+                   class="btn-pagination">
+                   <i class="fa-solid fa-chevron-left"></i>
+                </a>
+                
+                <a th:each="i : ${#numbers.sequence(1, totalPages)}"
+                   th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort=${selectedSort}, page=${i})}"
+                   class="btn-pagination-number" th:classappend="${currentPage == i} ? 'active' : ''" th:text="${i}">1</a>
+
+                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage + 1})}"
+                   th:if="${hasNext}"
+                   class="btn-pagination">
+                   <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+
+            <!-- NẾU KHÔNG CÓ KẾT QUẢ -->
+            <div th:unless="${totalFound > 0}" style="text-align:center; padding: 70px 20px; background:#FAF8F5; border-radius:14px; border:1px solid #ECE7DE; margin-top:20px;">
+                <i class="fa-solid fa-magnifying-glass" style="font-size:42px; color:#A8A29E; margin-bottom:14px;"></i>
+                <h3 style="font-size:16px; font-weight:800; color:#1C1917;">Không tìm thấy cuốn sách nào phù hợp</h3>
+                <p style="color:#78716C; margin-top:6px; font-size:13.5px;">Hãy thử điều chỉnh bộ lọc hoặc tìm kiếm từ khóa khác.</p>
+                <div style="margin-top:16px;">
+                    <a th:href="@{/search}" style="display:inline-block; padding:8px 20px; background:#8C4A27; color:#fff; border-radius:9999px; font-weight:700; font-size:13px;">Xem Tất Cả Sách Cũ</a>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>
 </body>

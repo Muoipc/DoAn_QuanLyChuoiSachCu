@@ -57,6 +57,7 @@ public class SearchController {
             @RequestParam(value = "minPrice", required = false) String minPriceStr,
             @RequestParam(value = "maxPrice", required = false) String maxPriceStr,
             @RequestParam(value = "store", required = false) Long storeId,
+            @RequestParam(value = "storeId", required = false) Long storeIdShopee,
             @RequestParam(value = "sort", defaultValue = "popular") String sort,
             @RequestParam(value = "page", defaultValue = "1") int page,
             Model model) {
@@ -73,6 +74,7 @@ public class SearchController {
         // Hỗ trợ cả các tham số: ?keyword=... (chuẩn Shopee), ?q=..., ?categoryId=..., ?cat=..., ?category=...
         String effectiveQuery = (keyword != null && !keyword.isBlank()) ? keyword : query;
         Integer effectiveCategoryId = (categoryId != null) ? categoryId : (categoryIdShopee != null ? categoryIdShopee : categoryParam);
+        Long effectiveStoreId = (storeId != null) ? storeId : storeIdShopee;
 
         List<Book> allBooks = new ArrayList<>(bookRepository.findAllActiveWithImages());
 
@@ -116,8 +118,8 @@ public class SearchController {
         }
 
         // 5. Lọc theo chi nhánh kho còn hàng
-        if (storeId != null) {
-            List<Inventory> storeInventory = inventoryRepository.findByStoreId(storeId);
+        if (effectiveStoreId != null) {
+            List<Inventory> storeInventory = inventoryRepository.findByStoreId(effectiveStoreId);
             Set<Long> inStockBookIds = storeInventory.stream()
                     .filter(inv -> inv.getQuantity() != null && inv.getQuantity() > 0 && inv.getBook() != null && inv.getBook().getId() != null)
                     .map(inv -> inv.getBook().getId())
@@ -188,11 +190,11 @@ public class SearchController {
         model.addAttribute("stores", stores);
 
         model.addAttribute("selectedQuery", effectiveQuery);
-        model.addAttribute("selectedCat", categoryId);
+        model.addAttribute("selectedCat", effectiveCategoryId);
         model.addAttribute("selectedCond", minCondition);
         model.addAttribute("selectedMinPrice", minPrice);
         model.addAttribute("selectedMaxPrice", maxPrice);
-        model.addAttribute("selectedStore", storeId);
+        model.addAttribute("selectedStore", effectiveStoreId);
         model.addAttribute("selectedSort", sort);
 
         model.addAttribute("pageTitle", "Tìm Kiếm Sách Cũ — Kết Quả Bộ Lọc Chuỗi TP.HCM");
