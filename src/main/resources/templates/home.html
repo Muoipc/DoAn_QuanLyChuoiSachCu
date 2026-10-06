@@ -1350,12 +1350,11 @@
             margin-left: 8px;
         }
 
-        /* AI OVERVIEW CARD ULTRA-COMPACT */
+        /* AI OVERVIEW CARD CÂN XỨNG & ĐỒNG BỘ 100% LỀ 20PX */
         .ai-overview-card {
             background: #FAF8F5;
             border-bottom: 1px solid #ECE7DE;
-            padding: 8px 12px;
-            position: relative;
+            padding: 12px 20px 14px 20px;
             text-align: left !important;
             animation: aiCardSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -1363,72 +1362,72 @@
             from { opacity: 0; transform: translateY(-3px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .ai-card-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .ai-gen-label-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #8C4A27;
+        }
+        .ai-sparkle-dot {
+            color: #D97706;
+            font-size: 13px;
+        }
         .btn-clear-ai-overview {
-            position: absolute;
-            top: 6px;
-            right: 8px;
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 16px;
             line-height: 1;
             color: #A8A29E;
-            padding: 2px 4px;
+            padding: 2px 6px;
             border-radius: 4px;
             transition: all 0.15s;
-            z-index: 2;
         }
         .btn-clear-ai-overview:hover {
             color: #1C1917;
             background: #EFEAE2;
         }
 
-        /* HIỆU ỨNG SƯƠNG MỜ ĐƠN GIẢN TINH TẾ (SOFT BLUR MIST) - KHÔNG MÀU MÈ */
-        .ai-overview-loading {
-            padding: 6px 4px;
+        /* HIỆU ỨNG CON TRỎ GEN AI NHẤP NHÁY (BLINKING CURSOR) */
+        .ai-typing-cursor {
+            display: inline-block;
+            color: #D97706;
+            font-size: 13px;
+            margin-left: 2px;
+            font-weight: 900;
+            vertical-align: baseline;
+            animation: aiCursorBlink 0.7s infinite;
         }
-        .ai-soft-blur-wrap {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-            padding: 4px 0;
-            filter: blur(3.5px);
-            animation: softMistBreathe 1.8s ease-in-out infinite alternate;
+        @keyframes aiCursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
-        .ai-blur-skeleton {
-            height: 9px;
-            border-radius: 6px;
-            background: linear-gradient(90deg, #EAE3D9 0%, #C4B9AA 50%, #EAE3D9 100%);
-            background-size: 200% 100%;
-            animation: skeletonShimmer 2s ease-in-out infinite;
-        }
-        .ai-blur-skeleton.sk-1 { width: 90%; }
-        .ai-blur-skeleton.sk-2 { width: 72%; }
-        .ai-blur-skeleton.sk-3 { width: 48%; }
 
-        @keyframes softMistBreathe {
-            0% {
-                filter: blur(4px);
-                opacity: 0.35;
-            }
-            100% {
-                filter: blur(2px);
-                opacity: 0.75;
-            }
-        }
-        @keyframes skeletonShimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        .ai-overview-loading {
+            padding: 4px 0;
+            font-size: 12.5px;
+            color: #78716C;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-style: italic;
         }
 
         /* AI Overview Content CANH TRÁI TUYỆT ĐỐI */
         .ai-overview-content {
-            font-size: 12.5px;
-            line-height: 1.5;
+            font-size: 13px;
+            line-height: 1.55;
             color: #292524;
-            max-height: 140px;
+            max-height: 160px;
             overflow-y: auto;
-            padding-right: 20px;
             text-align: left !important;
             direction: ltr !important;
             scrollbar-width: thin;
@@ -1837,20 +1836,22 @@
 
                     <!-- OMNIBOX DROPDOWN (FLOATING CARD GỢI Ý & TRỢ LÝ AI TỰ ĐỘNG) -->
                     <div class="google-omnibox-dropdown" id="googleOmniboxDropdown" style="display:none;">
-                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI (TỐI GIẢN TỐI ĐA - ZERO CHỮ THỪA) -->
+                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI (CÂN XỨNG & HIỆU ỨNG GEN CHỮ) -->
                         <div class="ai-overview-card" id="aiOverviewCard" style="display:none;">
-                            <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
-
-                            <!-- HIỆU ỨNG SƯƠNG MỜ ĐƠN GIẢN TINH TẾ (SOFT BLUR MIST) -->
-                            <div class="ai-overview-loading" id="aiOverviewLoading" style="display:none;">
-                                <div class="ai-soft-blur-wrap">
-                                    <div class="ai-blur-skeleton sk-1"></div>
-                                    <div class="ai-blur-skeleton sk-2"></div>
-                                    <div class="ai-blur-skeleton sk-3"></div>
+                            <div class="ai-card-top-row">
+                                <div class="ai-gen-label-wrap">
+                                    <span class="ai-sparkle-dot">✨</span>
+                                    <span>Trợ lý AI</span>
                                 </div>
+                                <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
                             </div>
 
-                            <!-- Trạng thái Nội dung tổng quan -->
+                            <!-- Trạng thái lúc bắt đầu: Con trỏ AI nhấp nháy êm dịu -->
+                            <div class="ai-overview-loading" id="aiOverviewLoading" style="display:none;">
+                                <span>Đang tổng hợp thông tin</span><span class="ai-typing-cursor">▊</span>
+                            </div>
+
+                            <!-- Trạng thái chữ đang gen ra từng từ -->
                             <div class="ai-overview-content" id="aiOverviewContent"></div>
 
                             <!-- Trạng thái Thẻ sách gợi ý -->
@@ -2393,8 +2394,14 @@
             } catch (e) {}
         }
 
+        let typingInterval = null;
+
         window.closeAiOverview = function(e) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
+            if (typingInterval) {
+                clearInterval(typingInterval);
+                typingInterval = null;
+            }
             if (aiAbortController) {
                 aiAbortController.abort();
                 aiAbortController = null;
@@ -2403,34 +2410,7 @@
             saveLastAiOverview(null);
         };
 
-        window.copyAiReply = function(e) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            if (!aiOverviewContent) return;
-            const text = aiOverviewContent.innerText || aiOverviewContent.textContent || '';
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = e.currentTarget;
-                if (btn) {
-                    const originalHtml = btn.innerHTML;
-                    btn.innerHTML = '<i class="fa-solid fa-check" style="color:#10B981;"></i> Đã sao chép';
-                    setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
-                }
-            });
-        };
-
-        function renderAiOverview(replyText, books) {
-            if (!aiOverviewCard || !aiOverviewContent) return;
-            aiOverviewCard.style.display = 'block';
-            if (aiOverviewLoading) aiOverviewLoading.style.display = 'none';
-
-            let html = replyText
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                .replace(/(^|\n)\s*[\*\-\•]\s+/g, '$1&bull; ')
-                .replace(/\n\n/g, '<br><br>')
-                .replace(/\n/g, '<br>');
-
-            aiOverviewContent.innerHTML = html;
-
+        function renderAiBooks(books) {
             if (books && books.length > 0 && aiOverviewBooks) {
                 let booksHtml = '';
                 books.forEach(b => {
@@ -2453,6 +2433,48 @@
             }
         }
 
+        function streamAiTypewriter(replyText, books) {
+            if (!aiOverviewCard || !aiOverviewContent) return;
+            aiOverviewCard.style.display = 'block';
+            if (aiOverviewLoading) aiOverviewLoading.style.display = 'none';
+
+            if (typingInterval) {
+                clearInterval(typingInterval);
+                typingInterval = null;
+            }
+
+            if (aiOverviewBooks) {
+                aiOverviewBooks.innerHTML = '';
+                aiOverviewBooks.style.display = 'none';
+            }
+
+            let formattedHtml = (replyText || '')
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/(^|\n)\s*[\*\-\•]\s+/g, '$1&bull; ')
+                .replace(/\n\n/g, '<br><br>')
+                .replace(/\n/g, '<br>');
+
+            const tokens = formattedHtml.split(/(\s+|<br>|<br><br>|<strong>.*?<\/strong>)/).filter(Boolean);
+            let currentIdx = 0;
+            let currentText = '';
+
+            aiOverviewContent.innerHTML = '<span class="ai-typing-cursor">▊</span>';
+
+            typingInterval = setInterval(() => {
+                if (currentIdx < tokens.length) {
+                    currentText += tokens[currentIdx];
+                    aiOverviewContent.innerHTML = currentText + '<span class="ai-typing-cursor">▊</span>';
+                    currentIdx++;
+                } else {
+                    clearInterval(typingInterval);
+                    typingInterval = null;
+                    aiOverviewContent.innerHTML = currentText;
+                    renderAiBooks(books);
+                }
+            }, 18);
+        }
+
         function fetchAiOverview(queryText) {
             if (!queryText) return;
 
@@ -2465,9 +2487,7 @@
             // 1. Kiểm tra Cache tức thì (0ms latency, mượt mà như bơ)
             if (aiCache.has(qKey)) {
                 const cached = aiCache.get(qKey);
-                renderAiOverview(cached.reply, cached.books);
-                const footerBar = document.getElementById('aiOverviewFooterBar');
-                if (footerBar) footerBar.style.display = 'block';
+                streamAiTypewriter(cached.reply, cached.books);
                 saveLastAiOverview({ query: qClean, reply: cached.reply, books: cached.books, time: Date.now() });
                 return;
             }
@@ -2505,8 +2525,7 @@
                 const books = data.suggestedBooks || [];
                 // Lưu cache
                 aiCache.set(qKey, { reply, books });
-                renderAiOverview(reply, books);
-                if (footerBar) footerBar.style.display = 'block';
+                streamAiTypewriter(reply, books);
                 saveLastAiOverview({ query: qClean, reply: reply, books: books, time: Date.now() });
             })
             .catch(err => {
@@ -2515,7 +2534,6 @@
                 if (aiOverviewContent) {
                     aiOverviewContent.innerHTML = 'Dạ hệ thống AI đang cập nhật dữ liệu từ 5 chi nhánh, bạn có thể nhấn <strong>Tìm kiếm</strong> để xem danh sách sách trực tiếp nhé!';
                 }
-                if (footerBar) footerBar.style.display = 'block';
             })
             .finally(() => {
                 aiAbortController = null;
@@ -2550,7 +2568,7 @@
                     const qKey = val.toLowerCase();
                     if (aiCache.has(qKey)) {
                         const cached = aiCache.get(qKey);
-                        renderAiOverview(cached.reply, cached.books);
+                        streamAiTypewriter(cached.reply, cached.books);
                     } else {
                         fetchAiOverview(val);
                     }
@@ -2579,9 +2597,7 @@
                     // Nếu đã có sẵn trong cache -> render tức thì 0ms, siêu mượt
                     if (aiCache.has(qKey)) {
                         const cached = aiCache.get(qKey);
-                        renderAiOverview(cached.reply, cached.books);
-                        const footerBar = document.getElementById('aiOverviewFooterBar');
-                        if (footerBar) footerBar.style.display = 'block';
+                        streamAiTypewriter(cached.reply, cached.books);
                     } else {
                         // Hiển thị khung chờ êm ái và tự động gọi sau 650ms khi ngừng gõ
                         if (aiOverviewCard) aiOverviewCard.style.display = 'block';
