@@ -1368,20 +1368,103 @@
                         <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm sản phẩm, tên sách cũ, tác giả, giáo trình..." class="chotot-native-input" autocomplete="off">
                     </div>
 
-                    <!-- 2. Right Actions: Location Dropdown + Search Button -->
+                    <!-- 2. Right Actions: Multi-Criteria Filter Trigger + Search Submit Button -->
                     <div class="chotot-form-actions-group">
-                        <!-- Location Selector Button (Khớp ảnh Chợ Tốt) -->
-                        <div class="chotot-location-button-wrap">
-                            <svg class="location-pin-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M20.0005 10.0439C20.0004 11.4492 19.4826 12.8887 18.7915 14.2021C18.0937 15.5284 17.1749 16.8075 16.2759 17.9131C15.3742 19.0219 14.4755 19.9768 13.8032 20.6533C13.4666 20.992 13.1851 21.2623 12.9868 21.4492C12.8876 21.5427 12.8088 21.6161 12.7544 21.666L12.0005 22.3418L11.2466 21.666C11.1921 21.6161 11.1134 21.5427 11.0142 21.4492C10.8158 21.2623 10.5344 20.992 10.1978 20.6533C9.52545 19.9768 8.62674 19.0219 7.7251 17.9131C6.82612 16.8075 5.90731 15.5284 5.20947 14.2021C4.51839 12.8887 4.0006 11.4492 4.00049 10.0439C4.00049 5.6075 7.57638 2 12.0005 2C16.4246 2 20.0005 5.6075 20.0005 10.0439ZM12.0005 13C13.7936 13 15.2368 11.5391 15.2368 9.75C15.2367 7.96099 13.7935 6.5 12.0005 6.5C10.2076 6.50015 8.76521 7.96108 8.76514 9.75C8.76514 11.539 10.2075 12.9998 12.0005 13Z" fill="#EE4D2D"></path>
-                            </svg>
-                            <select name="store" class="chotot-location-select" onchange="document.getElementById('homeSearchForm').submit()">
-                                <option value="">Toàn TP.HCM (5 Shop)</option>
-                                <option th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStore == st.id}">Thủ Đức (HCMUTE)</option>
-                            </select>
-                            <svg class="chevron-down-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none">
-                                <path d="M12.4495 14.8316C12.2013 15.0561 11.7987 15.0561 11.5505 14.8316L6.18623 9.98133C6.0044 9.81692 5.95001 9.56967 6.04841 9.35486C6.14682 9.14006 6.37864 9 6.63578 9L17.3642 9C17.6214 9 17.8532 9.14006 17.9516 9.35487C18.05 9.56967 17.9956 9.81693 17.8138 9.98133L12.4495 14.8316Z" fill="currentColor"></path>
-                            </svg>
+                        <!-- Multi-Criteria Filter Trigger Button (Sắp xếp, Thể loại, Giá, Chi nhánh) -->
+                        <div class="chotot-filter-trigger-wrap">
+                            <button type="button" class="chotot-location-button-wrap" id="homeFilterBtn" onclick="toggleHeroFilterPopover(event)">
+                                <i class="fa-solid fa-sliders" style="color:#EE4D2D; font-size:14px; margin-right:2px;"></i>
+                                <span id="homeFilterBtnLabel" style="font-size:14px; font-weight:700; color:#1C1917;">Bộ lọc</span>
+                                <svg class="chevron-down-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none">
+                                    <path d="M12.4495 14.8316C12.2013 15.0561 11.7987 15.0561 11.5505 14.8316L6.18623 9.98133C6.0044 9.81692 5.95001 9.56967 6.04841 9.35486C6.14682 9.14006 6.37864 9 6.63578 9L17.3642 9C17.6214 9 17.8532 9.14006 17.9516 9.35487C18.05 9.56967 17.9956 9.81693 17.8138 9.98133L12.4495 14.8316Z" fill="currentColor"></path>
+                                </svg>
+                            </button>
+
+                            <!-- BẢNG BỘ LỌC CHUYÊN SÂU NẰM TRONG NÚT TÌM KIẾM (SẮP XẾP, THỂ LOẠI, KHOẢNG GIÁ, CHI NHÁNH) -->
+                            <div class="chotot-filter-modal-popover" id="heroFilterPopover" style="display:none;">
+                                <div class="filter-popover-header">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <i class="fa-solid fa-sliders text-danger" style="color:#EE4D2D;"></i>
+                                        <span style="font-weight:800; font-size:14px; color:#1C1917;">Bộ Lọc Tìm Kiếm</span>
+                                    </div>
+                                    <button type="button" class="btn-close-filter-popover" onclick="closeHeroFilterPopover(event)">&times;</button>
+                                </div>
+
+                                <div class="filter-popover-body">
+                                    <!-- 1. TIÊU CHÍ SẮP XẾP (Phổ biến, Mới nhất, Bán chạy, Giá) -->
+                                    <div class="filter-section-row">
+                                        <label class="filter-field-label">Sắp xếp theo</label>
+                                        <div class="sort-chips-grid">
+                                            <label class="sort-chip">
+                                                <input type="radio" name="sort" value="popular" th:checked="${selectedSort == null or selectedSort == 'popular'}">
+                                                <span><i class="fa-solid fa-fire me-1" style="color:#EE4D2D;"></i>Phổ biến</span>
+                                            </label>
+                                            <label class="sort-chip">
+                                                <input type="radio" name="sort" value="latest" th:checked="${selectedSort == 'latest'}">
+                                                <span><i class="fa-solid fa-sparkles me-1" style="color:#F59E0B;"></i>Mới nhất</span>
+                                            </label>
+                                            <label class="sort-chip">
+                                                <input type="radio" name="sort" value="sales" th:checked="${selectedSort == 'sales'}">
+                                                <span><i class="fa-solid fa-chart-line me-1" style="color:#10B981;"></i>Bán chạy</span>
+                                            </label>
+                                            <label class="sort-chip">
+                                                <input type="radio" name="sort" value="price-asc" th:checked="${selectedSort == 'price-asc'}">
+                                                <span><i class="fa-solid fa-arrow-up-1-9 me-1" style="color:#6366F1;"></i>Giá: Thấp → Cao</span>
+                                            </label>
+                                            <label class="sort-chip">
+                                                <input type="radio" name="sort" value="price-desc" th:checked="${selectedSort == 'price-desc'}">
+                                                <span><i class="fa-solid fa-arrow-down-9-1 me-1" style="color:#EC4899;"></i>Giá: Cao → Thấp</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- 2. DANH MỤC THỂ LOẠI -->
+                                    <div class="filter-section-row">
+                                        <label class="filter-field-label">Danh mục thể loại</label>
+                                        <div class="custom-select-wrap">
+                                            <select name="cat" id="heroFilterCatSelect" class="custom-filter-select">
+                                                <option value="">Tất cả thể loại</option>
+                                                <option th:if="${categories != null}" th:each="c : ${categories}" th:value="${c.id}" th:text="${c.categoryName}" th:selected="${selectedCat != null and selectedCat == c.id}">Văn Học</option>
+                                            </select>
+                                            <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- 3. KHOẢNG GIÁ (₫) -->
+                                    <div class="filter-section-row">
+                                        <label class="filter-field-label">Khoảng giá (₫)</label>
+                                        <div class="price-preset-chips" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+                                            <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('', '50000')">Dưới 50k</button>
+                                            <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('50000', '100000')">50k - 100k</button>
+                                            <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('100000', '200000')">100k - 200k</button>
+                                            <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('200000', '')">Trên 200k</button>
+                                        </div>
+                                        <div class="price-range-inputs">
+                                            <input type="number" name="minPrice" id="heroMinPrice" th:value="${selectedMinPrice}" placeholder="Từ ₫" class="price-input-box" min="0" step="1000">
+                                            <span class="price-sep" style="color:#78716C; font-weight:700;">&mdash;</span>
+                                            <input type="number" name="maxPrice" id="heroMaxPrice" th:value="${selectedMaxPrice}" placeholder="Đến ₫" class="price-input-box" min="0" step="1000">
+                                        </div>
+                                    </div>
+
+                                    <!-- 4. CHI NHÁNH CỬA HÀNG -->
+                                    <div class="filter-section-row">
+                                        <label class="filter-field-label">Chi nhánh TP.HCM</label>
+                                        <div class="custom-select-wrap">
+                                            <select name="store" id="heroFilterStoreSelect" class="custom-filter-select">
+                                                <option value="">Toàn TP.HCM (5 Shop)</option>
+                                                <option th:if="${stores != null}" th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStore != null and selectedStore == st.id}">Thủ Đức</option>
+                                            </select>
+                                            <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- FOOTER: XOÁ LỌC & ÁP DỤNG -->
+                                <div class="filter-popover-footer">
+                                    <button type="button" class="btn-popover-reset" onclick="resetHeroFilterPopover(event)">Xoá lọc</button>
+                                    <button type="button" class="btn-popover-apply" onclick="applyHeroFilterPopover(event)">Áp dụng</button>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Search Submit Button -->
@@ -1719,6 +1802,62 @@
                 document.getElementById('flashSeconds').innerText = s;
             }
         }, 1000);
+
+        // Điều khiển bảng Bộ Lọc Tìm Kiếm (Hero Filter Popover)
+        function toggleHeroFilterPopover(event) {
+            if (event) event.stopPropagation();
+            const pop = document.getElementById('heroFilterPopover');
+            if (!pop) return;
+            pop.style.display = (pop.style.display === 'none' || !pop.style.display) ? 'block' : 'none';
+        }
+
+        function closeHeroFilterPopover(event) {
+            if (event) event.stopPropagation();
+            const pop = document.getElementById('heroFilterPopover');
+            if (pop) pop.style.display = 'none';
+        }
+
+        function resetHeroFilterPopover(event) {
+            if (event) event.stopPropagation();
+            // Đặt lại sắp xếp về popular
+            const sortInp = document.querySelector('#heroFilterPopover input[name="sort"][value="popular"]');
+            if (sortInp) sortInp.checked = true;
+            // Đặt lại thể loại
+            const catSelect = document.getElementById('heroFilterCatSelect');
+            if (catSelect) catSelect.value = '';
+            // Đặt lại khoảng giá
+            const minPrice = document.getElementById('heroMinPrice');
+            const maxPrice = document.getElementById('heroMaxPrice');
+            if (minPrice) minPrice.value = '';
+            if (maxPrice) maxPrice.value = '';
+            // Đặt lại chi nhánh
+            const storeSelect = document.getElementById('heroFilterStoreSelect');
+            if (storeSelect) storeSelect.value = '';
+        }
+
+        function applyHeroFilterPopover(event) {
+            if (event) event.stopPropagation();
+            const form = document.getElementById('homeSearchForm') || document.getElementById('smartSearchForm');
+            if (form) form.submit();
+        }
+
+        function setHeroPriceRange(min, max) {
+            const minInput = document.getElementById('heroMinPrice');
+            const maxInput = document.getElementById('heroMaxPrice');
+            if (minInput) minInput.value = min;
+            if (maxInput) maxInput.value = max;
+        }
+
+        // Đóng popover khi nhấn bên ngoài
+        document.addEventListener('click', function(e) {
+            const pop = document.getElementById('heroFilterPopover');
+            const btn = document.getElementById('homeFilterBtn') || document.getElementById('heroFilterBtn');
+            if (pop && pop.style.display === 'block') {
+                if (!pop.contains(e.target) && (!btn || !btn.contains(e.target))) {
+                    pop.style.display = 'none';
+                }
+            }
+        });
     </script>
 
     <script src="/js/i18n.js"></script>
