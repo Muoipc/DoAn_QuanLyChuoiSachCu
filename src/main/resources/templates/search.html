@@ -726,22 +726,17 @@
             justify-content: space-between;
             margin-bottom: 6px;
         }
-        .ai-gen-label-wrap {
+        .ai-sparkle-pill {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            padding: 2px 7px;
-            border-radius: 9999px;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
             background: #FFF7ED;
             border: 1px solid rgba(217, 119, 6, 0.2);
-            color: #9A3412;
-            font-size: 10.5px;
-            font-weight: 600;
-            letter-spacing: 0.1px;
-        }
-        .ai-sparkle-dot {
             color: #D97706;
-            font-size: 10.5px;
+            font-size: 11px;
         }
         .btn-clear-ai-overview {
             width: 18px;
@@ -1206,10 +1201,7 @@
                         <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI (CÂN XỨNG & HIỆU ỨNG GEN CHỮ) -->
                         <div class="ai-overview-card" id="aiOverviewCard" style="display:none;">
                             <div class="ai-card-top-row">
-                                <div class="ai-gen-label-wrap">
-                                    <span class="ai-sparkle-dot">✨</span>
-                                    <span>Trợ lý AI</span>
-                                </div>
+                                <span class="ai-sparkle-pill">✨</span>
                                 <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
                             </div>
 
