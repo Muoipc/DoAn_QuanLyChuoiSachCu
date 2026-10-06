@@ -1505,7 +1505,7 @@
         <!-- 3.5. THÔNG TIN SHOP / CHI NHÁNH CỬA HÀNG (CHUẨN SHOPEE PDP STOREFRONT) -->
         <section class="shopee-shop-card">
             <div class="shop-card-left">
-                <a th:href="@{/search(store=${store != null ? store.id : 1})}" class="shop-avatar-link" style="text-decoration:none;">
+                <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1})}" class="shop-avatar-link" style="text-decoration:none;">
                     <div class="shop-avatar-box">
                         <img th:src="${store != null && store.image != null ? store.image : '/images/brand-book-icon.png'}" 
                              onerror="this.src='/images/brand-book-icon.png'" 
@@ -1515,7 +1515,7 @@
                 </a>
                 <div class="shop-meta-info">
                     <h3 class="shop-name-title">
-                        <a th:href="@{/search(store=${store != null ? store.id : 1})}" 
+                        <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1})}" 
                            th:text="${store != null ? store.storeName : 'Chi Nhánh 1: Thủ Đức (Gần HCMUTE)'}">
                            Chi Nhánh 1: Thủ Đức (Gần HCMUTE)
                         </a>
@@ -1533,7 +1533,7 @@
                                 onclick="chatWithStoreFromBook(this.dataset.store, this.dataset.title)">
                             <i class="fa-solid fa-comments"></i> Chat Ngay
                         </button>
-                        <a th:href="@{/search(store=${store != null ? store.id : 1})}" class="btn-shop-view">
+                        <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1})}" class="btn-shop-view">
                             <i class="fa-solid fa-store"></i> Xem Shop
                         </a>
                     </div>
