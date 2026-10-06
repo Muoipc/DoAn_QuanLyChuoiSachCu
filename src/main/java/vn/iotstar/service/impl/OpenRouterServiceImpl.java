@@ -150,11 +150,11 @@ public class OpenRouterServiceImpl implements IOpenRouterService {
              + catalogContext + "\n\n"
 
              + "### YÊU CẦU TRẢ LỜI:\n"
-             + "1. Xưng 'Em', gọi khách là 'Bạn', văn phong ấm áp, gần gũi, chuẩn văn hóa đọc Sài Gòn.\n"
-             + "2. Ưu tiên gợi ý sách THỰC TẾ có trong danh mục trên kèm giá bán.\n"
-             + "3. Dùng Markdown rõ ràng, ngắn gọn, có bullet points khi liệt kê sách.\n"
-             + "4. Nếu sách không có trong kho, trả lời lịch sự và gợi ý 1-2 cuốn tương tự đang có.\n"
-             + "5. Nhớ ngữ cảnh hội thoại trước — không hỏi lại thông tin khách đã cung cấp.";
+             + "1. Chuẩn phong cách Google AI Overview: Cực kỳ súc tích, trực diện (tối đa 2-3 câu hoặc 2 gạch đầu dòng).\n"
+             + "2. Không chào hỏi hay rào đón dài dòng. Nêu ngay tựa sách phù hợp và lý do ngắn gọn.\n"
+             + "3. Ưu tiên gợi ý sách THỰC TẾ có trong danh mục trên kèm giá bán.\n"
+             + "4. Dùng Markdown rõ ràng (**tên sách in đậm**).\n"
+             + "5. Nhớ ngữ cảnh câu hỏi của khách.";
     }
 
     /**

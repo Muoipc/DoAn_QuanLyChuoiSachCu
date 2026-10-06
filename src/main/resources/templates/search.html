@@ -585,53 +585,6 @@
             z-index: 9999;
         }
 
-        /* Nút AI Mode dạng pill chuẩn Google */
-        .google-ai-mode-btn {
-            height: 34px;
-            padding: 0 13px;
-            border-radius: 9999px;
-            background: #F1F3F4;
-            color: #202124;
-            border: 1px solid #DADCE0;
-            font-size: 13px;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            white-space: nowrap;
-            flex-shrink: 0;
-            font-family: inherit;
-        }
-        .google-ai-mode-btn i {
-            font-size: 12px;
-            color: #5F6368;
-            transition: color 0.15s ease;
-        }
-        .google-ai-mode-btn:hover {
-            background: #E8EAED;
-            border-color: #BDC1C6;
-            color: #174EA6;
-        }
-        .google-ai-mode-btn:hover i {
-            color: #1a73e8;
-        }
-        .google-ai-mode-btn.active {
-            background: #E8F0FE;
-            color: #1967D2;
-            border-color: #1967D2;
-            box-shadow: 0 1px 4px rgba(25, 103, 210, 0.2);
-        }
-        .google-ai-mode-btn.active i {
-            color: #1967D2;
-            animation: sparklePulse 2s infinite ease-in-out;
-        }
-        @keyframes sparklePulse {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50% { transform: scale(1.2); opacity: 1; }
-        }
-
         /* Khi mở dropdown: mép đáy của search bar phẳng ra để nối liền mạch */
         .search-omnibox-wrapper.is-open .chotot-search-form-card {
             border-bottom-left-radius: 0 !important;
@@ -661,30 +614,185 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Danh sách tìm kiếm / lịch sử chuẩn Google (Image_9a9ec6.png) */
-        .omnibox-history-list {
-            padding: 8px 0;
+        /* GOOGLE AI OVERVIEW MINIMALIST CARD */
+        .ai-overview-card {
+            background: #FAF8F5;
+            border-bottom: 1px solid #ECE7DE;
+            padding: 16px 20px;
         }
-        .omnibox-ask-row {
+        .ai-overview-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 11px 20px;
-            cursor: pointer;
-            border-bottom: 1px solid #F3F1EC;
-            background: #FAF8F5;
-            transition: background 0.15s ease;
+            margin-bottom: 10px;
         }
-        .omnibox-ask-row:hover {
-            background: #F3EFE9;
-        }
-        .omnibox-ask-left {
+        .ai-overview-badge {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 13.5px;
+            gap: 8px;
+            font-size: 13px;
             font-weight: 700;
+            color: #1C1917;
+        }
+        .ai-sparkle-icon {
+            flex-shrink: 0;
+            animation: aiPulse 2.5s infinite ease-in-out;
+        }
+        @keyframes aiPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(66, 133, 244, 0.4)); }
+            50% { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(155, 114, 203, 0.8)); }
+        }
+        .ai-overview-sub {
+            font-size: 11px;
+            font-weight: 500;
+            color: #78716C;
+        }
+        .btn-clear-ai-overview {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            color: #A8A29E;
+            padding: 2px 6px;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+        .btn-clear-ai-overview:hover {
+            color: #1C1917;
+            background: #EFEAE2;
+        }
+
+        /* Loading / Shimmer state */
+        .ai-overview-loading {
+            padding: 6px 0 10px 0;
+        }
+        .ai-loading-shimmer {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .shimmer-line {
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #EFEAE2 0%, #FAF8F5 50%, #EFEAE2 100%);
+            background-size: 200% 100%;
+            animation: shimmerSlide 1.5s infinite;
+        }
+        .shimmer-line.line-1 { width: 92%; }
+        .shimmer-line.line-2 { width: 78%; }
+        .shimmer-line.line-3 { width: 62%; }
+        @keyframes shimmerSlide {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .ai-loading-text {
+            font-size: 12.5px;
             color: #8C4A27;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        /* AI Overview Content */
+        .ai-overview-content {
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #292524;
+            max-height: 240px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #D7CCC8 #FAF8F5;
+        }
+        .ai-overview-content strong {
+            color: #8C4A27;
+            font-weight: 700;
+        }
+        .ai-overview-content p, .ai-overview-content ul {
+            margin: 0 0 8px 0;
+        }
+
+        /* AI Overview Book Cards Carousel */
+        .ai-overview-books {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .ai-overview-books::-webkit-scrollbar { display: none; }
+        .ai-book-mini-card {
+            flex: 0 0 135px;
+            background: #fff;
+            border: 1px solid #ECE7DE;
+            border-radius: 10px;
+            overflow: hidden;
+            text-decoration: none;
+            color: #1C1917;
+            transition: all 0.15s;
+        }
+        .ai-book-mini-card:hover {
+            border-color: #8C4A27;
+            box-shadow: 0 2px 8px rgba(140,74,39,0.12);
+            transform: translateY(-2px);
+        }
+        .ai-book-mini-card img {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+        }
+        .ai-book-mini-info {
+            padding: 6px 8px;
+        }
+        .ai-book-mini-info .mini-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .ai-book-mini-info .mini-price {
+            font-size: 12px;
+            font-weight: 800;
+            color: #EE4D2D;
+            margin-top: 3px;
+        }
+
+        /* Recent Queries & History Section */
+        .omnibox-recent-section {
+            padding: 8px 0;
+        }
+        .omnibox-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 20px 4px 20px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #78716C;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-clear-recent-all {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            color: #A8A29E;
+            padding: 0;
+            text-transform: none;
+            transition: color 0.15s;
+        }
+        .btn-clear-recent-all:hover {
+            color: #EE4D2D;
+        }
+        .omnibox-history-list {
+            padding: 4px 0 6px 0;
         }
         .omnibox-history-row {
             display: flex;
@@ -730,165 +838,6 @@
             color: #1967D2;
             font-weight: 600;
         }
-
-        /* VIEW 2: AI CONVERSATION VIEW */
-        .omnibox-chat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 18px;
-            background: linear-gradient(135deg, #FFFDF8 0%, #FFF8EE 100%);
-            border-bottom: 1px solid #F0ECE4;
-        }
-        .omnibox-header-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .omnibox-ai-avatar {
-            width: 30px; height: 30px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #8C4A27, #D97706);
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 13px;
-            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.25);
-        }
-        .omnibox-ai-tag {
-            font-size: 10px; background: #8C4A27; color: #fff;
-            padding: 2px 7px; border-radius: 9999px; font-weight: 700;
-        }
-        .omnibox-header-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-omnibox-icon {
-            background: #FFFFFF; border: 1px solid #E5E0D8; cursor: pointer;
-            font-size: 11.5px; font-weight: 600; color: #57534E; padding: 4px 9px;
-            border-radius: 6px; transition: all 0.15s; display: inline-flex; align-items: center; gap: 4px;
-        }
-        .btn-omnibox-icon:hover { border-color: #8C4A27; color: #8C4A27; background: #FAF8F5; }
-        .btn-omnibox-close {
-            background: none; border: none; cursor: pointer;
-            font-size: 20px; color: #78716C; padding: 2px 6px;
-            border-radius: 6px; transition: all 0.15s; line-height: 1;
-        }
-        .btn-omnibox-close:hover { background: #F5F0EB; color: #1C1917; }
-
-        /* Chat body & message bubbles */
-        .omnibox-chat-body {
-            padding: 16px 18px;
-            max-height: 360px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #8C4A27 #F5F0EB;
-            overscroll-behavior: contain;
-            scroll-behavior: smooth;
-        }
-        .omnibox-chat-body::-webkit-scrollbar {
-            width: 7px;
-            display: block;
-        }
-        .omnibox-chat-body::-webkit-scrollbar-track {
-            background: #F5F0EB;
-            border-radius: 9999px;
-        }
-        .omnibox-chat-body::-webkit-scrollbar-thumb {
-            background: #8C4A27;
-            border-radius: 9999px;
-        }
-        .omnibox-chat-body::-webkit-scrollbar-thumb:hover {
-            background: #6D3416;
-        }
-        .ai-msg-row {
-            display: flex; gap: 8px; margin-bottom: 10px;
-        }
-        .ai-msg-row.user { flex-direction: row-reverse; }
-        .ai-msg-bubble {
-            max-width: 85%;
-            padding: 10px 14px;
-            border-radius: 14px;
-            font-size: 13px;
-            line-height: 1.55;
-            color: #1C1917;
-            word-break: break-word;
-        }
-        .ai-msg-row:not(.user) .ai-msg-bubble {
-            background: #F5F0EB;
-            border-bottom-left-radius: 4px;
-        }
-        .ai-msg-row.user .ai-msg-bubble {
-            background: #8C4A27;
-            color: #fff;
-            border-bottom-right-radius: 4px;
-        }
-        .ai-typing-dots {
-            display: inline-flex; gap: 4px; align-items: center; padding: 10px 14px;
-            background: #F5F0EB; border-radius: 14px; border-bottom-left-radius: 4px;
-        }
-        .ai-typing-dots span {
-            width: 6px; height: 6px; background: #A8A29E; border-radius: 50%;
-            animation: aiDotPulse 1.2s infinite ease-in-out;
-        }
-        .ai-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .ai-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes aiDotPulse {
-            0%, 60%, 100% { transform: scale(0.6); opacity: 0.4; }
-            30% { transform: scale(1); opacity: 1; }
-        }
-
-        /* Suggested books carousel */
-        .ai-suggested-books {
-            display: flex; gap: 10px; margin-top: 8px; overflow-x: auto;
-            padding-bottom: 4px; scrollbar-width: none;
-        }
-        .ai-suggested-books::-webkit-scrollbar { display: none; }
-        .ai-book-mini-card {
-            flex: 0 0 135px;
-            background: #fff; border: 1px solid #ECE7DE; border-radius: 10px;
-            overflow: hidden; text-decoration: none; color: #1C1917;
-            transition: all 0.15s;
-        }
-        .ai-book-mini-card:hover {
-            border-color: #8C4A27; box-shadow: 0 2px 8px rgba(140,74,39,0.12);
-            transform: translateY(-2px);
-        }
-        .ai-book-mini-card img {
-            width: 100%; height: 90px; object-fit: cover;
-        }
-        .ai-book-mini-info {
-            padding: 6px 8px;
-        }
-        .ai-book-mini-info .mini-title {
-            font-size: 11.5px; font-weight: 700; line-height: 1.3;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .ai-book-mini-info .mini-price {
-            font-size: 12px; font-weight: 800; color: #EE4D2D; margin-top: 3px;
-        }
-
-        /* Follow-up input row at bottom */
-        .omnibox-chat-footer {
-            display: flex; align-items: center; gap: 8px;
-            padding: 10px 14px;
-            border-top: 1px solid #F0ECE4;
-            background: #FAFAF8;
-        }
-        .omnibox-chat-input-box {
-            flex: 1; border: 1px solid #E0DCD6; border-radius: 9999px;
-            padding: 8px 14px; font-size: 13px; outline: none;
-            transition: border-color 0.15s; background: #FFFFFF;
-        }
-        .omnibox-chat-input-box:focus { border-color: #8C4A27; }
-        .omnibox-chat-send-btn {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: #8C4A27; border: none; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; transition: all 0.15s;
-        }
-        .omnibox-chat-send-btn:hover { background: #EE4D2D; transform: scale(1.06); }
-        .omnibox-chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* Phân trang dưới đáy */
         .btn-pagination {
@@ -995,10 +944,10 @@
                             <svg class="chotot-lens-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none">
                                 <path d="M18.2798 11.4399C18.2797 7.66239 15.2175 4.6001 11.4399 4.6001C7.66244 4.60018 4.60018 7.66244 4.6001 11.4399C4.6001 15.2175 7.66239 18.2797 11.4399 18.2798C15.2176 18.2798 18.2798 15.2176 18.2798 11.4399ZM20.2798 11.4399C20.2798 13.5439 19.5432 15.4748 18.3159 16.9927L21.0952 19.6812C21.4922 20.1438 21.4786 20.7232 21.1187 21.0952C20.7586 21.4674 20.1798 21.5 19.7817 21.186L16.8901 18.396C15.3881 19.5745 13.4972 20.2798 11.4399 20.2798C6.55782 20.2797 2.6001 16.3221 2.6001 11.4399C2.60018 6.55787 6.55787 2.60018 11.4399 2.6001C16.3221 2.6001 20.2797 6.55782 20.2798 11.4399Z" fill="currentColor"></path>
                             </svg>
-                            <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm sản phẩm, tên sách cũ, tác giả, giáo trình..." class="chotot-native-input" id="searchSearchInput" autocomplete="off">
+                            <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm kiếm sách cũ hoặc hỏi bất kỳ điều gì..." class="chotot-native-input" id="searchSearchInput" autocomplete="off">
                         </div>
 
-                        <!-- 2. Right Actions: Filter Button + Google AI Mode Button + Search Button -->
+                        <!-- 2. Right Actions: Filter Button + Search Button -->
                         <div class="chotot-form-actions-group">
                             <!-- Multi-Criteria Filter Trigger Button (Sắp xếp, Thể loại, Giá, Chi nhánh) -->
                             <div class="chotot-filter-trigger-wrap">
@@ -1097,12 +1046,6 @@
                                 </div>
                             </div>
 
-                            <!-- Google AI Mode Button (Khớp 100% Image_9a9ec6.png) -->
-                            <button type="button" class="google-ai-mode-btn" id="searchAiModeBtn" onclick="toggleGoogleAiMode(event)" title="Chế độ AI - Hỏi đáp & Tư vấn sách">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                <span>AI Mode</span>
-                            </button>
-
                             <!-- Search Submit Button -->
                             <button type="submit" class="chotot-submit-button">
                                 <span>Tìm kiếm</span>
@@ -1112,110 +1055,53 @@
 
                     <!-- GOOGLE OMNIBOX DROPDOWN (NỐI LIỀN DƯỚI SEARCH BAR) -->
                     <div class="google-omnibox-dropdown" id="googleOmniboxDropdown" style="display:none;">
-                        <!-- VIEW 1: SEARCH SUGGESTIONS & RECENT QUERIES (KHỚP 100% ẢNH IMAGE_9A9EC6.PNG) -->
-                        <div class="omnibox-view-suggestions" id="omniboxSuggestionsView">
-                            <div class="omnibox-history-list">
-                                <div class="omnibox-ask-row" onclick="startAiFromOmniboxPrompt()">
-                                    <div class="omnibox-ask-left">
-                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                        <span>+ Hỏi Trợ lý AI về bất kỳ cuốn sách nào...</span>
-                                    </div>
-                                    <span class="omnibox-mode-label ai-tag" style="background:#E8F0FE; padding:2px 8px; border-radius:9999px;">AI Mode</span>
+                        <!-- KHỐI 1: TỔNG QUAN AI (GOOGLE AI OVERVIEW) -->
+                        <div class="ai-overview-card" id="aiOverviewCard" style="display:none;">
+                            <div class="ai-overview-header">
+                                <div class="ai-overview-badge">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" class="ai-sparkle-icon">
+                                        <path d="M12 2L14.2 9.8L22 12L14.2 14.2L12 22L9.8 14.2L2 12L9.8 9.8L12 2Z" fill="url(#aiGrad)"/>
+                                        <defs>
+                                            <linearGradient id="aiGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#4285F4"/>
+                                                <stop offset="0.5" stop-color="#9B72CB"/>
+                                                <stop offset="1" stop-color="#D96570"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <span>AI Overview</span>
+                                    <span class="ai-overview-sub">&bull; Chuỗi Sách Cũ TP.HCM</span>
                                 </div>
-                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Sách chữa lành tâm hồn, giảm áp lực', true)">
-                                    <div class="omnibox-row-left">
-                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
-                                        <span class="omnibox-query-text">Sách chữa lành tâm hồn, giảm áp lực</span>
-                                    </div>
-                                    <span class="omnibox-mode-label ai-tag">- AI Mode</span>
+                                <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng tổng quan">&times;</button>
+                            </div>
+
+                            <!-- Trạng thái Loading / Shimmer -->
+                            <div class="ai-overview-loading" id="aiOverviewLoading" style="display:none;">
+                                <div class="ai-loading-shimmer">
+                                    <div class="shimmer-line line-1"></div>
+                                    <div class="shimmer-line line-2"></div>
+                                    <div class="shimmer-line line-3"></div>
                                 </div>
-                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Giáo trình CNTT & Lập trình Web HCMUTE', true)">
-                                    <div class="omnibox-row-left">
-                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
-                                        <span class="omnibox-query-text">Giáo trình CNTT & Lập trình Web HCMUTE</span>
-                                    </div>
-                                    <span class="omnibox-mode-label ai-tag">- AI Mode</span>
-                                </div>
-                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Kinh tế, khởi nghiệp dưới 70k', true)">
-                                    <div class="omnibox-row-left">
-                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
-                                        <span class="omnibox-query-text">Kinh tế, khởi nghiệp dưới 70k</span>
-                                    </div>
-                                    <span class="omnibox-mode-label ai-tag">- AI Mode</span>
-                                </div>
-                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Yêu Những Điều Không Hoàn Hảo', false)">
-                                    <div class="omnibox-row-left">
-                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
-                                        <span class="omnibox-query-text">Yêu Những Điều Không Hoàn Hảo</span>
-                                    </div>
-                                    <span class="omnibox-mode-label">- Sách Cũ</span>
-                                </div>
-                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Kiểm tra tồn kho 5 chi nhánh TP.HCM', true)">
-                                    <div class="omnibox-row-left">
-                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
-                                        <span class="omnibox-query-text">Kiểm tra tồn kho 5 chi nhánh TP.HCM</span>
-                                    </div>
-                                    <span class="omnibox-mode-label ai-tag">- AI Mode</span>
-                                </div>
-                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Đắc Nhân Tâm', false)">
-                                    <div class="omnibox-row-left">
-                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
-                                        <span class="omnibox-query-text">Đắc Nhân Tâm</span>
-                                    </div>
-                                    <span class="omnibox-mode-label">- Sách Cũ</span>
-                                </div>
-                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Nguyễn Nhật Ánh', false)">
-                                    <div class="omnibox-row-left">
-                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
-                                        <span class="omnibox-query-text">Nguyễn Nhật Ánh</span>
-                                    </div>
-                                    <span class="omnibox-mode-label">- Sách Cũ</span>
-                                </div>
-                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Clean Code (Mã Sạch)', false)">
-                                    <div class="omnibox-row-left">
-                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
-                                        <span class="omnibox-query-text">Clean Code (Mã Sạch)</span>
-                                    </div>
-                                    <span class="omnibox-mode-label">- Sách Cũ</span>
+                                <div class="ai-loading-text">
+                                    <i class="fa-solid fa-spinner fa-spin me-2" style="color:#8C4A27;"></i>Đang phân tích và kiểm tra tồn kho 5 chi nhánh...
                                 </div>
                             </div>
+
+                            <!-- Trạng thái Nội dung tổng quan -->
+                            <div class="ai-overview-content" id="aiOverviewContent"></div>
+
+                            <!-- Trạng thái Thẻ sách gợi ý -->
+                            <div class="ai-overview-books" id="aiOverviewBooks" style="display:none;"></div>
                         </div>
 
-                        <!-- VIEW 2: AI CONVERSATION VIEW (KHI ĐANG CHAT HOẶC CHỌN AI MODE) -->
-                        <div class="omnibox-view-chat" id="omniboxChatView" style="display:none;">
-                            <div class="omnibox-chat-header">
-                                <div class="omnibox-header-title-wrap">
-                                    <div class="omnibox-ai-avatar"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                                    <div>
-                                        <div style="display:flex; align-items:center; gap:6px;">
-                                            <span style="font-size:13px; font-weight:800; color:#1C1917;">Trợ Lý AI Sách Cũ</span>
-                                            <span class="omnibox-ai-tag">AI Mode</span>
-                                        </div>
-                                        <div style="font-size:10.5px; color:#78716C;">Online &bull; Tư vấn &amp; Tồn kho 5 chi nhánh TP.HCM</div>
-                                    </div>
-                                </div>
-                                <div class="omnibox-header-actions">
-                                    <button type="button" class="btn-omnibox-icon" onclick="switchToSuggestionsView()" title="Quay lại danh sách tìm kiếm">
-                                        <i class="fa-regular fa-clock"></i> <span>Gợi ý</span>
-                                    </button>
-                                    <button type="button" class="btn-omnibox-icon" onclick="clearOmniboxChat()" title="Xóa đoạn chat">
-                                        <i class="fa-regular fa-trash-can"></i>
-                                    </button>
-                                    <button type="button" class="btn-omnibox-close" onclick="closeGoogleOmnibox()">&times;</button>
-                                </div>
+                        <!-- KHỐI 2: TÌM KIẾM GẦN ĐÂY & GỢI Ý (RECENT SEARCHES) -->
+                        <div class="omnibox-recent-section" id="omniboxRecentSection">
+                            <div class="omnibox-section-title">
+                                <span>Tìm kiếm gần đây &amp; Gợi ý</span>
+                                <button type="button" class="btn-clear-recent-all" onclick="clearAllRecentQueries(event)">Xóa lịch sử</button>
                             </div>
-
-                            <!-- Chat messages body -->
-                            <div class="omnibox-chat-body" id="omniboxChatBody">
-                                <!-- Messages render here -->
-                            </div>
-
-                            <!-- Bottom follow-up input -->
-                            <div class="omnibox-chat-footer">
-                                <input type="text" id="omniboxChatInput" class="omnibox-chat-input-box" placeholder="Hỏi thêm về nội dung, chi nhánh, giá..." autocomplete="off">
-                                <button type="button" class="omnibox-chat-send-btn" id="omniboxSendBtn" onclick="sendOmniboxMsg()" title="Gửi câu hỏi">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                </button>
+                            <div class="omnibox-history-list" id="omniboxHistoryList">
+                                <!-- Render động bằng JS từ localStorage -->
                             </div>
                         </div>
                     </div>
@@ -1400,21 +1286,20 @@
     <script src="/js/cart-popover.js"></script>
 
     <script>
-    // ================= GOOGLE OMNIBOX AI MODE & PERSISTENT HISTORY (SEARCH) (KHỚP 100% IMAGE_9A9EC6.PNG) =================
+    // ================= GOOGLE AI OVERVIEW OMNIBOX (SEARCH) (TỐI GIẢN & TỰ ĐỘNG) =================
     (function() {
         const wrapper = document.getElementById('searchOmniboxWrapper');
         const dropdown = document.getElementById('googleOmniboxDropdown');
         const searchInput = document.getElementById('searchSearchInput');
-        const aiModeBtn = document.getElementById('searchAiModeBtn');
-        const suggestionsView = document.getElementById('omniboxSuggestionsView');
-        const chatView = document.getElementById('omniboxChatView');
-        const chatBody = document.getElementById('omniboxChatBody');
-        const chatInput = document.getElementById('omniboxChatInput');
-        const sendBtn = document.getElementById('omniboxSendBtn');
+        const searchForm = document.getElementById('smartSearchForm');
+        const aiOverviewCard = document.getElementById('aiOverviewCard');
+        const aiOverviewLoading = document.getElementById('aiOverviewLoading');
+        const aiOverviewContent = document.getElementById('aiOverviewContent');
+        const aiOverviewBooks = document.getElementById('aiOverviewBooks');
+        const historyListContainer = document.getElementById('omniboxHistoryList');
 
-        const STORAGE_CHAT_KEY = 'CHOSACHCU_AI_CHAT_HISTORY_V1';
-        const STORAGE_CONTEXT_KEY = 'CHOSACHCU_AI_CONTEXT_V1';
-        const STORAGE_RECENT_KEY = 'CHOSACHCU_SEARCH_RECENT_V1';
+        const STORAGE_RECENT_KEY = 'CHOSACHCU_SEARCH_RECENT_V2';
+        const STORAGE_LAST_AI_KEY = 'CHOSACHCU_LAST_AI_OVERVIEW_V2';
 
         const DEFAULT_QUERIES = [
             { query: 'Sách chữa lành tâm hồn, giảm áp lực', isAi: true },
@@ -1427,12 +1312,25 @@
             { query: 'Clean Code (Mã Sạch)', isAi: false }
         ];
 
-        let aiBusy = false;
-        let isAiMode = false;
-        let chatMessages = [];
-        let aiContextHistory = [];
+        let debounceTimer = null;
+        let isFetchingAi = false;
 
-        // 1. QUẢN LÝ LỊCH SỬ TÌM KIẾM (PERSISTENT RECENT QUERIES)
+        // 1. Nhận diện truy vấn mang tính đàm thoại / câu hỏi tự nhiên
+        function isQuestionQuery(text) {
+            if (!text) return false;
+            const t = text.trim().toLowerCase();
+            const questionKeywords = [
+                'gợi ý', 'tư vấn', 'tìm sách', 'sách gì', 'cuốn nào', 'ở đâu',
+                'bao nhiêu', 'chi nhánh', 'còn không', 'hcmute', 'giảm giá',
+                'chữa lành', 'kinh tế', 'cho mình', 'có nên', 'ai ', 'học lập trình',
+                'thể loại', 'review', 'nói về', 'đọc gì', 'mới nhất', 'phù hợp'
+            ];
+            const words = t.split(/\s+/).filter(Boolean);
+            const hasKeyword = questionKeywords.some(k => t.includes(k));
+            return (hasKeyword && words.length >= 2) || (words.length >= 3 && (t.includes('?') || t.startsWith('tìm ') || t.startsWith('sách ')));
+        }
+
+        // 2. Quản lý lịch sử tìm kiếm gần đây
         function loadRecentQueries() {
             try {
                 const raw = localStorage.getItem(STORAGE_RECENT_KEY);
@@ -1456,25 +1354,20 @@
         }
 
         function renderRecentQueries() {
-            const listContainer = document.querySelector('.omnibox-history-list');
-            if (!listContainer) return;
-            const queries = loadRecentQueries();
-            let html = `
-                <div class="omnibox-ask-row" onclick="startAiFromOmniboxPrompt()">
-                    <div class="omnibox-ask-left">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>+ Hỏi Trợ lý AI về bất kỳ cuốn sách nào...</span>
-                    </div>
-                    <span class="omnibox-mode-label ai-tag" style="background:#E8F0FE; padding:2px 8px; border-radius:9999px;">AI Mode</span>
-                </div>
-            `;
+            if (!historyListContainer) return;
+            let queries = loadRecentQueries();
+            const isOverviewVisible = aiOverviewCard && aiOverviewCard.style.display !== 'none';
+            if (isOverviewVisible && queries.length > 4) {
+                queries = queries.slice(0, 4);
+            }
+            let html = '';
             queries.forEach(item => {
                 const isAi = item.isAi;
                 const safeQuery = item.query.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 const tagClass = isAi ? 'omnibox-mode-label ai-tag' : 'omnibox-mode-label';
-                const tagText = isAi ? '- AI Mode' : '- Sách Cũ';
+                const tagText = isAi ? '✨ AI' : 'Sách Cũ';
                 html += `
-                    <div class="omnibox-history-row" onclick="selectOmniboxQuery('${safeQuery}', ${isAi})">
+                    <div class="omnibox-history-row" onclick="handleSelectQuery('${safeQuery}', ${isAi})">
                         <div class="omnibox-row-left">
                             <i class="fa-regular fa-clock omnibox-clock-icon"></i>
                             <span class="omnibox-query-text">${escapeHtml(item.query)}</span>
@@ -1483,282 +1376,217 @@
                     </div>
                 `;
             });
-            listContainer.innerHTML = html;
+            historyListContainer.innerHTML = html;
         }
 
-        // 2. QUẢN LÝ LỊCH SỬ CHAT AI (PERSISTENT CONVERSATION HISTORY)
-        function loadStoredChat() {
+        window.clearAllRecentQueries = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
             try {
-                const rawChat = localStorage.getItem(STORAGE_CHAT_KEY);
-                const rawContext = localStorage.getItem(STORAGE_CONTEXT_KEY);
-                chatMessages = rawChat ? JSON.parse(rawChat) : [];
-                aiContextHistory = rawContext ? JSON.parse(rawContext) : [];
+                localStorage.setItem(STORAGE_RECENT_KEY, JSON.stringify([]));
+            } catch (err) {}
+            renderRecentQueries();
+        };
+
+        // 3. Quản lý Google AI Overview
+        function loadLastAiOverview() {
+            try {
+                const raw = localStorage.getItem(STORAGE_LAST_AI_KEY);
+                return raw ? JSON.parse(raw) : null;
             } catch (e) {
-                chatMessages = [];
-                aiContextHistory = [];
+                return null;
             }
         }
 
-        function saveStoredChat() {
+        function saveLastAiOverview(overview) {
             try {
-                localStorage.setItem(STORAGE_CHAT_KEY, JSON.stringify(chatMessages));
-                localStorage.setItem(STORAGE_CONTEXT_KEY, JSON.stringify(aiContextHistory));
+                if (overview) {
+                    localStorage.setItem(STORAGE_LAST_AI_KEY, JSON.stringify(overview));
+                } else {
+                    localStorage.removeItem(STORAGE_LAST_AI_KEY);
+                }
             } catch (e) {}
         }
 
-        function renderStoredChat() {
-            if (!chatBody) return;
-            chatBody.innerHTML = '';
-            if (chatMessages.length === 0) {
-                appendMsgToDOM('ai', 'Dạ chào bạn! Em là **Trợ lý AI của Chuỗi Sách Cũ TP.HCM**. Bạn có thể hỏi bất kỳ cuốn sách nào, kiểm tra tồn kho tại 5 chi nhánh hoặc nhờ gợi ý sách nhé!', []);
-                return;
+        window.closeAiOverview = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+            saveLastAiOverview(null);
+        };
+
+        function renderAiOverview(replyText, books) {
+            if (!aiOverviewCard || !aiOverviewContent) return;
+            aiOverviewCard.style.display = 'block';
+            if (aiOverviewLoading) aiOverviewLoading.style.display = 'none';
+
+            let html = replyText
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '<br><br>')
+                .replace(/\n•/g, '<br>&bull;')
+                .replace(/\n/g, '<br>');
+
+            aiOverviewContent.innerHTML = html;
+
+            if (books && books.length > 0 && aiOverviewBooks) {
+                let booksHtml = '';
+                books.forEach(b => {
+                    const price = b.price ? '₫' + Number(b.price).toLocaleString('vi-VN') : '';
+                    booksHtml += `
+                        <a href="${b.detailUrl || '/books/' + b.id}" class="ai-book-mini-card">
+                            <img src="${b.imageUrl || '/images/books/book_1.jpg'}" alt="${escapeHtml(b.title || '')}">
+                            <div class="ai-book-mini-info">
+                                <div class="mini-title">${escapeHtml(b.title || 'Sách')}</div>
+                                <div class="mini-price">${price}</div>
+                            </div>
+                        </a>
+                    `;
+                });
+                aiOverviewBooks.innerHTML = booksHtml;
+                aiOverviewBooks.style.display = 'flex';
+            } else if (aiOverviewBooks) {
+                aiOverviewBooks.innerHTML = '';
+                aiOverviewBooks.style.display = 'none';
             }
-            chatMessages.forEach(msg => {
-                appendMsgToDOM(msg.role, msg.text, msg.books || []);
-            });
-            chatBody.scrollTop = chatBody.scrollHeight;
         }
 
-        // Mở dropdown khi focus hoặc click vào ô tìm kiếm
+        function fetchAiOverview(queryText) {
+            if (!queryText || isFetchingAi) return;
+            isFetchingAi = true;
+
+            openGoogleOmnibox();
+            if (aiOverviewCard) aiOverviewCard.style.display = 'block';
+            if (aiOverviewLoading) aiOverviewLoading.style.display = 'block';
+            if (aiOverviewContent) aiOverviewContent.innerHTML = '';
+            if (aiOverviewBooks) aiOverviewBooks.style.display = 'none';
+
+            saveRecentQuery(queryText, true);
+
+            fetch('/ai-assistant/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: queryText, history: [] })
+            })
+            .then(r => r.json())
+            .then(data => {
+                const reply = data.reply || 'Dạ Chuỗi Sách Cũ đã ghi nhận yêu cầu của bạn.';
+                const books = data.suggestedBooks || [];
+                renderAiOverview(reply, books);
+                saveLastAiOverview({ query: queryText, reply: reply, books: books, time: Date.now() });
+            })
+            .catch(() => {
+                if (aiOverviewLoading) aiOverviewLoading.style.display = 'none';
+                if (aiOverviewContent) {
+                    aiOverviewContent.innerHTML = 'Dạ hệ thống AI đang cập nhật dữ liệu từ 5 chi nhánh, bạn có thể nhấn <strong>Tìm kiếm</strong> để xem danh sách sách trực tiếp nhé!';
+                }
+            })
+            .finally(() => {
+                isFetchingAi = false;
+            });
+        }
+
+        // 4. Dropdown Show / Hide
+        function openGoogleOmnibox() {
+            if (!wrapper || !dropdown) return;
+            wrapper.classList.add('is-open');
+            dropdown.style.display = 'block';
+        }
+
+        function closeGoogleOmnibox() {
+            if (!wrapper || !dropdown) return;
+            wrapper.classList.remove('is-open');
+            dropdown.style.display = 'none';
+        }
+
+        // 5. Sự kiện Input & Auto-trigger
         if (searchInput) {
             searchInput.addEventListener('focus', function() {
-                openGoogleOmnibox(false);
+                openGoogleOmnibox();
+                const last = loadLastAiOverview();
+                if (last && (Date.now() - (last.time || 0) < 15 * 60 * 1000)) {
+                    renderAiOverview(last.reply, last.books);
+                }
             });
+
             searchInput.addEventListener('click', function(e) {
                 e.stopPropagation();
-                openGoogleOmnibox(false);
+                openGoogleOmnibox();
             });
+
+            searchInput.addEventListener('input', function() {
+                const val = searchInput.value.trim();
+                openGoogleOmnibox();
+
+                if (debounceTimer) clearTimeout(debounceTimer);
+
+                if (isQuestionQuery(val)) {
+                    if (aiOverviewCard) aiOverviewCard.style.display = 'block';
+                    if (aiOverviewLoading) aiOverviewLoading.style.display = 'block';
+                    debounceTimer = setTimeout(function() {
+                        fetchAiOverview(val);
+                    }, 550);
+                } else if (!val) {
+                    const last = loadLastAiOverview();
+                    if (last) {
+                        renderAiOverview(last.reply, last.books);
+                    } else if (aiOverviewCard) {
+                        aiOverviewCard.style.display = 'none';
+                    }
+                } else {
+                    if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+                }
+            });
+
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     const val = searchInput.value.trim();
-                    if (isAiMode && val) {
+                    if (!val) return;
+
+                    if (debounceTimer) clearTimeout(debounceTimer);
+
+                    if (isQuestionQuery(val)) {
                         e.preventDefault();
-                        openGoogleOmnibox(true);
-                        triggerAiQuery(val);
-                    } else if (val) {
+                        fetchAiOverview(val);
+                    } else {
                         saveRecentQuery(val, false);
                     }
                 }
             });
         }
 
-        // Form submit lưu query tìm kiếm thường
-        const searchForm = document.getElementById('smartSearchForm');
         if (searchForm) {
-            searchForm.addEventListener('submit', function() {
+            searchForm.addEventListener('submit', function(e) {
                 const val = searchInput ? searchInput.value.trim() : '';
-                if (val) saveRecentQuery(val, false);
+                if (isQuestionQuery(val)) {
+                    e.preventDefault();
+                    fetchAiOverview(val);
+                } else if (val) {
+                    saveRecentQuery(val, false);
+                }
             });
         }
 
-        // Bật / tắt chế độ AI Mode (Google-style Pill Button)
-        window.toggleGoogleAiMode = function(e) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            isAiMode = !isAiMode;
-            if (aiModeBtn) {
-                aiModeBtn.classList.toggle('active', isAiMode);
-            }
-            if (isAiMode) {
-                openGoogleOmnibox(true);
-                const query = searchInput ? searchInput.value.trim() : '';
-                if (query.length >= 2) {
-                    triggerAiQuery(query);
-                }
-            } else {
-                switchToSuggestionsView();
-            }
-        };
-
-        window.openGoogleOmnibox = function(showChat) {
-            if (!wrapper || !dropdown) return;
-            wrapper.classList.add('is-open');
-            dropdown.style.display = 'block';
-            if (showChat) {
-                if (suggestionsView) suggestionsView.style.display = 'none';
-                if (chatView) chatView.style.display = 'block';
-                if (chatInput) chatInput.focus({ preventScroll: true });
-                if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
-            } else {
-                if (chatView && chatMessages.length > 0 && isAiMode) {
-                    if (suggestionsView) suggestionsView.style.display = 'none';
-                    if (chatView) chatView.style.display = 'block';
-                    if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
-                } else {
-                    if (suggestionsView) suggestionsView.style.display = 'block';
-                    if (chatView) chatView.style.display = 'none';
-                }
-            }
-        };
-
-        window.closeGoogleOmnibox = function() {
-            if (!wrapper || !dropdown) return;
-            wrapper.classList.remove('is-open');
-            dropdown.style.display = 'none';
-        };
-
-        window.switchToSuggestionsView = function() {
-            if (suggestionsView) suggestionsView.style.display = 'block';
-            if (chatView) chatView.style.display = 'none';
-            if (searchInput) searchInput.focus({ preventScroll: true });
-        };
-
-        window.startAiFromOmniboxPrompt = function() {
-            isAiMode = true;
-            if (aiModeBtn) aiModeBtn.classList.add('active');
-            openGoogleOmnibox(true);
-            const query = searchInput ? searchInput.value.trim() : '';
-            if (query.length >= 2) {
-                triggerAiQuery(query);
-            }
-        };
-
-        window.selectOmniboxQuery = function(queryText, isAi) {
-            if (isAi) {
-                isAiMode = true;
-                if (aiModeBtn) aiModeBtn.classList.add('active');
-                if (searchInput) searchInput.value = queryText;
-                openGoogleOmnibox(true);
-                triggerAiQuery(queryText);
+        // 6. Xử lý click dòng lịch sử / gợi ý
+        window.handleSelectQuery = function(queryText, isAi) {
+            if (searchInput) searchInput.value = queryText;
+            if (isAi || isQuestionQuery(queryText)) {
+                fetchAiOverview(queryText);
             } else {
                 saveRecentQuery(queryText, false);
-                if (searchInput) searchInput.value = queryText;
-                const form = document.getElementById('smartSearchForm');
-                if (form) form.submit();
+                if (searchForm) searchForm.submit();
             }
         };
-
-        window.clearOmniboxChat = function() {
-            chatMessages = [];
-            aiContextHistory = [];
-            saveStoredChat();
-            if (chatBody) chatBody.innerHTML = '';
-            appendMsgToDOM('ai', 'Dạ em đã làm mới đoạn chat. Bạn đang cần tìm cuốn sách hoặc giáo trình nào ạ?', []);
-            if (chatInput) chatInput.focus({ preventScroll: true });
-        };
-
-        window.sendOmniboxMsg = function() {
-            if (aiBusy) return;
-            const msg = chatInput ? chatInput.value.trim() : '';
-            if (!msg) return;
-            chatInput.value = '';
-            triggerAiQuery(msg);
-        };
-
-        if (chatInput) {
-            chatInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendOmniboxMsg();
-                }
-            });
-        }
-
-        function triggerAiQuery(msg) {
-            if (aiBusy) return;
-            aiBusy = true;
-            if (sendBtn) sendBtn.disabled = true;
-
-            // Lưu vào lịch sử tìm kiếm gần đây
-            saveRecentQuery(msg, true);
-
-            // Chuyển sang Chat View
-            if (suggestionsView) suggestionsView.style.display = 'none';
-            if (chatView) chatView.style.display = 'block';
-
-            // Append tin nhắn user & lưu storage
-            appendMsgToDOM('user', msg, []);
-            chatMessages.push({ role: 'user', text: msg, books: [], time: Date.now() });
-            saveStoredChat();
-
-            // Typing indicator
-            const typingId = 'typing-' + Date.now();
-            if (chatBody) {
-                chatBody.insertAdjacentHTML('beforeend',
-                    '<div class="ai-msg-row" id="' + typingId + '">' +
-                    '<div class="ai-typing-dots"><span></span><span></span><span></span></div></div>');
-                chatBody.scrollTop = chatBody.scrollHeight;
-            }
-
-            fetch('/ai-assistant/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: msg, history: aiContextHistory })
-            })
-            .then(r => r.json())
-            .then(data => {
-                const typing = document.getElementById(typingId);
-                if (typing) typing.remove();
-
-                const reply = data.reply || 'Dạ em chưa tìm thấy thông tin phù hợp, bạn thử hỏi cách khác xem nhé!';
-                const books = data.suggestedBooks || [];
-
-                appendMsgToDOM('ai', reply, books);
-
-                // Lưu vào mảng tin nhắn & lưu storage
-                chatMessages.push({ role: 'ai', text: reply, books: books, time: Date.now() });
-
-                // Cập nhật context history cho server RAG
-                aiContextHistory.push({ role: 'user', content: msg });
-                aiContextHistory.push({ role: 'assistant', content: reply });
-                if (aiContextHistory.length > 20) aiContextHistory = aiContextHistory.slice(-20);
-
-                saveStoredChat();
-            })
-            .catch(function() {
-                const typing = document.getElementById(typingId);
-                if (typing) typing.remove();
-                appendMsgToDOM('ai', 'Dạ hệ thống tư vấn đang bận một chút, bạn thử lại sau ít giây nhé!', []);
-            })
-            .finally(function() {
-                aiBusy = false;
-                if (sendBtn) sendBtn.disabled = false;
-                if (chatInput) chatInput.focus();
-            });
-        }
-
-        function appendMsgToDOM(role, text, books) {
-            if (!chatBody) return;
-            let html = text
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-
-            let booksHtml = '';
-            if (books && books.length > 0) {
-                booksHtml = '<div class="ai-suggested-books">';
-                books.forEach(function(b) {
-                    const price = b.price ? '₫' + Number(b.price).toLocaleString('vi-VN') : '';
-                    booksHtml += '<a href="' + (b.detailUrl || '/books/' + b.id) + '" class="ai-book-mini-card">' +
-                        '<img src="' + (b.imageUrl || '/images/books/book_1.jpg') + '" alt="' + (b.title || '') + '">' +
-                        '<div class="ai-book-mini-info">' +
-                        '<div class="mini-title">' + (b.title || 'Sách') + '</div>' +
-                        '<div class="mini-price">' + price + '</div>' +
-                        '</div></a>';
-                });
-                booksHtml += '</div>';
-            }
-
-            const rowClass = role === 'user' ? 'ai-msg-row user' : 'ai-msg-row';
-            chatBody.insertAdjacentHTML('beforeend',
-                '<div class="' + rowClass + '"><div class="ai-msg-bubble">' + html + booksHtml + '</div></div>');
-            chatBody.scrollTop = chatBody.scrollHeight;
-        }
 
         function escapeHtml(str) {
             return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
 
-        // Đóng dropdown khi click bên ngoài wrapper
         document.addEventListener('click', function(e) {
             if (wrapper && !wrapper.contains(e.target)) {
                 closeGoogleOmnibox();
             }
         });
 
-        // Khởi động nạp dữ liệu từ localStorage
-        loadStoredChat();
         renderRecentQueries();
-        renderStoredChat();
     })();
     </script>
 </body>
