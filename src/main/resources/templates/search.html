@@ -42,7 +42,7 @@
             background: transparent;
         }
 
-        /* 1 ẢNH NỀN 3D MINH HỌA SÁCH CỔ ĐIỂN - PHỦ KÍN 100% KHÔNG BỊ HỤT ĐÁY HAY MẤT CẠNH */
+        /* 1 ẢNH NỀN 3D MINH HỌA SÁCH CỔ ĐIỂN - DỊCH LÊN TRÊN HIỂN THỊ RÕ SÀN SÁCH VÀ ĐỒ HỌA */
         .chotot-unified-backdrop {
             position: absolute;
             top: 0;
@@ -51,7 +51,7 @@
             height: 100%;
             background-color: #3E2314;
             background-image: url('/images/vintage-book-hero-bg.png');
-            background-position: center center;
+            background-position: center 65%; /* Dịch ảnh lên trên để lộ rõ sàn sách và chi tiết 3D */
             background-repeat: no-repeat;
             background-size: cover; /* Phủ kín 100% toàn bộ khung, không bao giờ bị hụt hay thiếu mảng nền */
             z-index: 1;
@@ -576,6 +576,147 @@
             color: #78716C;
         }
 
+        /* ================= AI SEARCH ASSISTANT PANEL ================= */
+        .ai-search-panel {
+            max-width: 900px;
+            margin: 0 auto;
+            display: none;
+            animation: aiPanelSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes aiPanelSlideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ai-search-panel.visible { display: block; }
+        .ai-panel-card {
+            background: #FEFEFE;
+            border: 1px solid #E8E4DF;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        .ai-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #FFF8F0 0%, #FFF5EB 100%);
+            border-bottom: 1px solid #F0ECE4;
+        }
+        .ai-panel-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-panel-avatar {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8C4A27, #EE4D2D);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 14px;
+        }
+        .ai-panel-title {
+            font-size: 13px; font-weight: 700; color: #1C1917;
+        }
+        .ai-panel-badge {
+            font-size: 10px; background: #8C4A27; color: #fff;
+            padding: 2px 7px; border-radius: 9999px; font-weight: 600;
+        }
+        .ai-panel-close {
+            background: none; border: none; cursor: pointer;
+            font-size: 18px; color: #78716C; padding: 4px 8px;
+            border-radius: 6px; transition: all 0.15s;
+        }
+        .ai-panel-close:hover { background: #F5F0EB; color: #1C1917; }
+        .ai-panel-body {
+            padding: 14px 16px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .ai-msg-row {
+            display: flex; gap: 8px; margin-bottom: 10px;
+        }
+        .ai-msg-row.user { flex-direction: row-reverse; }
+        .ai-msg-bubble {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 13.5px;
+            line-height: 1.55;
+            color: #1C1917;
+            word-break: break-word;
+        }
+        .ai-msg-row:not(.user) .ai-msg-bubble {
+            background: #F5F0EB;
+            border-bottom-left-radius: 4px;
+        }
+        .ai-msg-row.user .ai-msg-bubble {
+            background: #8C4A27;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .ai-typing-dots {
+            display: inline-flex; gap: 4px; align-items: center; padding: 10px 14px;
+            background: #F5F0EB; border-radius: 14px; border-bottom-left-radius: 4px;
+        }
+        .ai-typing-dots span {
+            width: 6px; height: 6px; background: #A8A29E; border-radius: 50%;
+            animation: aiDotPulse 1.2s infinite ease-in-out;
+        }
+        .ai-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .ai-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes aiDotPulse {
+            0%, 60%, 100% { transform: scale(0.6); opacity: 0.4; }
+            30% { transform: scale(1); opacity: 1; }
+        }
+        .ai-suggested-books {
+            display: flex; gap: 10px; margin-top: 8px; overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .ai-book-mini-card {
+            flex: 0 0 140px;
+            background: #fff; border: 1px solid #ECE7DE; border-radius: 10px;
+            overflow: hidden; text-decoration: none; color: #1C1917;
+            transition: all 0.15s;
+        }
+        .ai-book-mini-card:hover {
+            border-color: #8C4A27; box-shadow: 0 2px 8px rgba(140,74,39,0.1);
+        }
+        .ai-book-mini-card img {
+            width: 100%; height: 90px; object-fit: cover;
+        }
+        .ai-book-mini-info {
+            padding: 6px 8px;
+        }
+        .ai-book-mini-info .mini-title {
+            font-size: 11.5px; font-weight: 700; line-height: 1.3;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .ai-book-mini-info .mini-price {
+            font-size: 12px; font-weight: 800; color: #EE4D2D; margin-top: 3px;
+        }
+        .ai-panel-input-wrap {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 14px;
+            border-top: 1px solid #F0ECE4;
+            background: #FAFAF8;
+        }
+        .ai-panel-input {
+            flex: 1; border: 1px solid #E0DCD6; border-radius: 9999px;
+            padding: 8px 14px; font-size: 13px; outline: none;
+            transition: border-color 0.15s;
+        }
+        .ai-panel-input:focus { border-color: #8C4A27; }
+        .ai-panel-send {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: #8C4A27; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; transition: all 0.15s;
+        }
+        .ai-panel-send:hover { background: #EE4D2D; transform: scale(1.06); }
+        .ai-panel-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
         /* Phân trang dưới đáy */
         .btn-pagination {
             display: inline-flex;
@@ -792,6 +933,31 @@
         </section>
     </div>
 
+    <!-- AI SEARCH ASSISTANT PANEL (dưới search bar) -->
+    <div class="ai-search-panel" id="aiSearchPanel">
+        <div style="max-width:900px; margin:0 auto; padding:0 16px;">
+            <div class="ai-panel-card">
+                <div class="ai-panel-header">
+                    <div class="ai-panel-header-left">
+                        <div class="ai-panel-avatar"><i class="fa-solid fa-robot"></i></div>
+                        <span class="ai-panel-title">Trợ lý AI Sách Cũ</span>
+                        <span class="ai-panel-badge">AI</span>
+                    </div>
+                    <button class="ai-panel-close" onclick="closeAiPanel()" title="Đóng">&times;</button>
+                </div>
+                <div class="ai-panel-body" id="aiPanelBody">
+                    <!-- Messages render here -->
+                </div>
+                <div class="ai-panel-input-wrap">
+                    <input class="ai-panel-input" id="aiPanelInput" type="text" placeholder="Hỏi thêm về sách, giá, chi nhánh..." autocomplete="off">
+                    <button class="ai-panel-send" id="aiPanelSend" onclick="sendAiMsg()" title="Gửi">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- CONTENT CHÍNH DƯỚI NỀN TRẮNG THUẦN KHIẾT (CÁCH MÉP SEARCH BAR 24PX) -->
     <div class="container-shopee" style="padding-top: 24px;">
 
@@ -966,5 +1132,145 @@
 
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>
+
+    <script>
+    // ================= AI SEARCH ASSISTANT =================
+    (function() {
+        const panel = document.getElementById('aiSearchPanel');
+        const body = document.getElementById('aiPanelBody');
+        const input = document.getElementById('aiPanelInput');
+        const sendBtn = document.getElementById('aiPanelSend');
+        const searchInput = document.querySelector('.chotot-native-input');
+        let aiHistory = [];
+        let aiBusy = false;
+
+        // Auto-trigger: khi trang load có keyword hoặc cat, tự động hỏi AI
+        window.addEventListener('DOMContentLoaded', function() {
+            const keyword = searchInput ? searchInput.value.trim() : '';
+            const urlParams = new URLSearchParams(window.location.search);
+            const cat = urlParams.get('cat');
+            if (keyword.length >= 2) {
+                openAiPanel();
+                triggerAiQuery(keyword);
+            } else if (cat) {
+                // Tìm tên category từ tiêu đề trên trang
+                const catTitle = document.querySelector('.container-shopee h1');
+                const catName = catTitle ? catTitle.textContent.trim() : 'thể loại này';
+                openAiPanel();
+                triggerAiQuery('Gợi ý sách hay nhất thể loại ' + catName);
+            }
+        });
+
+        // Khi user submit search form, cũng trigger AI
+        const form = document.getElementById('smartSearchForm');
+        if (form) {
+            form.addEventListener('submit', function() {
+                // AI sẽ được trigger sau khi trang reload với keyword mới
+            });
+        }
+
+        window.openAiPanel = function() {
+            panel.classList.add('visible');
+        };
+
+        window.closeAiPanel = function() {
+            panel.classList.remove('visible');
+        };
+
+        window.sendAiMsg = function() {
+            if (aiBusy) return;
+            const msg = input.value.trim();
+            if (!msg) return;
+            input.value = '';
+            triggerAiQuery(msg);
+        };
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendAiMsg();
+            }
+        });
+
+        function triggerAiQuery(msg) {
+            if (aiBusy) return;
+            aiBusy = true;
+            sendBtn.disabled = true;
+
+            // Render user msg
+            appendMsg('user', msg);
+
+            // Show typing
+            const typingId = 'typing-' + Date.now();
+            body.insertAdjacentHTML('beforeend',
+                '<div class="ai-msg-row" id="' + typingId + '">' +
+                '<div class="ai-typing-dots"><span></span><span></span><span></span></div></div>');
+            body.scrollTop = body.scrollHeight;
+
+            fetch('/ai-assistant/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg, history: aiHistory })
+            })
+            .then(r => r.json())
+            .then(data => {
+                // Remove typing
+                const typing = document.getElementById(typingId);
+                if (typing) typing.remove();
+
+                const reply = data.reply || 'Xin lỗi, em chưa có câu trả lời phù hợp.';
+
+                // Render AI reply
+                appendMsg('ai', reply);
+
+                // Render suggested books
+                if (data.suggestedBooks && data.suggestedBooks.length > 0) {
+                    let booksHtml = '<div class="ai-suggested-books">';
+                    data.suggestedBooks.forEach(function(b) {
+                        const price = b.price ? '₫' + Number(b.price).toLocaleString('vi-VN') : '';
+                        booksHtml += '<a href="' + (b.detailUrl || '/books/' + b.id) + '" class="ai-book-mini-card">' +
+                            '<img src="' + (b.imageUrl || '/images/books/book_1.jpg') + '" alt="' + (b.title || '') + '">' +
+                            '<div class="ai-book-mini-info">' +
+                            '<div class="mini-title">' + (b.title || 'Sách') + '</div>' +
+                            '<div class="mini-price">' + price + '</div>' +
+                            '</div></a>';
+                    });
+                    booksHtml += '</div>';
+                    body.insertAdjacentHTML('beforeend', booksHtml);
+                }
+
+                body.scrollTop = body.scrollHeight;
+
+                // Update history
+                aiHistory.push({ role: 'user', content: msg });
+                aiHistory.push({ role: 'assistant', content: reply });
+                // Keep last 10 turns
+                if (aiHistory.length > 20) aiHistory = aiHistory.slice(-20);
+            })
+            .catch(function() {
+                const typing = document.getElementById(typingId);
+                if (typing) typing.remove();
+                appendMsg('ai', 'Xin lỗi, hệ thống AI đang bận. Vui lòng thử lại sau.');
+            })
+            .finally(function() {
+                aiBusy = false;
+                sendBtn.disabled = false;
+                input.focus();
+            });
+        }
+
+        function appendMsg(role, text) {
+            // Simple markdown: **bold**, \n -> <br>
+            let html = text
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+            const rowClass = role === 'user' ? 'ai-msg-row user' : 'ai-msg-row';
+            body.insertAdjacentHTML('beforeend',
+                '<div class="' + rowClass + '"><div class="ai-msg-bubble">' + html + '</div></div>');
+            body.scrollTop = body.scrollHeight;
+        }
+    })();
+    </script>
 </body>
 </html>
