@@ -102,14 +102,28 @@ public class AiAssistantController {
                 }
             }
 
-            // Build RAG context string
+            // Batch load inventory for RAG books so AI has real-time stock at all 5 branches
+            List<Long> allRagBookIds = ragBooks.stream().map(Book::getId).collect(Collectors.toList());
+            Map<Long, List<Inventory>> ragInventoryMap = batchLoadInventory(allRagBookIds);
+
+            // Build RAG context string with real-time branch stock
             StringBuilder catalogContext = new StringBuilder();
             for (Book b : ragBooks) {
+                List<Inventory> invs = ragInventoryMap.getOrDefault(b.getId(), Collections.emptyList());
+                String branchStock = invs.stream()
+                        .filter(i -> i.getQuantity() != null && i.getQuantity() > 0 && i.getStore() != null)
+                        .map(i -> i.getStore().getStoreName() + " (" + i.getQuantity() + " cuốn)")
+                        .collect(Collectors.joining(", "));
+                if (branchStock.isEmpty()) {
+                    branchStock = "Kho trung tâm TP.HCM";
+                }
+
                 catalogContext.append("- ID ").append(b.getId())
                         .append(": \"").append(b.getTitle()).append("\"")
                         .append(" | Tác giả: ").append(b.getAuthor() != null ? b.getAuthor() : "Khác")
                         .append(" | Giá: ₫").append(b.getPrice() != null ? b.getPrice().longValue() : 0)
-                        .append(" | Độ mới: ").append(b.getConditionPercent() != null ? b.getConditionPercent() : 90).append("%\n");
+                        .append(" | Độ mới: ").append(b.getConditionPercent() != null ? b.getConditionPercent() : 90).append("%")
+                        .append(" | Tồn kho chi nhánh: ").append(branchStock).append("\n");
             }
 
             // [TỐI ƯU - CONVERSATION HISTORY] Gửi kèm lịch sử hội thoại
@@ -128,11 +142,20 @@ public class AiAssistantController {
                         .limit(3)
                         .collect(Collectors.toList());
 
+                // Nếu chưa match được cuốn nào, thử tìm trong keyword books
+                if (matchedBooks.isEmpty()) {
+                    for (Book kb : keywordBooks) {
+                        String cleanTitle = (kb.getTitle() != null) ? kb.getTitle().toLowerCase().trim() : "";
+                        if (cleanTitle.length() >= 3 && combined.contains(cleanTitle)) {
+                            matchedBooks.add(kb);
+                            if (matchedBooks.size() >= 3) break;
+                        }
+                    }
+                }
+
                 if (!matchedBooks.isEmpty()) {
-                    List<Long> bookIds = matchedBooks.stream().map(Book::getId).collect(Collectors.toList());
-                    Map<Long, List<Inventory>> inventoryMap = batchLoadInventory(bookIds);
                     for (Book b : matchedBooks) {
-                        suggestedBooks.add(buildBookCardData(b, inventoryMap.getOrDefault(b.getId(), Collections.emptyList())));
+                        suggestedBooks.add(buildBookCardData(b, ragInventoryMap.getOrDefault(b.getId(), Collections.emptyList())));
                     }
                 }
 
