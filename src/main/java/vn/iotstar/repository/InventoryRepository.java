@@ -25,4 +25,12 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
     @Query("SELECT i FROM Inventory i JOIN FETCH i.book b JOIN FETCH b.category c WHERE i.store.id = :storeId AND b.isActive = true AND i.quantity > 0 ORDER BY b.id DESC")
     List<Inventory> findByStoreIdWithBooks(@Param("storeId") Long storeId);
+
+    /**
+     * [TỐI ƯU AI] Batch load tồn kho cho nhiều cuốn sách cùng lúc — tránh N+1 query.
+     * Thay vì gọi findByBookIdWithStore() N lần trong vòng lặp, gọi 1 lần duy nhất
+     * và group kết quả theo bookId ở tầng ứng dụng.
+     */
+    @Query("SELECT i FROM Inventory i JOIN FETCH i.store s WHERE i.book.id IN :bookIds AND s.isActive = true ORDER BY i.book.id ASC, s.id ASC")
+    List<Inventory> findByBookIdsWithStore(@Param("bookIds") List<Long> bookIds);
 }
