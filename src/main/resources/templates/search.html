@@ -705,48 +705,40 @@
             margin-left: 8px;
         }
 
-        /* AI OVERVIEW CARD */
+        /* AI OVERVIEW CARD COMPACT */
         .ai-overview-card {
             background: #FAF8F5;
             border-bottom: 1px solid #ECE7DE;
-            padding: 16px 20px;
-            animation: aiCardSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 10px 14px;
+            animation: aiCardSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes aiCardSlide {
-            from { opacity: 0; transform: translateY(-4px); }
+            from { opacity: 0; transform: translateY(-3px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .ai-overview-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
         .ai-overview-badge {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 13px;
+            gap: 6px;
+            font-size: 12px;
             font-weight: 800;
             color: #8C4A27;
-        }
-        .ai-sparkle-icon {
-            flex-shrink: 0;
-        }
-        .ai-overview-sub {
-            font-size: 11px;
-            font-weight: 500;
-            color: #78716C;
         }
         .btn-clear-ai-overview {
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             line-height: 1;
             color: #A8A29E;
-            padding: 2px 6px;
-            border-radius: 6px;
+            padding: 0 4px;
+            border-radius: 4px;
             transition: all 0.15s;
         }
         .btn-clear-ai-overview:hover {
@@ -756,22 +748,23 @@
 
         /* Loading / Pulse state */
         .ai-overview-loading {
-            padding: 10px 0;
+            padding: 6px 0;
         }
         .ai-loading-text {
-            font-size: 13px;
+            font-size: 12px;
             color: #8C4A27;
             font-weight: 600;
             display: flex;
             align-items: center;
+            gap: 6px;
         }
 
         /* AI Overview Content */
         .ai-overview-content {
-            font-size: 13.5px;
-            line-height: 1.6;
+            font-size: 12.5px;
+            line-height: 1.5;
             color: #292524;
-            max-height: 240px;
+            max-height: 150px;
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: #D7CCC8 #FAF8F5;
@@ -781,45 +774,24 @@
             font-weight: 700;
         }
         .ai-overview-content p, .ai-overview-content ul {
-            margin: 0 0 8px 0;
+            margin: 0 0 4px 0;
         }
 
-        .ai-overview-footer-bar {
-            margin-top: 12px;
-            padding-top: 10px;
-            border-top: 1px solid #EFEAE2;
-            text-align: right;
-        }
-        .btn-ai-view-full {
-            background: none;
-            border: none;
-            color: #8C4A27;
-            font-size: 12.5px;
-            font-weight: 700;
-            cursor: pointer;
-            padding: 4px 8px;
-            transition: color 0.15s ease;
-        }
-        .btn-ai-view-full:hover {
-            color: #733615;
-            text-decoration: underline;
-        }
-
-        /* AI Overview Book Cards Carousel */
+        /* AI Overview Book Cards Carousel Compact */
         .ai-overview-books {
             display: flex;
-            gap: 10px;
-            margin-top: 12px;
+            gap: 8px;
+            margin-top: 8px;
             overflow-x: auto;
-            padding-bottom: 4px;
+            padding-bottom: 2px;
             scrollbar-width: none;
         }
         .ai-overview-books::-webkit-scrollbar { display: none; }
         .ai-book-mini-card {
-            flex: 0 0 135px;
+            flex: 0 0 115px;
             background: #fff;
             border: 1px solid #ECE7DE;
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
             text-decoration: none;
             color: #1C1917;
@@ -832,14 +804,14 @@
         }
         .ai-book-mini-card img {
             width: 100%;
-            height: 90px;
+            height: 70px;
             object-fit: cover;
         }
         .ai-book-mini-info {
-            padding: 6px 8px;
+            padding: 4px 6px;
         }
         .ai-book-mini-info .mini-title {
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 700;
             line-height: 1.3;
             display: -webkit-box;
@@ -848,10 +820,10 @@
             overflow: hidden;
         }
         .ai-book-mini-info .mini-price {
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 800;
             color: #EE4D2D;
-            margin-top: 3px;
+            margin-top: 2px;
         }
 
         /* Recent Queries & History Section */
@@ -1147,24 +1119,20 @@
 
                     <!-- OMNIBOX DROPDOWN (FLOATING CARD GỢI Ý & TRỢ LÝ AI TỰ ĐỘNG) -->
                     <div class="google-omnibox-dropdown" id="googleOmniboxDropdown" style="display:none;">
-                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI TỰ ĐỘNG -->
+                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI (SIÊU TINH GỌN) -->
                         <div class="ai-overview-card" id="aiOverviewCard" style="display:none;">
                             <div class="ai-overview-header">
                                 <div class="ai-overview-badge">
-                                    <span style="font-size: 16px; color: #D97706;">✨</span>
-                                    <span>Trợ Lý AI Tư Vấn</span>
-                                    <span class="ai-overview-sub">&bull; Chuỗi Sách Cũ TP.HCM</span>
+                                    <span style="font-size: 13px; color: #D97706;">✨</span>
+                                    <span>Gợi ý từ AI</span>
                                 </div>
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <button type="button" class="btn-copy-ai-overview" onclick="copyAiReply(event)" title="Sao chép nội dung" style="background:none; border:none; cursor:pointer; font-size:12px; color:#78716C; padding:4px 8px; border-radius:6px; transition:all 0.15s; display:inline-flex; align-items:center; gap:4px; font-weight:600;"><i class="fa-regular fa-copy"></i> Sao chép</button>
-                                    <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
-                                </div>
+                                <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
                             </div>
 
                             <!-- Trạng thái Loading / Pulse -->
                             <div class="ai-overview-loading" id="aiOverviewLoading" style="display:none;">
                                 <div class="ai-loading-text">
-                                    <i class="fa-solid fa-spinner fa-spin me-2" style="color:#8C4A27;"></i>Đang tra cứu danh mục sách &amp; tồn kho 5 chi nhánh TP.HCM...
+                                    <i class="fa-solid fa-spinner fa-spin me-2" style="color:#8C4A27;"></i>Đang tìm sách phù hợp...
                                 </div>
                             </div>
 
@@ -1173,13 +1141,6 @@
 
                             <!-- Trạng thái Thẻ sách gợi ý -->
                             <div class="ai-overview-books" id="aiOverviewBooks" style="display:none;"></div>
-
-                            <!-- Footer Xem danh sách kết quả đầy đủ -->
-                            <div class="ai-overview-footer-bar" id="aiOverviewFooterBar" style="display:none;">
-                                <button type="button" class="btn-ai-view-full" onclick="searchCurrentQueryFull(event)">
-                                    <span>Xem danh sách sách tìm kiếm đầy đủ &rarr;</span>
-                                </button>
-                            </div>
                         </div>
 
                         <!-- KHỐI 2: TÌM KIẾM GẦN ĐÂY & GỢI Ý (RECENT SEARCHES) -->
@@ -1665,18 +1626,11 @@
                     if (aiCache.has(qKey)) {
                         const cached = aiCache.get(qKey);
                         renderAiOverview(cached.reply, cached.books);
-                        const footerBar = document.getElementById('aiOverviewFooterBar');
-                        if (footerBar) footerBar.style.display = 'block';
                     } else {
                         fetchAiOverview(val);
                     }
                 } else {
-                    const last = loadLastAiOverview();
-                    if (last && (Date.now() - (last.time || 0) < 10 * 60 * 1000)) {
-                        renderAiOverview(last.reply, last.books);
-                        const footerBar = document.getElementById('aiOverviewFooterBar');
-                        if (footerBar) footerBar.style.display = 'block';
-                    }
+                    if (aiOverviewCard) aiOverviewCard.style.display = 'none';
                 }
                 renderRecentQueries();
             });
