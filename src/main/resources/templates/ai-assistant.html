@@ -52,12 +52,40 @@
         /* MAIN CHAT LAYOUT */
         .chat-layout-wrap {
             flex: 1;
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 24px;
-            margin: 24px auto 36px;
-            height: calc(100vh - 150px);
-            min-height: 580px;
+            display: grid !important;
+            grid-template-columns: 300px 1fr !important;
+            gap: 20px !important;
+            margin: 20px auto 28px !important;
+            height: calc(100vh - 130px) !important;
+            min-height: 580px !important;
+            max-width: 1240px !important;
+            width: 100% !important;
+            padding: 0 16px !important;
+            background: transparent !important;
+        }
+
+        .btn-new-chat {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: #8C4A27;
+            color: #ffffff;
+            font-size: 13.5px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+        .btn-new-chat:hover {
+            background: #733615;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(140, 74, 39, 0.35);
         }
 
         /* SIDEBAR CHỦ ĐỀ GỢI Ý */
@@ -423,13 +451,18 @@
     <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
 
 
-    <main class="container chat-layout-wrap chat-card-wrap">
+    <main class="container chat-layout-wrap">
 
         <!-- CỘT TRÁI: GỢI Ý CHỦ ĐỀ HỎI NHANH -->
         <aside class="chat-sidebar">
-            <div class="sidebar-title">
+            <button type="button" class="btn-new-chat" onclick="resetChat()">
+                <i class="fa-solid fa-plus"></i>
+                <span>Cuộc trò chuyện mới</span>
+            </button>
+
+            <div class="sidebar-title" style="margin-top: 6px;">
                 <i class="fa-solid fa-wand-magic-sparkles text-danger"></i>
-                <span>Gợi ý câu hỏi nhanh cho bạn:</span>
+                <span>Chủ đề gợi ý đào sâu:</span>
             </div>
 
             <div class="prompt-chip prompt-suggestion-pill" onclick="sendQuickPrompt('Tư vấn sách chữa lành, giảm stress và lo âu')">
@@ -663,6 +696,35 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        function resetChat() {
+            conversationHistory = [];
+            chatMessages.innerHTML = `
+                <div class="msg-row ai">
+                    <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div class="msg-bubble">
+                        Dạ em đã làm mới cuộc trò chuyện! Bạn muốn tìm hiểu sâu về tác phẩm hay chủ đề nào tiếp theo ạ?
+                    </div>
+                </div>
+                <div class="typing-indicator" id="typingIndicator" style="display:none;">
+                    <i class="fa-solid fa-robot text-danger me-1"></i>
+                    <span>AI đang phân tích và tìm sách...</span>
+                    <span class="typing-dots"><span></span><span></span><span></span></span>
+                </div>
+            `;
+            chatInput.value = '';
+            chatInput.focus();
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const q = urlParams.get('q');
+            if (q && q.trim()) {
+                chatInput.value = q.trim();
+                sendUserMessage();
+                window.history.replaceState({}, '', '/ai-assistant');
+            }
+        });
     </script>
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>
