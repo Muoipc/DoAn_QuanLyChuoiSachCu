@@ -1315,19 +1315,28 @@
         let debounceTimer = null;
         let isFetchingAi = false;
 
-        // 1. Nhận diện truy vấn mang tính đàm thoại / câu hỏi tự nhiên
+        // 1. Nhận diện truy vấn mang tính đàm thoại / câu hỏi tự nhiên / tính toán
         function isQuestionQuery(text) {
             if (!text) return false;
             const t = text.trim().toLowerCase();
+            // Ký tự toán học, dấu hỏi hoặc câu tính toán
+            if (t.includes('?') || /[0-9\+\-\*\/\=\%]/.test(t)) {
+                if (t.includes('?') || t.includes('+') || t.includes('-') || t.includes('*') || t.includes('/') || t.includes('=') || t.includes('cộng') || t.includes('trừ') || t.includes('nhân') || t.includes('chia') || t.includes('bằng') || t.includes('mấy')) {
+                    return true;
+                }
+            }
             const questionKeywords = [
-                'gợi ý', 'tư vấn', 'tìm sách', 'sách gì', 'cuốn nào', 'ở đâu',
-                'bao nhiêu', 'chi nhánh', 'còn không', 'hcmute', 'giảm giá',
-                'chữa lành', 'kinh tế', 'cho mình', 'có nên', 'ai ', 'học lập trình',
-                'thể loại', 'review', 'nói về', 'đọc gì', 'mới nhất', 'phù hợp'
+                'mấy', 'bằng', 'cộng', 'trừ', 'nhân', 'chia', 'là gì', 'là ai', 'ở đâu',
+                'tại sao', 'vì sao', 'thế nào', 'ra sao', 'bao nhiêu', 'ai', 'gì', 'nào',
+                'đâu', 'sao', 'gợi ý', 'tư vấn', 'tìm sách', 'sách gì', 'cuốn nào', 'chi nhánh',
+                'tồn kho', 'còn không', 'hcmute', 'giảm giá', 'chữa lành', 'kinh tế', 'cho mình',
+                'có nên', 'học lập trình', 'thể loại', 'review', 'nói về', 'đọc gì', 'mới nhất',
+                'phù hợp', 'giải thích', 'tóm tắt', 'nghĩa là', 'bao tiền', 'ở tp', 'giúp mình',
+                'chỉ mình', 'hỏi', 'bạn là', 'ai là', 'tác giả', 'năm nào'
             ];
             const words = t.split(/\s+/).filter(Boolean);
-            const hasKeyword = questionKeywords.some(k => t.includes(k));
-            return (hasKeyword && words.length >= 2) || (words.length >= 3 && (t.includes('?') || t.startsWith('tìm ') || t.startsWith('sách ')));
+            if (questionKeywords.some(k => t.includes(k))) return true;
+            return words.length >= 3;
         }
 
         // 2. Quản lý lịch sử tìm kiếm gần đây
@@ -1501,9 +1510,13 @@
         if (searchInput) {
             searchInput.addEventListener('focus', function() {
                 openGoogleOmnibox();
+                const val = searchInput.value.trim().toLowerCase();
                 const last = loadLastAiOverview();
-                if (last && (Date.now() - (last.time || 0) < 15 * 60 * 1000)) {
+                // CHỈ phục hồi kết quả cũ nếu input trống hoặc trùng khớp câu hỏi
+                if (last && (!val || val === (last.query || '').trim().toLowerCase()) && (Date.now() - (last.time || 0) < 15 * 60 * 1000)) {
                     renderAiOverview(last.reply, last.books);
+                } else {
+                    if (aiOverviewCard) aiOverviewCard.style.display = 'none';
                 }
             });
 
@@ -1519,18 +1532,17 @@
                 if (debounceTimer) clearTimeout(debounceTimer);
 
                 if (isQuestionQuery(val)) {
+                    // Xóa sạch nội dung cũ ngay, hiển thị loading shimmer
                     if (aiOverviewCard) aiOverviewCard.style.display = 'block';
                     if (aiOverviewLoading) aiOverviewLoading.style.display = 'block';
+                    if (aiOverviewContent) aiOverviewContent.innerHTML = '';
+                    if (aiOverviewBooks) aiOverviewBooks.style.display = 'none';
+
                     debounceTimer = setTimeout(function() {
                         fetchAiOverview(val);
-                    }, 550);
+                    }, 400);
                 } else if (!val) {
-                    const last = loadLastAiOverview();
-                    if (last) {
-                        renderAiOverview(last.reply, last.books);
-                    } else if (aiOverviewCard) {
-                        aiOverviewCard.style.display = 'none';
-                    }
+                    if (aiOverviewCard) aiOverviewCard.style.display = 'none';
                 } else {
                     if (aiOverviewCard) aiOverviewCard.style.display = 'none';
                 }
@@ -1564,6 +1576,15 @@
                 }
             });
         }
+
+        // Auto kích hoạt khi tải trang /search có chứa câu hỏi
+        window.addEventListener('DOMContentLoaded', function() {
+            const val = searchInput ? searchInput.value.trim() : '';
+            if (val && isQuestionQuery(val)) {
+                openGoogleOmnibox();
+                fetchAiOverview(val);
+            }
+        });
 
         // 6. Xử lý click dòng lịch sử / gợi ý
         window.handleSelectQuery = function(queryText, isAi) {
