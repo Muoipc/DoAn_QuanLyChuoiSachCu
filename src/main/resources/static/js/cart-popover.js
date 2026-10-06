@@ -29,61 +29,63 @@
                 z-index: 100000 !important;
             }
 
-            /* POPOVER GIỎ HÀNG CHUẨN SHOPEE: GỌN GÀNG, SẮC NÉT, BO GÓC 4PX */
+            /* POPOVER GIỎ HÀNG CHUẨN APPLE LIQUID GLASS: ĐỒNG NHẤT MÀU & ĐỘ TRONG SUỐT, BO GÓC 18PX */
             .shopee-cart-popover {
                 position: absolute !important;
-                top: calc(100% + 10px) !important;
+                top: calc(100% + 8px) !important;
                 right: 0 !important;
-                width: 360px !important;
-                background: #ffffff !important;
-                border-radius: 4px !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
-                border: 1px solid rgba(0, 0, 0, 0.09) !important;
+                width: 370px !important;
+                background: rgba(255, 255, 255, 0.65) !important;
+                backdrop-filter: blur(32px) saturate(200%) brightness(102%) !important;
+                -webkit-backdrop-filter: blur(32px) saturate(200%) brightness(102%) !important;
+                border-radius: 18px !important;
+                box-shadow: 0 20px 48px -6px rgba(45, 24, 15, 0.12), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95) !important;
+                border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
                 z-index: 100001 !important;
                 display: none;
                 cursor: default;
                 transform-origin: calc(100% - 20px) top;
-                animation: popoverFadeIn 0.18s ease-out;
+                animation: popoverFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
                 box-sizing: border-box !important;
                 padding: 0 !important;
+                overflow: hidden !important;
             }
 
             @keyframes popoverFadeIn {
-                from { opacity: 0; transform: translateY(-4px); }
-                to { opacity: 1; transform: translateY(0); }
+                from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+                to { opacity: 1; transform: translateY(0) scale(1); }
             }
 
-            /* Mũi tên tam giác trỏ thẳng lên giỏ hàng chuẩn Shopee */
+            /* Bỏ mũi tên trỏ giỏ hàng */
             .shopee-cart-arrow {
-                position: absolute !important;
-                top: -6px !important;
-                right: 22px !important;
-                width: 12px !important;
-                height: 12px !important;
-                background: #ffffff !important;
-                transform: rotate(45deg) !important;
-                border-top: 1px solid rgba(0, 0, 0, 0.12) !important;
-                border-left: 1px solid rgba(0, 0, 0, 0.12) !important;
-                z-index: 100010 !important;
-                display: block !important;
-            }
-
-            .shopee-cart-popover::before {
                 display: none !important;
             }
 
-            /* Cầu nối hover để rê chuột từ icon xuống menu không bị mất */
+            /* Cầu nối hover tàng hình: phủ toàn bộ khoảng cách giữa cart icon và popover */
             .shopee-cart-wrap::after {
                 content: '';
                 position: absolute;
                 top: 100%;
-                left: 0;
+                left: -120px;
                 right: 0;
-                height: 14px;
+                height: 18px;
                 display: none;
+                background: transparent;
+                z-index: 100002;
             }
             .shopee-cart-wrap:hover::after {
                 display: block;
+            }
+
+            .shopee-cart-popover::before {
+                content: '' !important;
+                position: absolute !important;
+                top: -16px !important;
+                left: 0 !important;
+                right: 0 !important;
+                height: 16px !important;
+                background: transparent !important;
+                display: block !important;
             }
 
             .shopee-cart-wrap:hover .shopee-cart-popover {
@@ -92,70 +94,74 @@
 
             .popover-header-title {
                 font-size: 13px;
-                font-weight: 600;
-                color: #78716C;
-                padding: 10px 14px;
-                background: #FAF8F5;
-                border-bottom: 1px solid #F0ECE4;
-                border-radius: 4px 4px 0 0;
+                font-weight: 700;
+                color: #57534E;
+                padding: 12px 16px;
+                background: transparent !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.65);
+                border-radius: 18px 18px 0 0;
                 text-transform: capitalize;
             }
 
             .popover-items-list {
                 list-style: none;
-                max-height: 280px;
+                max-height: 290px;
                 overflow-y: auto;
                 margin: 0;
                 padding: 0;
-                background: #ffffff;
+                background: transparent !important;
             }
             .popover-items-list::-webkit-scrollbar {
                 width: 4px;
             }
             .popover-items-list::-webkit-scrollbar-thumb {
-                background: #e8dec8;
-                border-radius: 2px;
+                background: rgba(232, 222, 200, 0.7);
+                border-radius: 4px;
             }
 
             .popover-item-link {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 10px 14px;
+                padding: 11px 16px;
                 text-decoration: none;
                 color: inherit;
-                background: #ffffff;
-                border-bottom: 1px solid #F5F1EA;
-                transition: background 0.15s ease;
+                background: transparent !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+                transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
                 box-sizing: border-box;
             }
             .popover-item-link:hover {
-                background: #FAF6F0;
+                background: rgba(255, 255, 255, 0.42) !important;
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
             }
 
             .popover-item-left {
                 display: flex;
                 align-items: center;
-                gap: 10px;
+                gap: 12px;
                 overflow: hidden;
                 flex: 1;
                 padding-right: 12px;
             }
 
             .popover-thumb-img {
-                width: 42px;
-                height: 48px;
+                width: 44px;
+                height: 50px;
                 object-fit: cover;
-                border: 1px solid #E8DEC8;
-                border-radius: 3px;
+                border: 1px solid rgba(232, 222, 200, 0.8);
+                border-radius: 8px;
                 flex-shrink: 0;
                 background: #FAF8F5;
+                box-shadow: 0 2px 6px rgba(45, 24, 15, 0.05);
             }
 
             .popover-text-meta {
                 display: flex;
                 flex-direction: column;
-                gap: 2px;
+                gap: 3px;
                 overflow: hidden;
             }
 
@@ -174,72 +180,77 @@
 
             .popover-item-cond {
                 font-size: 11px;
-                font-weight: 600;
+                font-weight: 700;
                 color: #15803d;
-                background: rgba(22, 163, 74, 0.1);
-                padding: 1px 6px;
-                border-radius: 3px;
+                background: rgba(22, 163, 74, 0.12);
+                padding: 2px 7px;
+                border-radius: 6px;
                 display: inline-block;
                 width: fit-content;
+                border: 1px solid rgba(22, 163, 74, 0.15);
             }
 
             .popover-item-price {
                 font-size: 14px;
-                font-weight: 700;
+                font-weight: 800;
                 color: #ee4d2d !important;
                 white-space: nowrap;
                 text-align: right;
             }
 
-            /* Chân Popover */
+            /* Chân Popover Liquid Glass */
             .popover-footer-bar {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 10px 14px;
-                background: #FAF8F5;
-                border-top: 1px solid #F0ECE4;
-                border-radius: 0 0 4px 4px;
+                padding: 12px 16px;
+                background: transparent !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.65);
+                border-radius: 0 0 18px 18px;
             }
 
             .popover-more-txt {
                 font-size: 12px;
                 color: #78716C;
-                font-weight: 500;
+                font-weight: 600;
             }
 
             .popover-btn-view-cart {
-                background: #8C4A27;
+                background: linear-gradient(135deg, #8C4A27 0%, #733615 100%) !important;
                 color: #ffffff !important;
                 font-size: 12.5px;
                 font-weight: 700;
                 border: none;
-                border-radius: 4px;
-                padding: 7px 16px;
+                border-radius: 10px !important;
+                padding: 8px 18px;
                 cursor: pointer;
-                transition: background 0.15s ease;
+                transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
                 text-decoration: none;
                 display: inline-block;
+                box-shadow: 0 3px 10px rgba(140, 74, 39, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
             }
             .popover-btn-view-cart:hover {
-                background: #733615;
+                transform: translateY(-1px);
+                box-shadow: 0 5px 14px rgba(140, 74, 39, 0.35) !important;
             }
 
             /* Khi giỏ trống */
             .popover-empty-box {
-                padding: 36px 16px;
+                padding: 40px 16px;
                 text-align: center;
                 color: #78716C;
-                background: #ffffff;
-                border-radius: 4px;
+                background: transparent;
+                border-radius: 16px;
             }
             .popover-empty-icon {
                 font-size: 42px;
                 color: #d5cec4;
-                margin-bottom: 10px;
+                margin-bottom: 12px;
             }
             .popover-empty-text {
-                font-size: 13px;
+                font-size: 13.5px;
                 font-weight: 600;
                 color: #574E45;
             }
@@ -259,12 +270,9 @@
         const moreCount = data.moreCount || 0;
         const items = data.items || [];
 
-        const arrowHtml = '<div class="shopee-cart-arrow"></div>';
-
         if (total === 0 || items.length === 0) {
             const emptyTxt = isEn ? 'No Products Yet' : 'Chưa Có Sản Phẩm';
             return `
-                ${arrowHtml}
                 <div class="popover-empty-box">
                     <i class="fa-solid fa-cart-shopping popover-empty-icon"></i>
                     <div class="popover-empty-text">${emptyTxt}</div>
@@ -297,7 +305,6 @@
         });
 
         return `
-            ${arrowHtml}
             <div class="popover-header-title">${titleTxt}</div>
             <div class="popover-items-list">${itemsHtml}</div>
             <div class="popover-footer-bar">

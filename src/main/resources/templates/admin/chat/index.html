@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
+<head>
+    <title>Kênh Chat & Tư Vấn Chi Nhánh — Hệ Thống Chuỗi Sách Cũ</title>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="container-fluid px-4 py-3">
+
+        <!-- HEADER TIÊU ĐỀ -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1 text-white font-weight-bold">
+                    <i class="fa-solid fa-comments me-2 text-warning"></i>Kênh Tin Nhắn Chi Nhánh
+                </h1>
+                <p class="text-white-50 mb-0 small">
+                    Trực quầy &amp; giải đáp thắc mắc về tồn kho, tình trạng sách cũ theo từng chi nhánh thực tế
+                </p>
+            </div>
+
+            <!-- CHỌN CHI NHÁNH NẾU LÀ ADMIN -->
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-white-50 small"><i class="fa-solid fa-store me-1"></i>Chi nhánh:</span>
+                <select class="form-select form-select-sm bg-dark text-white border-secondary"
+                        onchange="location.href='/admin/chat?storeId=' + this.value" style="width: auto;">
+                    <option th:each="s : ${stores}"
+                            th:value="${s.id}"
+                            th:text="${s.storeName}"
+                            th:selected="${currentStore != null and currentStore.id == s.id}">
+                        Chi Nhánh Thủ Đức
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- KHUNG GIAO DIỆN CHAT HAI CỘT CHUẨN APPLE LIQUID GLASS -->
+        <div class="row g-3" style="min-height: 650px;">
+
+            <!-- CỘT TRÁI: DANH SÁCH KHÁCH HÀNG ĐÃ NHẮN TIN -->
+            <div class="col-lg-4 col-md-5">
+                <div class="card bg-dark border-secondary h-100 shadow-sm" style="border-radius: 14px; overflow: hidden;">
+                    <div class="card-header bg-secondary bg-opacity-25 border-secondary py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 text-white font-weight-bold">
+                                <i class="fa-solid fa-users me-2 text-warning"></i>Khách hàng (<span th:text="${customers.size()}">0</span>)
+                            </h6>
+                            <span class="badge bg-warning text-dark font-weight-bold" th:text="${currentStore != null ? currentStore.storeName : ''}">Thủ Đức</span>
+                        </div>
+                    </div>
+                    <div class="list-group list-group-flush overflow-auto" style="max-height: 560px;">
+                        <div th:if="${customers.empty}" class="text-center py-5 text-white-50">
+                            <i class="fa-regular fa-comment-dots fa-3x mb-3 text-secondary"></i>
+                            <p class="mb-0 small">Chưa có khách hàng nào gửi tin nhắn tới chi nhánh này.</p>
+                        </div>
+
+                        <a th:each="c : ${customers}"
+                           th:href="@{/admin/chat(storeId=${currentStoreId}, userId=${c.id})}"
+                           class="list-group-item list-group-item-action bg-dark text-white border-secondary d-flex align-items-center gap-3 py-3"
+                           th:classappend="${activeCustomer != null and activeCustomer.id == c.id} ? 'active bg-warning bg-opacity-25 border-warning' : ''"
+                           style="transition: all 0.2s;">
+                            <div class="position-relative">
+                                <img th:src="${c.avatar != null ? c.avatar : '/images/default-avatar.png'}"
+                                     onerror="this.src='/images/default-avatar.png'"
+                                     class="rounded-circle border border-warning"
+                                     style="width: 44px; height: 44px; object-fit: cover;">
+                                <span class="position-absolute bottom-0 end-0 bg-success border border-dark rounded-circle"
+                                      style="width: 10px; height: 10px;"></span>
+                            </div>
+                            <div class="flex-grow-1 min-w-0">
+                                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                    <strong class="text-truncate d-block small" style="max-width: 130px;"
+                                            th:text="${c.fullName != null ? c.fullName : c.username}">Khách hàng</strong>
+                                    <span th:if="${needAttentionUserIds != null and needAttentionUserIds.contains(c.id)}" 
+                                          class="badge bg-danger text-white font-weight-bold" style="font-size: 10px;">
+                                        <i class="fa-solid fa-bell me-1"></i>Cần trả lời
+                                    </span>
+                                </div>
+                                <div class="text-white-50 small text-truncate" style="font-size: 11.5px;"
+                                     th:text="${c.email != null ? c.email : c.phone}">email@example.com</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: KHUNG HỘI THOẠI TRỰC TIẾP -->
+            <div class="col-lg-8 col-md-7">
+                <div class="card bg-dark border-secondary h-100 shadow-sm d-flex flex-column" style="border-radius: 14px; overflow: hidden;">
+                    <!-- HEADER CUỘC TRÒ CHUYỆN -->
+                    <div class="card-header bg-secondary bg-opacity-25 border-secondary py-3 d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-3" th:if="${activeCustomer != null}">
+                            <img th:src="${activeCustomer.avatar != null ? activeCustomer.avatar : '/images/default-avatar.png'}"
+                                 onerror="this.src='/images/default-avatar.png'"
+                                 class="rounded-circle border border-warning"
+                                 style="width: 40px; height: 40px; object-fit: cover;">
+                            <div>
+                                <h6 class="mb-0 text-white font-weight-bold"
+                                    th:text="${activeCustomer.fullName != null ? activeCustomer.fullName : activeCustomer.username}">Tên Khách Hàng</h6>
+                                <span class="badge bg-success bg-opacity-25 text-success small" style="font-size: 10.5px;">
+                                    <i class="fa-solid fa-circle me-1" style="font-size: 7px;"></i>Đang kết nối với Quầy Chi Nhánh
+                                </span>
+                            </div>
+                        </div>
+                        <div th:if="${activeCustomer == null}" class="text-white-50 small">
+                            Vui lòng chọn khách hàng bên cột trái để xem tin nhắn.
+                        </div>
+                        <span class="text-white-50 small" th:if="${currentStore != null}">
+                            <i class="fa-solid fa-location-dot me-1 text-warning"></i><span th:text="${currentStore.address}">Địa chỉ</span>
+                        </span>
+                    </div>
+
+                    <!-- BANNER CẢNH BÁO CÂU HỎI ĐẶC BIỆT CẦN QUẦY TRẢ LỜI -->
+                    <div th:if="${activeCustomerNeedsAttention}" 
+                         class="alert alert-warning border-0 rounded-0 mb-0 py-2 px-3 small d-flex align-items-center gap-2" 
+                         style="background: rgba(234, 179, 8, 0.2); color: #fde047; border-bottom: 1px solid rgba(234, 179, 8, 0.4) !important;">
+                        <i class="fa-solid fa-triangle-exclamation text-warning" style="font-size: 15px;"></i>
+                        <div>
+                            <strong>Yêu cầu đặc biệt:</strong> Khách hàng có câu hỏi đặc biệt AI không tự xử lý được. Vui lòng kiểm tra thực tế và trực tiếp phản hồi khách!
+                        </div>
+                    </div>
+
+                    <!-- NỘI DUNG TIN NHẮN (MESSAGE BODY) -->
+                    <div id="adminChatBody" class="card-body overflow-auto flex-grow-1 p-3 d-flex flex-column gap-3"
+                         style="background: rgba(15, 10, 5, 0.4); max-height: 440px; min-height: 400px;">
+
+                        <div th:if="${conversation.empty and activeCustomer != null}" class="text-center py-5 text-white-50 my-auto">
+                            <i class="fa-solid fa-envelope-open-text fa-3x mb-3 text-secondary"></i>
+                            <p>Cuộc hội thoại chưa có tin nhắn nào.</p>
+                        </div>
+
+                        <!-- LẶP CÁC TIN NHẮN -->
+                        <div th:each="m : ${conversation}"
+                             class="d-flex flex-column"
+                             th:classappend="${m.senderType == T(vn.iotstar.entity.ChatMessage.SenderType).CUSTOMER ? 'align-items-start' : 'align-items-end'}">
+
+                            <!-- TÊN NGƯỜI GỬI & THỜI GIAN -->
+                            <div class="small text-white-50 mb-1 px-1" style="font-size: 11px;">
+                                <strong th:text="${m.senderName != null ? m.senderName : (m.senderType == T(vn.iotstar.entity.ChatMessage.SenderType).CUSTOMER ? 'Khách hàng' : 'Nhân viên quầy')}">Tên</strong>
+                                <span class="ms-1" th:text="${#temporals.format(m.createdAt, 'HH:mm dd/MM')}">10:30 05/10</span>
+                            </div>
+
+                            <!-- NẾU CÓ ĐÍNH KÈM THẺ SÁCH -->
+                            <div th:if="${m.book != null}"
+                                 class="p-2 mb-1 rounded bg-secondary bg-opacity-25 border border-secondary d-flex align-items-center gap-2"
+                                 style="max-width: 380px;">
+                                <img th:src="${m.book.primaryImageUrl}" style="width: 36px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                <div class="small text-truncate">
+                                    <strong class="text-white d-block text-truncate" th:text="${m.book.title}">Tựa sách</strong>
+                                    <span class="text-warning font-weight-bold" th:text="${#numbers.formatDecimal(m.book.price, 0, 'POINT', 0, 'COMMA') + '₫'}">₫50.000</span>
+                                </div>
+                            </div>
+
+                            <!-- BONG BÓNG TIN NHẮN -->
+                            <div class="p-3 rounded shadow-sm"
+                                 style="max-width: 80%; line-height: 1.5; font-size: 13.5px;"
+                                 th:styleappend="${m.senderType == T(vn.iotstar.entity.ChatMessage.SenderType).CUSTOMER ? 'background: #2a2723; color: #f5f0eb; border-left: 3px solid #ee4d2d;' : 'background: #8C4A27; color: #ffffff; border-right: 3px solid #d4af37;'}">
+                                <span th:text="${m.content}">Nội dung tin nhắn</span>
+
+                                <!-- ẢNH ĐÍNH KÈM -->
+                                <div th:if="${m.mediaUrl != null and m.mediaType == 'IMAGE'}" class="mt-2">
+                                    <a th:href="${m.mediaUrl}" target="_blank">
+                                        <img th:src="${m.mediaUrl}" class="rounded border border-secondary shadow-sm"
+                                             style="max-width: 230px; max-height: 200px; object-fit: cover;" title="Nhấn để xem kích thước lớn">
+                                    </a>
+                                </div>
+
+                                <!-- VIDEO ĐÍNH KÈM -->
+                                <div th:if="${m.mediaUrl != null and m.mediaType == 'VIDEO'}" class="mt-2">
+                                    <video th:src="${m.mediaUrl}" controls class="rounded border border-secondary shadow-sm"
+                                           style="max-width: 260px; max-height: 220px; background: #000;"></video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FOOTER: SOẠN VÀ GỬI PHẢN HỒI KÈM ẢNH/VIDEO THỰC TẾ -->
+                    <div class="card-footer bg-secondary bg-opacity-25 border-secondary p-3" th:if="${activeCustomer != null}">
+                        <!-- PHẢN HỒI MẪU NHANH -->
+                        <div class="d-flex gap-2 mb-2 overflow-auto pb-1">
+                            <button type="button" class="btn btn-outline-warning btn-sm py-0 text-nowrap" style="font-size: 11px;"
+                                    onclick="setAdminReplyPrompt('Dạ cuốn sách này hiện đang còn trên kệ tại quầy của chi nhánh ạ! Anh/chị có thể ghé xem hoặc đặt mua trên web nhé!')">
+                                📚 Sách còn tại quầy
+                            </button>
+                            <button type="button" class="btn btn-outline-warning btn-sm py-0 text-nowrap" style="font-size: 11px;"
+                                    onclick="setAdminReplyPrompt('Dạ sách này độ mới còn khoảng 90%, bìa đẹp và không rách mép, trang giấy sạch ạ!')">
+                                ✨ Tình trạng sách 90%
+                            </button>
+                            <button type="button" class="btn btn-outline-warning btn-sm py-0 text-nowrap" style="font-size: 11px;"
+                                    onclick="setAdminReplyPrompt('Dạ em đã giữ sách ở quầy thu ngân cho mình rồi ạ!')">
+                                🔖 Đã giữ sách
+                            </button>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="file" id="adminMediaFile" style="display:none;" onchange="handleAdminFileUpload(event)">
+                            <button class="btn btn-outline-warning" type="button" onclick="triggerAdminUpload('image/*')" title="Gửi ảnh chụp góc sách tại quầy">
+                                <i class="fa-solid fa-camera"></i>
+                            </button>
+                            <button class="btn btn-outline-warning" type="button" onclick="triggerAdminUpload('video/*')" title="Gửi video kiểm tra sách">
+                                <i class="fa-solid fa-video"></i>
+                            </button>
+                            <input type="text" id="adminReplyInput" class="form-control bg-dark text-white border-secondary"
+                                   placeholder="Nhập tin nhắn trả lời khách hàng..."
+                                   onkeydown="if(event.key==='Enter') sendAdminReply()">
+                            <button class="btn btn-warning font-weight-bold" type="button" onclick="sendAdminReply()">
+                                <i class="fa-solid fa-paper-plane me-1"></i> Gửi Tin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCRIPT GỬI TRẢ LỜI TỨC THÌ TỪ NHÂN VIÊN QUẦY -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const currentStoreId = /*[[${currentStoreId}]]*/ 1;
+        const activeCustomerId = /*[[${activeCustomer != null ? activeCustomer.id : null}]]*/ null;
+
+        function setAdminReplyPrompt(text) {
+            const input = document.getElementById('adminReplyInput');
+            if (input) {
+                input.value = text;
+                input.focus();
+            }
+        }
+
+        function triggerAdminUpload(accept) {
+            const fileInput = document.getElementById('adminMediaFile');
+            if (fileInput) {
+                fileInput.accept = accept;
+                fileInput.click();
+            }
+        }
+
+        function handleAdminFileUpload(e) {
+            const file = e.target.files ? e.target.files[0] : null;
+            if (!file || !activeCustomerId) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/api/chat/upload-media', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const defaultMsg = data.mediaType === 'VIDEO' ? 'Dạ gửi video sách kiểm tra trực tiếp tại quầy ạ' : 'Dạ gửi ảnh chụp thực tế tình trạng sách tại quầy ạ';
+                    postAdminReply(defaultMsg, data.mediaUrl, data.mediaType);
+                } else {
+                    alert(data.message || 'Lỗi tải ảnh/video');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Không thể tải tệp lên');
+            })
+            .finally(() => {
+                e.target.value = '';
+            });
+        }
+
+        function sendAdminReply() {
+            const input = document.getElementById('adminReplyInput');
+            if (!input || !activeCustomerId) return;
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            postAdminReply(text, null, null);
+        }
+
+        function postAdminReply(content, mediaUrl, mediaType) {
+            const params = new URLSearchParams();
+            params.append('storeId', currentStoreId);
+            params.append('userId', activeCustomerId);
+            if (content) params.append('content', content);
+            if (mediaUrl) params.append('mediaUrl', mediaUrl);
+            if (mediaType) params.append('mediaType', mediaType);
+
+            fetch('/api/chat/staff/reply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || 'Lỗi gửi tin nhắn');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                location.reload();
+            });
+        }
+
+        // Tự cuộn xuống đáy khung chat
+        window.addEventListener('load', function() {
+            const box = document.getElementById('adminChatBody');
+            if (box) box.scrollTop = box.scrollHeight;
+        });
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

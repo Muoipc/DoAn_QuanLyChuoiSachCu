@@ -546,24 +546,40 @@
             color: #8C4A27;
         }
 
-        /* 2. SHOPEE MAIN HEADER - NATIVE STICKY TOP 0 SIÊU MƯỢT */
+        /* 2. CHỢ TỐT MAIN HEADER - MÀU NÂU GỖ CỔ ĐIỂN CHUẨN STYLE WEB ĐỌC SÁCH */
         .shopee-header-section {
-            background: rgba(45, 24, 15, 0.28);
-            backdrop-filter: blur(36px);
-            -webkit-backdrop-filter: blur(36px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 32px 0 rgba(40, 20, 10, 0.12);
-            padding: 16px 0 12px 0;
+            background: #3E2314 !important;
+            border-bottom: none !important;
+            box-shadow: none !important;
+            padding: 10px 0 !important;
             position: sticky;
             top: 0;
             z-index: 99999 !important;
+        }
+        .chotot-home-header {
+            background: transparent !important;
+            position: relative !important;
+        }
+        /* Chữ Nav Tabs nổi bật trên nền nâu cổ điển */
+        .chotot-home-header .chotot-nav-tab {
+            color: #FDFBF7 !important;
+        }
+        .chotot-home-header .chotot-nav-tab:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: #FFFFFF !important;
+        }
+        .chotot-home-header .chotot-nav-tab.active {
+            color: #FFFFFF !important;
+            background: rgba(255, 255, 255, 0.22) !important;
+            font-weight: 800 !important;
         }
 
         .header-main-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 40px;
+            position: relative;
+            min-height: 48px;
         }
 
         /* Brand Logo Báo Chí "Books" */
@@ -749,7 +765,7 @@
         .shopee-cart-wrap {
             position: relative !important;
             cursor: pointer;
-            padding: 6px 12px;
+            padding: 0;
             flex-shrink: 0;
             z-index: 100000 !important;
         }
@@ -767,14 +783,488 @@
         .shopee-cart-badge {
             position: absolute;
             top: -2px;
-            right: 0;
+            right: -2px;
             background: #8C4A27;
             color: #ffffff;
             font-size: 11px;
             font-weight: 900;
-            padding: 1px 7px;
+            padding: 1px 6px;
             border-radius: 12px;
             border: 2px solid #ffffff;
+            line-height: 1.2;
+        }
+
+        /* ================= CHỢ TỐT HEADER STYLING ================= */
+        .btn-chotot-menu {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1px solid rgba(45, 24, 15, 0.12);
+            color: #1C1917;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        .btn-chotot-menu:hover {
+            background: #F5ECE4;
+            color: var(--color-fire);
+            border-color: var(--color-fire);
+            transform: scale(1.04);
+        }
+
+        .chotot-brand-pill {
+            background: transparent;
+            padding: 4px 0;
+            border: none;
+            box-shadow: none;
+            transition: opacity 0.2s ease;
+        }
+        .chotot-brand-pill:hover {
+            background: transparent;
+            box-shadow: none;
+            opacity: 0.85;
+        }
+
+        /* Nav Tabs Chợ Tốt */
+        /* Nav Tabs Chợ Tốt trên nền vàng */
+        .chotot-nav-tabs {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .chotot-nav-tab {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #1C1917 !important;
+            text-decoration: none;
+            padding: 7px 18px;
+            border-radius: 9999px;
+            position: relative;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+        .chotot-nav-tab:hover {
+            background: rgba(0, 0, 0, 0.06) !important;
+            color: #000000 !important;
+        }
+        .chotot-nav-tab.active {
+            color: #1C1917 !important;
+            font-weight: 900 !important;
+            background: rgba(0, 0, 0, 0.09) !important;
+        }
+        .chotot-nav-tab.active::after {
+            display: none !important;
+            content: none !important;
+        }
+
+        /* Capsule Search Form in Header (Đồng bộ 100% Home & Search) */
+        .chotot-header-search-form {
+            flex: 1;
+            max-width: 560px;
+            height: 42px;
+            background: #ffffff;
+            border-radius: 9999px;
+            border: 1.5px solid #D5D5D5;
+            padding: 3px 4px 3px 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            box-sizing: border-box;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .chotot-header-search-form:focus-within {
+            border-color: rgba(140, 74, 39, 0.5);
+            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.12);
+        }
+
+        .chotot-header-search-form .chotot-input-field-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+        }
+        .chotot-header-search-form .chotot-lens-svg {
+            color: #8C857B;
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+        }
+        .chotot-header-search-form .chotot-native-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13.5px;
+            line-height: 1.35;
+            color: #1C1917;
+            font-family: inherit;
+        }
+        .chotot-header-search-form .chotot-native-input::placeholder {
+            color: #8C857B;
+        }
+
+        .chotot-filter-trigger-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .chotot-header-search-form .chotot-location-button-wrap {
+            height: 32px;
+            border: 1px solid #E5E0D8;
+            border-radius: 9999px;
+            background: #FAF8F5;
+            color: #1C1917;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-size: 12px;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+        .chotot-header-search-form .chotot-location-button-wrap:hover {
+            border-color: #8C4A27;
+            background: #ffffff;
+            color: #8C4A27;
+        }
+        .chotot-header-search-form .location-pin-svg {
+            color: #EE4D2D;
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+        }
+        .chotot-header-search-form .chevron-down-svg {
+            color: #78716C;
+            width: 10px;
+            height: 10px;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        /* BẢNG BỘ LỌC HIỆN RA CHUẨN CHỢ TỐT (KHỚP 100% ẢNH IMAGE_6B7338.PNG) */
+        .chotot-filter-modal-popover {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 350px;
+            background: #ffffff !important;
+            border-radius: 16px;
+            border: 1.5px solid #E5E0D8;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04);
+            z-index: 100050 !important;
+            overflow: hidden;
+            animation: filterPopoverSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: left;
+        }
+        @keyframes filterPopoverSlide {
+            from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .filter-popover-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid #F0ECE4;
+            background: #FAF8F5;
+        }
+        .btn-close-filter-popover {
+            border: none;
+            background: transparent;
+            font-size: 20px;
+            line-height: 1;
+            color: #78716C;
+            cursor: pointer;
+            padding: 0 4px;
+            transition: color 0.15s ease;
+        }
+        .btn-close-filter-popover:hover {
+            color: #EE4D2D;
+        }
+
+        .filter-popover-body {
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 380px;
+            overflow-y: auto;
+        }
+
+        .filter-section-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .filter-field-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #57534E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .custom-select-wrap {
+            position: relative;
+            width: 100%;
+        }
+        .custom-filter-select {
+            width: 100%;
+            height: 36px;
+            border: 1px solid #E5E0D8;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #1C1917;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 0 32px 0 12px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            transition: border-color 0.15s ease;
+            box-sizing: border-box;
+        }
+        .custom-filter-select:focus {
+            border-color: #8C4A27;
+        }
+        .custom-select-arrow {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: #78716C;
+            pointer-events: none;
+        }
+
+        .condition-chips-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .condition-chip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            border: 1px solid #E5E0D8;
+            border-radius: 8px;
+            background: #FAF8F5 !important;
+            color: #57534E !important;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+        .condition-chip:hover {
+            border-color: #8C4A27;
+            color: #8C4A27 !important;
+        }
+        .condition-chip:has(input:checked) {
+            background: #8C4A27 !important;
+            border-color: #8C4A27 !important;
+            color: #ffffff !important;
+            font-weight: 700;
+        }
+        .condition-chip:has(input:checked) span {
+            color: #ffffff !important;
+        }
+
+        .price-range-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .price-input-box {
+            flex: 1;
+            height: 36px;
+            border: 1px solid #E5E0D8;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #1C1917;
+            font-size: 12.5px;
+            padding: 0 10px;
+            outline: none;
+            transition: border-color 0.15s ease;
+            box-sizing: border-box;
+        }
+        .price-input-box:focus {
+            border-color: #8C4A27;
+        }
+
+        .filter-popover-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 16px;
+            border-top: 1px solid #F0ECE4;
+            background: #FAF8F5;
+        }
+        .btn-popover-reset {
+            height: 36px;
+            padding: 0 16px;
+            border: 1px solid #E5E0D8;
+            border-radius: 9999px;
+            background: #ffffff;
+            color: #57534E;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-popover-reset:hover {
+            border-color: #8C4A27;
+            color: #8C4A27;
+        }
+        .btn-popover-apply {
+            flex: 1;
+            height: 36px;
+            border: none;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #8C4A27 0%, #733615 100%);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.25);
+            transition: all 0.15s ease;
+        }
+        .btn-popover-apply:hover {
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.35);
+            transform: scale(1.02);
+        }
+
+        .chotot-header-search-form .chotot-submit-button {
+            height: 32px;
+            border: none;
+            outline: none;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #8C4A27 0%, #733615 100%);
+            color: #ffffff;
+            font-size: 12.5px;
+            font-weight: 700;
+            padding: 0 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.2);
+            font-family: inherit;
+        }
+        .chotot-header-search-form .chotot-submit-button:hover {
+            box-shadow: 0 3px 10px rgba(140, 74, 39, 0.3);
+            transform: scale(1.02);
+        }
+        .chotot-header-search-form .chotot-submit-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Action buttons hình tròn màu trắng trên nền vàng Chợ Tốt */
+        .chotot-circle-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #ffffff !important;
+            border: none !important;
+            color: #1C1917 !important;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .chotot-circle-btn:hover {
+            color: #EE4D2D !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.14);
+        }
+
+        .chotot-badge-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ee4d2d;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 1px 5px;
+            border-radius: 10px;
+            border: 2px solid #ffffff;
+            line-height: 1.2;
+        }
+
+        .btn-chotot-login {
+            background: #ffffff !important;
+            color: #1C1917 !important;
+            font-size: 13.5px;
+            font-weight: 700;
+            padding: 0 20px;
+            height: 38px;
+            border-radius: 9999px;
+            border: none !important;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-chotot-login:hover {
+            background: #F8F8F8 !important;
+            color: #000000 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-chotot-post {
+            background: #1C1917;
+            color: #ffffff !important;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 7px 15px;
+            border-radius: 9999px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(28, 25, 23, 0.2);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .btn-chotot-post:hover {
+            background: var(--color-fire);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 18px rgba(140, 74, 39, 0.35);
         }
 
         /* MODAL 5 CỬA HÀNG */
@@ -829,13 +1319,11 @@
         }
     </style>
 
-    <!-- 1. SHOPEE TOPBAR (TỰ NHIÊN CUỘN THEO TRANG, KHÔNG GÂY ĐƠ LAG) -->
-    <div class="shopee-topbar">
+    <!-- 1. SHOPEE TOPBAR (ẨN TOÀN BỘ ĐỂ HEADER SIÊU TINH GỌN CHUẨN CHỢ TỐT) -->
+    <div class="shopee-topbar" th:if="${false}">
         <div class="container-shopee topbar-content">
             <div class="topbar-nav">
                 <a th:href="@{/consignments}"><i class="fa-solid fa-recycle me-1" style="color:#10b981;"></i> Ký Gửi Sách Cũ</a>
-                <span class="topbar-divider"></span>
-                <a href="javascript:void(0)" onclick="openStoreModal()"><i class="fa-solid fa-store me-1" style="color:#8C4A27;"></i> Hệ Thống Cửa Hàng TP.HCM</a>
             </div>
 
             <div class="topbar-links">
@@ -960,172 +1448,211 @@
         </div>
     </div>
 
-    <!-- 2. SHOPEE HEADER CHÍNH (STICKY TỰ NHIÊN Ở TOP 0) -->
-    <header class="shopee-header-section">
-        <div class="container-shopee header-main-row">
-            <!-- Brand Logo Báo Chí "Books" -->
-            <a th:href="@{/}" class="shopee-brand-logo">
-                <img th:src="@{/images/logo-books.png}" alt="BOOKS Logo" class="brand-logo-img">
-                <div class="brand-logo-text">
-                    <h1>CHUỖI SÁCH CŨ</h1>
-                    <span>Kho Sách Cũ Kiểm Định · Giá Tốt Sinh Viên</span>
-                </div>
-            </a>
-
-            <!-- Thanh tìm kiếm Shopee -->
-            <div class="shopee-search-container">
-                <form th:action="@{/search}" method="get" class="shopee-search-bar">
-                    <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm tên sách cũ, tác giả, ISBN, hoặc giáo trình HCMUTE (Mới 80% – 99%)...">
-                    <button type="submit" class="btn-search-shopee">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <span>Tìm Kiếm</span>
-                    </button>
-                </form>
-
-                <!-- Từ khóa hot dưới thanh search -->
-                <div class="shopee-hot-keywords">
-                    <a th:href="@{/search(keyword='Yêu Những Điều Không Hoàn Hảo')}">Yêu Những Điều Không Hoàn Hảo</a>
-                    <a th:href="@{/search(keyword='Nhà Giả Kim')}">Nhà Giả Kim</a>
-                    <a th:href="@{/search(keyword='Đắc Nhân Tâm')}">Đắc Nhân Tâm</a>
-                    <a th:href="@{/search(keyword='Atomic Habits')}">Atomic Habits</a>
-                    <a th:href="@{/search(keyword='Cây Cam Ngọt Của Tôi')}">Cây Cam Ngọt Của Tôi</a>
-                    <a th:href="@{/search(keyword='Kính Vạn Hoa')}">Kính Vạn Hoa</a>
-                    <a th:href="@{/search(cond=95)}">Độ mới &ge; 95%</a>
-                </div>
+    <!-- 2. HEADER CHÍNH CHUẨN CHỢ TỐT VINTAGE (STICKY TOP 0) -->
+    <header class="shopee-header-section" th:classappend="${isHome == true} ? 'chotot-home-header' : ''">
+        <div class="container-shopee header-main-row" style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
+            <!-- Brand Logo dạng pill trắng nổi bật trên nền vàng Chợ Tốt -->
+            <div class="chotot-header-left" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                <a th:href="@{/}" class="shopee-brand-logo chotot-brand-pill" style="display:inline-flex; align-items:center; gap:8px; padding:6px 16px; background:#FFFFFF; border-radius:9999px; box-shadow:0 2px 8px rgba(0,0,0,0.08); text-decoration:none;">
+                    <img th:src="@{/images/brand-book-icon.png}" alt="Chuỗi Sách Cũ" style="width:32px; height:32px; object-fit:contain; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.15));">
+                    <span style="font-size:15px; font-weight:900; color:#1C1917; letter-spacing:0.5px; white-space:nowrap;">CHUỖI SÁCH CŨ</span>
+                </a>
             </div>
 
-            <!-- Nhóm nút hành động Header: Giỏ Hàng Chuẩn Shopee -->
-            <div class="header-action-group" style="display:flex; align-items:center; gap:16px;">
-                <!-- Giỏ hàng Shopee với Live Badge Counter -->
+            <!-- THANH TÌM KIẾM CAPSULE NẰM TRỰC TIẾP TRONG HEADER (CHỈ HIỆN TRÊN TRANG CON KHI KHÔNG CÓ HERO BANNER) -->
+            <form th:if="${isHome != true}" th:action="@{/search}" method="get" class="chotot-header-search-form" id="headerSearchForm">
+                <div class="chotot-input-field-wrap">
+                    <svg class="chotot-lens-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none">
+                        <path d="M18.2798 11.4399C18.2797 7.66239 15.2175 4.6001 11.4399 4.6001C7.66244 4.60018 4.60018 7.66244 4.6001 11.4399C4.6001 15.2175 7.66239 18.2797 11.4399 18.2798C15.2176 18.2798 18.2798 15.2176 18.2798 11.4399ZM20.2798 11.4399C20.2798 13.5439 19.5432 15.4748 18.3159 16.9927L21.0952 19.6812C21.4922 20.1438 21.4786 20.7232 21.1187 21.0952C20.7586 21.4674 20.1798 21.5 19.7817 21.186L16.8901 18.396C15.3881 19.5745 13.4972 20.2798 11.4399 20.2798C6.55782 20.2797 2.6001 16.3221 2.6001 11.4399C2.60018 6.55787 6.55787 2.60018 11.4399 2.6001C16.3221 2.6001 20.2797 6.55782 20.2798 11.4399Z" fill="currentColor"></path>
+                    </svg>
+                    <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm sản phẩm, tên sách cũ, tác giả, giáo trình..." class="chotot-native-input" autocomplete="off">
+                </div>
+
+                <!-- Nút chọn khu vực / Mở bộ lọc popover (Khớp 100% ảnh image_6b7338.png) -->
+                <div class="chotot-filter-trigger-wrap">
+                    <button type="button" class="chotot-location-button-wrap" id="headerFilterBtn" onclick="toggleChototFilterPopover(event)">
+                        <svg class="location-pin-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M20.0005 10.0439C20.0004 11.4492 19.4826 12.8887 18.7915 14.2021C18.0937 15.5284 17.1749 16.8075 16.2759 17.9131C15.3742 19.0219 14.4755 19.9768 13.8032 20.6533C13.4666 20.992 13.1851 21.2623 12.9868 21.4492C12.8876 21.5427 12.8088 21.6161 12.7544 21.666L12.0005 22.3418L11.2466 21.666C11.1921 21.6161 11.1134 21.5427 11.0142 21.4492C10.8158 21.2623 10.5344 20.992 10.1978 20.6533C9.52545 19.9768 8.62674 19.0219 7.7251 17.9131C6.82612 16.8075 5.90731 15.5284 5.20947 14.2021C4.51839 12.8887 4.0006 11.4492 4.00049 10.0439C4.00049 5.6075 7.57638 2 12.0005 2C16.4246 2 20.0005 5.6075 20.0005 10.0439ZM12.0005 13C13.7936 13 15.2368 11.5391 15.2368 9.75C15.2367 7.96099 13.7935 6.5 12.0005 6.5C10.2076 6.50015 8.76521 7.96108 8.76514 9.75C8.76514 11.539 10.2075 12.9998 12.0005 13Z" fill="#EE4D2D"></path>
+                        </svg>
+                        <span id="filterBtnLabel">Toàn TP.HCM</span>
+                        <svg class="chevron-down-svg" id="filterBtnArrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="10" height="10" fill="none">
+                            <path d="M12.4495 14.8316C12.2013 15.0561 11.7987 15.0561 11.5505 14.8316L6.18623 9.98133C6.0044 9.81692 5.95001 9.56967 6.04841 9.35486C6.14682 9.14006 6.37864 9 6.63578 9L17.3642 9C17.6214 9 17.8532 9.14006 17.9516 9.35487C18.05 9.56967 17.9956 9.81693 17.8138 9.98133L12.4495 14.8316Z" fill="currentColor"></path>
+                        </svg>
+                    </button>
+
+                    <!-- BẢNG BỘ LỌC HIỆN RA CHUẨN TRẮNG CHỢ TỐT (KHÔNG DÙNG BẢNG ĐEN OS) -->
+                    <div class="chotot-filter-modal-popover" id="chototFilterPopover" style="display:none;">
+                        <div class="filter-popover-header">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-sliders text-danger"></i>
+                                <span style="font-weight:800; font-size:14px; color:#1C1917;">Bộ Lọc &amp; Khu Vực</span>
+                            </div>
+                            <button type="button" class="btn-close-filter-popover" onclick="closeChototFilterPopover(event)">&times;</button>
+                        </div>
+
+                        <div class="filter-popover-body">
+                            <!-- 1. Chọn Chi Nhánh / Tỉnh thành -->
+                            <div class="filter-section-row">
+                                <label class="filter-field-label">Chi nhánh cửa hàng</label>
+                                <div class="custom-select-wrap">
+                                    <select name="store" id="filterStoreSelect" class="custom-filter-select" onchange="updateFilterLabel(this)">
+                                        <option value="">Toàn TP.HCM (5 Shop)</option>
+                                        <option th:if="${stores != null}" th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStore != null and selectedStore == st.id}">Thủ Đức</option>
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
+                                </div>
+                            </div>
+
+                            <!-- 2. Danh mục thể loại -->
+                            <div class="filter-section-row">
+                                <label class="filter-field-label">Danh mục thể loại</label>
+                                <div class="custom-select-wrap">
+                                    <select name="cat" id="filterCatSelect" class="custom-filter-select">
+                                        <option value="">Tất cả thể loại</option>
+                                        <option th:if="${categories != null}" th:each="c : ${categories}" th:value="${c.id}" th:text="${c.categoryName}" th:selected="${selectedCat != null and selectedCat == c.id}">Văn Học</option>
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
+                                </div>
+                            </div>
+
+                            <!-- 3. Độ mới thẩm định -->
+                            <div class="filter-section-row">
+                                <label class="filter-field-label">Độ mới thẩm định</label>
+                                <div class="condition-chips-grid">
+                                    <label class="condition-chip">
+                                        <input type="radio" name="cond" value="" th:checked="${selectedCond == null}">
+                                        <span>Tất cả</span>
+                                    </label>
+                                    <label class="condition-chip">
+                                        <input type="radio" name="cond" value="95" th:checked="${selectedCond == 95}">
+                                        <span>&ge; 95%</span>
+                                    </label>
+                                    <label class="condition-chip">
+                                        <input type="radio" name="cond" value="90" th:checked="${selectedCond == 90}">
+                                        <span>&ge; 90%</span>
+                                    </label>
+                                    <label class="condition-chip">
+                                        <input type="radio" name="cond" value="80" th:checked="${selectedCond == 80}">
+                                        <span>&ge; 80%</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 4. Khoảng giá -->
+                            <div class="filter-section-row">
+                                <label class="filter-field-label">Khoảng giá (₫)</label>
+                                <div class="price-range-inputs">
+                                    <input type="number" name="minPrice" id="filterMinPrice" class="price-input-box" placeholder="Từ ₫" th:value="${selectedMinPrice}">
+                                    <span style="color:#A8A29E;">-</span>
+                                    <input type="number" name="maxPrice" id="filterMaxPrice" class="price-input-box" placeholder="Đến ₫" th:value="${selectedMaxPrice}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Actions: Xoá lọc & Áp dụng -->
+                        <div class="filter-popover-footer">
+                            <button type="button" class="btn-popover-reset" onclick="resetPopoverFilters(event)">Xoá lọc</button>
+                            <button type="button" class="btn-popover-apply" onclick="applyPopoverFilters(event)">Áp dụng</button>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="cat" th:if="${selectedCat != null}" th:value="${selectedCat}">
+                <input type="hidden" name="sort" th:if="${selectedSort != null and selectedSort != ''}" th:value="${selectedSort}">
+
+                <!-- Nút tìm kiếm -->
+                <button type="submit" class="chotot-submit-button">
+                    <span>Tìm kiếm</span>
+                </button>
+            </form>
+
+            <!-- NẾU LÀ HOME / SEARCH (CÓ HERO BANNER VÀNG PHÍA DƯỚI) -> NAV TABS Ở CHÍNH GIỮA HEADER -->
+            <nav th:if="${isHome == true}" class="chotot-nav-tabs" style="margin: 0 auto;">
+                <a th:href="@{/}" class="chotot-nav-tab" th:classappend="${isHome == true and (selectedCat == null and (selectedQuery == null or selectedQuery == ''))} ? 'active' : ''">Sách Cũ</a>
+                <a th:href="@{/consignments/create}" class="chotot-nav-tab" th:classappend="${activeTab == 'consignment'} ? 'active' : ''">Ký Gửi Sách</a>
+            </nav>
+
+            <!-- Nhóm nút hành động Header bên phải -->
+            <div style="display:flex; align-items:center; gap:14px; flex-shrink:0;">
+                <!-- 1. Nút Thông Báo hình tròn ngoài Header kèm badge & Popover -->
+                <div class="shopee-noti-wrapper">
+                    <a th:href="@{/help}" class="chotot-circle-btn" aria-label="Thông báo" title="Thông báo">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notification-badge" style="position:absolute; top:-4px; right:-4px; background:#EE4D2D; color:#ffffff; font-size:11px; font-weight:800; min-width:18px; height:18px; border-radius:9999px; display:flex; align-items:center; justify-content:center; padding:0 4px; border:2px solid #ffffff; box-shadow:0 1px 4px rgba(0,0,0,0.2);">5</span>
+                    </a>
+                    <div class="shopee-noti-popover">
+                        <div class="noti-popover-header">Thông Báo Mới Nhận</div>
+                        <div class="noti-popover-list">
+                            <!-- Thông báo 1: Ưu đãi sách cũ -->
+                            <a th:href="@{/search}" class="noti-item unread">
+                                <img th:src="@{/images/books/book_1.jpg}" alt="Ưu đãi" class="noti-thumb">
+                                <div class="noti-body">
+                                    <h4 class="noti-title">NGÀNH HÀNG SÁCH CŨ TUNG MÃ GIẢM ĐẾN 50.000₫</h4>
+                                    <p class="noti-desc">🎉 Thêm mã trợ giá sinh viên đơn từ 120.000₫ 💯 Vô vàn giáo trình HCMUTE chỉ từ 20K đang chờ bạn!</p>
+                                </div>
+                            </a>
+
+                            <!-- Thông báo 2: Cập nhật đơn hàng -->
+                            <a th:href="@{/orders}" class="noti-item unread">
+                                <img th:src="@{/images/books/book_2.jpg}" alt="Đơn hàng" class="noti-thumb">
+                                <div class="noti-body">
+                                    <h4 class="noti-title">Đơn hàng #ORD259683735 đã được kho Thủ Đức xác nhận</h4>
+                                    <p class="noti-desc">📦 Đang chuẩn bị cuốn "Đắc Nhân Tâm (Khổ Lớn)". Đơn vị vận chuyển sẽ giao trong 1-2 ngày tới.</p>
+                                </div>
+                            </a>
+
+                            <!-- Thông báo 3: Hàng mới về kèm preview ảnh -->
+                            <a th:href="@{/search?cat=2}" class="noti-item">
+                                <img th:src="@{/images/books/book_15.jpg}" alt="Sách mới" class="noti-thumb">
+                                <div class="noti-body">
+                                    <h4 class="noti-title">"Giáo Trình Cấu Trúc Dữ Liệu & Giải Thuật" đã có lại hàng...</h4>
+                                    <p class="noti-desc">🎉 5 cuốn độ mới 90-95% vừa về kệ tại 5 chi nhánh TP.HCM 🛒 Nhấn để chọn cuốn đẹp nhất!</p>
+                                    <div class="noti-preview-grid">
+                                        <img th:src="@{/images/books/book_15.jpg}" alt="P1">
+                                        <img th:src="@{/images/books/book_16.jpg}" alt="P2">
+                                        <img th:src="@{/images/books/book_17.jpg}" alt="P3">
+                                        <img th:src="@{/images/books/book_18.jpg}" alt="P4">
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <a th:href="@{/help}" class="noti-popover-footer">Xem Tất Cả Thông Báo</a>
+                    </div>
+                </div>
+
+                <!-- 2. Giỏ hàng Shopee với Live Badge Counter & Popover -->
                 <div class="shopee-cart-wrap" id="shopeeCartWrap">
-                    <a th:href="@{/cart}" aria-label="Giỏ hàng">
-                        <i class="fa-solid fa-cart-shopping shopee-cart-icon"></i>
+                    <a th:href="@{/cart}" class="chotot-circle-btn" aria-label="Giỏ hàng" title="Giỏ hàng">
+                        <i class="fa-solid fa-cart-shopping"></i>
                         <span class="shopee-cart-badge" id="headerCartBadge">0</span>
                     </a>
+                </div>
+
+                <!-- Đăng nhập nếu Anonymous -->
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/login}" class="btn-chotot-login">Đăng Nhập</a>
+                </div>
+
+                <!-- User Popover nếu Authenticated -->
+                <div sec:authorize="isAuthenticated()" class="shopee-user-wrapper">
+                    <div class="shopee-user-trigger" style="display:flex; align-items:center; gap:6px; cursor:pointer; background:#FFFFFF; border-radius:9999px; padding:4px 14px 4px 5px; box-shadow:0 2px 6px rgba(0,0,0,0.08);">
+                        <img th:src="${user != null and user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
+                             alt="Avatar" class="shopee-user-avatar">
+                        <span class="shopee-user-name" sec:authentication="name" style="max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; font-size:13px; color:#1C1917;">Tài khoản</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size:10px; color:#78716C;"></i>
+                    </div>
+                    <div class="shopee-user-popover">
+                        <div class="shopee-popover-arrow"></div>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="shopee-popover-item text-danger fw-bold"><i class="fa-solid fa-gauge-high me-1 text-danger"></i>Kênh Quản Trị</a>
+                        <a th:href="@{/user/account/profile}" class="shopee-popover-item"><i class="fa-regular fa-user me-2 text-muted"></i>Tài Khoản Của Tôi</a>
+                        <a th:href="@{/orders}" class="shopee-popover-item"><i class="fa-regular fa-file-lines me-2 text-muted"></i>Đơn Mua</a>
+                        <a th:href="@{/user/wishlist}" class="shopee-popover-item"><i class="fa-regular fa-heart me-2 text-muted"></i>Sách Yêu Thích</a>
+                        <a th:href="@{/logout}" class="shopee-popover-item logout-item" style="color:#c62828;"><i class="fa-solid fa-arrow-right-from-bracket me-2 text-danger"></i>Đăng Xuất</a>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
-
-    <!-- MODAL HỆ THỐNG CỬA HÀNG TP.HCM -->
-    <div class="modal-stores-backdrop" id="storeModal" onclick="closeStoreModal(event)">
-        <div class="modal-stores-content" onclick="event.stopPropagation()" style="max-width:850px; max-height:85vh; overflow-y:auto;">
-            <button type="button" class="modal-close-btn" onclick="closeStoreModal()"><i class="fa-solid fa-xmark"></i></button>
-
-            <h3 style="font-size: 18px; font-weight: 900; color: #1C1917; display:flex; align-items:center; gap:8px;">
-                <i class="fa-solid fa-shop" style="color:#8C4A27;"></i>
-                <span>HỆ THỐNG CÁC HIỆU SÁCH CŨ UY TÍN TẠI TP. HỒ CHÍ MINH</span>
-            </h3>
-            <p style="font-size: 13px; color: #574E45; margin-top: 4px;">
-                Quý khách có thể ghé đọc thử, nhận sách Click &amp; Collect trong 2h hoặc ký gửi trực tiếp tại quầy:
-            </p>
-
-            <div class="modal-store-grid" style="grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:12px;">
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Bá Tân – Sách Cũ Thư Viện (Thủ Đức)
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Gian số 10, Đường Sách Thủ Đức, 2 Hồ Thị Tư, P. Hiệp Phú
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>0962.936.310</strong>
-                    </p>
-                    <a th:href="@{/stores/1}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Little Cats Bookstore – Đường Sách Q1
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Đường Sách Nguyễn Văn Bình, P. Bến Nghé, Quận 1
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>028.3822.9988</strong>
-                    </p>
-                    <a th:href="@{/stores/2}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Sách Cũ Bảo Khang – Làng ĐHQG TP.HCM
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Tòa Nhà Công Vụ ĐHQG-HCM, Đường Nguyễn Du, TP. Thủ Đức
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>0908.123.456</strong>
-                    </p>
-                    <a th:href="@{/stores/3}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Sách Cũ Tổng Hợp 160 – Trần Huy Liệu
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 160 Trần Huy Liệu, P. 15, Q. Phú Nhuận
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>028.3847.9924</strong>
-                    </p>
-                    <a th:href="@{/stores/4}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Hiệu Sách Cũ Tấn Phương – Trần Nhân Tôn
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 29 Trần Nhân Tôn, P. 9, Quận 5
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 07:30 - 21:30 | Hotline: <strong>028.3835.1122</strong>
-                    </p>
-                    <a th:href="@{/stores/5}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Tiệm Sách Ngoại Văn Momo – Phú Nhuận
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 205 Trần Huy Liệu, P. 15, Q. Phú Nhuận
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 09:00 - 20:30 | Hotline: <strong>0938.556.789</strong>
-                    </p>
-                    <a th:href="@{/stores/6}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Kho Sách Cũ ABC – Sài Gòn
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 35 Đường Tám Danh, P. 4, Quận 8
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:00 | Hotline: <strong>028.3855.4433</strong>
-                    </p>
-                    <a th:href="@{/stores/7}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-                <div class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 4px;">
-                        <i class="fa-solid fa-building me-1" style="color:#8C4A27;"></i> Hiệu Sách Cũ Khải Vinh – Trần Nhân Tôn
-                    </h5>
-                    <p style="font-size: 12.5px; color: #574E45; margin-bottom: 2px;">
-                        <i class="fa-solid fa-location-dot me-1 text-muted"></i> Số 43 Trần Nhân Tôn, P. 9, Quận 5
-                    </p>
-                    <p style="font-size: 12px; color: #78716C;">
-                        <i class="fa-solid fa-clock me-1 text-muted"></i> 08:00 - 21:30 | Hotline: <strong>028.3833.6677</strong>
-                    </p>
-                    <a th:href="@{/stores/8}" style="font-size:12px; color:#ee4d2d; font-weight:700; text-decoration:none;">Ghé thăm shop &gt;</a>
-                </div>
-            </div>
-
-            <div style="margin-top:16px; text-align:center;">
-                <a th:href="@{/stores}" style="display:inline-flex; align-items:center; gap:6px; background:#ee4d2d; color:#ffffff; padding:10px 24px; border-radius:6px; font-size:13.5px; font-weight:700; text-decoration:none; box-shadow:0 4px 12px rgba(238,77,45,0.2);">
-                    <i class="fa-solid fa-store"></i> Xem Bản Đồ &amp; Danh Sách 8 Chi Nhánh &gt;
-                </a>
-            </div>
-        </div>
-    </div>
 
     <!-- TOAST CONTAINER APPLE LIQUID GLASS TOÀN CỤC -->
     <div id="universalToastContainer"></div>
@@ -1399,6 +1926,66 @@
 
     <!-- SCRIPT ĐIỀU KHIỂN CHUNG CHO HEADER & TOAST/MODAL TOÀN CỤC -->
     <script>
+        // ================= HÀM ĐIỀU KHIỂN BỘ LỌC CHỢ TỐT POPOVER (KHỚP 100% ẢNH IMAGE_6B7338.PNG) =================
+        function toggleChototFilterPopover(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            var pop = document.getElementById('chototFilterPopover');
+            var arrow = document.getElementById('filterBtnArrow');
+            if (pop) {
+                var isHidden = (pop.style.display === 'none' || !pop.style.display);
+                pop.style.display = isHidden ? 'block' : 'none';
+                if (arrow) arrow.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        }
+        function closeChototFilterPopover(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            var pop = document.getElementById('chototFilterPopover');
+            var arrow = document.getElementById('filterBtnArrow');
+            if (pop) pop.style.display = 'none';
+            if (arrow) arrow.style.transform = 'rotate(0deg)';
+        }
+        function resetPopoverFilters(event) {
+            if (event) event.preventDefault();
+            var storeSel = document.getElementById('filterStoreSelect');
+            if (storeSel) storeSel.value = '';
+            var catSel = document.getElementById('filterCatSelect');
+            if (catSel) catSel.value = '';
+            document.querySelectorAll('input[name="cond"]').forEach(function(r, idx) {
+                r.checked = (idx === 0);
+            });
+            var minP = document.getElementById('filterMinPrice');
+            if (minP) minP.value = '';
+            var maxP = document.getElementById('filterMaxPrice');
+            if (maxP) maxP.value = '';
+            var lbl = document.getElementById('filterBtnLabel');
+            if (lbl) lbl.textContent = 'Toàn TP.HCM';
+        }
+        function applyPopoverFilters(event) {
+            if (event) event.preventDefault();
+            var form = document.getElementById('headerSearchForm');
+            if (form) form.submit();
+        }
+        function updateFilterLabel(sel) {
+            var lbl = document.getElementById('filterBtnLabel');
+            if (lbl && sel) {
+                var opt = sel.options[sel.selectedIndex];
+                var text = (opt && opt.text) ? opt.text : 'Toàn TP.HCM';
+                lbl.textContent = text.replace(' (5 Shop)', '');
+            }
+        }
+        document.addEventListener('click', function(e) {
+            var triggerWrap = document.querySelector('.chotot-filter-trigger-wrap');
+            if (triggerWrap && !triggerWrap.contains(e.target)) {
+                closeChototFilterPopover();
+            }
+        });
+
         function openStoreModal() {
             var m = document.getElementById('storeModal');
             if (m) m.classList.add('open');
@@ -1625,185 +2212,7 @@
                 }, 400);
             }, 2500);
         }
-
-        // ================= WIDGET TRỢ LÝ AI MINI TOÀN CỤC =================
-        function toggleAiMiniChat() {
-            var widget = document.getElementById('aiMiniChatWidget');
-            if (!widget) return;
-            if (widget.style.display === 'none' || widget.style.display === '') {
-                widget.style.display = 'flex';
-                var inp = document.getElementById('miniChatInput');
-                if (inp) inp.focus();
-                scrollMiniChatBottom();
-            } else {
-                widget.style.display = 'none';
-            }
-        }
-
-        function sendMiniChatPrompt(promptText) {
-            var inp = document.getElementById('miniChatInput');
-            if (inp) {
-                inp.value = promptText;
-                sendMiniChatMessage();
-            }
-        }
-
-        function sendMiniChatMessage() {
-            var inp = document.getElementById('miniChatInput');
-            if (!inp) return;
-            var text = inp.value.trim();
-            if (!text) return;
-
-            var body = document.getElementById('miniChatBody');
-            inp.value = '';
-
-            // User bubble
-            var userRow = document.createElement('div');
-            userRow.style.cssText = 'display:flex; justify-content:flex-end;';
-            userRow.innerHTML = '<div style="background:linear-gradient(135deg, #ff5722 0%, #ee4d2d 100%); color:#fff; padding:9px 13px; border-radius:16px; border-top-right-radius:4px; max-width:85%; line-height:1.45; word-break:break-word;">' + escapeMiniHtml(text) + '</div>';
-            body.appendChild(userRow);
-            scrollMiniChatBottom();
-
-            // Typing indicator
-            var typingRow = document.createElement('div');
-            typingRow.id = 'miniChatTyping';
-            typingRow.style.cssText = 'display:flex; gap:8px; align-items:center; color:#78716c; font-size:12px;';
-            typingRow.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#ee4d2d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px;"><i class="fa-solid fa-robot"></i></div> <span>AI đang tìm sách...</span>';
-            body.appendChild(typingRow);
-            scrollMiniChatBottom();
-
-            fetch('/ai-assistant/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text })
-            })
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
-                var tp = document.getElementById('miniChatTyping');
-                if (tp) tp.remove();
-
-                var aiRow = document.createElement('div');
-                aiRow.style.cssText = 'display:flex; gap:8px; align-items:flex-start;';
-
-                var replyHtml = (data.reply || '')
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\n/g, '<br>');
-
-                var cardsHtml = '';
-                if (data.suggestedBooks && data.suggestedBooks.length > 0) {
-                    cardsHtml = '<div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">';
-                    data.suggestedBooks.forEach(function(b) {
-                        var p = Number(b.price || 0).toLocaleString('vi-VN');
-                        cardsHtml += '<div style="display:flex; gap:8px; background:rgba(255,255,255,0.9); border:1px solid #e7e5e4; border-radius:12px; padding:8px; align-items:center;">' +
-                            '<img src="' + (b.imageUrl || '/images/books/book_1.jpg') + '" style="width:42px; height:58px; object-fit:cover; border-radius:6px; flex-shrink:0;">' +
-                            '<div style="flex:1; min-width:0;">' +
-                                '<div style="font-weight:700; font-size:12.5px; color:#1C1917; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + escapeMiniHtml(b.title) + '</div>' +
-                                '<div style="font-size:11px; color:#78716c; margin-top:2px;">Mới ' + (b.conditionPercent || 90) + '% · ' + escapeMiniHtml(b.availableStores || 'Kho TP.HCM') + '</div>' +
-                                '<div style="font-weight:700; color:#ee4d2d; font-size:12.5px; margin-top:2px;">₫' + p + '</div>' +
-                            '</div>' +
-                            '<div style="display:flex; flex-direction:column; gap:4px; flex-shrink:0;">' +
-                                '<a href="' + (b.buyNowUrl || '/checkout?buyNow=true&bookId=' + b.id) + '" style="padding:4px 8px; border-radius:6px; background:#ee4d2d; color:#fff; font-size:10.5px; font-weight:700; text-decoration:none; text-align:center;">Mua Ngay</a>' +
-                                '<a href="' + (b.detailUrl || '/books/' + b.id) + '" style="padding:4px 8px; border-radius:6px; background:#f5f5f4; color:#44403c; font-size:10.5px; text-decoration:none; text-align:center;">Chi Tiết</a>' +
-                            '</div>' +
-                        '</div>';
-                    });
-                    cardsHtml += '</div>';
-                }
-
-                aiRow.innerHTML = '<div style="width:28px; height:28px; border-radius:50%; background:#ee4d2d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;"><i class="fa-solid fa-robot"></i></div>' +
-                    '<div style="background:#f5f0eb; padding:10px 14px; border-radius:16px; border-top-left-radius:4px; color:#292524; line-height:1.5; max-width:85%; font-size:12.5px;">' +
-                        '<div>' + replyHtml + '</div>' +
-                        cardsHtml +
-                    '</div>';
-
-                body.appendChild(aiRow);
-                scrollMiniChatBottom();
-            })
-            .catch(function() {
-                var tp = document.getElementById('miniChatTyping');
-                if (tp) tp.remove();
-            });
-        }
-
-        function scrollMiniChatBottom() {
-            var body = document.getElementById('miniChatBody');
-            if (body) body.scrollTop = body.scrollHeight;
-        }
-
-        function escapeMiniHtml(s) {
-            if (!s) return '';
-            var d = document.createElement('div');
-            d.textContent = s;
-            return d.innerHTML;
-        }
-
-        // Tự động ẩn Floating Button trên trang /ai-assistant để tránh trùng lặp
-        if (window.location.pathname.indexOf('/ai-assistant') !== -1) {
-            var btn = document.getElementById('aiFloatingBtn');
-            if (btn) btn.style.display = 'none';
-        }
     </script>
-
-    <!-- WIDGET TRỢ LÝ AI MINI TOÀN CỤC (GLOBAL MINI CHAT WIDGET APPLE LIQUID GLASS) -->
-    <div id="aiMiniChatWidget" style="display:none; position:fixed; bottom:96px; right:30px; width:380px; height:560px; max-height:82vh; max-width:calc(100vw - 40px); z-index:99998; border-radius:24px; background:rgba(255, 255, 255, 0.92); backdrop-filter:blur(36px) saturate(200%); -webkit-backdrop-filter:blur(36px) saturate(200%); border:1.5px solid rgba(255, 255, 255, 0.95); box-shadow:0 24px 60px rgba(45, 24, 15, 0.22), inset 0 1.5px 2px rgba(255, 255, 255, 0.95); flex-direction:column; overflow:hidden; transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1);">
-        <!-- Top bar của widget -->
-        <div style="padding:14px 18px; background:linear-gradient(135deg, rgba(140, 74, 39, 0.92) 0%, rgba(238, 77, 45, 0.92) 100%); color:#ffffff; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.2);">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:16px;">
-                    <i class="fa-solid fa-robot"></i>
-                </div>
-                <div>
-                    <div style="font-weight:700; font-size:14px; line-height:1.2;">Trợ Lý AI Chuỗi Sách Cũ</div>
-                    <div style="font-size:11px; opacity:0.9; display:flex; align-items:center; gap:4px; margin-top:2px;">
-                        <span style="width:7px; height:7px; border-radius:50%; background:#10b981; display:inline-block;"></span> 5 chi nhánh TP.HCM
-                    </div>
-                </div>
-            </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-                <a th:href="@{/ai-assistant}" target="_blank" title="Mở toàn màn hình" style="color:#ffffff; font-size:13px; opacity:0.85; padding:6px; cursor:pointer;">
-                    <i class="fa-solid fa-up-right-from-square"></i>
-                </a>
-                <button type="button" onclick="toggleAiMiniChat()" style="background:none; border:none; color:#ffffff; font-size:18px; cursor:pointer; opacity:0.85; padding:2px 6px;">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Khung tin nhắn -->
-        <div id="miniChatBody" style="flex:1; padding:14px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; font-size:13px;">
-            <!-- Tin nhắn chào -->
-            <div style="display:flex; gap:8px; align-items:flex-start;">
-                <div style="width:28px; height:28px; border-radius:50%; background:#ee4d2d; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">
-                    <i class="fa-solid fa-robot"></i>
-                </div>
-                <div style="background:#f5f0eb; padding:10px 14px; border-radius:16px; border-top-left-radius:4px; color:#292524; line-height:1.5; max-width:85%;">
-                    Chào bạn! Em là <strong>Trợ lý AI</strong> của Chuỗi Sách Cũ TP.HCM. Em có thể tư vấn sách, kiểm tra tồn kho tại 5 chi nhánh hoặc giải đáp phí ship và chính sách đồng kiểm ạ!
-                </div>
-            </div>
-
-            <!-- Gợi ý nhanh (Quick Chips) -->
-            <div style="display:flex; flex-wrap:wrap; gap:6px; margin: 4px 0 4px 36px;">
-                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Các chi nhánh ở đâu?')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">📍 5 Chi nhánh</button>
-                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Gợi ý sách chữa lành')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">🌱 Sách chữa lành</button>
-                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Sách sinh viên giá rẻ dưới 50k')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">💰 Sách dưới 50K</button>
-                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Phí vận chuyển bao nhiêu?')" style="padding:4px 10px; border-radius:9999px; border:1px solid rgba(238, 77, 45, 0.25); background:rgba(238, 77, 45, 0.06); color:#ee4d2d; font-size:11px; font-weight:600; cursor:pointer;">🚚 Phí ship</button>
-            </div>
-        </div>
-
-        <!-- Ô nhập tin nhắn -->
-        <div style="padding:10px 14px; background:rgba(255,255,255,0.95); border-top:1px solid rgba(0,0,0,0.06); display:flex; gap:8px; align-items:center;">
-            <input type="text" id="miniChatInput" placeholder="Hỏi AI về sách, tồn kho, giá..." style="flex:1; height:38px; border-radius:9999px; border:1px solid #e7e5e4; padding:0 14px; font-size:13px; outline:none; background:#faf8f5;" onkeydown="if(event.key==='Enter') sendMiniChatMessage()">
-            <button type="button" onclick="sendMiniChatMessage()" style="width:38px; height:38px; border-radius:50%; border:none; background:#ee4d2d; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; box-shadow:0 3px 8px rgba(238,77,45,0.3);">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- NÚT WIDGET TRỢ LÝ AI NỔI TOÀN CỤC (FLOATING FAB) -->
-    <div id="aiFloatingBtn" class="ai-floating-widget-btn" onclick="toggleAiMiniChat()" title="Trợ Lý AI Tư Vấn Sách Cũ">
-        <i class="fa-solid fa-robot"></i>
-        <span class="ai-floating-status-dot"></span>
-    </div>
 </th:block>
 
 </body>

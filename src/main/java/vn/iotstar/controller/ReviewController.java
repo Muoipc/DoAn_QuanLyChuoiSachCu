@@ -272,7 +272,7 @@ public class ReviewController {
 
         response.put("success", true);
         response.put("message", "Gửi đánh giá sách thành công! Cảm ơn phản hồi quý báu của bạn.");
-        response.put("avgRating", avgRating != null ? String.format(Locale.US, "%.1f", avgRating) : "5.0");
+        response.put("avgRating", (avgRating != null && totalReviews > 0) ? String.format(Locale.US, "%.1f", avgRating) : "0.0");
         response.put("reviewCount", totalReviews);
         response.put("counts", counts);
         response.put("review", convertToDTO(saved));
@@ -318,7 +318,7 @@ public class ReviewController {
         response.put("filterRating", rating != null ? rating : 0);
         response.put("totalReviews", totalReviews);
         response.put("filteredCount", dtoList.size());
-        response.put("avgRating", avgRating != null ? String.format(Locale.US, "%.1f", avgRating) : "5.0");
+        response.put("avgRating", (avgRating != null && totalReviews > 0) ? String.format(Locale.US, "%.1f", avgRating) : "0.0");
         response.put("counts", counts);
         response.put("reviews", dtoList);
 

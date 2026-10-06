@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.iotstar.entity.BookConsignment;
 import vn.iotstar.entity.Category;
@@ -17,12 +18,13 @@ import vn.iotstar.repository.StoreRepository;
 import vn.iotstar.repository.UserRepository;
 import vn.iotstar.service.INotificationService;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * ============================================================================
@@ -96,6 +98,49 @@ public class ConsignmentController {
     }
 
     /**
+     * POST /consignments/api/upload-image: API tải ảnh chụp thực tế góc sách của khách
+     */
+    @PostMapping("/api/upload-image")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> uploadConsignmentImage(
+            @RequestParam("file") MultipartFile file) {
+        Map<String, Object> response = new HashMap<>();
+        if (file == null || file.isEmpty()) {
+            response.put("success", false);
+            response.put("message", "Vui lòng chọn tệp hình ảnh hợp lệ!");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        try {
+            String originalFilename = file.getOriginalFilename();
+            String ext = ".jpg";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                ext = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
+            }
+            String filename = "consignment_" + System.currentTimeMillis() + "_" + UUID.randomUUID().toString().substring(0, 8) + ext;
+
+            Path targetPath = Paths.get("target/classes/static/images/consignments", filename);
+            Files.createDirectories(targetPath.getParent());
+            Files.write(targetPath, file.getBytes());
+
+            try {
+                Path srcPath = Paths.get("src/main/resources/static/images/consignments", filename);
+                Files.createDirectories(srcPath.getParent());
+                Files.write(srcPath, file.getBytes());
+            } catch (Exception ignored) {}
+
+            String imageUrl = "/images/consignments/" + filename;
+            response.put("success", true);
+            response.put("imageUrl", imageUrl);
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            response.put("success", false);
+            response.put("message", "Lỗi lưu tệp: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    /**
      * POST /consignments/submit: Tiếp nhận phiếu đăng ký ký gửi sách từ khách hàng
      */
     @PostMapping("/submit")
@@ -109,6 +154,7 @@ public class ConsignmentController {
             @RequestParam("storeId") Long storeId,
             @RequestParam("proposedPrice") BigDecimal proposedPrice,
             @RequestParam(value = "photosJson", required = false) String photosJson,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             Authentication authentication,
             RedirectAttributes redirectAttributes) {
 
@@ -135,9 +181,35 @@ public class ConsignmentController {
         consignment.setProposedPrice(proposedPrice);
         consignment.setStatus(BookConsignment.ConsignmentStatus.PENDING);
 
-        // Gán ảnh mẫu hoặc ảnh upload
-        if (photosJson != null && !photosJson.trim().isEmpty()) {
-            consignment.setPhotosJson(photosJson);
+        // Xử lý tệp hình ảnh tải lên trực tiếp nếu có
+        String finalImageUrl = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String originalFilename = imageFile.getOriginalFilename();
+                String ext = ".jpg";
+                if (originalFilename != null && originalFilename.contains(".")) {
+                    ext = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
+                }
+                String filename = "consignment_" + System.currentTimeMillis() + "_" + UUID.randomUUID().toString().substring(0, 8) + ext;
+
+                Path targetPath = Paths.get("target/classes/static/images/consignments", filename);
+                Files.createDirectories(targetPath.getParent());
+                Files.write(targetPath, imageFile.getBytes());
+
+                try {
+                    Path srcPath = Paths.get("src/main/resources/static/images/consignments", filename);
+                    Files.createDirectories(srcPath.getParent());
+                    Files.write(srcPath, imageFile.getBytes());
+                } catch (Exception ignored) {}
+
+                finalImageUrl = "/images/consignments/" + filename;
+            } catch (Exception ignored) {}
+        }
+
+        if (finalImageUrl != null) {
+            consignment.setPhotosJson(finalImageUrl);
+        } else if (photosJson != null && !photosJson.trim().isEmpty()) {
+            consignment.setPhotosJson(photosJson.trim());
         } else {
             consignment.setPhotosJson("/images/books/book_1.jpg");
         }

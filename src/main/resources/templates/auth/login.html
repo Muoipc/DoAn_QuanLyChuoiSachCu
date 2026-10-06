@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Nhập — Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
+    <title>Đăng Nhập — Chuỗi Cửa Hàng Sách Cũ</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,17 +15,17 @@
         :root {
             --color-fire: #8C4A27;
             --color-fire-hover: #733615;
-            --color-bg-body: #F8F5EE;
+            --color-bg-body: #FFFFFF;
             --color-text-main: #1C1917;
-            --color-text-secondary: #44403C;
+            --color-text-secondary: #57534E;
             --color-text-light: #78716C;
-            --color-border: rgba(45, 24, 15, 0.12);
+            --color-border: #E5E0D8;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: "Roboto", sans-serif;
-            background-color: var(--color-bg-body);
+            background-color: #FFFFFF;
             color: var(--color-text-main);
             min-height: 100vh;
             display: flex;
@@ -32,13 +33,11 @@
         }
         a { color: inherit; text-decoration: none; }
 
-        /* HEADER CHUẨN AUTH SHOPEE FLEXIBLE */
+        /* HEADER AUTH NỀN TRẮNG SÁCH CŨ */
         .auth-header {
-            background: rgba(45, 24, 15, 0.28);
-            backdrop-filter: blur(36px);
-            -webkit-backdrop-filter: blur(36px);
+            background: #FFFFFF !important;
             padding: 14px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            border-bottom: 1px solid #ECE7DE;
             position: relative;
             z-index: 10;
         }
@@ -60,20 +59,43 @@
             align-items: center;
             gap: clamp(10px, 2vw, 16px);
         }
-        .brand-img {
-            height: clamp(38px, 5vw, 50px);
-            width: auto;
+        .auth-brand-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: #FAF8F5;
+            border: 1px solid #E5E0D8;
+            border-radius: 9999px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .auth-brand-pill:hover {
+            transform: translateY(-1px);
+            border-color: #8C4A27;
+        }
+        .auth-brand-icon {
+            width: 26px;
+            height: 26px;
             object-fit: contain;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+        }
+        .auth-brand-text {
+            font-size: 15px;
+            font-weight: 900;
+            color: #1C1917;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
         .auth-page-title {
-            font-size: clamp(16px, 2.5vw, 22px);
+            font-size: clamp(15px, 2vw, 19px);
             font-weight: 800;
             color: #1C1917;
             border-left: 2px solid #1C1917;
             padding-left: clamp(10px, 1.5vw, 14px);
             text-transform: uppercase;
             white-space: nowrap;
+            letter-spacing: 0.5px;
         }
         .header-right-actions {
             display: flex;
@@ -82,38 +104,29 @@
             flex-wrap: wrap;
         }
         .auth-help-link {
-            font-size: clamp(12px, 1.5vw, 13px);
+            font-size: clamp(12.5px, 1.5vw, 13.5px);
             font-weight: 700;
-            color: var(--color-fire);
+            color: #8C4A27;
             display: flex;
             align-items: center;
+            gap: 6px;
             transition: color 0.2s;
         }
         .auth-help-link:hover {
-            color: var(--color-fire-hover);
+            color: #733615;
         }
 
-        /* MAIN AUTH BANNER SPLIT (LAYOUT FLEXIBLE CHUẨN SHOPEE & APPLE) */
+        /* MAIN AUTH BANNER SPLIT (NỀN TRẮNG TINH KHIẾT THUẦN TÚY) */
         .auth-main-section {
             flex: 1;
-            background: linear-gradient(135deg, #382012 0%, #201007 100%);
+            background-color: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: clamp(24px, 5vw, 56px) 0;
+            padding: clamp(28px, 5vw, 64px) 0;
             position: relative;
             overflow: hidden;
-            min-height: calc(100vh - 150px);
-        }
-
-        /* Hiệu ứng hạt sáng vàng cổ điển */
-        .auth-main-section::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(238, 77, 45, 0.08) 0%, transparent 60%);
-            pointer-events: none;
+            min-height: calc(100vh - 140px);
         }
 
         .auth-grid {
@@ -126,9 +139,9 @@
             width: 100%;
         }
 
-        /* BÊN TRÁI: BANNER THƯƠNG HIỆU TRI THỨC SÁCH CŨ FLEXIBLE */
+        /* BÊN TRÁI: BANNER THƯƠNG HIỆU TRI THỨC SÁCH CŨ */
         .auth-banner-left {
-            color: #ffffff;
+            color: #1C1917;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -137,33 +150,34 @@
             display: inline-flex;
             align-items: center;
             align-self: flex-start;
-            background: var(--color-fire);
-            color: white;
+            background: #FAF8F5;
+            border: 1px solid #E5E0D8;
+            color: #8C4A27;
             font-size: 12px;
             font-weight: 800;
-            padding: 4px 12px;
-            border-radius: 4px;
+            padding: 5px 14px;
+            border-radius: 9999px;
             margin-bottom: 16px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         .banner-heading {
-            font-size: clamp(22px, 3.5vw, 34px);
+            font-size: clamp(24px, 3.5vw, 36px);
             font-weight: 900;
             line-height: 1.25;
             margin-bottom: 16px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            color: #1C1917;
         }
         .banner-sub {
-            font-size: clamp(13px, 1.6vw, 15px);
-            color: #dcd3c9;
+            font-size: clamp(13.5px, 1.6vw, 15px);
+            color: #57534E;
             line-height: 1.6;
             margin-bottom: 24px;
             max-width: 520px;
         }
         .banner-features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
             gap: 12px;
             max-width: 540px;
         }
@@ -171,27 +185,32 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 10px 14px;
+            background: #FAF8F5;
+            padding: 11px 16px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            border: 1px solid #E5E0D8;
             font-size: 13px;
             font-weight: 600;
+            color: #1C1917;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+        }
+        .feat-item:hover {
+            border-color: #8C4A27;
+            background: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.08);
         }
 
-        /* BÊN PHẢI: THẺ APPLE LIQUID GLASS ĐĂNG NHẬP FLEXIBLE */
+        /* BÊN PHẢI: THẺ FORM ĐĂNG NHẬP NỀN TRẮNG TINH TẾ */
         .auth-card-glass, .auth-box, .auth-form-card {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(32px) saturate(190%) brightness(103%);
-            -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(103%);
-            border-radius: clamp(18px, 3vw, 24px);
-            border: 1.5px solid rgba(255, 255, 255, 0.95);
-            box-shadow: 0 24px 60px rgba(45, 24, 15, 0.18), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            background: #FFFFFF;
+            border-radius: clamp(18px, 3vw, 22px);
+            border: 1px solid #E5E0D8;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.07), 0 2px 8px rgba(0, 0, 0, 0.03);
             padding: clamp(22px, 4vw, 36px);
             width: 100%;
-            max-width: 460px;
+            max-width: 450px;
             margin: 0 auto;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -215,18 +234,16 @@
         .form-input-wrap {
             display: flex;
             align-items: center;
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            border: 1px solid #DADADA;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: #FAF8F5;
             padding: 0 16px;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .form-input-wrap:focus-within {
             background: #ffffff;
-            border-color: var(--color-fire);
-            box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.14);
+            border-color: #8C4A27;
+            box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.12);
         }
         .input-icon {
             color: #78716C;
@@ -246,40 +263,41 @@
             border-radius: 12px;
         }
 
-        /* SUBMIT BUTTON (APPLE PILL) */
+        /* SUBMIT BUTTON - NÂU GỖ VINTAGE BO GÓC CHUẨN HỆ THỐNG */
         .btn-submit-shopee, .btn-auth-primary {
-            background: linear-gradient(135deg, #8C4A27 0%, #6B3416 100%);
-            color: white;
-            border: 1.5px solid rgba(255, 255, 255, 0.35);
-            border-radius: 9999px;
-            padding: 14px;
+            background: #8C4A27 !important;
+            color: white !important;
+            border: none;
+            border-radius: 10px;
+            padding: 13px;
             font-size: 15px;
             font-weight: 800;
             width: 100%;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(140, 74, 39, 0.32), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.4);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.35);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             margin-top: 10px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            font-family: inherit;
         }
         .btn-submit-shopee:hover, .btn-auth-primary:hover {
-            background: linear-gradient(135deg, #733615 0%, #52270f 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 26px rgba(140, 74, 39, 0.45);
+            background: #733615 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(115, 54, 21, 0.45);
         }
         .btn-submit-shopee:active, .btn-auth-primary:active {
-            transform: scale(0.97);
+            transform: scale(0.98);
         }
 
         /* HINT TÀI KHOẢN MẪU TEST DÙNG FLEXIBLE */
         .test-accounts-box {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1.5px dashed rgba(140, 74, 39, 0.3);
+            border: 1.5px dashed rgba(140, 74, 39, 0.35);
             border-radius: 14px;
-            padding: 12px 14px;
+            padding: 14px 16px;
             margin-top: 20px;
             font-size: 12px;
             color: var(--color-text-secondary);
@@ -287,27 +305,34 @@
         .test-acc-btn-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 6px;
+            gap: 8px;
+            margin-top: 10px;
         }
         .test-acc-btn {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(213, 206, 196, 0.8);
-            padding: 5px 12px;
+            background: #ffffff;
+            border: 1px solid rgba(213, 206, 196, 0.9);
+            padding: 6px 14px;
             border-radius: 9999px;
-            font-size: 11.5px;
-            font-weight: 700;
+            font-size: 12px;
+            font-weight: 600;
+            color: #44403C;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            transition: all 0.2s;
+            gap: 6px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
         .test-acc-btn:hover {
-            border-color: var(--color-fire);
-            color: var(--color-fire);
-            background: #ffffff;
+            border-color: #8C4A27;
+            color: #8C4A27;
+            background: #FFFDF9;
             transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(140, 74, 39, 0.15);
+        }
+        .test-acc-btn:active {
+            transform: scale(0.96);
         }
 
         /* FOOTER LINKS FLEXIBLE */
@@ -339,16 +364,17 @@
         .alert-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
         .alert-success { background: #e6f7f0; color: #007a57; border: 1px solid #b7ebd6; }
 
-        /* FOOTER */
+        /* FOOTER ĐỒNG BỘ TRẮNG */
         .auth-footer {
-            background: #25160d;
-            color: #b7b0a5;
+            background: #FFFFFF;
+            border-top: 1px solid #ECE7DE;
+            color: #78716C;
             padding: 24px 0;
-            font-size: 12px;
+            font-size: 12.5px;
             text-align: center;
         }
     
-        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
+        /* DROPDOWN CHỌN NGÔN NGỮ NỀN SÁNG */
         .lang-dropdown-box {
             position: relative;
             display: inline-block;
@@ -359,16 +385,18 @@
             gap: 6px;
             cursor: pointer;
             font-weight: 700;
-            color: #292524;
-            padding: 4px 8px;
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: #1C1917;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            background: #FAF8F5;
+            border: 1px solid #E5E0D8;
+            font-size: 13px;
             transition: all 0.15s ease;
         }
         .lang-trigger-btn:hover {
             color: #8C4A27;
-            background: rgba(255, 255, 255, 0.8);
+            border-color: #8C4A27;
+            background: #FFFFFF;
         }
         .lang-dropdown-menu {
             position: absolute;
@@ -483,15 +511,16 @@
     <header class="auth-header">
         <div class="container header-inner">
             <div class="brand-box">
-                <a th:href="@{/}">
-                    <img th:src="@{/images/logo-books.png}" alt="Logo Books" class="brand-img">
+                <a th:href="@{/}" class="auth-brand-pill">
+                    <img th:src="@{/images/brand-book-icon.png}" alt="Chuỗi Sách Cũ" class="auth-brand-icon">
+                    <span class="auth-brand-text">CHUỖI SÁCH CŨ</span>
                 </a>
                 <span class="auth-page-title">Đăng Nhập</span>
             </div>
             
             <div class="header-right-actions">
                 <a th:href="@{/}" class="auth-help-link">
-                    <i class="fa-solid fa-arrow-left me-1"></i> <span>Quay lại mua sắm</span>
+                    <i class="fa-solid fa-arrow-left"></i> <span>Quay lại mua sắm</span>
                 </a>
 
                 <div class="lang-dropdown-box">
@@ -520,17 +549,17 @@
 
                 <!-- BÊN TRÁI: BANNER THƯƠNG HIỆU -->
                 <div class="auth-banner-left">
-                    <span class="banner-tag"><i class="fa-solid fa-shop me-1"></i> Chuỗi Sách Cũ TP.HCM</span>
-                    <h1 class="banner-heading">Hồi Sinh Tri Thức,<br>Tiết Kiệm Đến 60%</h1>
+                    <span class="banner-tag"><i class="fa-solid fa-book-open me-1" style="color:#FFAE00;"></i> Chuỗi Cửa Hàng Sách Cũ TP.HCM</span>
+                    <h1 class="banner-heading">Sách Cũ Trao Tay,<br>Tri Thức Đong Đầy</h1>
                     <p class="banner-sub">
-                        Hệ thống kết nối 5 chi nhánh kho tại TP.HCM (Thủ Đức, Q.1, Làng ĐHQG, Phú Nhuận, Q.5). Đồng kiểm khi nhận, 100% sách đã qua kiểm định độ mới.
+                        Hệ thống kết nối 5 chi nhánh kho tại TP.HCM (Thủ Đức, Q.1, Làng ĐHQG, Phú Nhuận, Q.5). Đồng kiểm 100% khi nhận hàng, kiểm định độ mới từ 80% &mdash; 99%, tiết kiệm đến 70%.
                     </p>
 
                     <div class="banner-features">
-                        <div class="feat-item"><i class="fa-solid fa-award text-warning"></i> Sách thật nguyên bản &ge; 90%</div>
-                        <div class="feat-item"><i class="fa-solid fa-truck-fast text-success"></i> Freeship cho đơn từ 150K</div>
-                        <div class="feat-item"><i class="fa-solid fa-shield-halved text-info"></i> Thanh toán VNPay / COD</div>
-                        <div class="feat-item"><i class="fa-solid fa-hand-holding-dollar text-warning"></i> Ký gửi sách nhận tiền 24h</div>
+                        <div class="feat-item"><i class="fa-solid fa-award" style="color:#FFAE00; font-size:16px;"></i> Sách thật nguyên bản &ge; 90%</div>
+                        <div class="feat-item"><i class="fa-solid fa-truck-fast" style="color:#10B981; font-size:16px;"></i> Freeship cho đơn từ 150K</div>
+                        <div class="feat-item"><i class="fa-solid fa-shield-halved" style="color:#38BDF8; font-size:16px;"></i> Thanh toán VNPay / COD</div>
+                        <div class="feat-item"><i class="fa-solid fa-hand-holding-dollar" style="color:#F59E0B; font-size:16px;"></i> Định giá ký gửi online 24H</div>
                     </div>
                 </div>
 
@@ -590,11 +619,23 @@
 
                     <!-- TÀI KHOẢN MẪU DÀNH CHO THẦY CÔ & BẠN BÈ TEST -->
                     <div class="test-accounts-box">
-                        <strong style="color:#1C1917;"><i class="fa-solid fa-key me-1 text-warning"></i> Tài khoản mẫu dùng nhanh:</strong>
+                        <strong style="color:#1C1917; display:flex; align-items:center; gap:6px;">
+                            <i class="fa-solid fa-key text-warning"></i>
+                            <span>Tài khoản mẫu dùng nhanh:</span>
+                        </strong>
                         <div class="test-acc-btn-group">
-                            <span class="test-acc-btn" onclick="fillTestAcc('phuc_customer', '123456')">Khách hàng (Phúc)</span>
-                            <span class="test-acc-btn" onclick="fillTestAcc('admin', '123456')">Quản trị viên</span>
-                            <span class="test-acc-btn" onclick="fillTestAcc('manager_thuduc', '123456')">Thủ kho Thủ Đức</span>
+                            <span class="test-acc-btn" onclick="fillTestAcc('phuc_customer', '123456')">
+                                <i class="fa-regular fa-user text-muted"></i> Khách hàng (Phúc)
+                            </span>
+                            <span class="test-acc-btn" onclick="fillTestAcc('admin', '123456')">
+                                <i class="fa-solid fa-shield-halved text-danger"></i> Quản trị viên
+                            </span>
+                            <span class="test-acc-btn" onclick="fillTestAcc('manager_td', '123456')">
+                                <i class="fa-solid fa-warehouse text-primary"></i> Thủ kho Thủ Đức
+                            </span>
+                            <span class="test-acc-btn" onclick="fillTestAcc('shipper_hung', '123456')">
+                                <i class="fa-solid fa-truck-fast text-success"></i> Shipper (Hùng)
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -613,8 +654,18 @@
 
     <script>
         function fillTestAcc(user, pass) {
-            document.getElementById('loginUsername').value = user;
-            document.getElementById('loginPassword').value = pass;
+            const userInput = document.getElementById('loginUsername');
+            const passInput = document.getElementById('loginPassword');
+            if (userInput && passInput) {
+                userInput.value = user;
+                passInput.value = pass;
+                userInput.style.borderColor = '#ee4d2d';
+                passInput.style.borderColor = '#ee4d2d';
+                setTimeout(function() {
+                    userInput.style.borderColor = '';
+                    passInput.style.borderColor = '';
+                }, 600);
+            }
         }
     </script>
     <script src="/js/i18n.js"></script>
