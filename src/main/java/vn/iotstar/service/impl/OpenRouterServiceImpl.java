@@ -29,7 +29,7 @@ public class OpenRouterServiceImpl implements IOpenRouterService {
     @Value("${openrouter.api-key:}")
     private String apiKey;
 
-    @Value("${openrouter.model:google/gemini-2.5-flash-lite}")
+    @Value("${openrouter.model:google/gemma-4-31b-it:free}")
     private String modelName;
 
     @Value("${openrouter.base-url:https://openrouter.ai/api/v1/chat/completions}")
@@ -165,14 +165,13 @@ public class OpenRouterServiceImpl implements IOpenRouterService {
                                         List<Map<String, String>> conversationHistory) throws Exception {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", modelName);
-        // [TỐI ƯU - QUOTA FALLBACK] Danh sách model fallback tự động nếu model chính hết quota
+        // [TỐI ƯU - QUOTA FALLBACK] Danh sách model fallback tự động (tối đa 3 items theo quy định OpenRouter)
         requestBody.put("models", List.of(
                 modelName,
-                "google/gemini-2.0-flash-exp:free",
-                "meta-llama/llama-3.3-70b-instruct:free",
-                "deepseek/deepseek-r1:free",
-                "qwen/qwen-2.5-coder-32b-instruct:free"
+                "google/gemini-2.5-flash-lite",
+                "google/gemma-4-26b-a4b-it:free"
         ));
+        requestBody.put("reasoning", Map.of("enabled", true));
         requestBody.put("temperature", 0.7);
         requestBody.put("max_tokens", 800);
 

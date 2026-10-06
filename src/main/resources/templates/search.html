@@ -1421,8 +1421,8 @@
             let html = replyText
                 .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/(^|\n)\s*[\*\-\•]\s+/g, '$1&bull; ')
                 .replace(/\n\n/g, '<br><br>')
-                .replace(/\n•/g, '<br>&bull;')
                 .replace(/\n/g, '<br>');
 
             aiOverviewContent.innerHTML = html;
