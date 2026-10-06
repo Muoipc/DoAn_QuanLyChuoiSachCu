@@ -1502,6 +1502,79 @@
 
         </div>
 
+        <!-- 3.5. THÔNG TIN SHOP / CHI NHÁNH CỬA HÀNG (CHUẨN SHOPEE PDP STOREFRONT) -->
+        <section class="shopee-shop-card">
+            <div class="shop-card-left">
+                <a th:href="@{/search(store=${store != null ? store.id : 1})}" class="shop-avatar-link" style="text-decoration:none;">
+                    <div class="shop-avatar-box">
+                        <img th:src="${store != null && store.image != null ? store.image : '/images/brand-book-icon.png'}" 
+                             onerror="this.src='/images/brand-book-icon.png'" 
+                             alt="Shop Avatar" class="shop-avatar-img">
+                        <span class="shop-badge-official">Yêu Thích+</span>
+                    </div>
+                </a>
+                <div class="shop-meta-info">
+                    <h3 class="shop-name-title">
+                        <a th:href="@{/search(store=${store != null ? store.id : 1})}" 
+                           th:text="${store != null ? store.storeName : 'Chi Nhánh 1: Thủ Đức (Gần HCMUTE)'}">
+                           Chi Nhánh 1: Thủ Đức (Gần HCMUTE)
+                        </a>
+                    </h3>
+                    <div class="shop-online-status">
+                        <span class="online-indicator-dot"></span>
+                        <span>Online 5 Phút Trước</span>
+                        <span class="status-sep">|</span>
+                        <span th:text="${store != null ? store.district : 'TP. Thủ Đức'}">TP. Thủ Đức</span>
+                    </div>
+                    <div class="shop-action-buttons">
+                        <button type="button" class="btn-shop-chat" 
+                                th:data-store="${store != null ? store.storeName : 'Chuỗi Sách Cũ'}"
+                                th:data-title="${book.title}"
+                                onclick="chatWithStoreFromBook(this.dataset.store, this.dataset.title)">
+                            <i class="fa-solid fa-comments"></i> Chat Ngay
+                        </button>
+                        <a th:href="@{/search(store=${store != null ? store.id : 1})}" class="btn-shop-view">
+                            <i class="fa-solid fa-store"></i> Xem Shop
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6 THỐNG KÊ CHI NHÁNH CHUẨN SHOPEE -->
+            <div class="shop-card-right-stats">
+                <div class="shop-stat-col">
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Đánh Giá:</span>
+                        <span class="stat-val highlight">4.9k</span>
+                    </div>
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Sản Phẩm:</span>
+                        <span class="stat-val highlight" th:text="${totalStock != null ? totalStock + '+' : '185+'}">185+</span>
+                    </div>
+                </div>
+                <div class="shop-stat-col">
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Tỉ Lệ Phản Hồi:</span>
+                        <span class="stat-val highlight">99%</span>
+                    </div>
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Thời Gian Phản Hồi:</span>
+                        <span class="stat-val highlight">trong vài phút</span>
+                    </div>
+                </div>
+                <div class="shop-stat-col">
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Tham Gia:</span>
+                        <span class="stat-val">3 Năm Trước</span>
+                    </div>
+                    <div class="shop-stat-item">
+                        <span class="stat-label">Người Theo Dõi:</span>
+                        <span class="stat-val">12.8k</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- 4. THÔNG TIN CHI TIẾT SÁCH (SPECS & DESCRIPTION CHUẨN SHOPEE) -->
         <section class="product-specs-section">
             <div class="section-header-title">CHI TIẾT SẢN PHẨM</div>
