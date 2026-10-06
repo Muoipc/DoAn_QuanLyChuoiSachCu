@@ -705,85 +705,120 @@
             margin-left: 8px;
         }
 
-        /* AI OVERVIEW CARD ULTRA-COMPACT */
+        /* CARD TRỢ LÝ AI HIỆN ĐẠI (ENCLOSED PILL CARD - CHUẨN GEN AI) */
         .ai-overview-card {
-            background: #FAF8F5;
-            border-bottom: 1px solid #ECE7DE;
-            padding: 8px 12px;
-            position: relative;
+            background: #FAFAF9;
+            border: 1px solid #ECE7DE;
+            border-radius: 14px;
+            margin: 12px 14px 10px 14px;
+            padding: 13px 16px 14px 16px;
             text-align: left !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
             animation: aiCardSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes aiCardSlide {
             from { opacity: 0; transform: translateY(-3px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .ai-card-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 9px;
+        }
+        .ai-gen-label-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #FFF7ED 0%, #FEF3C7 100%);
+            border: 1px solid rgba(217, 119, 6, 0.25);
+            color: #B45309;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+        .ai-sparkle-dot {
+            color: #D97706;
+            font-size: 12px;
+        }
         .btn-clear-ai-overview {
-            position: absolute;
-            top: 6px;
-            right: 8px;
-            background: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.05);
             border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            font-size: 15px;
+            color: #78716C;
+            font-size: 12px;
             line-height: 1;
-            color: #A8A29E;
-            padding: 2px 4px;
-            border-radius: 4px;
-            transition: all 0.15s;
-            z-index: 2;
+            padding: 0;
+            transition: all 0.15s ease;
         }
         .btn-clear-ai-overview:hover {
             color: #1C1917;
-            background: #EFEAE2;
+            background: rgba(0, 0, 0, 0.1);
         }
 
-        /* HIỆU ỨNG SƯƠNG MỜ ĐƠN GIẢN TINH TẾ (SOFT BLUR MIST) - KHÔNG MÀU MÈ */
+        /* HIỆU ỨNG 3 CHẤM GEN AI ĐANG SOẠN CÂU TRẢ LỜI (SIGNATURE AI TYPING DOTS) */
         .ai-overview-loading {
-            padding: 6px 4px;
+            padding: 4px 2px;
         }
-        .ai-soft-blur-wrap {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
+        .ai-gen-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
             padding: 4px 0;
-            filter: blur(3.5px);
-            animation: softMistBreathe 1.8s ease-in-out infinite alternate;
         }
-        .ai-blur-skeleton {
-            height: 9px;
-            border-radius: 6px;
-            background: linear-gradient(90deg, #EAE3D9 0%, #C4B9AA 50%, #EAE3D9 100%);
-            background-size: 200% 100%;
-            animation: skeletonShimmer 2s ease-in-out infinite;
+        .ai-gen-dots .dot {
+            width: 7px;
+            height: 7px;
+            background: #D97706;
+            border-radius: 50%;
+            animation: aiTypingWave 1.4s infinite ease-in-out both;
         }
-        .ai-blur-skeleton.sk-1 { width: 90%; }
-        .ai-blur-skeleton.sk-2 { width: 72%; }
-        .ai-blur-skeleton.sk-3 { width: 48%; }
-
-        @keyframes softMistBreathe {
-            0% {
-                filter: blur(4px);
+        .ai-gen-dots .dot:nth-child(1) { animation-delay: -0.32s; }
+        .ai-gen-dots .dot:nth-child(2) { animation-delay: -0.16s; }
+        .ai-gen-dots .dot:nth-child(3) { animation-delay: 0s; }
+        @keyframes aiTypingWave {
+            0%, 80%, 100% {
+                transform: scale(0.6);
                 opacity: 0.35;
             }
-            100% {
-                filter: blur(2px);
-                opacity: 0.75;
+            40% {
+                transform: scale(1.15);
+                opacity: 1;
+                background: #8C4A27;
             }
         }
-        @keyframes skeletonShimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+
+        /* CON TRỎ STREAMING THANH MẢNH ĐẶC TRƯNG CỦA GEN AI */
+        .ai-stream-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 14px;
+            background: #D97706;
+            margin-left: 2px;
+            vertical-align: -2px;
+            border-radius: 1px;
+            animation: aiStreamBlink 0.8s infinite;
+        }
+        @keyframes aiStreamBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
-        /* AI Overview Content CANH TRÁI TUYỆT ĐỐI */
+        /* AI Overview Content CANH TRÁI & PHÂN CẤP RÕ RÀNG */
         .ai-overview-content {
-            font-size: 12.5px;
-            line-height: 1.5;
-            color: #292524;
-            max-height: 140px;
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #1C1917;
+            max-height: 180px;
             overflow-y: auto;
-            padding-right: 20px;
             text-align: left !important;
             direction: ltr !important;
             scrollbar-width: thin;
@@ -797,7 +832,7 @@
             font-weight: 700;
         }
         .ai-overview-content p, .ai-overview-content ul {
-            margin: 0 0 4px 0;
+            margin: 0 0 6px 0;
             text-align: left !important;
         }
 
@@ -805,7 +840,9 @@
         .ai-overview-books {
             display: flex;
             gap: 8px;
-            margin-top: 8px;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #ECE7DE;
             overflow-x: auto;
             padding-bottom: 2px;
             scrollbar-width: none;
@@ -825,6 +862,29 @@
             border-color: #8C4A27;
             box-shadow: 0 2px 8px rgba(140,74,39,0.12);
             transform: translateY(-2px);
+        }
+        .ai-book-mini-card img {
+            width: 100%;
+            height: 70px;
+            object-fit: cover;
+        }
+        .ai-book-mini-info {
+            padding: 4px 6px;
+        }
+        .ai-book-mini-info .mini-title {
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .ai-book-mini-info .mini-price {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: #EE4D2D;
+            margin-top: 2px;
         }
         .ai-book-mini-card img {
             width: 100%;
@@ -1143,20 +1203,26 @@
 
                     <!-- OMNIBOX DROPDOWN (FLOATING CARD GỢI Ý & TRỢ LÝ AI TỰ ĐỘNG) -->
                     <div class="google-omnibox-dropdown" id="googleOmniboxDropdown" style="display:none;">
-                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI (TỐI GIẢN TỐI ĐA - ZERO CHỮ THỪA) -->
+                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI (CÂN XỨNG & HIỆU ỨNG GEN CHỮ) -->
                         <div class="ai-overview-card" id="aiOverviewCard" style="display:none;">
-                            <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
+                            <div class="ai-card-top-row">
+                                <div class="ai-gen-label-wrap">
+                                    <span class="ai-sparkle-dot">✨</span>
+                                    <span>Trợ lý AI</span>
+                                </div>
+                                <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
+                            </div>
 
-                            <!-- HIỆU ỨNG SƯƠNG MỜ ĐƠN GIẢN TINH TẾ (SOFT BLUR MIST) -->
+                            <!-- Trạng thái lúc bắt đầu: 3 chấm Gen AI nhấp nháy chuyển động sóng êm ái -->
                             <div class="ai-overview-loading" id="aiOverviewLoading" style="display:none;">
-                                <div class="ai-soft-blur-wrap">
-                                    <div class="ai-blur-skeleton sk-1"></div>
-                                    <div class="ai-blur-skeleton sk-2"></div>
-                                    <div class="ai-blur-skeleton sk-3"></div>
+                                <div class="ai-gen-dots">
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
                                 </div>
                             </div>
 
-                            <!-- Trạng thái Nội dung tổng quan -->
+                            <!-- Trạng thái chữ đang gen ra từng từ -->
                             <div class="ai-overview-content" id="aiOverviewContent"></div>
 
                             <!-- Trạng thái Thẻ sách gợi ý -->
@@ -1553,12 +1619,12 @@
             let currentIdx = 0;
             let currentText = '';
 
-            aiOverviewContent.innerHTML = '<span class="ai-typing-cursor">▊</span>';
+            aiOverviewContent.innerHTML = '<span class="ai-stream-cursor"></span>';
 
             typingInterval = setInterval(() => {
                 if (currentIdx < tokens.length) {
                     currentText += tokens[currentIdx];
-                    aiOverviewContent.innerHTML = currentText + '<span class="ai-typing-cursor">▊</span>';
+                    aiOverviewContent.innerHTML = currentText + '<span class="ai-stream-cursor"></span>';
                     currentIdx++;
                 } else {
                     clearInterval(typingInterval);
