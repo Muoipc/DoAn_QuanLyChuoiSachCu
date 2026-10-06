@@ -90,14 +90,14 @@
             box-shadow: 0 6px 16px rgba(140, 74, 39, 0.35);
         }
 
-        /* SIDEBAR CHỦ ĐỀ GỢI Ý */
+        /* SIDEBAR CHỦ ĐỀ GỢI Ý & LỊCH SỬ CHAT */
         .chat-sidebar {
             background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(28px) saturate(190%) brightness(103%);
             -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
             border-radius: 22px;
             border: 1.5px solid rgba(255, 255, 255, 0.92);
-            padding: 18px;
+            padding: 16px 14px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -107,18 +107,103 @@
             overflow-y: auto !important;
         }
         .sidebar-title {
-            font-size: 14px; font-weight: 800; color: #1C1917;
+            font-size: 13px; font-weight: 800; color: #1C1917;
             display: flex; align-items: center; gap: 8px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
+
+        /* LỊCH SỬ PHIÊN TRÒ CHUYỆN (SESSIONS) */
+        .session-history-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .badge-session-count {
+            background: rgba(140, 74, 39, 0.12);
+            color: #8C4A27;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 1px 7px;
+            border-radius: 9999px;
+        }
+        .session-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 175px;
+            overflow-y: auto;
+            padding-right: 2px;
+            scrollbar-width: thin;
+            scrollbar-color: #D6CEBE transparent;
+        }
+        .session-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            gap: 6px;
+        }
+        .session-item:hover {
+            background: #ffffff;
+            border-color: #8C4A27;
+            transform: translateX(2px);
+        }
+        .session-item.active {
+            background: #FFF7ED;
+            border-color: #FDBA74;
+            color: #8C4A27;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1);
+        }
+        .session-item-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+            flex: 1;
+        }
+        .session-item-icon {
+            font-size: 12px;
+            color: #8C4A27;
+            flex-shrink: 0;
+        }
+        .session-item-title {
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .btn-delete-session {
+            background: none;
+            border: none;
+            color: #A8A29E;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 0 4px;
+            border-radius: 4px;
+            opacity: 0.6;
+            transition: all 0.15s;
+            line-height: 1;
+        }
+        .btn-delete-session:hover {
+            color: #DC2626;
+            opacity: 1;
+            background: rgba(220, 38, 38, 0.1);
+        }
+
         .prompt-chip, .prompt-suggestion-pill {
             background: rgba(255, 255, 255, 0.72);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.88);
             border-radius: 9999px;
-            padding: 10px 18px;
-            font-size: 13px;
+            padding: 8px 14px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--color-text-secondary);
             cursor: pointer;
@@ -126,17 +211,17 @@
             line-height: 1.35;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 2px 6px rgba(45, 24, 15, 0.03);
         }
         .prompt-chip:hover, .prompt-suggestion-pill:hover {
             background: rgba(255, 255, 255, 0.96);
             border-color: var(--color-fire);
             color: var(--color-fire);
-            transform: translateY(-2px) scale(1.015);
-            box-shadow: 0 6px 16px rgba(140, 74, 39, 0.16);
+            transform: translateY(-1px) scale(1.01);
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.12);
         }
-        .chip-icon { color: var(--color-fire); font-size: 13px; }
+        .chip-icon { color: var(--color-fire); font-size: 12px; }
 
         .chain-info-box {
             margin-top: auto;
@@ -478,52 +563,57 @@
 
     <main class="container chat-layout-wrap">
 
-        <!-- CỘT TRÁI: GỢI Ý CHỦ ĐỀ HỎI NHANH -->
+        <!-- CỘT TRÁI: QUẢN LÝ PHIÊN CHAT & GỢI Ý ĐÀO SÂU -->
         <aside class="chat-sidebar">
-            <button type="button" class="btn-new-chat" onclick="resetChat()">
+            <button type="button" class="btn-new-chat" onclick="createNewSession()">
                 <i class="fa-solid fa-plus"></i>
                 <span>Cuộc trò chuyện mới</span>
             </button>
 
-            <div class="sidebar-title" style="margin-top: 6px;">
+            <!-- LỊCH SỬ CÁC PHIÊN TRÒ CHUYỆN (SESSIONS) -->
+            <div class="session-history-section">
+                <div class="sidebar-title" style="justify-content:space-between; margin-bottom:6px;">
+                    <span style="display:flex; align-items:center; gap:6px;">
+                        <i class="fa-regular fa-clock text-danger"></i>
+                        <span>Lịch sử trò chuyện</span>
+                    </span>
+                    <span class="badge-session-count" id="sessionCountBadge">0</span>
+                </div>
+                <div class="session-list" id="sessionList">
+                    <!-- Render động từ localStorage -->
+                </div>
+            </div>
+
+            <!-- CHỦ ĐỀ GỢI Ý ĐÀO SÂU -->
+            <div class="sidebar-title" style="margin-top: 4px;">
                 <i class="fa-solid fa-wand-magic-sparkles text-danger"></i>
                 <span>Chủ đề gợi ý đào sâu:</span>
             </div>
 
             <div class="prompt-chip prompt-suggestion-pill" onclick="sendQuickPrompt('Tư vấn sách chữa lành, giảm stress và lo âu')">
                 <i class="fa-solid fa-spa chip-icon"></i>
-                <span>Tư vấn sách chữa lành, giảm áp lực học tập</span>
+                <span>Tư vấn sách chữa lành, giảm stress</span>
             </div>
 
             <div class="prompt-chip prompt-suggestion-pill" onclick="sendQuickPrompt('Tìm sách kinh tế khởi nghiệp dưới 70k')">
                 <i class="fa-solid fa-chart-line chip-icon"></i>
-                <span>Tìm sách kinh tế khởi nghiệp dưới 70.000₫</span>
+                <span>Sách kinh tế khởi nghiệp &lt; 70k</span>
             </div>
 
             <div class="prompt-chip prompt-suggestion-pill" onclick="sendQuickPrompt('Cuốn Đắc Nhân Tâm còn hàng ở chi nhánh nào?')">
                 <i class="fa-solid fa-location-dot chip-icon"></i>
-                <span>Cuốn Đắc Nhân Tâm còn ở chi nhánh nào?</span>
+                <span>Tra cứu tồn kho tại 5 chi nhánh</span>
             </div>
 
             <div class="prompt-chip prompt-suggestion-pill" onclick="sendQuickPrompt('Giải thích tiêu chuẩn kiểm định sách cũ 95% của chuỗi')">
                 <i class="fa-solid fa-shield-halved chip-icon"></i>
-                <span>Giải thích kiểm định độ mới % &amp; đổi trả</span>
-            </div>
-
-            <div class="prompt-chip prompt-suggestion-pill" onclick="sendQuickPrompt('Sách công nghệ thông tin lập trình Java Spring Boot')">
-                <i class="fa-solid fa-laptop-code chip-icon"></i>
-                <span>Sách công nghệ thông tin HCMUTE</span>
-            </div>
-
-            <div class="prompt-chip prompt-suggestion-pill" onclick="sendQuickPrompt('Sách có giá hạt dẻ dưới 50k')">
-                <i class="fa-solid fa-tag chip-icon"></i>
-                <span>Khu vực sách đồng giá dưới 50k</span>
+                <span>Kiểm định độ mới % &amp; đổi trả</span>
             </div>
 
             <div class="chain-info-box">
-                <strong><i class="fa-solid fa-store me-1"></i> Chuỗi 5 Chi Nhánh:</strong>
+                <strong><i class="fa-solid fa-store me-1"></i> Chuỗi 5 Chi Nhánh TP.HCM:</strong>
                 <div style="margin-top:4px; line-height:1.4;">
-                    Thủ Đức · Quận 1 · Làng ĐHQG · Phú Nhuận · Quận 5 (Mở cửa 08:00 - 21:30 hàng ngày).
+                    Thủ Đức · Quận 1 · Làng ĐHQG · Phú Nhuận · Quận 5 (08:00 - 21:30).
                 </div>
             </div>
         </aside>
@@ -536,7 +626,7 @@
                         <i class="fa-solid fa-robot"></i>
                     </div>
                     <div>
-                        <div class="ai-name-label">Trợ Lý AI Chuỗi Sách Cũ TP.HCM</div>
+                        <div class="ai-name-label" id="chatSessionTitleDisplay">Trợ Lý AI Chuỗi Sách Cũ TP.HCM</div>
                         <div class="ai-online-status">
                             <span class="online-dot"></span> Sẵn sàng tư vấn theo thời gian thực
                         </div>
@@ -550,27 +640,17 @@
 
             <!-- NỘI DUNG CHAT -->
             <div class="chat-messages-body chat-messages-container" id="chatMessages">
-                <!-- TIN NHẮN CHÀO MỪNG BAN ĐẦU -->
-                <div class="msg-row ai">
-                    <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
-                    <div class="msg-bubble">
-                        Dạ em chào bạn! Em là <strong>Trợ lý AI của Chuỗi Cửa Hàng Sách Cũ TP.HCM</strong>. 
-                        Em có thể giúp bạn:
-                        <ul style="margin: 8px 0 8px 18px; line-height: 1.6;">
-                            <li>Gợi ý sách theo cảm xúc (buồn, mất định hướng, cần chữa lành, khởi nghiệp...)</li>
-                            <li>Lọc sách theo ngân sách sinh viên (dưới 50k, 70k)</li>
-                            <li>Tra cứu số lượng tồn kho thời gian thực tại 5 chi nhánh TP.HCM</li>
-                            <li>Giải thích quy trình kiểm định sách cũ và chính sách đồng kiểm COD 100%</li>
-                        </ul>
-                        Bạn đang quan tâm đến cuốn sách hoặc chủ đề nào hôm nay ạ?
-                    </div>
-                </div>
+                <!-- Danh sách tin nhắn động (Được lưu trữ & render theo từng phiên) -->
+                <div id="chatMessageList" style="display:flex; flex-direction:column; gap:16px;"></div>
 
-                <!-- TYPING INDICATOR -->
-                <div class="typing-indicator" id="typingIndicator">
-                    <i class="fa-solid fa-robot text-danger me-1"></i>
-                    <span>AI đang phân tích và tìm sách...</span>
-                    <span class="typing-dots"><span></span><span></span><span></span></span>
+                <!-- TYPING INDICATOR (NẰM ĐỘC LẬP NGOÀI MESSAGE LIST, KHÔNG BAO GIỜ BỊ INNERHTML XÓA) -->
+                <div class="typing-indicator" id="typingIndicator" style="display:none; padding:6px 0; align-items:center; gap:8px;">
+                    <div class="ai-gen-dots">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                    <span style="font-size:12px; color:#78716C; font-style:italic;">AI đang kiểm tra kho và phân tích...</span>
                 </div>
             </div>
 
@@ -598,16 +678,148 @@
 
     <script>
         const chatMessages = document.getElementById('chatMessages');
+        const chatMessageList = document.getElementById('chatMessageList');
         const chatInput = document.getElementById('chatInput');
         const typingIndicator = document.getElementById('typingIndicator');
+        const sessionTitleDisplay = document.getElementById('chatSessionTitleDisplay');
 
-        /**
-         * [TỐI ƯU - CONVERSATION HISTORY]
-         * Lưu lịch sử hội thoại local để gửi kèm mỗi request — giúp AI nhớ ngữ cảnh.
-         * Giới hạn 20 tin nhắn (10 cặp user/assistant) để tránh payload quá lớn.
-         */
+        // ================= SESSION & LỊCH SỬ CHAT STORAGE =================
+        const SESSIONS_STORAGE_KEY = 'CHOSACHCU_AI_SESSIONS_V2';
+        const ACTIVE_SESSION_ID_KEY = 'CHOSACHCU_AI_ACTIVE_SESSION_V2';
         const MAX_LOCAL_HISTORY = 20;
-        let conversationHistory = [];
+
+        let sessions = [];
+        let activeSessionId = null;
+
+        function loadSessionsFromStorage() {
+            try {
+                const raw = localStorage.getItem(SESSIONS_STORAGE_KEY);
+                sessions = raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                sessions = [];
+            }
+            if (!Array.isArray(sessions)) sessions = [];
+            activeSessionId = localStorage.getItem(ACTIVE_SESSION_ID_KEY);
+        }
+
+        function saveSessionsToStorage() {
+            try {
+                localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
+                if (activeSessionId) {
+                    localStorage.setItem(ACTIVE_SESSION_ID_KEY, activeSessionId);
+                }
+            } catch (e) {}
+            renderSessionList();
+        }
+
+        function getActiveSession() {
+            if (!activeSessionId) return null;
+            return sessions.find(s => s.id === activeSessionId) || null;
+        }
+
+        function createNewSession(initialTitle) {
+            const newId = 'sess_' + Date.now();
+            const welcomeText = "Dạ em chào bạn! Em là **Trợ lý AI của Chuỗi Cửa Hàng Sách Cũ TP.HCM**.\n\nEm có thể giúp bạn:\n• Gợi ý sách theo cảm xúc (chữa lành, khởi nghiệp, CNTT...)\n• Tra cứu số lượng tồn kho thời gian thực tại 5 chi nhánh TP.HCM\n• Kiểm định độ mới và chính sách đồng kiểm 100%\n\nBạn đang quan tâm đến cuốn sách hay chủ đề nào hôm nay ạ?";
+            
+            const session = {
+                id: newId,
+                title: initialTitle || 'Cuộc trò chuyện mới',
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+                conversationHistory: [],
+                messages: [
+                    {
+                        sender: 'ai',
+                        text: welcomeText,
+                        books: []
+                    }
+                ]
+            };
+
+            sessions.unshift(session);
+            activeSessionId = newId;
+            saveSessionsToStorage();
+            loadActiveSessionToUI();
+            
+            chatInput.value = '';
+            chatInput.focus();
+            return session;
+        }
+
+        function switchSession(sessionId) {
+            if (activeSessionId === sessionId) return;
+            activeSessionId = sessionId;
+            localStorage.setItem(ACTIVE_SESSION_ID_KEY, sessionId);
+            renderSessionList();
+            loadActiveSessionToUI();
+            chatInput.focus();
+        }
+
+        function deleteSession(e, sessionId) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            sessions = sessions.filter(s => s.id !== sessionId);
+            if (activeSessionId === sessionId) {
+                activeSessionId = sessions.length > 0 ? sessions[0].id : null;
+            }
+            saveSessionsToStorage();
+
+            if (!activeSessionId) {
+                createNewSession();
+            } else {
+                loadActiveSessionToUI();
+            }
+        }
+
+        function renderSessionList() {
+            const listEl = document.getElementById('sessionList');
+            const badgeEl = document.getElementById('sessionCountBadge');
+            if (badgeEl) badgeEl.textContent = sessions.length;
+            if (!listEl) return;
+
+            if (sessions.length === 0) {
+                listEl.innerHTML = '<div style="font-size:11.5px; color:#A8A29E; text-align:center; padding:8px 0;">Chưa có lịch sử chat</div>';
+                return;
+            }
+
+            let html = '';
+            sessions.forEach(s => {
+                const isActive = s.id === activeSessionId;
+                const safeTitle = escapeHtml(s.title || 'Cuộc trò chuyện mới');
+                html += `
+                    <div class="session-item ${isActive ? 'active' : ''}" onclick="switchSession('${s.id}')">
+                        <div class="session-item-left">
+                            <i class="fa-regular fa-message session-item-icon"></i>
+                            <span class="session-item-title" title="${safeTitle}">${safeTitle}</span>
+                        </div>
+                        <button type="button" class="btn-delete-session" onclick="deleteSession(event, '${s.id}')" title="Xóa phiên này">&times;</button>
+                    </div>
+                `;
+            });
+            listEl.innerHTML = html;
+        }
+
+        function loadActiveSessionToUI() {
+            const session = getActiveSession();
+            if (!chatMessageList) return;
+            chatMessageList.innerHTML = '';
+
+            if (sessionTitleDisplay && session) {
+                sessionTitleDisplay.textContent = session.title || 'Trợ Lý AI Chuỗi Sách Cũ TP.HCM';
+            }
+
+            if (!session || !session.messages || session.messages.length === 0) {
+                return;
+            }
+
+            session.messages.forEach(m => {
+                if (m.sender === 'user') {
+                    appendUserMessageDOM(m.text);
+                } else {
+                    appendAiMessageDOM(m.text, m.books);
+                }
+            });
+            scrollToBottom();
+        }
 
         function sendQuickPrompt(promptText) {
             chatInput.value = promptText;
@@ -618,55 +830,79 @@
             const text = chatInput.value.trim();
             if (!text) return;
 
-            appendUserMessage(text);
+            let session = getActiveSession();
+            if (!session) {
+                session = createNewSession(text);
+            } else if (!session.messages || session.messages.length <= 1) {
+                // Đặt tên session theo câu hỏi đầu tiên
+                session.title = text.length > 26 ? text.slice(0, 26) + '...' : text;
+                if (sessionTitleDisplay) sessionTitleDisplay.textContent = session.title;
+            }
+
+            // Lưu tin nhắn user vào session
+            session.messages.push({ sender: 'user', text: text, books: [] });
+            appendUserMessageDOM(text);
             chatInput.value = '';
             showTyping(true);
 
-            // [TỐI ƯU] Gửi kèm lịch sử hội thoại trong request body
+            session.updatedAt = Date.now();
+            saveSessionsToStorage();
+
             fetch('/ai-assistant/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: text,
-                    history: conversationHistory
+                    history: session.conversationHistory || []
                 })
             })
             .then(res => res.json())
             .then(data => {
                 showTyping(false);
-                appendAiMessage(data.reply, data.suggestedBooks);
+                const reply = data.reply || 'Dạ Chuỗi Sách Cũ đã ghi nhận yêu cầu của bạn.';
+                const books = data.suggestedBooks || [];
 
-                // [TỐI ƯU] Lưu cặp user/assistant vào lịch sử hội thoại
-                conversationHistory.push({ role: 'user', content: text });
-                conversationHistory.push({ role: 'assistant', content: data.reply });
+                session.messages.push({ sender: 'ai', text: reply, books: books });
+                if (!session.conversationHistory) session.conversationHistory = [];
+                session.conversationHistory.push({ role: 'user', content: text });
+                session.conversationHistory.push({ role: 'assistant', content: reply });
 
-                // Giới hạn độ dài lịch sử để tránh payload quá lớn
-                if (conversationHistory.length > MAX_LOCAL_HISTORY) {
-                    conversationHistory = conversationHistory.slice(-MAX_LOCAL_HISTORY);
+                if (session.conversationHistory.length > MAX_LOCAL_HISTORY) {
+                    session.conversationHistory = session.conversationHistory.slice(-MAX_LOCAL_HISTORY);
                 }
+
+                session.updatedAt = Date.now();
+                saveSessionsToStorage();
+
+                appendAiMessageDOM(reply, books);
             })
             .catch(err => {
                 showTyping(false);
-                appendAiMessage("Dạ em gặp sự cố mạng một chút, nhưng hệ thống chuỗi vẫn hoạt động bình thường tại 5 chi nhánh TP.HCM ạ! Bạn thử hỏi lại nhé.", []);
+                const fallbackReply = "Dạ em gặp sự cố mạng một chút, nhưng hệ thống chuỗi vẫn hoạt động bình thường tại 5 chi nhánh TP.HCM ạ! Bạn thử hỏi lại nhé.";
+                session.messages.push({ sender: 'ai', text: fallbackReply, books: [] });
+                saveSessionsToStorage();
+                appendAiMessageDOM(fallbackReply, []);
             });
         }
 
-        function appendUserMessage(text) {
+        function appendUserMessageDOM(text) {
+            if (!chatMessageList) return;
             const row = document.createElement('div');
             row.className = 'msg-row user';
             row.innerHTML = `
                 <div class="msg-avatar"><i class="fa-solid fa-user"></i></div>
                 <div class="msg-bubble">${escapeHtml(text)}</div>
             `;
-            chatMessages.insertBefore(row, typingIndicator);
+            chatMessageList.appendChild(row);
             scrollToBottom();
         }
 
-        function appendAiMessage(replyText, books) {
+        function appendAiMessageDOM(replyText, books) {
+            if (!chatMessageList) return;
             const row = document.createElement('div');
             row.className = 'msg-row ai';
 
-            let formattedText = replyText
+            let formattedText = (replyText || '')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\n/g, '<br>');
 
@@ -703,17 +939,21 @@
                     ${booksHtml}
                 </div>
             `;
-            chatMessages.insertBefore(row, typingIndicator);
+            chatMessageList.appendChild(row);
             scrollToBottom();
         }
 
         function showTyping(show) {
-            typingIndicator.style.display = show ? 'flex' : 'none';
+            if (typingIndicator) {
+                typingIndicator.style.display = show ? 'flex' : 'none';
+            }
             scrollToBottom();
         }
 
         function scrollToBottom() {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            if (chatMessages) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
         }
 
         function escapeHtml(text) {
@@ -722,32 +962,26 @@
             return div.innerHTML;
         }
 
-        function resetChat() {
-            conversationHistory = [];
-            chatMessages.innerHTML = `
-                <div class="msg-row ai">
-                    <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
-                    <div class="msg-bubble">
-                        Dạ em đã làm mới cuộc trò chuyện! Bạn muốn tìm hiểu sâu về tác phẩm hay chủ đề nào tiếp theo ạ?
-                    </div>
-                </div>
-                <div class="typing-indicator" id="typingIndicator" style="display:none;">
-                    <i class="fa-solid fa-robot text-danger me-1"></i>
-                    <span>AI đang phân tích và tìm sách...</span>
-                    <span class="typing-dots"><span></span><span></span><span></span></span>
-                </div>
-            `;
-            chatInput.value = '';
-            chatInput.focus();
-        }
-
+        // Khởi động khi tải trang
         window.addEventListener('DOMContentLoaded', function() {
+            loadSessionsFromStorage();
+
             const urlParams = new URLSearchParams(window.location.search);
             const q = urlParams.get('q');
+
             if (q && q.trim()) {
+                // Nếu được chuyển tiếp từ thanh search: Tạo riêng 1 phiên với tiêu đề câu hỏi đó
+                createNewSession(q.trim());
                 chatInput.value = q.trim();
                 sendUserMessage();
                 window.history.replaceState({}, '', '/ai-assistant');
+            } else {
+                if (sessions.length === 0 || !activeSessionId) {
+                    createNewSession();
+                } else {
+                    renderSessionList();
+                    loadActiveSessionToUI();
+                }
             }
         });
     </script>
