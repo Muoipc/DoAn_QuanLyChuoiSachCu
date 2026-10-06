@@ -1221,6 +1221,320 @@
             transform: scale(0.98);
         }
 
+        /* ================= GOOGLE AI MODE OMNIBOX STYLES (KHỚP 100% IMAGE_9A9EC6.PNG) ================= */
+        .search-omnibox-wrapper {
+            position: relative;
+            max-width: min(680px, 92vw);
+            margin: 0 auto;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        /* Nút AI Mode dạng pill chuẩn Google */
+        .google-ai-mode-btn {
+            height: 34px;
+            padding: 0 13px;
+            border-radius: 9999px;
+            background: #F1F3F4;
+            color: #202124;
+            border: 1px solid #DADCE0;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .google-ai-mode-btn i {
+            font-size: 12px;
+            color: #5F6368;
+            transition: color 0.15s ease;
+        }
+        .google-ai-mode-btn:hover {
+            background: #E8EAED;
+            border-color: #BDC1C6;
+            color: #174EA6;
+        }
+        .google-ai-mode-btn:hover i {
+            color: #1a73e8;
+        }
+        .google-ai-mode-btn.active {
+            background: #E8F0FE;
+            color: #1967D2;
+            border-color: #1967D2;
+            box-shadow: 0 1px 4px rgba(25, 103, 210, 0.2);
+        }
+        .google-ai-mode-btn.active i {
+            color: #1967D2;
+            animation: sparklePulse 2s infinite ease-in-out;
+        }
+        @keyframes sparklePulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* Khi mở dropdown: mép đáy của search bar phẳng ra để nối liền mạch */
+        .search-omnibox-wrapper.is-open .chotot-search-form-card {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+            border-bottom: 1px solid #ECE7DE !important;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.04) !important;
+        }
+
+        /* Khung Dropdown Google Omnibox */
+        .google-omnibox-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border: 1px solid #ECE7DE;
+            border-top: none;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            z-index: 10000;
+            animation: omniboxFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes omniboxFadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Danh sách tìm kiếm / lịch sử chuẩn Google (Image_9a9ec6.png) */
+        .omnibox-history-list {
+            padding: 8px 0;
+        }
+        .omnibox-ask-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #F3F1EC;
+            background: #FAF8F5;
+            transition: background 0.15s ease;
+        }
+        .omnibox-ask-row:hover {
+            background: #F3EFE9;
+        }
+        .omnibox-ask-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #8C4A27;
+        }
+        .omnibox-history-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 20px;
+            cursor: pointer;
+            transition: background 0.12s ease;
+            user-select: none;
+        }
+        .omnibox-history-row:hover {
+            background: #F8F9FA;
+        }
+        .omnibox-row-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            overflow: hidden;
+            flex: 1;
+        }
+        .omnibox-clock-icon {
+            color: #70757A;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .omnibox-query-text {
+            font-size: 14px;
+            color: #202124;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .omnibox-mode-label {
+            font-size: 13px;
+            color: #70757A;
+            font-weight: 400;
+            margin-left: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .omnibox-mode-label.ai-tag {
+            color: #1967D2;
+            font-weight: 600;
+        }
+
+        /* VIEW 2: AI CONVERSATION VIEW */
+        .omnibox-chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 18px;
+            background: linear-gradient(135deg, #FFFDF8 0%, #FFF8EE 100%);
+            border-bottom: 1px solid #F0ECE4;
+        }
+        .omnibox-header-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .omnibox-ai-avatar {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8C4A27, #D97706);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 13px;
+            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.25);
+        }
+        .omnibox-ai-tag {
+            font-size: 10px; background: #8C4A27; color: #fff;
+            padding: 2px 7px; border-radius: 9999px; font-weight: 700;
+        }
+        .omnibox-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-omnibox-icon {
+            background: #FFFFFF; border: 1px solid #E5E0D8; cursor: pointer;
+            font-size: 11.5px; font-weight: 600; color: #57534E; padding: 4px 9px;
+            border-radius: 6px; transition: all 0.15s; display: inline-flex; align-items: center; gap: 4px;
+        }
+        .btn-omnibox-icon:hover { border-color: #8C4A27; color: #8C4A27; background: #FAF8F5; }
+        .btn-omnibox-close {
+            background: none; border: none; cursor: pointer;
+            font-size: 20px; color: #78716C; padding: 2px 6px;
+            border-radius: 6px; transition: all 0.15s; line-height: 1;
+        }
+        .btn-omnibox-close:hover { background: #F5F0EB; color: #1C1917; }
+
+        /* Chat body & message bubbles */
+        .omnibox-chat-body {
+            padding: 16px 18px;
+            max-height: 360px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #8C4A27 #F5F0EB;
+            overscroll-behavior: contain;
+            scroll-behavior: smooth;
+        }
+        .omnibox-chat-body::-webkit-scrollbar {
+            width: 7px;
+            display: block;
+        }
+        .omnibox-chat-body::-webkit-scrollbar-track {
+            background: #F5F0EB;
+            border-radius: 9999px;
+        }
+        .omnibox-chat-body::-webkit-scrollbar-thumb {
+            background: #8C4A27;
+            border-radius: 9999px;
+        }
+        .omnibox-chat-body::-webkit-scrollbar-thumb:hover {
+            background: #6D3416;
+        }
+        .ai-msg-row {
+            display: flex; gap: 8px; margin-bottom: 10px;
+        }
+        .ai-msg-row.user { flex-direction: row-reverse; }
+        .ai-msg-bubble {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.55;
+            color: #1C1917;
+            word-break: break-word;
+        }
+        .ai-msg-row:not(.user) .ai-msg-bubble {
+            background: #F5F0EB;
+            border-bottom-left-radius: 4px;
+        }
+        .ai-msg-row.user .ai-msg-bubble {
+            background: #8C4A27;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .ai-typing-dots {
+            display: inline-flex; gap: 4px; align-items: center; padding: 10px 14px;
+            background: #F5F0EB; border-radius: 14px; border-bottom-left-radius: 4px;
+        }
+        .ai-typing-dots span {
+            width: 6px; height: 6px; background: #A8A29E; border-radius: 50%;
+            animation: aiDotPulse 1.2s infinite ease-in-out;
+        }
+        .ai-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .ai-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes aiDotPulse {
+            0%, 60%, 100% { transform: scale(0.6); opacity: 0.4; }
+            30% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Suggested books carousel */
+        .ai-suggested-books {
+            display: flex; gap: 10px; margin-top: 8px; overflow-x: auto;
+            padding-bottom: 4px; scrollbar-width: none;
+        }
+        .ai-suggested-books::-webkit-scrollbar { display: none; }
+        .ai-book-mini-card {
+            flex: 0 0 135px;
+            background: #fff; border: 1px solid #ECE7DE; border-radius: 10px;
+            overflow: hidden; text-decoration: none; color: #1C1917;
+            transition: all 0.15s;
+        }
+        .ai-book-mini-card:hover {
+            border-color: #8C4A27; box-shadow: 0 2px 8px rgba(140,74,39,0.12);
+            transform: translateY(-2px);
+        }
+        .ai-book-mini-card img {
+            width: 100%; height: 90px; object-fit: cover;
+        }
+        .ai-book-mini-info {
+            padding: 6px 8px;
+        }
+        .ai-book-mini-info .mini-title {
+            font-size: 11.5px; font-weight: 700; line-height: 1.3;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .ai-book-mini-info .mini-price {
+            font-size: 12px; font-weight: 800; color: #EE4D2D; margin-top: 3px;
+        }
+
+        /* Follow-up input row at bottom */
+        .omnibox-chat-footer {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 14px;
+            border-top: 1px solid #F0ECE4;
+            background: #FAFAF8;
+        }
+        .omnibox-chat-input-box {
+            flex: 1; border: 1px solid #E0DCD6; border-radius: 9999px;
+            padding: 8px 14px; font-size: 13px; outline: none;
+            transition: border-color 0.15s; background: #FFFFFF;
+        }
+        .omnibox-chat-input-box:focus { border-color: #8C4A27; }
+        .omnibox-chat-send-btn {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #8C4A27; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; transition: all 0.15s;
+        }
+        .omnibox-chat-send-btn:hover { background: #EE4D2D; transform: scale(1.06); }
+        .omnibox-chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
         /* ================= THANH DANH MỤC GỌN GÀNG, MỎNG NHẸ TINH TẾ (SLIM COMPACT) ================= */
         .chotot-category-section {
             margin-top: 24px !important;
@@ -1360,121 +1674,239 @@
                     </p>
                 </div>
 
-                <!-- THANH TÌM KIẾM TO TRÒN CHUẨN CHỢ TỐT (72PX, BO GÓC 20PX, ĐÈ 50% GIỮA NỀN BANNER VÀ TRẮNG) -->
-                <form th:action="@{/search}" method="get" class="chotot-search-form-card" id="homeSearchForm">
-                    <!-- 1. Search Icon & Input Field -->
-                    <div class="chotot-input-field-wrap">
-                        <svg class="chotot-lens-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none">
-                            <path d="M18.2798 11.4399C18.2797 7.66239 15.2175 4.6001 11.4399 4.6001C7.66244 4.60018 4.60018 7.66244 4.6001 11.4399C4.6001 15.2175 7.66239 18.2797 11.4399 18.2798C15.2176 18.2798 18.2798 15.2176 18.2798 11.4399ZM20.2798 11.4399C20.2798 13.5439 19.5432 15.4748 18.3159 16.9927L21.0952 19.6812C21.4922 20.1438 21.4786 20.7232 21.1187 21.0952C20.7586 21.4674 20.1798 21.5 19.7817 21.186L16.8901 18.396C15.3881 19.5745 13.4972 20.2798 11.4399 20.2798C6.55782 20.2797 2.6001 16.3221 2.6001 11.4399C2.60018 6.55787 6.55787 2.60018 11.4399 2.6001C16.3221 2.6001 20.2797 6.55782 20.2798 11.4399Z" fill="currentColor"></path>
-                        </svg>
-                        <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm sản phẩm, tên sách cũ, tác giả, giáo trình..." class="chotot-native-input" autocomplete="off">
-                    </div>
+                <!-- THANH TÌM KIẾM TO TRÒN CHUẨN GOOGLE / CHỢ TỐT KÈM OMNIBOX DROPDOWN NỐI LIỀN (KHỚP 100% IMAGE_9A9EC6.PNG) -->
+                <div class="search-omnibox-wrapper" id="searchOmniboxWrapper">
+                    <form th:action="@{/search}" method="get" class="chotot-search-form-card" id="homeSearchForm" autocomplete="off">
+                        <!-- 1. Search Icon & Input Field -->
+                        <div class="chotot-input-field-wrap">
+                            <svg class="chotot-lens-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none">
+                                <path d="M18.2798 11.4399C18.2797 7.66239 15.2175 4.6001 11.4399 4.6001C7.66244 4.60018 4.60018 7.66244 4.6001 11.4399C4.6001 15.2175 7.66239 18.2797 11.4399 18.2798C15.2176 18.2798 18.2798 15.2176 18.2798 11.4399ZM20.2798 11.4399C20.2798 13.5439 19.5432 15.4748 18.3159 16.9927L21.0952 19.6812C21.4922 20.1438 21.4786 20.7232 21.1187 21.0952C20.7586 21.4674 20.1798 21.5 19.7817 21.186L16.8901 18.396C15.3881 19.5745 13.4972 20.2798 11.4399 20.2798C6.55782 20.2797 2.6001 16.3221 2.6001 11.4399C2.60018 6.55787 6.55787 2.60018 11.4399 2.6001C16.3221 2.6001 20.2797 6.55782 20.2798 11.4399Z" fill="currentColor"></path>
+                            </svg>
+                            <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm sản phẩm, tên sách cũ, tác giả, giáo trình..." class="chotot-native-input" id="homeSearchInput" autocomplete="off">
+                        </div>
 
-                    <!-- 2. Right Actions: Multi-Criteria Filter Trigger + Search Submit Button -->
-                    <div class="chotot-form-actions-group">
-                        <!-- Multi-Criteria Filter Trigger Button (Sắp xếp, Thể loại, Giá, Chi nhánh) -->
-                        <div class="chotot-filter-trigger-wrap">
-                            <button type="button" class="chotot-location-button-wrap" id="homeFilterBtn" onclick="toggleHeroFilterPopover(event)">
-                                <i class="fa-solid fa-sliders" style="color:#EE4D2D; font-size:14px; margin-right:2px;"></i>
-                                <span id="homeFilterBtnLabel" style="font-size:14px; font-weight:700; color:#1C1917;">Bộ lọc</span>
-                                <svg class="chevron-down-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none">
-                                    <path d="M12.4495 14.8316C12.2013 15.0561 11.7987 15.0561 11.5505 14.8316L6.18623 9.98133C6.0044 9.81692 5.95001 9.56967 6.04841 9.35486C6.14682 9.14006 6.37864 9 6.63578 9L17.3642 9C17.6214 9 17.8532 9.14006 17.9516 9.35487C18.05 9.56967 17.9956 9.81693 17.8138 9.98133L12.4495 14.8316Z" fill="currentColor"></path>
-                                </svg>
+                        <!-- 2. Right Actions: Filter Button + Google AI Mode Button + Search Button -->
+                        <div class="chotot-form-actions-group">
+                            <!-- Multi-Criteria Filter Trigger Button (Sắp xếp, Thể loại, Giá, Chi nhánh) -->
+                            <div class="chotot-filter-trigger-wrap">
+                                <button type="button" class="chotot-location-button-wrap" id="homeFilterBtn" onclick="toggleHeroFilterPopover(event)">
+                                    <i class="fa-solid fa-sliders" style="color:#EE4D2D; font-size:14px; margin-right:2px;"></i>
+                                    <span id="homeFilterBtnLabel" style="font-size:14px; font-weight:700; color:#1C1917;">Bộ lọc</span>
+                                    <svg class="chevron-down-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none">
+                                        <path d="M12.4495 14.8316C12.2013 15.0561 11.7987 15.0561 11.5505 14.8316L6.18623 9.98133C6.0044 9.81692 5.95001 9.56967 6.04841 9.35486C6.14682 9.14006 6.37864 9 6.63578 9L17.3642 9C17.6214 9 17.8532 9.14006 17.9516 9.35487C18.05 9.56967 17.9956 9.81693 17.8138 9.98133L12.4495 14.8316Z" fill="currentColor"></path>
+                                    </svg>
+                                </button>
+
+                                <!-- BẢNG BỘ LỌC CHUYÊN SÂU NẰM TRONG NÚT TÌM KIẾM (SẮP XẾP, THỂ LOẠI, KHOẢNG GIÁ, CHI NHÁNH) -->
+                                <div class="chotot-filter-modal-popover" id="heroFilterPopover" style="display:none;">
+                                    <div class="filter-popover-header">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <i class="fa-solid fa-sliders text-danger" style="color:#EE4D2D;"></i>
+                                            <span style="font-weight:800; font-size:14px; color:#1C1917;">Bộ Lọc Tìm Kiếm</span>
+                                        </div>
+                                        <button type="button" class="btn-close-filter-popover" onclick="closeHeroFilterPopover(event)">&times;</button>
+                                    </div>
+
+                                    <div class="filter-popover-body">
+                                        <!-- 1. TIÊU CHÍ SẮP XẾP (Phổ biến, Mới nhất, Bán chạy, Giá) -->
+                                        <div class="filter-section-row">
+                                            <label class="filter-field-label">Sắp xếp theo</label>
+                                            <div class="sort-chips-grid">
+                                                <label class="sort-chip">
+                                                    <input type="radio" name="sort" value="popular" th:checked="${selectedSort == null or selectedSort == 'popular'}">
+                                                    <span><i class="fa-solid fa-fire me-1" style="color:#EE4D2D;"></i>Phổ biến</span>
+                                                </label>
+                                                <label class="sort-chip">
+                                                    <input type="radio" name="sort" value="latest" th:checked="${selectedSort == 'latest'}">
+                                                    <span><i class="fa-solid fa-sparkles me-1" style="color:#F59E0B;"></i>Mới nhất</span>
+                                                </label>
+                                                <label class="sort-chip">
+                                                    <input type="radio" name="sort" value="sales" th:checked="${selectedSort == 'sales'}">
+                                                    <span><i class="fa-solid fa-chart-line me-1" style="color:#10B981;"></i>Bán chạy</span>
+                                                </label>
+                                                <label class="sort-chip">
+                                                    <input type="radio" name="sort" value="price-asc" th:checked="${selectedSort == 'price-asc'}">
+                                                    <span><i class="fa-solid fa-arrow-up-1-9 me-1" style="color:#6366F1;"></i>Giá: Thấp → Cao</span>
+                                                </label>
+                                                <label class="sort-chip">
+                                                    <input type="radio" name="sort" value="price-desc" th:checked="${selectedSort == 'price-desc'}">
+                                                    <span><i class="fa-solid fa-arrow-down-9-1 me-1" style="color:#EC4899;"></i>Giá: Cao → Thấp</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- 2. DANH MỤC THỂ LOẠI -->
+                                        <div class="filter-section-row">
+                                            <label class="filter-field-label">Danh mục thể loại</label>
+                                            <div class="custom-select-wrap">
+                                                <select name="cat" id="heroFilterCatSelect" class="custom-filter-select">
+                                                    <option value="">Tất cả thể loại</option>
+                                                    <option th:if="${categories != null}" th:each="c : ${categories}" th:value="${c.id}" th:text="${c.categoryName}" th:selected="${selectedCat != null and selectedCat == c.id}">Văn Học</option>
+                                                </select>
+                                                <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
+                                            </div>
+                                        </div>
+
+                                        <!-- 3. KHOẢNG GIÁ (₫) -->
+                                        <div class="filter-section-row">
+                                            <label class="filter-field-label">Khoảng giá (₫)</label>
+                                            <div class="price-preset-chips" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+                                                <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('', '50000')">Dưới 50k</button>
+                                                <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('50000', '100000')">50k - 100k</button>
+                                                <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('100000', '200000')">100k - 200k</button>
+                                                <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('200000', '')">Trên 200k</button>
+                                            </div>
+                                            <div class="price-range-inputs">
+                                                <input type="number" name="minPrice" id="heroMinPrice" th:value="${selectedMinPrice}" placeholder="Từ ₫" class="price-input-box" min="0" step="1000">
+                                                <span class="price-sep" style="color:#78716C; font-weight:700;">&mdash;</span>
+                                                <input type="number" name="maxPrice" id="heroMaxPrice" th:value="${selectedMaxPrice}" placeholder="Đến ₫" class="price-input-box" min="0" step="1000">
+                                            </div>
+                                        </div>
+
+                                        <!-- 4. CHI NHÁNH CỬA HÀNG -->
+                                        <div class="filter-section-row">
+                                            <label class="filter-field-label">Chi nhánh TP.HCM</label>
+                                            <div class="custom-select-wrap">
+                                                <select name="store" id="heroFilterStoreSelect" class="custom-filter-select">
+                                                    <option value="">Toàn TP.HCM (5 Shop)</option>
+                                                    <option th:if="${stores != null}" th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStore != null and selectedStore == st.id}">Thủ Đức</option>
+                                                </select>
+                                                <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FOOTER: XOÁ LỌC & ÁP DỤNG -->
+                                    <div class="filter-popover-footer">
+                                        <button type="button" class="btn-popover-reset" onclick="resetHeroFilterPopover(event)">Xoá lọc</button>
+                                        <button type="button" class="btn-popover-apply" onclick="applyHeroFilterPopover(event)">Áp dụng</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Google AI Mode Button (Khớp 100% Image_9a9ec6.png) -->
+                            <button type="button" class="google-ai-mode-btn" id="homeAiModeBtn" onclick="toggleGoogleAiMode(event)" title="Chế độ AI - Hỏi đáp & Tư vấn sách">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>AI Mode</span>
                             </button>
 
-                            <!-- BẢNG BỘ LỌC CHUYÊN SÂU NẰM TRONG NÚT TÌM KIẾM (SẮP XẾP, THỂ LOẠI, KHOẢNG GIÁ, CHI NHÁNH) -->
-                            <div class="chotot-filter-modal-popover" id="heroFilterPopover" style="display:none;">
-                                <div class="filter-popover-header">
-                                    <div style="display:flex; align-items:center; gap:8px;">
-                                        <i class="fa-solid fa-sliders text-danger" style="color:#EE4D2D;"></i>
-                                        <span style="font-weight:800; font-size:14px; color:#1C1917;">Bộ Lọc Tìm Kiếm</span>
+                            <!-- Search Submit Button -->
+                            <button type="submit" class="chotot-submit-button">
+                                <span>Tìm kiếm</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- GOOGLE OMNIBOX DROPDOWN (NỐI LIỀN DƯỚI SEARCH BAR) -->
+                    <div class="google-omnibox-dropdown" id="googleOmniboxDropdown" style="display:none;">
+                        <!-- VIEW 1: SEARCH SUGGESTIONS & RECENT QUERIES (KHỚP 100% ẢNH IMAGE_9A9EC6.PNG) -->
+                        <div class="omnibox-view-suggestions" id="omniboxSuggestionsView">
+                            <div class="omnibox-history-list">
+                                <div class="omnibox-ask-row" onclick="startAiFromOmniboxPrompt()">
+                                    <div class="omnibox-ask-left">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                        <span>+ Hỏi Trợ lý AI về bất kỳ cuốn sách nào...</span>
                                     </div>
-                                    <button type="button" class="btn-close-filter-popover" onclick="closeHeroFilterPopover(event)">&times;</button>
+                                    <span class="omnibox-mode-label ai-tag" style="background:#E8F0FE; padding:2px 8px; border-radius:9999px;">AI Mode</span>
                                 </div>
-
-                                <div class="filter-popover-body">
-                                    <!-- 1. TIÊU CHÍ SẮP XẾP (Phổ biến, Mới nhất, Bán chạy, Giá) -->
-                                    <div class="filter-section-row">
-                                        <label class="filter-field-label">Sắp xếp theo</label>
-                                        <div class="sort-chips-grid">
-                                            <label class="sort-chip">
-                                                <input type="radio" name="sort" value="popular" th:checked="${selectedSort == null or selectedSort == 'popular'}">
-                                                <span><i class="fa-solid fa-fire me-1" style="color:#EE4D2D;"></i>Phổ biến</span>
-                                            </label>
-                                            <label class="sort-chip">
-                                                <input type="radio" name="sort" value="latest" th:checked="${selectedSort == 'latest'}">
-                                                <span><i class="fa-solid fa-sparkles me-1" style="color:#F59E0B;"></i>Mới nhất</span>
-                                            </label>
-                                            <label class="sort-chip">
-                                                <input type="radio" name="sort" value="sales" th:checked="${selectedSort == 'sales'}">
-                                                <span><i class="fa-solid fa-chart-line me-1" style="color:#10B981;"></i>Bán chạy</span>
-                                            </label>
-                                            <label class="sort-chip">
-                                                <input type="radio" name="sort" value="price-asc" th:checked="${selectedSort == 'price-asc'}">
-                                                <span><i class="fa-solid fa-arrow-up-1-9 me-1" style="color:#6366F1;"></i>Giá: Thấp → Cao</span>
-                                            </label>
-                                            <label class="sort-chip">
-                                                <input type="radio" name="sort" value="price-desc" th:checked="${selectedSort == 'price-desc'}">
-                                                <span><i class="fa-solid fa-arrow-down-9-1 me-1" style="color:#EC4899;"></i>Giá: Cao → Thấp</span>
-                                            </label>
-                                        </div>
+                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Sách chữa lành tâm hồn, giảm áp lực', true)">
+                                    <div class="omnibox-row-left">
+                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
+                                        <span class="omnibox-query-text">Sách chữa lành tâm hồn, giảm áp lực</span>
                                     </div>
-
-                                    <!-- 2. DANH MỤC THỂ LOẠI -->
-                                    <div class="filter-section-row">
-                                        <label class="filter-field-label">Danh mục thể loại</label>
-                                        <div class="custom-select-wrap">
-                                            <select name="cat" id="heroFilterCatSelect" class="custom-filter-select">
-                                                <option value="">Tất cả thể loại</option>
-                                                <option th:if="${categories != null}" th:each="c : ${categories}" th:value="${c.id}" th:text="${c.categoryName}" th:selected="${selectedCat != null and selectedCat == c.id}">Văn Học</option>
-                                            </select>
-                                            <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
-                                        </div>
-                                    </div>
-
-                                    <!-- 3. KHOẢNG GIÁ (₫) -->
-                                    <div class="filter-section-row">
-                                        <label class="filter-field-label">Khoảng giá (₫)</label>
-                                        <div class="price-preset-chips" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-                                            <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('', '50000')">Dưới 50k</button>
-                                            <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('50000', '100000')">50k - 100k</button>
-                                            <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('100000', '200000')">100k - 200k</button>
-                                            <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('200000', '')">Trên 200k</button>
-                                        </div>
-                                        <div class="price-range-inputs">
-                                            <input type="number" name="minPrice" id="heroMinPrice" th:value="${selectedMinPrice}" placeholder="Từ ₫" class="price-input-box" min="0" step="1000">
-                                            <span class="price-sep" style="color:#78716C; font-weight:700;">&mdash;</span>
-                                            <input type="number" name="maxPrice" id="heroMaxPrice" th:value="${selectedMaxPrice}" placeholder="Đến ₫" class="price-input-box" min="0" step="1000">
-                                        </div>
-                                    </div>
-
-                                    <!-- 4. CHI NHÁNH CỬA HÀNG -->
-                                    <div class="filter-section-row">
-                                        <label class="filter-field-label">Chi nhánh TP.HCM</label>
-                                        <div class="custom-select-wrap">
-                                            <select name="store" id="heroFilterStoreSelect" class="custom-filter-select">
-                                                <option value="">Toàn TP.HCM (5 Shop)</option>
-                                                <option th:if="${stores != null}" th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStore != null and selectedStore == st.id}">Thủ Đức</option>
-                                            </select>
-                                            <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
-                                        </div>
-                                    </div>
+                                    <span class="omnibox-mode-label ai-tag">- AI Mode</span>
                                 </div>
-
-                                <!-- FOOTER: XOÁ LỌC & ÁP DỤNG -->
-                                <div class="filter-popover-footer">
-                                    <button type="button" class="btn-popover-reset" onclick="resetHeroFilterPopover(event)">Xoá lọc</button>
-                                    <button type="button" class="btn-popover-apply" onclick="applyHeroFilterPopover(event)">Áp dụng</button>
+                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Giáo trình CNTT & Lập trình Web HCMUTE', true)">
+                                    <div class="omnibox-row-left">
+                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
+                                        <span class="omnibox-query-text">Giáo trình CNTT & Lập trình Web HCMUTE</span>
+                                    </div>
+                                    <span class="omnibox-mode-label ai-tag">- AI Mode</span>
+                                </div>
+                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Kinh tế, khởi nghiệp dưới 70k', true)">
+                                    <div class="omnibox-row-left">
+                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
+                                        <span class="omnibox-query-text">Kinh tế, khởi nghiệp dưới 70k</span>
+                                    </div>
+                                    <span class="omnibox-mode-label ai-tag">- AI Mode</span>
+                                </div>
+                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Yêu Những Điều Không Hoàn Hảo', false)">
+                                    <div class="omnibox-row-left">
+                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
+                                        <span class="omnibox-query-text">Yêu Những Điều Không Hoàn Hảo</span>
+                                    </div>
+                                    <span class="omnibox-mode-label">- Sách Cũ</span>
+                                </div>
+                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Kiểm tra tồn kho 5 chi nhánh TP.HCM', true)">
+                                    <div class="omnibox-row-left">
+                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
+                                        <span class="omnibox-query-text">Kiểm tra tồn kho 5 chi nhánh TP.HCM</span>
+                                    </div>
+                                    <span class="omnibox-mode-label ai-tag">- AI Mode</span>
+                                </div>
+                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Đắc Nhân Tâm', false)">
+                                    <div class="omnibox-row-left">
+                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
+                                        <span class="omnibox-query-text">Đắc Nhân Tâm</span>
+                                    </div>
+                                    <span class="omnibox-mode-label">- Sách Cũ</span>
+                                </div>
+                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Nguyễn Nhật Ánh', false)">
+                                    <div class="omnibox-row-left">
+                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
+                                        <span class="omnibox-query-text">Nguyễn Nhật Ánh</span>
+                                    </div>
+                                    <span class="omnibox-mode-label">- Sách Cũ</span>
+                                </div>
+                                <div class="omnibox-history-row" onclick="selectOmniboxQuery('Clean Code (Mã Sạch)', false)">
+                                    <div class="omnibox-row-left">
+                                        <i class="fa-regular fa-clock omnibox-clock-icon"></i>
+                                        <span class="omnibox-query-text">Clean Code (Mã Sạch)</span>
+                                    </div>
+                                    <span class="omnibox-mode-label">- Sách Cũ</span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Search Submit Button -->
-                        <button type="submit" class="chotot-submit-button">
-                            <span>Tìm kiếm</span>
-                        </button>
+                        <!-- VIEW 2: AI CONVERSATION VIEW (KHI ĐANG CHAT HOẶC CHỌN AI MODE) -->
+                        <div class="omnibox-view-chat" id="omniboxChatView" style="display:none;">
+                            <div class="omnibox-chat-header">
+                                <div class="omnibox-header-title-wrap">
+                                    <div class="omnibox-ai-avatar"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                                    <div>
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span style="font-size:13px; font-weight:800; color:#1C1917;">Trợ Lý AI Sách Cũ</span>
+                                            <span class="omnibox-ai-tag">AI Mode</span>
+                                        </div>
+                                        <div style="font-size:10.5px; color:#78716C;">Online &bull; Tư vấn &amp; Tồn kho 5 chi nhánh TP.HCM</div>
+                                    </div>
+                                </div>
+                                <div class="omnibox-header-actions">
+                                    <button type="button" class="btn-omnibox-icon" onclick="switchToSuggestionsView()" title="Quay lại danh sách tìm kiếm">
+                                        <i class="fa-regular fa-clock"></i> <span>Gợi ý</span>
+                                    </button>
+                                    <button type="button" class="btn-omnibox-icon" onclick="clearOmniboxChat()" title="Xóa đoạn chat">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                    <button type="button" class="btn-omnibox-close" onclick="closeGoogleOmnibox()">&times;</button>
+                                </div>
+                            </div>
+
+                            <!-- Chat messages body -->
+                            <div class="omnibox-chat-body" id="omniboxChatBody">
+                                <!-- Messages render here -->
+                            </div>
+
+                            <!-- Bottom follow-up input -->
+                            <div class="omnibox-chat-footer">
+                                <input type="text" id="omniboxChatInput" class="omnibox-chat-input-box" placeholder="Hỏi thêm về nội dung, chi nhánh, giá..." autocomplete="off">
+                                <button type="button" class="omnibox-chat-send-btn" id="omniboxSendBtn" onclick="sendOmniboxMsg()" title="Gửi câu hỏi">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         </section>
     </div>
@@ -1864,5 +2296,368 @@
 
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>
+
+    <script>
+    // ================= GOOGLE OMNIBOX AI MODE & PERSISTENT HISTORY (KHỚP 100% IMAGE_9A9EC6.PNG) =================
+    (function() {
+        const wrapper = document.getElementById('searchOmniboxWrapper');
+        const dropdown = document.getElementById('googleOmniboxDropdown');
+        const searchInput = document.getElementById('homeSearchInput');
+        const aiModeBtn = document.getElementById('homeAiModeBtn');
+        const suggestionsView = document.getElementById('omniboxSuggestionsView');
+        const chatView = document.getElementById('omniboxChatView');
+        const chatBody = document.getElementById('omniboxChatBody');
+        const chatInput = document.getElementById('omniboxChatInput');
+        const sendBtn = document.getElementById('omniboxSendBtn');
+
+        const STORAGE_CHAT_KEY = 'CHOSACHCU_AI_CHAT_HISTORY_V1';
+        const STORAGE_CONTEXT_KEY = 'CHOSACHCU_AI_CONTEXT_V1';
+        const STORAGE_RECENT_KEY = 'CHOSACHCU_SEARCH_RECENT_V1';
+
+        const DEFAULT_QUERIES = [
+            { query: 'Sách chữa lành tâm hồn, giảm áp lực', isAi: true },
+            { query: 'Giáo trình CNTT & Lập trình Web HCMUTE', isAi: true },
+            { query: 'Kinh tế, khởi nghiệp dưới 70k', isAi: true },
+            { query: 'Yêu Những Điều Không Hoàn Hảo', isAi: false },
+            { query: 'Kiểm tra tồn kho 5 chi nhánh TP.HCM', isAi: true },
+            { query: 'Đắc Nhân Tâm', isAi: false },
+            { query: 'Nguyễn Nhật Ánh', isAi: false },
+            { query: 'Clean Code (Mã Sạch)', isAi: false }
+        ];
+
+        let aiBusy = false;
+        let isAiMode = false;
+        let chatMessages = [];
+        let aiContextHistory = [];
+
+        // 1. QUẢN LÝ LỊCH SỬ TÌM KIẾM (PERSISTENT RECENT QUERIES)
+        function loadRecentQueries() {
+            try {
+                const raw = localStorage.getItem(STORAGE_RECENT_KEY);
+                return raw ? JSON.parse(raw) : DEFAULT_QUERIES;
+            } catch (e) {
+                return DEFAULT_QUERIES;
+            }
+        }
+
+        function saveRecentQuery(query, isAi) {
+            if (!query || !query.trim()) return;
+            const q = query.trim();
+            let list = loadRecentQueries();
+            list = list.filter(item => item.query.toLowerCase() !== q.toLowerCase());
+            list.unshift({ query: q, isAi: !!isAi, time: Date.now() });
+            if (list.length > 10) list = list.slice(0, 10);
+            try {
+                localStorage.setItem(STORAGE_RECENT_KEY, JSON.stringify(list));
+            } catch (e) {}
+            renderRecentQueries();
+        }
+
+        function renderRecentQueries() {
+            const listContainer = document.querySelector('.omnibox-history-list');
+            if (!listContainer) return;
+            const queries = loadRecentQueries();
+            let html = `
+                <div class="omnibox-ask-row" onclick="startAiFromOmniboxPrompt()">
+                    <div class="omnibox-ask-left">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>+ Hỏi Trợ lý AI về bất kỳ cuốn sách nào...</span>
+                    </div>
+                    <span class="omnibox-mode-label ai-tag" style="background:#E8F0FE; padding:2px 8px; border-radius:9999px;">AI Mode</span>
+                </div>
+            `;
+            queries.forEach(item => {
+                const isAi = item.isAi;
+                const safeQuery = item.query.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const tagClass = isAi ? 'omnibox-mode-label ai-tag' : 'omnibox-mode-label';
+                const tagText = isAi ? '- AI Mode' : '- Sách Cũ';
+                html += `
+                    <div class="omnibox-history-row" onclick="selectOmniboxQuery('${safeQuery}', ${isAi})">
+                        <div class="omnibox-row-left">
+                            <i class="fa-regular fa-clock omnibox-clock-icon"></i>
+                            <span class="omnibox-query-text">${escapeHtml(item.query)}</span>
+                        </div>
+                        <span class="${tagClass}">${tagText}</span>
+                    </div>
+                `;
+            });
+            listContainer.innerHTML = html;
+        }
+
+        // 2. QUẢN LÝ LỊCH SỬ CHAT AI (PERSISTENT CONVERSATION HISTORY)
+        function loadStoredChat() {
+            try {
+                const rawChat = localStorage.getItem(STORAGE_CHAT_KEY);
+                const rawContext = localStorage.getItem(STORAGE_CONTEXT_KEY);
+                chatMessages = rawChat ? JSON.parse(rawChat) : [];
+                aiContextHistory = rawContext ? JSON.parse(rawContext) : [];
+            } catch (e) {
+                chatMessages = [];
+                aiContextHistory = [];
+            }
+        }
+
+        function saveStoredChat() {
+            try {
+                localStorage.setItem(STORAGE_CHAT_KEY, JSON.stringify(chatMessages));
+                localStorage.setItem(STORAGE_CONTEXT_KEY, JSON.stringify(aiContextHistory));
+            } catch (e) {}
+        }
+
+        function renderStoredChat() {
+            if (!chatBody) return;
+            chatBody.innerHTML = '';
+            if (chatMessages.length === 0) {
+                appendMsgToDOM('ai', 'Dạ chào bạn! Em là **Trợ lý AI của Chuỗi Sách Cũ TP.HCM**. Bạn có thể hỏi bất kỳ cuốn sách nào, kiểm tra tồn kho tại 5 chi nhánh hoặc nhờ gợi ý sách nhé!', []);
+                return;
+            }
+            chatMessages.forEach(msg => {
+                appendMsgToDOM(msg.role, msg.text, msg.books || []);
+            });
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        // Mở dropdown khi focus hoặc click vào ô tìm kiếm
+        if (searchInput) {
+            searchInput.addEventListener('focus', function() {
+                openGoogleOmnibox(false);
+            });
+            searchInput.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openGoogleOmnibox(false);
+            });
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const val = searchInput.value.trim();
+                    if (isAiMode && val) {
+                        e.preventDefault();
+                        openGoogleOmnibox(true);
+                        triggerAiQuery(val);
+                    } else if (val) {
+                        saveRecentQuery(val, false);
+                    }
+                }
+            });
+        }
+
+        // Form submit lưu query tìm kiếm thường
+        const searchForm = document.getElementById('homeSearchForm');
+        if (searchForm) {
+            searchForm.addEventListener('submit', function() {
+                const val = searchInput ? searchInput.value.trim() : '';
+                if (val) saveRecentQuery(val, false);
+            });
+        }
+
+        // Bật / tắt chế độ AI Mode (Google-style Pill Button)
+        window.toggleGoogleAiMode = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            isAiMode = !isAiMode;
+            if (aiModeBtn) {
+                aiModeBtn.classList.toggle('active', isAiMode);
+            }
+            if (isAiMode) {
+                openGoogleOmnibox(true);
+                const query = searchInput ? searchInput.value.trim() : '';
+                if (query.length >= 2) {
+                    triggerAiQuery(query);
+                }
+            } else {
+                switchToSuggestionsView();
+            }
+        };
+
+        window.openGoogleOmnibox = function(showChat) {
+            if (!wrapper || !dropdown) return;
+            wrapper.classList.add('is-open');
+            dropdown.style.display = 'block';
+            if (showChat) {
+                if (suggestionsView) suggestionsView.style.display = 'none';
+                if (chatView) chatView.style.display = 'block';
+                if (chatInput) chatInput.focus({ preventScroll: true });
+                if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+            } else {
+                if (chatView && chatMessages.length > 0 && isAiMode) {
+                    if (suggestionsView) suggestionsView.style.display = 'none';
+                    if (chatView) chatView.style.display = 'block';
+                    if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+                } else {
+                    if (suggestionsView) suggestionsView.style.display = 'block';
+                    if (chatView) chatView.style.display = 'none';
+                }
+            }
+        };
+
+        window.closeGoogleOmnibox = function() {
+            if (!wrapper || !dropdown) return;
+            wrapper.classList.remove('is-open');
+            dropdown.style.display = 'none';
+        };
+
+        window.switchToSuggestionsView = function() {
+            if (suggestionsView) suggestionsView.style.display = 'block';
+            if (chatView) chatView.style.display = 'none';
+            if (searchInput) searchInput.focus({ preventScroll: true });
+        };
+
+        window.startAiFromOmniboxPrompt = function() {
+            isAiMode = true;
+            if (aiModeBtn) aiModeBtn.classList.add('active');
+            openGoogleOmnibox(true);
+            const query = searchInput ? searchInput.value.trim() : '';
+            if (query.length >= 2) {
+                triggerAiQuery(query);
+            }
+        };
+
+        window.selectOmniboxQuery = function(queryText, isAi) {
+            if (isAi) {
+                isAiMode = true;
+                if (aiModeBtn) aiModeBtn.classList.add('active');
+                if (searchInput) searchInput.value = queryText;
+                openGoogleOmnibox(true);
+                triggerAiQuery(queryText);
+            } else {
+                saveRecentQuery(queryText, false);
+                if (searchInput) searchInput.value = queryText;
+                const form = document.getElementById('homeSearchForm');
+                if (form) form.submit();
+            }
+        };
+
+        window.clearOmniboxChat = function() {
+            chatMessages = [];
+            aiContextHistory = [];
+            saveStoredChat();
+            if (chatBody) chatBody.innerHTML = '';
+            appendMsgToDOM('ai', 'Dạ em đã làm mới đoạn chat. Bạn đang cần tìm cuốn sách hoặc giáo trình nào ạ?', []);
+            if (chatInput) chatInput.focus({ preventScroll: true });
+        };
+
+        window.sendOmniboxMsg = function() {
+            if (aiBusy) return;
+            const msg = chatInput ? chatInput.value.trim() : '';
+            if (!msg) return;
+            chatInput.value = '';
+            triggerAiQuery(msg);
+        };
+
+        if (chatInput) {
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendOmniboxMsg();
+                }
+            });
+        }
+
+        function triggerAiQuery(msg) {
+            if (aiBusy) return;
+            aiBusy = true;
+            if (sendBtn) sendBtn.disabled = true;
+
+            // Lưu vào lịch sử tìm kiếm gần đây
+            saveRecentQuery(msg, true);
+
+            // Chuyển sang Chat View
+            if (suggestionsView) suggestionsView.style.display = 'none';
+            if (chatView) chatView.style.display = 'block';
+
+            // Append tin nhắn user & lưu storage
+            appendMsgToDOM('user', msg, []);
+            chatMessages.push({ role: 'user', text: msg, books: [], time: Date.now() });
+            saveStoredChat();
+
+            // Typing indicator
+            const typingId = 'typing-' + Date.now();
+            if (chatBody) {
+                chatBody.insertAdjacentHTML('beforeend',
+                    '<div class="ai-msg-row" id="' + typingId + '">' +
+                    '<div class="ai-typing-dots"><span></span><span></span><span></span></div></div>');
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            fetch('/ai-assistant/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg, history: aiContextHistory })
+            })
+            .then(r => r.json())
+            .then(data => {
+                const typing = document.getElementById(typingId);
+                if (typing) typing.remove();
+
+                const reply = data.reply || 'Dạ em chưa tìm thấy thông tin phù hợp, bạn thử hỏi cách khác xem nhé!';
+                const books = data.suggestedBooks || [];
+
+                appendMsgToDOM('ai', reply, books);
+
+                // Lưu vào mảng tin nhắn & lưu storage
+                chatMessages.push({ role: 'ai', text: reply, books: books, time: Date.now() });
+
+                // Cập nhật context history cho server RAG
+                aiContextHistory.push({ role: 'user', content: msg });
+                aiContextHistory.push({ role: 'assistant', content: reply });
+                if (aiContextHistory.length > 20) aiContextHistory = aiContextHistory.slice(-20);
+
+                saveStoredChat();
+            })
+            .catch(function() {
+                const typing = document.getElementById(typingId);
+                if (typing) typing.remove();
+                appendMsgToDOM('ai', 'Dạ hệ thống tư vấn đang bận một chút, bạn thử lại sau ít giây nhé!', []);
+            })
+            .finally(function() {
+                aiBusy = false;
+                if (sendBtn) sendBtn.disabled = false;
+                if (chatInput) chatInput.focus();
+            });
+        }
+
+        function appendMsgToDOM(role, text, books) {
+            if (!chatBody) return;
+            let html = text
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+
+            let booksHtml = '';
+            if (books && books.length > 0) {
+                booksHtml = '<div class="ai-suggested-books">';
+                books.forEach(function(b) {
+                    const price = b.price ? '₫' + Number(b.price).toLocaleString('vi-VN') : '';
+                    booksHtml += '<a href="' + (b.detailUrl || '/books/' + b.id) + '" class="ai-book-mini-card">' +
+                        '<img src="' + (b.imageUrl || '/images/books/book_1.jpg') + '" alt="' + (b.title || '') + '">' +
+                        '<div class="ai-book-mini-info">' +
+                        '<div class="mini-title">' + (b.title || 'Sách') + '</div>' +
+                        '<div class="mini-price">' + price + '</div>' +
+                        '</div></a>';
+                });
+                booksHtml += '</div>';
+            }
+
+            const rowClass = role === 'user' ? 'ai-msg-row user' : 'ai-msg-row';
+            chatBody.insertAdjacentHTML('beforeend',
+                '<div class="' + rowClass + '"><div class="ai-msg-bubble">' + html + booksHtml + '</div></div>');
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Đóng dropdown khi click bên ngoài wrapper
+        document.addEventListener('click', function(e) {
+            if (wrapper && !wrapper.contains(e.target)) {
+                closeGoogleOmnibox();
+            }
+        });
+
+        // Khởi động nạp dữ liệu từ localStorage
+        loadStoredChat();
+        renderRecentQueries();
+        renderStoredChat();
+    })();
+    </script>
 </body>
 </html>

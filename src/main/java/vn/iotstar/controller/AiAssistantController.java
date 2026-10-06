@@ -295,22 +295,78 @@ public class AiAssistantController {
                  .append("1. **Đồng kiểm COD 100%**: Khách mở gói hàng xem trực tiếp bìa và ruột sách trước khi trả tiền.\n")
                  .append("2. **Đổi trả 7 ngày miễn phí** tại bất kỳ chi nhánh nào trong 5 shop nếu sách không đúng mô tả.");
         }
-        // 13. CÂU HỎI CHUNG / TỰ DO — Hiển thị top sách bán chạy
+        // 13. TÌM KIẾM THEO TỪ KHÓA TỰ DO TRONG DANH MỤC SÁCH
         else {
-            reply.append("Dạ em đã nhận được câu hỏi của bạn. Tại Chuỗi Cửa Hàng Sách Cũ TP.HCM, tụi em hiện có hàng nghìn đầu sách thuộc các thể loại Văn học, Kỹ năng, Kinh tế, Công nghệ thông tin và Ngoại ngữ.\n\n")
-                 .append("Dưới đây là một số tựa sách kinh điển đang được bạn đọc săn đón nhiều nhất tại hệ thống 5 chi nhánh. Bạn có thể bấm vào để xem chi tiết tình trạng sách và đặt mua nhé!");
+            // Lọc các từ khóa có ý nghĩa từ câu hỏi (bỏ từ dừng tiếng Việt phổ biến)
+            String cleanQuery = lower.replaceAll("\\b(tìm|sách|cuốn|bán|có|không|ạ|dạ|cho|mình|em|tôi|với|về|nào|những|các|thể|loại|gì|được|ở|tại|giá)\\b", " ")
+                                     .replaceAll("\\s+", " ").trim();
 
-            // [TỐI ƯU] Dùng lại allActiveBooks đã load — không gọi DB thêm
-            List<Book> featured = bookRepository.findTopSoldWithImages(1);
-            if (featured.isEmpty()) {
-                featured = allActiveBooks.subList(0, Math.min(3, allActiveBooks.size()));
+            List<Book> keywordMatches = new ArrayList<>();
+            if (cleanQuery.length() >= 2) {
+                String[] words = cleanQuery.split(" ");
+                for (Book b : allActiveBooks) {
+                    String titleLower = (b.getTitle() != null) ? b.getTitle().toLowerCase() : "";
+                    String authorLower = (b.getAuthor() != null) ? b.getAuthor().toLowerCase() : "";
+                    String catLower = (b.getCategory() != null && b.getCategory().getCategoryName() != null) 
+                            ? b.getCategory().getCategoryName().toLowerCase() : "";
+
+                    // Khớp nguyên cụm hoặc khớp nhiều từ
+                    boolean match = titleLower.contains(cleanQuery) || authorLower.contains(cleanQuery) || catLower.contains(cleanQuery);
+                    if (!match && words.length > 1) {
+                        int matchedWordCount = 0;
+                        for (String w : words) {
+                            if (w.length() >= 2 && (titleLower.contains(w) || authorLower.contains(w) || catLower.contains(w))) {
+                                matchedWordCount++;
+                            }
+                        }
+                        if (matchedWordCount >= Math.min(2, words.length)) {
+                            match = true;
+                        }
+                    }
+
+                    if (match && keywordMatches.stream().noneMatch(k -> k.getId().equals(b.getId()))) {
+                        keywordMatches.add(b);
+                        if (keywordMatches.size() >= 3) break;
+                    }
+                }
             }
-            List<Book> topBooks = featured.stream().limit(3).collect(Collectors.toList());
-            if (!topBooks.isEmpty()) {
-                List<Long> bookIds = topBooks.stream().map(Book::getId).collect(Collectors.toList());
+
+            if (!keywordMatches.isEmpty()) {
+                reply.append("Dạ em đã tra cứu CSDL hệ thống và tìm thấy các cuốn sách cũ phù hợp với yêu cầu **\"").append(userMsg).append("\"** của bạn:\n\n");
+                for (Book b : keywordMatches) {
+                    reply.append("• **").append(b.getTitle()).append("**");
+                    if (b.getAuthor() != null && !b.getAuthor().isBlank()) {
+                        reply.append(" (Tác giả: ").append(b.getAuthor()).append(")");
+                    }
+                    reply.append(" — Độ mới: **").append(b.getConditionPercent() != null ? b.getConditionPercent() : 90).append("%**");
+                    if (b.getPrice() != null) {
+                        reply.append(" — Giá: **₫").append(String.format(Locale.US, "%,d", b.getPrice().longValue()).replace(',', '.')).append("**\n");
+                    } else {
+                        reply.append("\n");
+                    }
+                }
+                reply.append("\nTất cả đều được kiểm định kỹ càng và hỗ trợ xem sách trước khi thanh toán. Em gửi bạn thẻ sách chi tiết bên dưới nhé!");
+
+                List<Long> bookIds = keywordMatches.stream().map(Book::getId).collect(Collectors.toList());
                 Map<Long, List<Inventory>> inventoryMap = batchLoadInventory(bookIds);
-                for (Book b : topBooks) {
+                for (Book b : keywordMatches) {
                     suggestedBooks.add(buildBookCardData(b, inventoryMap.getOrDefault(b.getId(), Collections.emptyList())));
+                }
+            } else {
+                reply.append("Dạ em đã nhận được câu hỏi của bạn. Tại Chuỗi Cửa Hàng Sách Cũ TP.HCM, tụi em hiện có hàng nghìn đầu sách được kiểm định chất lượng tại 5 chi nhánh.\n\n")
+                     .append("Dưới đây là một số tựa sách kinh điển đang được bạn đọc săn đón nhiều nhất tại hệ thống 5 chi nhánh. Bạn có thể bấm vào để xem chi tiết tình trạng sách và đặt mua nhé!");
+
+                List<Book> featured = bookRepository.findTopSoldWithImages(10);
+                if (featured.isEmpty()) {
+                    featured = allActiveBooks.subList(0, Math.min(3, allActiveBooks.size()));
+                }
+                List<Book> topBooks = featured.stream().limit(3).collect(Collectors.toList());
+                if (!topBooks.isEmpty()) {
+                    List<Long> bookIds = topBooks.stream().map(Book::getId).collect(Collectors.toList());
+                    Map<Long, List<Inventory>> inventoryMap = batchLoadInventory(bookIds);
+                    for (Book b : topBooks) {
+                        suggestedBooks.add(buildBookCardData(b, inventoryMap.getOrDefault(b.getId(), Collections.emptyList())));
+                    }
                 }
             }
         }
