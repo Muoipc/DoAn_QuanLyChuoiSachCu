@@ -1018,13 +1018,13 @@
             background: transparent;
         }
 
-        /* 1 ẢNH NỀN 3D MINH HỌA SÁCH CỔ ĐIỂN TỪ ĐỈNH HEADER ĐẾN 50% THANH SEARCH */
+        /* 1 ẢNH NỀN 3D MINH HỌA SÁCH CỔ ĐIỂN BAO TRỌN VẸN CẢ HEADER VÀ THANH SEARCH */
         .chotot-unified-backdrop {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: calc(100% - 36px); /* Dừng đúng 50% trục ngang giữa thanh tìm kiếm cao 72px */
+            height: 100%; /* Bao trọn vẹn 100% cả thanh tìm kiếm bên trong bức tranh */
             background-color: #3E2314;
             background-image: url('/images/vintage-book-hero-bg.png');
             background-position: center bottom;
@@ -1038,7 +1038,7 @@
             position: relative;
             z-index: 10;
             background: transparent !important;
-            padding: 18px 0 0 0 !important;
+            padding: 24px 0 44px 0 !important; /* Đệm dưới 44px để thanh tìm kiếm nằm trọn vẹn trong tranh */
             border-bottom: none !important;
             text-align: center;
         }
