@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chuỗi Sách Cũ — Sàn Mua Bán &amp; Ký Gửi Sách Cũ Giá Tốt Nhất</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1221,6 +1222,45 @@
             transform: scale(0.98);
         }
 
+        /* Nút Hỏi AI trên thanh tìm kiếm (Chuẩn mượt mà & Nổi bật) */
+        .chotot-ai-spark-button {
+            height: 38px;
+            background: #FFFDF9;
+            color: #8C4A27;
+            border: 1.5px solid #E5D5C5;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 0 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
+            white-space: nowrap;
+            box-shadow: 0 1px 4px rgba(140, 74, 39, 0.08);
+        }
+        .chotot-ai-spark-button:hover {
+            background: #8C4A27;
+            color: #FFFFFF;
+            border-color: #8C4A27;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.25);
+        }
+        .chotot-ai-spark-button:hover .ai-spark-icon {
+            transform: scale(1.15) rotate(10deg);
+        }
+        .chotot-ai-spark-button:active {
+            transform: scale(0.97);
+        }
+        .chotot-ai-spark-button .ai-spark-icon {
+            font-size: 14px;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+
         /* ================= GOOGLE AI OVERVIEW OMNIBOX STYLES (TỐI GIẢN & TỰ ĐỘNG) ================= */
         .search-omnibox-wrapper {
             position: relative;
@@ -1238,19 +1278,19 @@
             box-shadow: 0 -4px 16px rgba(0,0,0,0.04) !important;
         }
 
-        /* Khung Dropdown Google Omnibox */
+        /* Khung Dropdown Omnibox Floating Card */
         .google-omnibox-dropdown {
             position: absolute;
-            top: 100%;
+            top: calc(100% + 8px);
             left: 0;
             right: 0;
             background: #FFFFFF;
             border: 1px solid #ECE7DE;
-            border-top: none;
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
-            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04);
+            border-radius: 18px;
+            box-shadow: 0 16px 44px rgba(45, 24, 15, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04);
             overflow: hidden;
+            max-height: 480px;
+            overflow-y: auto;
             z-index: 10000;
             animation: omniboxFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -1259,11 +1299,67 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* GOOGLE AI OVERVIEW MINIMALIST CARD */
+        /* Dòng hành động kích hoạt AI chủ động (mượt mà, không giật lag) */
+        .omnibox-ai-action-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            background: #FFF9F5;
+            border-bottom: 1px solid #F5EAE1;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .omnibox-ai-action-row:hover {
+            background: #FFF0E6;
+        }
+        .ai-action-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            flex: 1;
+        }
+        .ai-action-sparkle {
+            color: #D97706;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+        .ai-action-query {
+            font-size: 13.5px;
+            color: #1C1917;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .ai-action-query strong {
+            color: #8C4A27;
+            font-weight: 700;
+        }
+        .ai-action-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: #C2410C;
+            background: #FFEDE2;
+            border: 1px solid rgba(238, 77, 45, 0.25);
+            padding: 3px 9px;
+            border-radius: 9999px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        /* AI OVERVIEW CARD */
         .ai-overview-card {
             background: #FAF8F5;
             border-bottom: 1px solid #ECE7DE;
             padding: 16px 20px;
+            animation: aiCardSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes aiCardSlide {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .ai-overview-header {
             display: flex;
@@ -1276,16 +1372,11 @@
             align-items: center;
             gap: 8px;
             font-size: 13px;
-            font-weight: 700;
-            color: #1C1917;
+            font-weight: 800;
+            color: #8C4A27;
         }
         .ai-sparkle-icon {
             flex-shrink: 0;
-            animation: aiPulse 2.5s infinite ease-in-out;
-        }
-        @keyframes aiPulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(66, 133, 244, 0.4)); }
-            50% { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(155, 114, 203, 0.8)); }
         }
         .ai-overview-sub {
             font-size: 11px;
@@ -1308,32 +1399,12 @@
             background: #EFEAE2;
         }
 
-        /* Loading / Shimmer state */
+        /* Loading / Pulse state */
         .ai-overview-loading {
-            padding: 6px 0 10px 0;
-        }
-        .ai-loading-shimmer {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        .shimmer-line {
-            height: 12px;
-            border-radius: 6px;
-            background: linear-gradient(90deg, #EFEAE2 0%, #FAF8F5 50%, #EFEAE2 100%);
-            background-size: 200% 100%;
-            animation: shimmerSlide 1.5s infinite;
-        }
-        .shimmer-line.line-1 { width: 92%; }
-        .shimmer-line.line-2 { width: 78%; }
-        .shimmer-line.line-3 { width: 62%; }
-        @keyframes shimmerSlide {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+            padding: 10px 0;
         }
         .ai-loading-text {
-            font-size: 12.5px;
+            font-size: 13px;
             color: #8C4A27;
             font-weight: 600;
             display: flex;
@@ -1356,6 +1427,27 @@
         }
         .ai-overview-content p, .ai-overview-content ul {
             margin: 0 0 8px 0;
+        }
+
+        .ai-overview-footer-bar {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid #EFEAE2;
+            text-align: right;
+        }
+        .btn-ai-view-full {
+            background: none;
+            border: none;
+            color: #8C4A27;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: color 0.15s ease;
+        }
+        .btn-ai-view-full:hover {
+            color: #733615;
+            text-decoration: underline;
         }
 
         /* AI Overview Book Cards Carousel */
@@ -1733,6 +1825,12 @@
                                 </div>
                             </div>
 
+                            <!-- Nút Hỏi AI Tư Vấn (Chủ Động & Tức Thì) -->
+                            <button type="button" class="chotot-ai-spark-button" id="homeAiSparkBtn" onclick="triggerAiFromButton(event)" title="Nhờ Trợ lý AI tư vấn và tra cứu tồn kho">
+                                <span class="ai-spark-icon">✨</span>
+                                <span class="ai-spark-text">Hỏi AI</span>
+                            </button>
+
                             <!-- Search Submit Button -->
                             <button type="submit" class="chotot-submit-button">
                                 <span>Tìm kiếm</span>
@@ -1740,37 +1838,35 @@
                         </div>
                     </form>
 
-                    <!-- GOOGLE OMNIBOX DROPDOWN (NỐI LIỀN DƯỚI SEARCH BAR) -->
+                    <!-- OMNIBOX DROPDOWN (FLOATING CARD GỢI Ý & TRỢ LÝ AI) -->
                     <div class="google-omnibox-dropdown" id="googleOmniboxDropdown" style="display:none;">
-                        <!-- KHỐI 1: TỔNG QUAN AI (GOOGLE AI OVERVIEW) -->
+                        <!-- DÒNG KÍCH HOẠT HỎI TRỢ LÝ AI CHỦ ĐỘNG -->
+                        <div class="omnibox-ai-action-row" id="omniboxAiActionRow" style="display:none;" onclick="triggerAiFromRow(event)">
+                            <div class="ai-action-left">
+                                <span class="ai-action-sparkle">✨</span>
+                                <span class="ai-action-query">Hỏi Trợ Lý AI: <strong id="omniboxAiQueryText">...</strong></span>
+                            </div>
+                            <span class="ai-action-badge">Tư vấn kho 5 shop &rarr;</span>
+                        </div>
+
+                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI -->
                         <div class="ai-overview-card" id="aiOverviewCard" style="display:none;">
                             <div class="ai-overview-header">
                                 <div class="ai-overview-badge">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" class="ai-sparkle-icon">
-                                        <path d="M12 2L14.2 9.8L22 12L14.2 14.2L12 22L9.8 14.2L2 12L9.8 9.8L12 2Z" fill="url(#aiGrad)"/>
-                                        <defs>
-                                            <linearGradient id="aiGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-                                                <stop stop-color="#4285F4"/>
-                                                <stop offset="0.5" stop-color="#9B72CB"/>
-                                                <stop offset="1" stop-color="#D96570"/>
-                                            </linearGradient>
-                                        </defs>
-                                    </svg>
-                                    <span>AI Overview</span>
+                                    <span style="font-size: 16px; color: #D97706;">✨</span>
+                                    <span>Trợ Lý AI Tư Vấn</span>
                                     <span class="ai-overview-sub">&bull; Chuỗi Sách Cũ TP.HCM</span>
                                 </div>
-                                <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng tổng quan">&times;</button>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <button type="button" class="btn-copy-ai-overview" onclick="copyAiReply(event)" title="Sao chép nội dung" style="background:none; border:none; cursor:pointer; font-size:12px; color:#78716C; padding:4px 8px; border-radius:6px; transition:all 0.15s; display:inline-flex; align-items:center; gap:4px; font-weight:600;"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                                    <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
+                                </div>
                             </div>
 
-                            <!-- Trạng thái Loading / Shimmer -->
+                            <!-- Trạng thái Loading / Pulse -->
                             <div class="ai-overview-loading" id="aiOverviewLoading" style="display:none;">
-                                <div class="ai-loading-shimmer">
-                                    <div class="shimmer-line line-1"></div>
-                                    <div class="shimmer-line line-2"></div>
-                                    <div class="shimmer-line line-3"></div>
-                                </div>
                                 <div class="ai-loading-text">
-                                    <i class="fa-solid fa-spinner fa-spin me-2" style="color:#8C4A27;"></i>Đang phân tích và kiểm tra tồn kho 5 chi nhánh...
+                                    <i class="fa-solid fa-spinner fa-spin me-2" style="color:#8C4A27;"></i>Đang tra cứu danh mục sách &amp; tồn kho 5 chi nhánh TP.HCM...
                                 </div>
                             </div>
 
@@ -1779,6 +1875,13 @@
 
                             <!-- Trạng thái Thẻ sách gợi ý -->
                             <div class="ai-overview-books" id="aiOverviewBooks" style="display:none;"></div>
+
+                            <!-- Footer Xem danh sách kết quả đầy đủ -->
+                            <div class="ai-overview-footer-bar" id="aiOverviewFooterBar" style="display:none;">
+                                <button type="button" class="btn-ai-view-full" onclick="searchCurrentQueryFull(event)">
+                                    <span>Xem danh sách sách tìm kiếm đầy đủ &rarr;</span>
+                                </button>
+                            </div>
                         </div>
 
                         <!-- KHỐI 2: TÌM KIẾM GẦN ĐÂY & GỢI Ý (RECENT SEARCHES) -->
@@ -2294,7 +2397,10 @@
             renderRecentQueries();
         };
 
-        // 3. Quản lý Google AI Overview
+        // 3. Quản lý Trợ Lý AI (Siêu mượt, Cache tức thì, AbortController chống giật lag)
+        const aiCache = new Map();
+        let aiAbortController = null;
+
         function loadLastAiOverview() {
             try {
                 const raw = localStorage.getItem(STORAGE_LAST_AI_KEY);
@@ -2316,8 +2422,29 @@
 
         window.closeAiOverview = function(e) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
+            if (aiAbortController) {
+                aiAbortController.abort();
+                aiAbortController = null;
+            }
             if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+            const aiActionRow = document.getElementById('omniboxAiActionRow');
+            const val = searchInput ? searchInput.value.trim() : '';
+            if (aiActionRow && val) aiActionRow.style.display = 'flex';
             saveLastAiOverview(null);
+        };
+
+        window.copyAiReply = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            if (!aiOverviewContent) return;
+            const text = aiOverviewContent.innerText || aiOverviewContent.textContent || '';
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = e.currentTarget;
+                if (btn) {
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa-solid fa-check" style="color:#10B981;"></i> Đã sao chép';
+                    setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
+                }
+            });
         };
 
         function renderAiOverview(replyText, books) {
@@ -2357,39 +2484,71 @@
         }
 
         function fetchAiOverview(queryText) {
-            if (!queryText || isFetchingAi) return;
-            isFetchingAi = true;
+            if (!queryText) return;
 
-            // Mở dropdown & kích hoạt trạng thái loading shimmer
+            const qClean = queryText.trim();
+            const qKey = qClean.toLowerCase();
+
+            // Mở dropdown
             openGoogleOmnibox();
+
+            // 1. Kiểm tra Cache tức thì (0ms latency, mượt mà như bơ)
+            if (aiCache.has(qKey)) {
+                const cached = aiCache.get(qKey);
+                renderAiOverview(cached.reply, cached.books);
+                const footerBar = document.getElementById('aiOverviewFooterBar');
+                if (footerBar) footerBar.style.display = 'block';
+                saveLastAiOverview({ query: qClean, reply: cached.reply, books: cached.books, time: Date.now() });
+                return;
+            }
+
+            // Hủy request cũ nếu đang chạy
+            if (aiAbortController) {
+                aiAbortController.abort();
+            }
+            aiAbortController = new AbortController();
+
+            // Mở trạng thái loading mượt mà
             if (aiOverviewCard) aiOverviewCard.style.display = 'block';
             if (aiOverviewLoading) aiOverviewLoading.style.display = 'block';
             if (aiOverviewContent) aiOverviewContent.innerHTML = '';
             if (aiOverviewBooks) aiOverviewBooks.style.display = 'none';
+            const footerBar = document.getElementById('aiOverviewFooterBar');
+            if (footerBar) footerBar.style.display = 'none';
+
+            // Ẩn dòng trigger để tránh lặp
+            const aiActionRow = document.getElementById('omniboxAiActionRow');
+            if (aiActionRow) aiActionRow.style.display = 'none';
 
             // Lưu vào lịch sử tìm kiếm dạng AI
-            saveRecentQuery(queryText, true);
+            saveRecentQuery(qClean, true);
 
             fetch('/ai-assistant/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: queryText, history: [] })
+                body: JSON.stringify({ message: qClean, history: [] }),
+                signal: aiAbortController.signal
             })
             .then(r => r.json())
             .then(data => {
                 const reply = data.reply || 'Dạ Chuỗi Sách Cũ đã ghi nhận yêu cầu của bạn.';
                 const books = data.suggestedBooks || [];
+                // Lưu cache
+                aiCache.set(qKey, { reply, books });
                 renderAiOverview(reply, books);
-                saveLastAiOverview({ query: queryText, reply: reply, books: books, time: Date.now() });
+                if (footerBar) footerBar.style.display = 'block';
+                saveLastAiOverview({ query: qClean, reply: reply, books: books, time: Date.now() });
             })
-            .catch(() => {
+            .catch(err => {
+                if (err.name === 'AbortError') return; // Bỏ qua nếu bị abort chủ động
                 if (aiOverviewLoading) aiOverviewLoading.style.display = 'none';
                 if (aiOverviewContent) {
                     aiOverviewContent.innerHTML = 'Dạ hệ thống AI đang cập nhật dữ liệu từ 5 chi nhánh, bạn có thể nhấn <strong>Tìm kiếm</strong> để xem danh sách sách trực tiếp nhé!';
                 }
+                if (footerBar) footerBar.style.display = 'block';
             })
             .finally(() => {
-                isFetchingAi = false;
+                aiAbortController = null;
             });
         }
 
@@ -2406,18 +2565,57 @@
             dropdown.style.display = 'none';
         }
 
-        // 5. Sự kiện Input & Auto-trigger
+        // Nút Hỏi AI trên thanh tìm kiếm (Click trực tiếp)
+        window.triggerAiFromButton = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            const val = searchInput ? searchInput.value.trim() : '';
+            if (val) {
+                fetchAiOverview(val);
+            } else {
+                // Nếu ô tìm kiếm trống, tự động gợi ý câu hỏi mẫu hay và phân tích ngay
+                const defaultSample = 'Tư vấn sách hay phát triển bản thân & chữa lành';
+                if (searchInput) searchInput.value = defaultSample;
+                fetchAiOverview(defaultSample);
+            }
+        };
+
+        window.triggerAiFromRow = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            const val = searchInput ? searchInput.value.trim() : '';
+            if (val) {
+                fetchAiOverview(val);
+            }
+        };
+
+        window.searchCurrentQueryFull = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            closeGoogleOmnibox();
+            if (searchForm) searchForm.submit();
+        };
+
+        // 5. Sự kiện Input & Tìm kiếm mượt mà (Không spam API, không chặn submit)
         if (searchInput) {
             searchInput.addEventListener('focus', function() {
                 openGoogleOmnibox();
-                const val = searchInput.value.trim().toLowerCase();
-                const last = loadLastAiOverview();
-                // CHỈ phục hồi kết quả cũ nếu input trống hoặc trùng khớp câu hỏi
-                if (last && (!val || val === (last.query || '').trim().toLowerCase()) && (Date.now() - (last.time || 0) < 15 * 60 * 1000)) {
-                    renderAiOverview(last.reply, last.books);
+                const val = searchInput.value.trim();
+                const aiActionRow = document.getElementById('omniboxAiActionRow');
+                const aiQueryText = document.getElementById('omniboxAiQueryText');
+
+                if (val) {
+                    if (aiActionRow && aiQueryText) {
+                        aiQueryText.textContent = val;
+                        aiActionRow.style.display = 'flex';
+                    }
                 } else {
-                    if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+                    if (aiActionRow) aiActionRow.style.display = 'none';
+                    const last = loadLastAiOverview();
+                    if (last && (Date.now() - (last.time || 0) < 10 * 60 * 1000)) {
+                        renderAiOverview(last.reply, last.books);
+                        const footerBar = document.getElementById('aiOverviewFooterBar');
+                        if (footerBar) footerBar.style.display = 'block';
+                    }
                 }
+                renderRecentQueries();
             });
 
             searchInput.addEventListener('click', function(e) {
@@ -2429,51 +2627,44 @@
                 const val = searchInput.value.trim();
                 openGoogleOmnibox();
 
-                if (debounceTimer) clearTimeout(debounceTimer);
+                const aiActionRow = document.getElementById('omniboxAiActionRow');
+                const aiQueryText = document.getElementById('omniboxAiQueryText');
 
-                if (isQuestionQuery(val)) {
-                    // Xóa sạch nội dung cũ ngay, hiển thị loading shimmer
-                    if (aiOverviewCard) aiOverviewCard.style.display = 'block';
-                    if (aiOverviewLoading) aiOverviewLoading.style.display = 'block';
-                    if (aiOverviewContent) aiOverviewContent.innerHTML = '';
-                    if (aiOverviewBooks) aiOverviewBooks.style.display = 'none';
+                // Khi đang gõ: Ẩn card cũ để không che tầm mắt, hiển thị dòng gợi ý hỏi AI chủ động
+                if (aiOverviewCard) aiOverviewCard.style.display = 'none';
 
-                    debounceTimer = setTimeout(function() {
-                        fetchAiOverview(val);
-                    }, 400);
-                } else if (!val) {
-                    if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+                if (val) {
+                    if (aiActionRow && aiQueryText) {
+                        aiQueryText.textContent = val;
+                        aiActionRow.style.display = 'flex';
+                    }
                 } else {
-                    if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+                    if (aiActionRow) aiActionRow.style.display = 'none';
                 }
+
+                renderRecentQueries();
             });
 
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     const val = searchInput.value.trim();
-                    if (!val) return;
-
-                    if (debounceTimer) clearTimeout(debounceTimer);
-
-                    if (isQuestionQuery(val)) {
-                        e.preventDefault();
-                        fetchAiOverview(val);
-                    } else {
+                    if (val) {
                         saveRecentQuery(val, false);
                     }
+                    closeGoogleOmnibox();
+                    // Cho phép form submit bình thường sang trang /search
                 }
             });
         }
 
         if (searchForm) {
-            searchForm.addEventListener('submit', function(e) {
+            searchForm.addEventListener('submit', function() {
                 const val = searchInput ? searchInput.value.trim() : '';
-                if (isQuestionQuery(val)) {
-                    e.preventDefault();
-                    fetchAiOverview(val);
-                } else if (val) {
+                if (val) {
                     saveRecentQuery(val, false);
                 }
+                closeGoogleOmnibox();
+                // Không chặn e.preventDefault() -> Luồng tìm kiếm luôn thông suốt, tức thì
             });
         }
 
