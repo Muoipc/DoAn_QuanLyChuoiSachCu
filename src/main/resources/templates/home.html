@@ -1356,6 +1356,7 @@
             border-bottom: 1px solid #ECE7DE;
             padding: 8px 12px;
             position: relative;
+            text-align: left !important;
             animation: aiCardSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes aiCardSlide {
@@ -1382,40 +1383,67 @@
             background: #EFEAE2;
         }
 
-        /* HIỆU ỨNG ĐANG GEN AI (GENERATIVE SHIMMER STREAM) - KHÔNG CẦN CHỮ */
+        /* HIỆU ỨNG SƯƠNG MỜ ĐƠN GIẢN TINH TẾ (SOFT BLUR MIST) - KHÔNG MÀU MÈ */
         .ai-overview-loading {
             padding: 6px 4px;
         }
-        .ai-gen-wave-wrap {
+        .ai-soft-blur-wrap {
             display: flex;
             flex-direction: column;
-            gap: 7px;
+            gap: 9px;
+            padding: 4px 0;
+            filter: blur(3.5px);
+            animation: softMistBreathe 1.8s ease-in-out infinite alternate;
         }
-        .ai-gen-shimmer-bar {
-            height: 7px;
-            border-radius: 9999px;
-            background: linear-gradient(90deg, #F0E8DF 0%, #F59E0B 35%, #EE4D2D 50%, #8C4A27 65%, #F0E8DF 100%);
-            background-size: 250% 100%;
-            animation: aiGenFlow 1.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        .ai-blur-skeleton {
+            height: 9px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #EAE3D9 0%, #C4B9AA 50%, #EAE3D9 100%);
+            background-size: 200% 100%;
+            animation: skeletonShimmer 2s ease-in-out infinite;
         }
-        .ai-gen-shimmer-bar.bar-1 { width: 88%; }
-        .ai-gen-shimmer-bar.bar-2 { width: 68%; animation-delay: 0.15s; }
-        .ai-gen-shimmer-bar.bar-3 { width: 45%; animation-delay: 0.3s; }
-        @keyframes aiGenFlow {
-            0% { background-position: 250% 0; }
-            100% { background-position: -50% 0; }
+        .ai-blur-skeleton.sk-1 { width: 90%; }
+        .ai-blur-skeleton.sk-2 { width: 72%; }
+        .ai-blur-skeleton.sk-3 { width: 48%; }
+
+        @keyframes softMistBreathe {
+            0% {
+                filter: blur(4px);
+                opacity: 0.35;
+            }
+            100% {
+                filter: blur(2px);
+                opacity: 0.75;
+            }
+        }
+        @keyframes skeletonShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
-        /* AI Overview Content */
+        /* AI Overview Content CANH TRÁI TUYỆT ĐỐI */
         .ai-overview-content {
             font-size: 12.5px;
-            line-height: 1.45;
+            line-height: 1.5;
             color: #292524;
             max-height: 140px;
             overflow-y: auto;
             padding-right: 20px;
+            text-align: left !important;
+            direction: ltr !important;
             scrollbar-width: thin;
             scrollbar-color: #D7CCC8 #FAF8F5;
+        }
+        .ai-overview-content * {
+            text-align: left !important;
+        }
+        .ai-overview-content strong {
+            color: #8C4A27;
+            font-weight: 700;
+        }
+        .ai-overview-content p, .ai-overview-content ul {
+            margin: 0 0 4px 0;
+            text-align: left !important;
         }
         .ai-overview-content strong {
             color: #8C4A27;
@@ -1813,12 +1841,12 @@
                         <div class="ai-overview-card" id="aiOverviewCard" style="display:none;">
                             <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
 
-                            <!-- HIỆU ỨNG ĐANG GEN AI (GENERATIVE SHIMMER STREAM) -->
+                            <!-- HIỆU ỨNG SƯƠNG MỜ ĐƠN GIẢN TINH TẾ (SOFT BLUR MIST) -->
                             <div class="ai-overview-loading" id="aiOverviewLoading" style="display:none;">
-                                <div class="ai-gen-wave-wrap">
-                                    <div class="ai-gen-shimmer-bar bar-1"></div>
-                                    <div class="ai-gen-shimmer-bar bar-2"></div>
-                                    <div class="ai-gen-shimmer-bar bar-3"></div>
+                                <div class="ai-soft-blur-wrap">
+                                    <div class="ai-blur-skeleton sk-1"></div>
+                                    <div class="ai-blur-skeleton sk-2"></div>
+                                    <div class="ai-blur-skeleton sk-3"></div>
                                 </div>
                             </div>
 
