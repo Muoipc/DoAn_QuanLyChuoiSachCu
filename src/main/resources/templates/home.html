@@ -1825,12 +1825,6 @@
                                 </div>
                             </div>
 
-                            <!-- Nút Hỏi AI Tư Vấn (Chủ Động & Tức Thì) -->
-                            <button type="button" class="chotot-ai-spark-button" id="homeAiSparkBtn" onclick="triggerAiFromButton(event)" title="Nhờ Trợ lý AI tư vấn và tra cứu tồn kho">
-                                <span class="ai-spark-icon">✨</span>
-                                <span class="ai-spark-text">Hỏi AI</span>
-                            </button>
-
                             <!-- Search Submit Button -->
                             <button type="submit" class="chotot-submit-button">
                                 <span>Tìm kiếm</span>
@@ -1838,18 +1832,9 @@
                         </div>
                     </form>
 
-                    <!-- OMNIBOX DROPDOWN (FLOATING CARD GỢI Ý & TRỢ LÝ AI) -->
+                    <!-- OMNIBOX DROPDOWN (FLOATING CARD GỢI Ý & TRỢ LÝ AI TỰ ĐỘNG) -->
                     <div class="google-omnibox-dropdown" id="googleOmniboxDropdown" style="display:none;">
-                        <!-- DÒNG KÍCH HOẠT HỎI TRỢ LÝ AI CHỦ ĐỘNG -->
-                        <div class="omnibox-ai-action-row" id="omniboxAiActionRow" style="display:none;" onclick="triggerAiFromRow(event)">
-                            <div class="ai-action-left">
-                                <span class="ai-action-sparkle">✨</span>
-                                <span class="ai-action-query">Hỏi Trợ Lý AI: <strong id="omniboxAiQueryText">...</strong></span>
-                            </div>
-                            <span class="ai-action-badge">Tư vấn kho 5 shop &rarr;</span>
-                        </div>
-
-                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI -->
+                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI TỰ ĐỘNG -->
                         <div class="ai-overview-card" id="aiOverviewCard" style="display:none;">
                             <div class="ai-overview-header">
                                 <div class="ai-overview-badge">
@@ -2427,9 +2412,6 @@
                 aiAbortController = null;
             }
             if (aiOverviewCard) aiOverviewCard.style.display = 'none';
-            const aiActionRow = document.getElementById('omniboxAiActionRow');
-            const val = searchInput ? searchInput.value.trim() : '';
-            if (aiActionRow && val) aiActionRow.style.display = 'flex';
             saveLastAiOverview(null);
         };
 
@@ -2565,49 +2547,28 @@
             dropdown.style.display = 'none';
         }
 
-        // Nút Hỏi AI trên thanh tìm kiếm (Click trực tiếp)
-        window.triggerAiFromButton = function(e) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            const val = searchInput ? searchInput.value.trim() : '';
-            if (val) {
-                fetchAiOverview(val);
-            } else {
-                // Nếu ô tìm kiếm trống, tự động gợi ý câu hỏi mẫu hay và phân tích ngay
-                const defaultSample = 'Tư vấn sách hay phát triển bản thân & chữa lành';
-                if (searchInput) searchInput.value = defaultSample;
-                fetchAiOverview(defaultSample);
-            }
-        };
-
-        window.triggerAiFromRow = function(e) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            const val = searchInput ? searchInput.value.trim() : '';
-            if (val) {
-                fetchAiOverview(val);
-            }
-        };
-
         window.searchCurrentQueryFull = function(e) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
             closeGoogleOmnibox();
             if (searchForm) searchForm.submit();
         };
 
-        // 5. Sự kiện Input & Tìm kiếm mượt mà (Không spam API, không chặn submit)
+        // 5. Sự kiện Input & Tự động gọi AI mượt mà (Tự động sau 650ms, không chặn submit)
         if (searchInput) {
             searchInput.addEventListener('focus', function() {
                 openGoogleOmnibox();
                 const val = searchInput.value.trim();
-                const aiActionRow = document.getElementById('omniboxAiActionRow');
-                const aiQueryText = document.getElementById('omniboxAiQueryText');
-
-                if (val) {
-                    if (aiActionRow && aiQueryText) {
-                        aiQueryText.textContent = val;
-                        aiActionRow.style.display = 'flex';
+                if (val.length >= 2) {
+                    const qKey = val.toLowerCase();
+                    if (aiCache.has(qKey)) {
+                        const cached = aiCache.get(qKey);
+                        renderAiOverview(cached.reply, cached.books);
+                        const footerBar = document.getElementById('aiOverviewFooterBar');
+                        if (footerBar) footerBar.style.display = 'block';
+                    } else {
+                        fetchAiOverview(val);
                     }
                 } else {
-                    if (aiActionRow) aiActionRow.style.display = 'none';
                     const last = loadLastAiOverview();
                     if (last && (Date.now() - (last.time || 0) < 10 * 60 * 1000)) {
                         renderAiOverview(last.reply, last.books);
@@ -2627,19 +2588,38 @@
                 const val = searchInput.value.trim();
                 openGoogleOmnibox();
 
-                const aiActionRow = document.getElementById('omniboxAiActionRow');
-                const aiQueryText = document.getElementById('omniboxAiQueryText');
+                if (debounceTimer) {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = null;
+                }
 
-                // Khi đang gõ: Ẩn card cũ để không che tầm mắt, hiển thị dòng gợi ý hỏi AI chủ động
-                if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+                if (val.length >= 2) {
+                    const qKey = val.toLowerCase();
+                    // Nếu đã có sẵn trong cache -> render tức thì 0ms, siêu mượt
+                    if (aiCache.has(qKey)) {
+                        const cached = aiCache.get(qKey);
+                        renderAiOverview(cached.reply, cached.books);
+                        const footerBar = document.getElementById('aiOverviewFooterBar');
+                        if (footerBar) footerBar.style.display = 'block';
+                    } else {
+                        // Hiển thị khung chờ êm ái và tự động gọi sau 650ms khi ngừng gõ
+                        if (aiOverviewCard) aiOverviewCard.style.display = 'block';
+                        if (aiOverviewLoading) aiOverviewLoading.style.display = 'block';
+                        if (aiOverviewContent) aiOverviewContent.innerHTML = '';
+                        if (aiOverviewBooks) aiOverviewBooks.style.display = 'none';
+                        const footerBar = document.getElementById('aiOverviewFooterBar');
+                        if (footerBar) footerBar.style.display = 'none';
 
-                if (val) {
-                    if (aiActionRow && aiQueryText) {
-                        aiQueryText.textContent = val;
-                        aiActionRow.style.display = 'flex';
+                        debounceTimer = setTimeout(function() {
+                            fetchAiOverview(val);
+                        }, 650);
                     }
                 } else {
-                    if (aiActionRow) aiActionRow.style.display = 'none';
+                    if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+                    if (aiAbortController) {
+                        aiAbortController.abort();
+                        aiAbortController = null;
+                    }
                 }
 
                 renderRecentQueries();
@@ -2647,6 +2627,7 @@
 
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
+                    if (debounceTimer) clearTimeout(debounceTimer);
                     const val = searchInput.value.trim();
                     if (val) {
                         saveRecentQuery(val, false);
@@ -2659,6 +2640,7 @@
 
         if (searchForm) {
             searchForm.addEventListener('submit', function() {
+                if (debounceTimer) clearTimeout(debounceTimer);
                 const val = searchInput ? searchInput.value.trim() : '';
                 if (val) {
                     saveRecentQuery(val, false);
