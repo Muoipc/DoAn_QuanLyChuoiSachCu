@@ -1,165 +1,231 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trợ Lý AI Tư Vấn Sách Cũ — Chuỗi Sách Cũ TP.HCM</title>
+    <title>Trợ Lý AI Tư Vấn Sách — Chuỗi Sách Cũ TP.HCM</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
         :root {
             --color-fire: #8C4A27;
             --color-fire-hover: #733615;
-            --color-bg-body: #FFFFFF;
-            --color-text-main: #1C1917;
-            --color-text-secondary: #44403C;
-            --color-text-light: #78716C;
+            --color-bg-page: #FFFFFF;
+            --color-bg-sidebar: #FAFAF9;
+            --color-bg-card: #FAF8F5;
             --color-border: #ECE7DE;
-            --radius-md: 10px;
+            --color-border-subtle: #F2EFE9;
+            --color-text-main: #1C1917;
+            --color-text-secondary: #57534E;
+            --color-text-muted: #8C857B;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: "Roboto", sans-serif;
-            background-color: #FFFFFF;
+            font-family: "Roboto", -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--color-bg-page);
             color: var(--color-text-main);
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
         a { color: inherit; text-decoration: none; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
 
-        /* HEADER */
-        .page-header {
-            background: rgba(45, 24, 15, 0.28);
-            backdrop-filter: blur(36px);
-            padding: 14px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        /* 1. TOPBAR LEAN (MINIMAL HEADER) */
+        .lean-header {
+            height: 52px;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            flex-shrink: 0;
+            z-index: 100;
         }
-        .header-inner { display: flex; align-items: center; justify-content: space-between; }
-        .brand-box { display: flex; align-items: center; gap: 14px; }
-        .brand-img { height: 46px; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35)); }
-        .page-title {
-            font-size: 20px; font-weight: 800; color: var(--color-fire);
-            border-left: 2px solid #1C1917; padding-left: 14px; text-transform: uppercase;
+        .lean-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-toggle-sidebar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.15s ease;
+        }
+        .btn-toggle-sidebar:hover {
+            background: #F5F4F0;
+            color: var(--color-text-main);
+            border-color: var(--color-border);
+        }
+        .lean-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 14.5px;
+            letter-spacing: 0.3px;
+            color: var(--color-text-main);
+        }
+        .lean-brand i {
+            color: var(--color-fire);
+            font-size: 16px;
+        }
+        .lean-badge {
+            background: #FAF6F0;
+            color: var(--color-fire);
+            border: 1px solid #EADBCC;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        /* MAIN CHAT LAYOUT FIXED TO VIEWPORT */
-        .chat-layout-wrap {
+        .lean-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .lean-nav-btn {
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        .lean-nav-btn:hover {
+            background: #FAF8F5;
+            color: var(--color-text-main);
+            border-color: var(--color-border);
+        }
+
+        /* 2. CHAT LAYOUT EDGE-TO-EDGE */
+        .lean-layout {
             flex: 1;
-            display: grid !important;
-            grid-template-columns: 300px 1fr !important;
-            gap: 20px !important;
-            margin: 16px auto !important;
-            height: calc(100vh - 100px) !important;
-            max-height: calc(100vh - 100px) !important;
-            min-height: 520px !important;
-            max-width: 1240px !important;
-            width: 100% !important;
-            padding: 0 16px !important;
-            background: transparent !important;
-            overflow: hidden !important;
+            display: flex;
+            height: calc(100vh - 52px);
+            overflow: hidden;
+            background: #FFFFFF;
         }
 
-        .btn-new-chat {
+        /* 3. SIDEBAR LỊCH SỬ CHAT */
+        .lean-sidebar {
+            width: 260px;
+            min-width: 260px;
+            background: var(--color-bg-sidebar);
+            border-right: 1px solid var(--color-border);
+            padding: 14px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+            transition: all 0.2s ease;
+        }
+        .lean-sidebar.collapsed {
+            margin-left: -260px;
+        }
+
+        .btn-new-chat-lean {
+            width: 100%;
+            padding: 9px 14px;
+            border-radius: 8px;
+            background: #FFFFFF;
+            border: 1px solid #E2DCD1;
+            color: var(--color-text-main);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            background: #FFFFFF;
-            color: #1C1917;
-            font-size: 13px;
-            font-weight: 600;
-            border: 1px solid #E5E0D8;
-            cursor: pointer;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
             transition: all 0.15s ease;
         }
-        .btn-new-chat:hover {
-            border-color: #8C4A27;
-            color: #8C4A27;
+        .btn-new-chat-lean:hover {
+            border-color: var(--color-fire);
+            color: var(--color-fire);
             background: #FAF8F5;
         }
 
-        /* SIDEBAR LỊCH SỬ CHAT TỐI GIẢN (MINIMALISM) */
-        .chat-sidebar {
-            background: #FFFFFF !important;
-            border-radius: 16px !important;
-            border: 1px solid #ECE7DE !important;
-            padding: 16px 14px !important;
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 12px !important;
-            box-shadow: none !important;
-            height: 100% !important;
-            max-height: 100% !important;
-            overflow: hidden !important;
-        }
-        .sidebar-title {
-            font-size: 12.5px; font-weight: 700; color: #44403C;
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        /* LỊCH SỬ PHIÊN TRÒ CHUYỆN (SESSIONS) */
-        .session-history-section {
+        .lean-history-header {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex: 1;
-            min-height: 0;
-            overflow: hidden;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 6px;
             margin-top: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .badge-session-count {
-            background: #FAF8F5;
-            color: #8C4A27;
-            border: 1px solid #ECE7DE;
-            font-size: 11px;
+            background: #EFECE6;
+            color: var(--color-text-secondary);
+            font-size: 10.5px;
             font-weight: 700;
-            padding: 1px 7px;
+            padding: 1px 6px;
             border-radius: 9999px;
         }
+
         .session-list {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
             flex: 1;
             overflow-y: auto;
-            padding-right: 3px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding-right: 2px;
             scrollbar-width: thin;
-            scrollbar-color: #E5E0D8 transparent;
+            scrollbar-color: #E2DDD5 transparent;
         }
         .session-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 10px;
-            border-radius: 8px;
+            padding: 7px 10px;
+            border-radius: 6px;
             background: transparent;
             border: 1px solid transparent;
             cursor: pointer;
             transition: all 0.15s ease;
             gap: 6px;
-            color: #57534E;
+            color: var(--color-text-secondary);
+            font-size: 12.5px;
         }
         .session-item:hover {
-            background: #FAF8F5;
-            color: #1C1917;
-            border-color: #E5E0D8;
+            background: #FFFFFF;
+            color: var(--color-text-main);
+            border-color: #E8E4DC;
         }
         .session-item.active {
-            background: #FAF8F5;
-            border-color: #D6CEBE;
-            color: #8C4A27;
+            background: #FFFFFF;
+            border-color: #EADBCC;
+            color: var(--color-fire);
             font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
         }
         .session-item-left {
             display: flex;
@@ -169,15 +235,14 @@
             flex: 1;
         }
         .session-item-icon {
-            font-size: 12px;
+            font-size: 11px;
             color: #A8A29E;
             flex-shrink: 0;
         }
         .session-item.active .session-item-icon {
-            color: #8C4A27;
+            color: var(--color-fire);
         }
         .session-item-title {
-            font-size: 12.5px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -186,11 +251,11 @@
             background: none;
             border: none;
             color: #A8A29E;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
-            padding: 0 4px;
+            padding: 0 3px;
             border-radius: 4px;
-            opacity: 0.5;
+            opacity: 0.4;
             transition: all 0.15s;
             line-height: 1;
         }
@@ -200,349 +265,336 @@
             background: rgba(220, 38, 38, 0.08);
         }
 
-        /* KHUNG CHAT CHÍNH (MINIMALISM CARD) */
-        .chat-main-card, .chat-card-wrap {
-            background: #FFFFFF !important;
-            border-radius: 16px !important;
-            border: 1px solid #ECE7DE !important;
-            box-shadow: none !important;
-            display: flex !important;
-            flex-direction: column !important;
-            height: 100% !important;
-            max-height: 100% !important;
-            overflow: hidden !important;
-        }
-
-        /* HEADER CHAT */
-        .chat-top-bar {
-            padding: 14px 22px;
-            border-bottom: 1px solid #ECE7DE;
-            display: flex; align-items: center; justify-content: space-between;
-            background: #FFFFFF;
-            flex-shrink: 0;
-        }
-        .ai-status-indicator {
-            display: flex; align-items: center; gap: 12px;
-        }
-        .ai-avatar-circle {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: #FAF8F5;
-            display: flex; align-items: center; justify-content: center;
-            color: #8C4A27; font-size: 15px;
-            border: 1px solid #E5E0D8;
-        }
-        .ai-name-label { font-size: 14.5px; font-weight: 700; color: #1C1917; }
-        .ai-online-status { font-size: 11.5px; color: #007a57; display: flex; align-items: center; gap: 5px; font-weight: 500; }
-        .online-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; }
-
-        /* DANH SÁCH TIN NHẮN (MESSAGE LOG) */
-        .chat-messages-body, .chat-messages-container {
-            flex: 1 1 0% !important;
-            min-height: 0 !important;
-            overflow-y: auto !important;
-            padding: 20px 24px;
+        /* 4. KHUNG CHAT CHÍNH (CANVAS CĂN GIỮA LEAN) */
+        .lean-chat-canvas {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            height: 100%;
             background: #FFFFFF;
+            position: relative;
+            min-width: 0;
         }
 
-        /* TIN NHẮN */
-        .msg-row {
-            display: flex; gap: 10px; max-width: 82%;
+        .chat-scroll-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 20px 16px;
+            scroll-behavior: smooth;
         }
-        .msg-row.ai { align-self: flex-start; }
-        .msg-row.user { align-self: flex-end; flex-direction: row-reverse; }
+        .chat-centered-wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* TIN NHẮN (MESSAGE BUBBLE) */
+        .msg-row {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+        .msg-row.ai {
+            align-items: flex-start;
+        }
+        .msg-row.user {
+            justify-content: flex-end;
+        }
 
         .msg-avatar {
-            width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 12px;
+            margin-top: 2px;
         }
-        .msg-row.ai .msg-avatar { background: #FAF8F5; color: #8C4A27; border: 1px solid #E5E0D8; }
-        .msg-row.user .msg-avatar { background: #8C4A27; color: white; border: none; }
+        .msg-row.ai .msg-avatar {
+            background: #FAF6F0;
+            color: var(--color-fire);
+            border: 1px solid #EADBCC;
+        }
 
         .msg-bubble {
-            padding: 12px 16px; font-size: 13.5px;
-            line-height: 1.6; position: relative;
+            font-size: 14px;
+            line-height: 1.65;
+            position: relative;
         }
         .msg-row.ai .msg-bubble {
-            background: #FAF8F5;
-            border: 1px solid #ECE7DE;
-            color: #1C1917;
-            border-radius: 12px;
+            flex: 1;
+            color: var(--color-text-main);
+            background: transparent;
+            padding: 0;
         }
         .msg-row.user .msg-bubble {
-            background: #8C4A27;
-            color: white;
-            border-radius: 12px;
-            border: none;
+            background: var(--color-fire);
+            color: #FFFFFF;
+            padding: 10px 16px;
+            border-radius: 16px 16px 4px 16px;
+            max-width: 82%;
+            font-weight: 400;
         }
 
-        /* THẺ SÁCH GỢI Ý NGAY TRONG BUBBLE */
+        /* THẺ SÁCH LEAN (COMPACT BOOK CARD) */
         .cards-deck-wrap {
-            display: flex; flex-direction: column; gap: 8px; margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 14px;
+            width: 100%;
         }
         .mini-book-card {
-            background: #FFFFFF;
-            border: 1px solid #ECE7DE;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
             border-radius: 10px;
-            padding: 10px 12px;
-            display: grid; grid-template-columns: 46px 1fr auto;
-            gap: 12px; align-items: center;
+            padding: 10px 14px;
+            display: grid;
+            grid-template-columns: 44px 1fr auto;
+            gap: 12px;
+            align-items: center;
             transition: all 0.15s ease;
         }
         .mini-book-card:hover {
-            border-color: #8C4A27;
+            border-color: #D6CEBE;
+            background: #FFFFFF;
         }
         .mini-book-thumb {
-            width: 46px; height: 60px; object-fit: cover; border-radius: 6px;
+            width: 44px;
+            height: 58px;
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
         .mini-book-title {
-            font-size: 13px; font-weight: 700; color: #1C1917; line-height: 1.3;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--color-text-main);
+            line-height: 1.35;
         }
         .mini-book-meta {
-            font-size: 11px; color: #78716C; margin-top: 2px;
+            font-size: 11.5px;
+            color: var(--color-text-muted);
+            margin-top: 2px;
         }
         .mini-book-price {
-            font-size: 13.5px; font-weight: 800; color: var(--color-fire);
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--color-fire);
         }
-        .btn-mini-view {
-            border-radius: 6px; padding: 5px 12px; font-size: 11px; font-weight: 600;
-            cursor: pointer; transition: all 0.15s; display: inline-block; text-align: center;
+        .mini-book-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .btn-mini-buy {
-            background: #EE4D2D !important;
-            color: #ffffff !important;
-            border: none !important;
+            background: #EE4D2D;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
         }
         .btn-mini-buy:hover {
-            background: #D73211 !important;
+            background: #D73211;
         }
         .btn-mini-detail {
-            background: #FAF8F5 !important;
-            color: #57534E !important;
-            border: 1px solid #E5E0D8 !important;
+            background: #FFFFFF;
+            color: var(--color-text-secondary);
+            border: 1px solid #D6CEBE;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 11.5px;
+            font-weight: 500;
+            transition: all 0.15s ease;
         }
         .btn-mini-detail:hover {
-            background: #F0ECE4 !important;
-            color: #1C1917 !important;
+            border-color: var(--color-fire);
+            color: var(--color-fire);
         }
 
         /* TYPING INDICATOR */
         .typing-indicator {
-            display: none; align-self: flex-start;
-            background: #FAF8F5;
-            border: 1px solid #ECE7DE;
-            border-radius: 10px;
-            padding: 6px 14px; font-size: 12px; color: #78716C; gap: 8px; align-items: center;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 12px;
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+        .ai-gen-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+        .ai-gen-dots .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--color-fire);
+            opacity: 0.3;
+            animation: pulse-dot 1.2s infinite ease-in-out;
+        }
+        .ai-gen-dots .dot:nth-child(2) { animation-delay: 0.2s; }
+        .ai-gen-dots .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 0.3; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* THANH NHẬP LIỆU ĐÁY */
-        .chat-input-bar, .input-message-bar {
-            padding: 12px 20px 14px 20px;
-            background: #ffffff !important;
-            border-top: 1px solid #ECE7DE !important;
-            display: flex; gap: 10px; align-items: center;
-            box-shadow: none !important;
+        /* 5. BOTTOM INPUT BAR CĂN GIỮA (CHATGPT STYLE) */
+        .lean-input-area {
+            padding: 10px 20px 14px;
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
         }
-        .chat-input-wrapper {
-            flex: 1;
+        .lean-input-box {
+            max-width: 760px;
+            width: 100%;
             display: flex;
             align-items: center;
             background: #FAF8F5;
             border: 1px solid #E5E0D8;
-            border-radius: 12px;
-            padding: 0 14px;
+            border-radius: 24px;
+            padding: 6px 8px 6px 18px;
             transition: all 0.2s ease;
         }
-        .chat-input-wrapper:hover {
-            border-color: #D6CEBE;
+        .lean-input-box:focus-within {
             background: #FFFFFF;
-        }
-        .chat-input-wrapper:focus-within {
-            background: #ffffff;
             border-color: var(--color-fire);
             box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.08);
         }
-        .chat-input-lead-icon {
-            color: #A8A29E;
+        .lean-input-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
             font-size: 14px;
-            margin-right: 10px;
-            flex-shrink: 0;
-        }
-        .input-pill-field {
-            flex: 1; border: none !important;
-            background: transparent !important;
-            padding: 12px 2px !important;
-            font-size: 13.5px;
             font-family: inherit;
-            color: #1C1917;
-            font-weight: 500;
-            outline: none !important;
-            box-shadow: none !important;
-        }
-        .input-pill-field::placeholder {
-            color: #A8A29E !important;
-            font-weight: 400;
-            font-size: 13px;
-        }
-        .btn-send-chat {
-            width: 40px; height: 40px; border-radius: 10px;
-            background: #8C4A27;
-            color: white; border: none;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 14px;
-            transition: all 0.15s ease; flex-shrink: 0;
-        }
-        .btn-send-chat:hover {
-            background: #733615;
-            transform: translateY(-1px);
-        }
-        .btn-send-chat:active {
-            transform: translateY(0);
-        }
-    
-        /* DROPDOWN CHỌN NGÔN NGỮ CHUẨN SHOPEE TOPBAR */
-        .lang-dropdown-box {
-            position: relative;
-            display: inline-block;
-        }
-        .lang-trigger-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            font-weight: 700;
-            color: #292524;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: all 0.15s ease;
-        }
-        .lang-trigger-btn:hover {
-            color: #8C4A27;
-            background: rgba(140, 74, 39, 0.08);
-        }
-        .lang-dropdown-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: #ffffff;
-            border-radius: 4px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            border: 1px solid #E8DEC8;
-            min-width: 145px;
-            display: none;
-            z-index: 1000;
+            color: var(--color-text-main);
+            outline: none;
             padding: 6px 0;
         }
-        .lang-dropdown-box:hover .lang-dropdown-menu {
-            display: block;
+        .lean-input-box input::placeholder {
+            color: #A8A29E;
+            font-size: 13.5px;
         }
-        .lang-item-btn {
+        .btn-send-lean {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--color-fire);
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
+            justify-content: center;
             font-size: 13px;
-            color: #1C1917;
-            cursor: pointer;
-            transition: background 0.15s;
-            font-weight: 600;
-            text-decoration: none;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
         }
-        .lang-item-btn:hover {
-            background: #F5ECE4;
-            color: #8C4A27;
+        .btn-send-lean:hover {
+            background: var(--color-fire-hover);
         }
-
+        .lean-input-note {
+            font-size: 11px;
+            color: #A8A29E;
+            margin-top: 6px;
+            text-align: center;
+        }
     </style>
-    <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
-    <link rel="stylesheet" href="/css/liquid-glass.css">
 </head>
 <body>
 
-    <!-- HEADER -->
-    <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
-    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+    <!-- 1. TOPBAR LEAN -->
+    <header class="lean-header">
+        <div class="lean-header-left">
+            <button type="button" class="btn-toggle-sidebar" onclick="toggleSidebar()" title="Ẩn/Hiện Sidebar">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+            <a th:href="@{/}" class="lean-brand" title="Về trang chủ Chuỗi Sách Cũ">
+                <i class="fa-solid fa-book-open"></i>
+                <span>CHUỖI SÁCH CŨ</span>
+            </a>
+            <span class="lean-badge"><i class="fa-solid fa-sparkles"></i> Trợ Lý AI</span>
+        </div>
 
+        <div class="lean-header-right">
+            <a th:href="@{/search}" class="lean-nav-btn"><i class="fa-solid fa-compass"></i> Tìm Sách</a>
+            <a th:href="@{/cart}" class="lean-nav-btn"><i class="fa-solid fa-cart-shopping"></i> Giỏ Hàng</a>
+            <a th:href="@{/}" class="lean-nav-btn" style="color:var(--color-fire); font-weight:600;"><i class="fa-solid fa-arrow-left"></i> Cửa Hàng</a>
+        </div>
+    </header>
 
-    <main class="container chat-layout-wrap">
+    <!-- 2. LAYOUT EDGE-TO-EDGE -->
+    <div class="lean-layout">
 
-        <!-- CỘT TRÁI: QUẢN LÝ PHIÊN CHAT TỐI GIẢN -->
-        <aside class="chat-sidebar">
-            <button type="button" class="btn-new-chat" onclick="createNewSession()">
+        <!-- SIDEBAR TRÁI: QUẢN LÝ PHIÊN CHAT TỐI GIẢN -->
+        <aside class="lean-sidebar" id="chatSidebar">
+            <button type="button" class="btn-new-chat-lean" onclick="createNewSession()">
                 <i class="fa-solid fa-plus"></i>
                 <span>Cuộc trò chuyện mới</span>
             </button>
 
-            <!-- LỊCH SỬ CÁC PHIÊN TRÒ CHUYỆN (SESSIONS) -->
-            <div class="session-history-section">
-                <div class="sidebar-title" style="justify-content:space-between; margin-bottom:6px;">
-                    <span style="display:flex; align-items:center; gap:6px;">
-                        <i class="fa-regular fa-clock"></i>
-                        <span>Lịch sử trò chuyện</span>
-                    </span>
-                    <span class="badge-session-count" id="sessionCountBadge">0</span>
-                </div>
-                <div class="session-list" id="sessionList">
-                    <!-- Render động từ localStorage -->
-                </div>
+            <div class="lean-history-header">
+                <span>Lịch sử trò chuyện</span>
+                <span class="badge-session-count" id="sessionCountBadge">0</span>
+            </div>
+
+            <div class="session-list" id="sessionList">
+                <!-- Render động từ localStorage -->
             </div>
         </aside>
 
-        <!-- CỘT PHẢI: KHUNG CHAT MINIMALISM -->
-        <section class="chat-main-card chat-card-wrap">
-            <div class="chat-top-bar">
-                <div class="ai-status-indicator">
-                    <div class="ai-avatar-circle">
-                        <i class="fa-solid fa-sparkles"></i>
-                    </div>
-                    <div>
-                        <div class="ai-name-label" id="chatSessionTitleDisplay">Trợ Lý AI Chuỗi Sách Cũ TP.HCM</div>
-                        <div class="ai-online-status">
-                            <span class="online-dot"></span> Trực tuyến
+        <!-- KHUNG CHAT CHÍNH (CANVAS CĂN GIỮA LEAN) -->
+        <main class="lean-chat-canvas">
+            <!-- VÙNG TIN NHẮN TẬP TRUNG (CENTERED COLUMN MAX-WIDTH 760px) -->
+            <div class="chat-scroll-body" id="chatMessages">
+                <div class="chat-centered-wrap">
+                    <div id="chatMessageList" style="display:flex; flex-direction:column; gap:20px;"></div>
+
+                    <!-- TYPING INDICATOR -->
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="ai-gen-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
                         </div>
+                        <span>AI đang kiểm tra kho và phân tích sách...</span>
                     </div>
                 </div>
             </div>
 
-            <!-- NỘI DUNG CHAT -->
-            <div class="chat-messages-body chat-messages-container" id="chatMessages">
-                <!-- Danh sách tin nhắn động (Được lưu trữ & render theo từng phiên) -->
-                <div id="chatMessageList" style="display:flex; flex-direction:column; gap:16px;"></div>
-
-                <!-- TYPING INDICATOR (NẰM ĐỘC LẬP NGOÀI MESSAGE LIST, KHÔNG BAO GIỜ BỊ INNERHTML XÓA) -->
-                <div class="typing-indicator" id="typingIndicator" style="display:none; padding:6px 0; align-items:center; gap:8px;">
-                    <div class="ai-gen-dots">
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                    </div>
-                    <span style="font-size:12px; color:#78716C; font-style:italic;">AI đang tìm sách...</span>
+            <!-- THANH NHẬP LIỆU ĐÁY CĂN GIỮA -->
+            <div class="lean-input-area">
+                <div class="lean-input-box">
+                    <input type="text" id="chatInput" placeholder="Hỏi trợ lý AI về tựa sách, tác giả, hoặc tồn kho tại 5 chi nhánh..." onkeydown="if(event.key === 'Enter') sendUserMessage()">
+                    <button type="button" class="btn-send-lean" onclick="sendUserMessage()" title="Gửi tin nhắn">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </button>
                 </div>
+                <div class="lean-input-note">Hỗ trợ tra cứu tồn kho thời gian thực tại Thủ Đức, Quận 1, Làng ĐHQG, Phú Nhuận, Quận 5.</div>
             </div>
+        </main>
 
-            <!-- THANH NHẬP LIỆU TỐI GIẢN -->
-            <div class="chat-input-bar input-message-bar">
-                <div class="chat-input-wrapper">
-                    <i class="fa-regular fa-comment-dots chat-input-lead-icon"></i>
-                    <input type="text" id="chatInput" class="input-pill-field" placeholder="Hỏi trợ lý AI bất kỳ điều gì (ví dụ: 'Tìm sách chữa lành', 'Cuốn Nhà Giả Kim còn ở đâu?')..." onkeydown="if(event.key === 'Enter') sendUserMessage()">
-                </div>
-                <button type="button" class="btn-send-chat" onclick="sendUserMessage()" title="Gửi tin nhắn">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
-        </section>
-
-    </main>
+    </div>
 
     <script>
         const chatMessages = document.getElementById('chatMessages');
         const chatMessageList = document.getElementById('chatMessageList');
         const chatInput = document.getElementById('chatInput');
         const typingIndicator = document.getElementById('typingIndicator');
-        const sessionTitleDisplay = document.getElementById('chatSessionTitleDisplay');
 
         // ================= SESSION & LỊCH SỬ CHAT STORAGE =================
         const SESSIONS_STORAGE_KEY = 'CHOSACHCU_AI_SESSIONS_V2';
@@ -551,6 +603,11 @@
 
         let sessions = [];
         let activeSessionId = null;
+
+        function toggleSidebar() {
+            const sb = document.getElementById('chatSidebar');
+            if (sb) sb.classList.toggle('collapsed');
+        }
 
         function loadSessionsFromStorage() {
             try {
@@ -638,7 +695,7 @@
             if (!listEl) return;
 
             if (sessions.length === 0) {
-                listEl.innerHTML = '<div style="font-size:11.5px; color:#A8A29E; text-align:center; padding:8px 0;">Chưa có lịch sử chat</div>';
+                listEl.innerHTML = '<div style="font-size:11.5px; color:#A8A29E; text-align:center; padding:12px 0;">Chưa có lịch sử chat</div>';
                 return;
             }
 
@@ -664,10 +721,6 @@
             if (!chatMessageList) return;
             chatMessageList.innerHTML = '';
 
-            if (sessionTitleDisplay && session) {
-                sessionTitleDisplay.textContent = session.title || 'Trợ Lý AI Chuỗi Sách Cũ TP.HCM';
-            }
-
             if (!session || !session.messages || session.messages.length === 0) {
                 return;
             }
@@ -682,11 +735,6 @@
             scrollToBottom();
         }
 
-        function sendQuickPrompt(promptText) {
-            chatInput.value = promptText;
-            sendUserMessage();
-        }
-
         function sendUserMessage() {
             const text = chatInput.value.trim();
             if (!text) return;
@@ -695,12 +743,9 @@
             if (!session) {
                 session = createNewSession(text);
             } else if (!session.messages || session.messages.length <= 1) {
-                // Đặt tên session theo câu hỏi đầu tiên
                 session.title = text.length > 26 ? text.slice(0, 26) + '...' : text;
-                if (sessionTitleDisplay) sessionTitleDisplay.textContent = session.title;
             }
 
-            // Lưu tin nhắn user vào session
             session.messages.push({ sender: 'user', text: text, books: [] });
             appendUserMessageDOM(text);
             chatInput.value = '';
@@ -750,10 +795,7 @@
             if (!chatMessageList) return;
             const row = document.createElement('div');
             row.className = 'msg-row user';
-            row.innerHTML = `
-                <div class="msg-avatar"><i class="fa-solid fa-user"></i></div>
-                <div class="msg-bubble">${escapeHtml(text)}</div>
-            `;
+            row.innerHTML = `<div class="msg-bubble">${escapeHtml(text)}</div>`;
             chatMessageList.appendChild(row);
             scrollToBottom();
         }
@@ -775,17 +817,17 @@
                     booksHtml += `
                         <div class="mini-book-card">
                             <img src="${b.imageUrl || '/images/books/book_1.jpg'}" alt="Bìa sách" class="mini-book-thumb">
-                            <div style="flex:1;">
+                            <div style="flex:1; min-width:0;">
                                 <div class="mini-book-title">${escapeHtml(b.title)}</div>
                                 <div class="mini-book-meta">
                                     Độ mới: <strong style="color:#007a57;">${b.conditionPercent}%</strong> · 
-                                    <i class="fa-solid fa-location-dot text-danger"></i> ${escapeHtml(b.availableStores || 'Kho TP.HCM')}
+                                    <i class="fa-solid fa-location-dot" style="color:#DC2626;"></i> ${escapeHtml(b.availableStores || 'Kho TP.HCM')}
                                 </div>
                                 <div class="mini-book-price">₫${priceFormatted}</div>
                             </div>
-                            <div style="display:flex; flex-direction:column; gap:6px;">
-                                <a href="${b.buyNowUrl || '/checkout?buyNow=true&bookId=' + b.id}" class="btn-mini-view btn-mini-buy">Mua Ngay</a>
-                                <a href="${b.detailUrl || '/books/' + b.id}" class="btn-mini-view btn-mini-detail">Chi Tiết</a>
+                            <div class="mini-book-actions">
+                                <a href="${b.buyNowUrl || '/checkout?buyNow=true&bookId=' + b.id}" class="btn-mini-buy">Mua Ngay</a>
+                                <a href="${b.detailUrl || '/books/' + b.id}" class="btn-mini-detail">Chi Tiết</a>
                             </div>
                         </div>
                     `;
@@ -794,7 +836,7 @@
             }
 
             row.innerHTML = `
-                <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="msg-avatar"><i class="fa-solid fa-sparkles"></i></div>
                 <div class="msg-bubble">
                     <div>${formattedText}</div>
                     ${booksHtml}
@@ -823,7 +865,6 @@
             return div.innerHTML;
         }
 
-        // Khởi động khi tải trang
         window.addEventListener('DOMContentLoaded', function() {
             loadSessionsFromStorage();
 
@@ -831,7 +872,6 @@
             const q = urlParams.get('q');
 
             if (q && q.trim()) {
-                // Nếu được chuyển tiếp từ thanh search: Tạo riêng 1 phiên với tiêu đề câu hỏi đó
                 createNewSession(q.trim());
                 chatInput.value = q.trim();
                 sendUserMessage();
@@ -846,7 +886,5 @@
             }
         });
     </script>
-    <script src="/js/i18n.js"></script>
-    <script src="/js/cart-popover.js"></script>
 </body>
 </html>
