@@ -47,12 +47,6 @@ public class ChatMessage {
     @Column(name = "needs_attention")
     private Boolean needsAttention = false;
 
-    @Column(name = "is_pinned")
-    private Boolean isPinned = false;
-
-    @Column(name = "is_deleted")
-    private Boolean isDeleted = false;
-
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -151,22 +145,6 @@ public class ChatMessage {
 
     public void setNeedsAttention(Boolean needsAttention) {
         this.needsAttention = needsAttention;
-    }
-
-    public Boolean getIsPinned() {
-        return isPinned;
-    }
-
-    public void setIsPinned(Boolean pinned) {
-        isPinned = pinned;
-    }
-
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Boolean deleted) {
-        isDeleted = deleted;
     }
 
     public LocalDateTime getCreatedAt() {
