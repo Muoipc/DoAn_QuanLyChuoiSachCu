@@ -174,6 +174,32 @@ public class StoreChatController {
     }
 
     /**
+     * API: Đánh dấu cuộc trò chuyện là chưa đọc
+     */
+    @PostMapping("/api/chat/store/{storeId}/mark-unread")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> markStoreMessagesAsUnread(
+            @PathVariable Long storeId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        User currentUser = resolveCurrentUser(userDetails);
+        Map<String, Object> res = new HashMap<>();
+
+        if (currentUser != null) {
+            List<ChatMessage> list = chatMessageRepository.findByUserIdAndStoreIdOrderByCreatedAtAsc(currentUser.getId(), storeId);
+            if (!list.isEmpty()) {
+                ChatMessage last = list.get(list.size() - 1);
+                last.setIsRead(false);
+                chatMessageRepository.save(last);
+            }
+            res.put("success", true);
+        } else {
+            res.put("success", false);
+        }
+        return ResponseEntity.ok(res);
+    }
+
+    /**
      * API: Xóa toàn bộ lịch sử trò chuyện với chi nhánh này
      */
     @PostMapping("/api/chat/store/{storeId}/delete-conversation")
