@@ -2213,26 +2213,160 @@
             }, 2500);
         }
 
-        // ================= WIDGET CHAT VỚI SHOP / CHI NHÁNH TOÀN CỤC =================
+        // ================= WIDGET CHAT VỚI SHOP / ĐA CHI NHÁNH CHUẨN SHOPEE WEB CHAT =================
+        let currentStoreId = 1;
+        let currentStoreName = 'Tổng Kho Sách Cũ TP.HCM';
+        let currentBookId = null;
+
         function toggleAiMiniChat() {
             var widget = document.getElementById('aiMiniChatWidget');
             if (!widget) return;
             if (widget.style.display === 'none' || widget.style.display === '') {
                 widget.style.display = 'flex';
-                var inp = document.getElementById('miniChatInput');
-                if (inp) inp.focus();
-                scrollMiniChatBottom();
+                // Mặc định mở danh sách các shop
+                var listView = document.getElementById('miniChatShopListView');
+                var roomView = document.getElementById('miniChatRoomView');
+                if (listView && roomView) {
+                    if (roomView.style.display === 'flex') {
+                        var inp = document.getElementById('miniChatInput');
+                        if (inp) inp.focus();
+                        scrollMiniChatBottom();
+                    } else {
+                        listView.style.display = 'flex';
+                        roomView.style.display = 'none';
+                        loadShopConversations();
+                    }
+                }
             } else {
                 widget.style.display = 'none';
             }
         }
 
-        function sendMiniChatPrompt(promptText) {
-            var inp = document.getElementById('miniChatInput');
-            if (inp) {
-                inp.value = promptText;
-                sendMiniChatMessage();
+        function loadShopConversations() {
+            fetch('/api/chat/conversations')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (!data.success) return;
+                    var container = document.getElementById('miniChatShopListContainer');
+                    if (!container) return;
+                    var list = data.conversations || [];
+                    var countEl = document.getElementById('shopConvCount');
+                    if (countEl) countEl.textContent = list.length;
+
+                    if (list.length === 0) {
+                        container.innerHTML = '<div style="text-align:center; padding:24px 12px; color:#A8A29E; font-size:12px;">Đang tải danh sách 5 chi nhánh TP.HCM...</div>';
+                        return;
+                    }
+
+                    var html = '';
+                    list.forEach(function(s) {
+                        var unreadBadge = (s.unreadCount && s.unreadCount > 0) ? '<span style="background:#EE4D2D; color:#fff; font-size:10px; font-weight:700; padding:1px 6px; border-radius:9999px;">' + s.unreadCount + '</span>' : '';
+                        var safeName = escapeMiniHtml(s.storeName);
+                        var safeDist = escapeMiniHtml(s.storeDistrict || 'TP.HCM');
+                        var safeMsg = escapeMiniHtml(s.lastMessage || 'Nhắn tin hỏi sách tại quầy...');
+                        var safeTime = s.lastTime || '';
+                        var avt = s.storeAvatar || '/images/brand-book-icon.png';
+
+                        html += '<div onclick="openChatWithStore(' + s.storeId + ', \'' + escapeMiniJs(s.storeName) + '\', null, null, \'' + escapeMiniJs(avt) + '\', \'' + escapeMiniJs(s.storeDistrict) + '\')" ' +
+                            'style="display:flex; align-items:center; gap:10px; padding:10px; border-radius:10px; cursor:pointer; transition:all 0.15s; border:1px solid transparent;" ' +
+                            'onmouseover="this.style.background=\'#FAF8F5\'; this.style.borderColor=\'#ECE7DE\';" ' +
+                            'onmouseout="this.style.background=\'transparent\'; this.style.borderColor=\'transparent\';">' +
+                            '<div style="position:relative; width:40px; height:40px; flex-shrink:0;">' +
+                                '<img src="' + avt + '" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #E5E0D8;">' +
+                                '<span style="position:absolute; bottom:0; right:0; width:10px; height:10px; border-radius:50%; background:#10b981; border:1.5px solid #fff;"></span>' +
+                            '</div>' +
+                            '<div style="flex:1; min-width:0;">' +
+                                '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+                                    '<strong style="font-size:12.5px; color:#1C1917; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + safeName + '</strong>' +
+                                    '<span style="font-size:10.5px; color:#A8A29E; flex-shrink:0; margin-left:4px;">' + safeTime + '</span>' +
+                                '</div>' +
+                                '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">' +
+                                    '<div style="font-size:11.5px; color:#78716C; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:215px;">' + safeMsg + '</div>' +
+                                    unreadBadge +
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
+                    });
+                    container.innerHTML = html;
+                })
+                .catch(function(err) { console.error('Lỗi tải cuộc trò chuyện:', err); });
+        }
+
+        function openChatWithStore(storeId, storeName, bookId, bookTitle, storeAvatar, storeDistrict) {
+            currentStoreId = storeId || 1;
+            currentStoreName = storeName || 'Tổng Kho Sách Cũ TP.HCM';
+            currentBookId = bookId || null;
+
+            var widget = document.getElementById('aiMiniChatWidget');
+            if (widget) widget.style.display = 'flex';
+
+            var listView = document.getElementById('miniChatShopListView');
+            var roomView = document.getElementById('miniChatRoomView');
+            if (listView) listView.style.display = 'none';
+            if (roomView) roomView.style.display = 'flex';
+
+            var nameEl = document.getElementById('activeStoreName');
+            var distEl = document.getElementById('activeStoreDistrict');
+            var avtEl = document.getElementById('activeStoreAvatar');
+            var inputEl = document.getElementById('miniChatInput');
+
+            if (nameEl) nameEl.textContent = currentStoreName;
+            if (distEl) distEl.textContent = storeDistrict || 'TP.HCM';
+            if (avtEl && storeAvatar) avtEl.src = storeAvatar;
+            if (inputEl) {
+                inputEl.placeholder = 'Nhắn tin cho ' + currentStoreName + '...';
+                inputEl.focus();
             }
+
+            loadStoreChatMessages(currentStoreId, bookTitle);
+        }
+
+        function backToShopList() {
+            var listView = document.getElementById('miniChatShopListView');
+            var roomView = document.getElementById('miniChatRoomView');
+            if (listView) listView.style.display = 'flex';
+            if (roomView) roomView.style.display = 'none';
+            loadShopConversations();
+        }
+
+        function loadStoreChatMessages(storeId, autoSendBookTitle) {
+            var body = document.getElementById('miniChatBody');
+            if (!body) return;
+            body.innerHTML = '<div style="text-align:center; padding:20px; color:#A8A29E; font-size:11.5px;">Đang tải tin nhắn...</div>';
+
+            fetch('/api/chat/store/' + storeId + '/messages')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    body.innerHTML = '';
+                    var messages = (data && data.messages) ? data.messages : [];
+
+                    // Tin nhắn chào mừng ban đầu
+                    var welcomeDiv = document.createElement('div');
+                    welcomeDiv.style.cssText = 'display:flex; gap:8px; align-items:flex-start;';
+                    welcomeDiv.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF8F5; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;"><i class="fa-solid fa-store"></i></div>' +
+                        '<div style="background:#FAF8F5; border:1px solid #ECE7DE; padding:9px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; max-width:85%; font-size:12.5px;">' +
+                            'Chào bạn! Em là nhân viên tư vấn &amp; trực quầy tại <strong>' + escapeMiniHtml(currentStoreName) + '</strong>. Bạn đang cần kiểm tra cuốn sách nào tại chi nhánh ạ?' +
+                        '</div>';
+                    body.appendChild(welcomeDiv);
+
+                    // Render các tin nhắn đã có
+                    messages.forEach(function(m) {
+                        appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId);
+                    });
+
+                    scrollMiniChatBottom();
+
+                    // Nếu có yêu cầu hỏi sách tự động từ nút "Chat Ngay" trên PDP
+                    if (autoSendBookTitle) {
+                        var prompt = 'Dạ em muốn hỏi ' + currentStoreName + ' về tình trạng và tồn kho của cuốn sách "' + autoSendBookTitle + '" ạ!';
+                        var inp = document.getElementById('miniChatInput');
+                        if (inp) inp.value = prompt;
+                        sendMiniChatMessage();
+                    }
+                })
+                .catch(function(err) {
+                    console.error('Lỗi tải tin nhắn chi nhánh:', err);
+                });
         }
 
         function sendMiniChatMessage() {
@@ -2245,71 +2379,85 @@
             inp.value = '';
 
             // User bubble
-            var userRow = document.createElement('div');
-            userRow.style.cssText = 'display:flex; justify-content:flex-end;';
-            userRow.innerHTML = '<div style="background:#8C4A27; color:#fff; padding:9px 13px; border-radius:14px; border-top-right-radius:4px; max-width:85%; line-height:1.45; word-break:break-word; font-size:12.5px;">' + escapeMiniHtml(text) + '</div>';
-            body.appendChild(userRow);
+            appendChatMessageDOM('CUSTOMER', text);
             scrollMiniChatBottom();
 
             // Typing indicator
             var typingRow = document.createElement('div');
             typingRow.id = 'miniChatTyping';
             typingRow.style.cssText = 'display:flex; gap:8px; align-items:center; color:#78716c; font-size:12px;';
-            typingRow.innerHTML = '<div style="width:24px; height:24px; border-radius:50%; background:#8C4A27; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px;"><i class="fa-solid fa-comments"></i></div> <span style="font-style:italic;">Cửa hàng đang kiểm tra và phản hồi...</span>';
+            typingRow.innerHTML = '<div style="width:24px; height:24px; border-radius:50%; background:#8C4A27; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px;"><i class="fa-solid fa-store"></i></div> <span style="font-style:italic;">' + escapeMiniHtml(currentStoreName) + ' đang kiểm tra...</span>';
             body.appendChild(typingRow);
             scrollMiniChatBottom();
 
-            fetch('/ai-assistant/chat', {
+            // Gửi tin nhắn đến API Store Chat
+            var formData = new URLSearchParams();
+            formData.append('content', text);
+            if (currentBookId) {
+                formData.append('bookId', currentBookId);
+            }
+
+            fetch('/api/chat/store/' + currentStoreId + '/send', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text })
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
             })
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 var tp = document.getElementById('miniChatTyping');
                 if (tp) tp.remove();
 
-                var aiRow = document.createElement('div');
-                aiRow.style.cssText = 'display:flex; gap:8px; align-items:flex-start;';
+                var reply = data.reply || 'Dạ chi nhánh đã nhận được tin nhắn của bạn.';
+                var b = data.suggestedBook || null;
 
-                var replyHtml = (data.reply || '')
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\n/g, '<br>');
-
-                var cardsHtml = '';
-                if (data.suggestedBooks && data.suggestedBooks.length > 0) {
-                    cardsHtml = '<div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">';
-                    data.suggestedBooks.forEach(function(b) {
-                        var p = Number(b.price || 0).toLocaleString('vi-VN');
-                        cardsHtml += '<div style="display:flex; gap:8px; background:#ffffff; border:1px solid #ECE7DE; border-radius:8px; padding:6px 8px; align-items:center;">' +
-                            '<img src="' + (b.imageUrl || '/images/books/book_1.jpg') + '" style="width:36px; height:48px; object-fit:cover; border-radius:4px; flex-shrink:0;">' +
-                            '<div style="flex:1; min-width:0;">' +
-                                '<div style="font-weight:600; font-size:12px; color:#1C1917; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + escapeMiniHtml(b.title) + '</div>' +
-                                '<div style="font-size:10.5px; color:#78716c; margin-top:1px;">Mới ' + (b.conditionPercent || 90) + '% · ' + escapeMiniHtml(b.availableStores || 'Kho TP.HCM') + '</div>' +
-                                '<div style="font-weight:700; color:#8C4A27; font-size:12px; margin-top:1px;">₫' + p + '</div>' +
-                            '</div>' +
-                            '<div style="display:flex; flex-direction:column; gap:4px; flex-shrink:0;">' +
-                                '<a href="' + (b.buyNowUrl || '/checkout?buyNow=true&bookId=' + b.id) + '" style="padding:3px 8px; border-radius:4px; background:#EE4D2D; color:#fff; font-size:10px; font-weight:600; text-decoration:none; text-align:center;">Mua</a>' +
-                                '<a href="' + (b.detailUrl || '/books/' + b.id) + '" style="padding:3px 8px; border-radius:4px; background:#FAF8F5; border:1px solid #E5E0D8; color:#57534E; font-size:10px; text-decoration:none; text-align:center;">Xem</a>' +
-                            '</div>' +
-                        '</div>';
-                    });
-                    cardsHtml += '</div>';
-                }
-
-                aiRow.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF8F5; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;"><i class="fa-solid fa-store"></i></div>' +
-                    '<div style="background:#FAF8F5; border:1px solid #ECE7DE; padding:10px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; max-width:85%; font-size:12.5px;">' +
-                        '<div>' + replyHtml + '</div>' +
-                        cardsHtml +
-                    '</div>';
-
-                body.appendChild(aiRow);
+                appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null);
                 scrollMiniChatBottom();
             })
             .catch(function() {
                 var tp = document.getElementById('miniChatTyping');
                 if (tp) tp.remove();
             });
+        }
+
+        function appendChatMessageDOM(senderType, content, bookTitle, bookPrice, bookImage, conditionPercent, bookId) {
+            var body = document.getElementById('miniChatBody');
+            if (!body) return;
+
+            var row = document.createElement('div');
+            if (senderType === 'CUSTOMER') {
+                row.style.cssText = 'display:flex; justify-content:flex-end;';
+                row.innerHTML = '<div style="background:#8C4A27; color:#fff; padding:9px 13px; border-radius:14px; border-top-right-radius:4px; max-width:85%; line-height:1.45; word-break:break-word; font-size:12.5px;">' + escapeMiniHtml(content) + '</div>';
+            } else {
+                row.style.cssText = 'display:flex; gap:8px; align-items:flex-start;';
+
+                var replyHtml = (content || '')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+
+                var bookCardHtml = '';
+                if (bookTitle) {
+                    var p = Number(bookPrice || 0).toLocaleString('vi-VN');
+                    bookCardHtml = '<div style="display:flex; gap:8px; background:#ffffff; border:1px solid #ECE7DE; border-radius:8px; padding:6px 8px; align-items:center; margin-top:8px;">' +
+                        '<img src="' + (bookImage || '/images/books/book_1.jpg') + '" style="width:36px; height:48px; object-fit:cover; border-radius:4px; flex-shrink:0;">' +
+                        '<div style="flex:1; min-width:0;">' +
+                            '<div style="font-weight:600; font-size:12px; color:#1C1917; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + escapeMiniHtml(bookTitle) + '</div>' +
+                            '<div style="font-size:10.5px; color:#78716c; margin-top:1px;">Mới ' + (conditionPercent || 90) + '% · ' + escapeMiniHtml(currentStoreName) + '</div>' +
+                            '<div style="font-weight:700; color:#8C4A27; font-size:12px; margin-top:1px;">₫' + p + '</div>' +
+                        '</div>' +
+                        '<div style="display:flex; flex-direction:column; gap:4px; flex-shrink:0;">' +
+                            '<a href="/checkout?buyNow=true&bookId=' + (bookId || 1) + '" style="padding:3px 8px; border-radius:4px; background:#EE4D2D; color:#fff; font-size:10px; font-weight:600; text-decoration:none; text-align:center;">Mua</a>' +
+                            '<a href="/books/' + (bookId || 1) + '" style="padding:3px 8px; border-radius:4px; background:#FAF8F5; border:1px solid #E5E0D8; color:#57534E; font-size:10px; text-decoration:none; text-align:center;">Xem</a>' +
+                        '</div>' +
+                    '</div>';
+                }
+
+                row.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF8F5; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;"><i class="fa-solid fa-store"></i></div>' +
+                    '<div style="background:#FAF8F5; border:1px solid #ECE7DE; padding:10px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; max-width:85%; font-size:12.5px;">' +
+                        '<div>' + replyHtml + '</div>' +
+                        bookCardHtml +
+                    '</div>';
+            }
+            body.appendChild(row);
         }
 
         function scrollMiniChatBottom() {
@@ -2324,6 +2472,11 @@
             return d.innerHTML;
         }
 
+        function escapeMiniJs(s) {
+            if (!s) return '';
+            return s.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+
         // Tự động ẩn Floating Button trên trang /ai-assistant để tránh trùng lặp
         if (window.location.pathname.indexOf('/ai-assistant') !== -1) {
             var btn = document.getElementById('aiFloatingBtn');
@@ -2331,58 +2484,75 @@
         }
     </script>
 
-    <!-- WIDGET CHAT VỚI SHOP TOÀN CỤC (GLOBAL MINI CHAT WIDGET) -->
+    <!-- WIDGET CHAT VỚI SHOP ĐA CHI NHÁNH TOÀN CỤC (GLOBAL MULTI-STORE CHAT WIDGET) -->
     <div id="aiMiniChatWidget" style="display:none; position:fixed; bottom:92px; right:28px; width:360px; height:520px; max-height:82vh; max-width:calc(100vw - 36px); z-index:999990 !important; border-radius:16px; background:#FFFFFF; border:1px solid #ECE7DE; box-shadow:0 12px 36px rgba(45, 24, 15, 0.15); flex-direction:column; overflow:hidden; transition:all 0.25s ease;">
-        <!-- Top bar của widget -->
-        <div style="padding:12px 16px; background:#FAF8F5; border-bottom:1px solid #ECE7DE; display:flex; justify-content:space-between; align-items:center;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:34px; height:34px; border-radius:50%; background:#FFFFFF; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:14px;">
-                    <i class="fa-solid fa-comments"></i>
-                </div>
-                <div>
-                    <div style="font-weight:700; font-size:13.5px; color:#1C1917; line-height:1.2;">Chat Với Cửa Hàng</div>
-                    <div style="font-size:11px; color:#007a57; display:flex; align-items:center; gap:4px; margin-top:2px;">
-                        <span style="width:6px; height:6px; border-radius:50%; background:#10b981; display:inline-block;"></span> Trực tuyến 5 chi nhánh TP.HCM
+        
+        <!-- VIEW 1: DANH SÁCH TẤT CẢ SHOP / CHI NHÁNH -->
+        <div id="miniChatShopListView" style="display:flex; flex-direction:column; height:100%;">
+            <!-- Header Danh Sách Shop -->
+            <div style="padding:14px 16px; background:#FAF8F5; border-bottom:1px solid #ECE7DE; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:28px; height:28px; border-radius:50%; background:#FFFFFF; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:12px;">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <strong style="font-size:13.5px; color:#1C1917;">Tin Nhắn Với Cửa Hàng</strong>
                     </div>
                 </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <span style="background:#EFECE6; color:#8C4A27; font-size:11px; font-weight:700; padding:1px 7px; border-radius:9999px;" id="shopConvCount">5</span>
+                    <button type="button" onclick="toggleAiMiniChat()" style="background:none; border:none; color:#78716C; font-size:16px; cursor:pointer; padding:2px 6px;">&times;</button>
+                </div>
             </div>
-            <div style="display:flex; align-items:center; gap:6px;">
-                <a th:href="@{/ai-assistant}" target="_blank" title="Mở trang chat toàn màn hình" style="color:#78716C; font-size:12px; padding:4px 6px; border-radius:4px; text-decoration:none;">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
-                <button type="button" onclick="toggleAiMiniChat()" style="background:none; border:none; color:#78716C; font-size:16px; cursor:pointer; padding:2px 6px; border-radius:4px;">
-                    <i class="fa-solid fa-xmark"></i>
+
+            <!-- Danh Sách Các Shop (Cuộn dọc) -->
+            <div id="miniChatShopListContainer" style="flex:1; overflow-y:auto; padding:8px; display:flex; flex-direction:column; gap:4px; background:#FFFFFF;">
+                <!-- Render động từ API /api/chat/conversations -->
+            </div>
+
+            <!-- Footer Danh sách -->
+            <div style="padding:10px 14px; background:#FAF8F5; border-top:1px solid #ECE7DE; text-align:center; font-size:11.5px; color:#78716C;">
+                Chọn chi nhánh để trao đổi về tồn kho sách tại quầy
+            </div>
+        </div>
+
+        <!-- VIEW 2: KHUNG CHAT CHI TIẾT VỚI SHOP ĐÃ CHỌN -->
+        <div id="miniChatRoomView" style="display:none; flex-direction:column; height:100%;">
+            <!-- Top bar phòng chat với nút Back ← -->
+            <div style="padding:10px 14px; background:#FAF8F5; border-bottom:1px solid #ECE7DE; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+                    <button type="button" onclick="backToShopList()" style="background:none; border:none; color:#57534E; font-size:13px; cursor:pointer; padding:4px 6px; border-radius:4px;" title="Quay lại danh sách shop">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <img id="activeStoreAvatar" src="/images/brand-book-icon.png" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:1px solid #E5E0D8; flex-shrink:0;">
+                    <div style="min-width:0;">
+                        <div id="activeStoreName" style="font-weight:700; font-size:12.5px; color:#1C1917; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Chi Nhánh 1: Thủ Đức</div>
+                        <div style="font-size:10.5px; color:#007a57; display:flex; align-items:center; gap:4px;">
+                            <span style="width:5px; height:5px; border-radius:50%; background:#10b981; display:inline-block;"></span> <span id="activeStoreDistrict">TP. Thủ Đức</span> · Trực tuyến
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <a th:href="@{/ai-assistant}" target="_blank" title="Mở toàn màn hình" style="color:#78716C; font-size:12px; padding:3px 5px; text-decoration:none;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                    <button type="button" onclick="toggleAiMiniChat()" style="background:none; border:none; color:#78716C; font-size:16px; cursor:pointer; padding:2px 5px;">&times;</button>
+                </div>
+            </div>
+
+            <!-- Khung tin nhắn của shop này -->
+            <div id="miniChatBody" style="flex:1; padding:12px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; font-size:13px; background:#FFFFFF;">
+            </div>
+
+            <!-- Ô nhập tin nhắn -->
+            <div style="padding:10px 12px; background:#FAF8F5; border-top:1px solid #ECE7DE; display:flex; gap:8px; align-items:center;">
+                <input type="text" id="miniChatInput" placeholder="Nhắn tin cho chi nhánh..." style="flex:1; height:36px; border-radius:8px; border:1px solid #E5E0D8; padding:0 12px; font-size:12.5px; outline:none; background:#FFFFFF; color:#1C1917;" onkeydown="if(event.key==='Enter') sendMiniChatMessage()">
+                <button type="button" onclick="sendMiniChatMessage()" style="width:36px; height:36px; border-radius:8px; border:none; background:#8C4A27; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px;">
+                    <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Khung tin nhắn -->
-        <div id="miniChatBody" style="flex:1; padding:14px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; font-size:13px; background:#FFFFFF;">
-            <!-- Tin nhắn chào -->
-            <div style="display:flex; gap:8px; align-items:flex-start;">
-                <div style="width:26px; height:26px; border-radius:50%; background:#FAF8F5; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;">
-                    <i class="fa-solid fa-store"></i>
-                </div>
-                <div style="background:#FAF8F5; border:1px solid #ECE7DE; padding:10px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; max-width:85%; font-size:12.5px;">
-                    Chào bạn! Bạn cần tư vấn về tựa sách, kiểm tra tồn kho tại 5 chi nhánh TP.HCM, hay hỏi chính sách đổi trả của shop ạ?
-                </div>
-            </div>
-
-            <!-- Gợi ý nhanh (Quick Chips) -->
-            <div style="display:flex; flex-wrap:wrap; gap:6px; margin: 2px 0 4px 34px;">
-                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Tư vấn sách chữa lành, giảm stress')" style="padding:4px 9px; border-radius:6px; border:1px solid #E5E0D8; background:#FAF8F5; color:#57534E; font-size:11px; font-weight:500; cursor:pointer;">🌱 Sách chữa lành</button>
-                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Cuốn Đắc Nhân Tâm còn ở chi nhánh nào?')" style="padding:4px 9px; border-radius:6px; border:1px solid #E5E0D8; background:#FAF8F5; color:#57534E; font-size:11px; font-weight:500; cursor:pointer;">📍 Tra cứu kho sách</button>
-                <button type="button" class="mini-quick-chip" onclick="sendMiniChatPrompt('Chính sách freeship và đồng kiểm như thế nào?')" style="padding:4px 9px; border-radius:6px; border:1px solid #E5E0D8; background:#FAF8F5; color:#57534E; font-size:11px; font-weight:500; cursor:pointer;">🚚 Phí ship &amp; Đồng kiểm</button>
-            </div>
-        </div>
-
-        <!-- Ô nhập tin nhắn -->
-        <div style="padding:10px 12px; background:#FAF8F5; border-top:1px solid #ECE7DE; display:flex; gap:8px; align-items:center;">
-            <input type="text" id="miniChatInput" placeholder="Nhắn tin cho cửa hàng / trợ lý..." style="flex:1; height:36px; border-radius:8px; border:1px solid #E5E0D8; padding:0 12px; font-size:12.5px; outline:none; background:#FFFFFF; color:#1C1917;" onkeydown="if(event.key==='Enter') sendMiniChatMessage()">
-            <button type="button" onclick="sendMiniChatMessage()" style="width:36px; height:36px; border-radius:8px; border:none; background:#8C4A27; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px;">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
-        </div>
     </div>
 
     <!-- NÚT CHAT VỚI SHOP NỔI TOÀN CỤC (FLOATING FAB) -->

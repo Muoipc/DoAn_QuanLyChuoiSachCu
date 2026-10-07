@@ -115,23 +115,28 @@ public class StoreChatController {
 
         for (Store store : allStores) {
             List<ChatMessage> messages = chatMessageRepository.findByUserIdAndStoreIdOrderByCreatedAtAsc(currentUser.getId(), store.getId());
-            // CHỈ HIỂN THỊ CÁC CHI NHÁNH ĐÃ TỪNG CÓ LỊCH SỬ TIN NHẮN VỚI KHÁCH HÀNG NÀY
-            if (!messages.isEmpty()) {
-                Map<String, Object> item = new HashMap<>();
-                item.put("storeId", store.getId());
-                item.put("storeName", store.getStoreName());
-                item.put("storeAvatar", store.getImage() != null ? store.getImage() : "/images/logo-books-badge.png");
-                item.put("storeDistrict", store.getDistrict());
+            Map<String, Object> item = new HashMap<>();
+            item.put("storeId", store.getId());
+            item.put("storeName", store.getStoreName());
+            item.put("storeAvatar", store.getImage() != null ? store.getImage() : "/images/brand-book-icon.png");
+            item.put("storeDistrict", store.getDistrict());
 
+            if (!messages.isEmpty()) {
                 ChatMessage last = messages.get(messages.size() - 1);
                 item.put("lastMessage", last.getContent());
-                item.put("lastTime", last.getCreatedAt() != null ? last.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM")) : "");
+                item.put("lastTime", last.getCreatedAt() != null ? last.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM HH:mm")) : "");
                 item.put("lastTimestamp", last.getCreatedAt());
                 long unread = messages.stream().filter(m -> m.getSenderType() == ChatMessage.SenderType.STORE_STAFF && !Boolean.TRUE.equals(m.getIsRead())).count();
                 item.put("unreadCount", unread);
                 item.put("hasHistory", true);
-                convList.add(item);
+            } else {
+                item.put("lastMessage", "Nhắn tin hỏi tồn kho, tình trạng sách tại quầy...");
+                item.put("lastTime", "");
+                item.put("lastTimestamp", java.time.LocalDateTime.of(2020, 1, 1, 0, 0));
+                item.put("unreadCount", 0L);
+                item.put("hasHistory", false);
             }
+            convList.add(item);
         }
 
         // Sắp xếp cuộc trò chuyện có tin nhắn mới nhất lên đầu danh sách
@@ -310,6 +315,19 @@ public class StoreChatController {
 
         res.put("success", true);
         res.put("needsStaff", needsStaff);
+        res.put("reply", aiMsg.getContent());
+        res.put("senderName", aiMsg.getSenderName());
+        res.put("storeId", storeId);
+        res.put("createdAt", aiMsg.getCreatedAt() != null ? aiMsg.getCreatedAt().format(TIME_FMT) : "");
+        if (aiMsg.getBook() != null) {
+            Map<String, Object> bMap = new HashMap<>();
+            bMap.put("id", aiMsg.getBook().getId());
+            bMap.put("title", aiMsg.getBook().getTitle());
+            bMap.put("price", aiMsg.getBook().getPrice());
+            bMap.put("imageUrl", aiMsg.getBook().getPrimaryImageUrl());
+            bMap.put("conditionPercent", aiMsg.getBook().getConditionPercent());
+            res.put("suggestedBook", bMap);
+        }
         return ResponseEntity.ok(res);
     }
 
