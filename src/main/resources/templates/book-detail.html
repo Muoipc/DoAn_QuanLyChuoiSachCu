@@ -1528,9 +1528,10 @@
                     </div>
                     <div class="shop-action-buttons">
                         <button type="button" class="btn-shop-chat" 
+                                th:data-store-id="${store != null ? store.id : 1}"
                                 th:data-store="${store != null ? store.storeName : 'Chuỗi Sách Cũ'}"
                                 th:data-title="${book.title}"
-                                onclick="chatWithStoreFromBook(this.dataset.store, this.dataset.title)">
+                                onclick="chatWithStoreFromBook(this.dataset.storeId, this.dataset.store, this.dataset.title)">
                             <i class="fa-solid fa-comments"></i> Chat Ngay
                         </button>
                         <a th:href="@{/stores/{id}(id=${store != null ? store.id : 1})}" class="btn-shop-view">
@@ -1958,16 +1959,11 @@
     <!-- SCRIPT TƯƠNG TÁC CHUẨN SHOPEE -->
     <script>
         // ================= CHAT NGAY VỚI SHOP QUA MINI CHATBOT =================
-        function chatWithStoreFromBook(storeName, bookTitle) {
-            if (typeof toggleAiMiniChat === 'function') {
-                var widget = document.getElementById('aiMiniChatWidget');
-                if (!widget || widget.style.display === 'none' || widget.style.display === '') {
-                    toggleAiMiniChat();
-                }
-            }
-            var prompt = 'Dạ em muốn hỏi ' + (storeName || 'chi nhánh') + ' về tình trạng và tồn kho của cuốn sách "' + (bookTitle || '') + '" ạ!';
-            if (typeof sendMiniChatPrompt === 'function') {
-                sendMiniChatPrompt(prompt);
+        function chatWithStoreFromBook(storeId, storeName, bookTitle) {
+            if (typeof openChatWithStore === 'function') {
+                openChatWithStore(storeId, storeName, null, bookTitle);
+            } else if (typeof toggleAiMiniChat === 'function') {
+                toggleAiMiniChat();
             }
         }
 

@@ -879,8 +879,9 @@
                             <i class="fa-solid fa-plus"></i> Theo Dõi
                         </button>
                         <button type="button" class="btn-shop-chat-top" 
+                                th:data-store-id="${store.id}"
                                 th:data-store-name="${store.storeName}"
-                                onclick="chatWithStore(this.dataset.storeName)">
+                                onclick="chatWithStore(this.dataset.storeId, this.dataset.storeName)">
                             <i class="fa-regular fa-comment-dots"></i> Chat
                         </button>
                     </div>
@@ -1204,14 +1205,11 @@
         }
 
         // 2. Chat trực tiếp với chi nhánh qua Mini Chatbot
-        function chatWithStore(storeName) {
-            var fab = document.getElementById('aiFloatingBtn');
-            var widget = document.getElementById('aiMiniChatWidget');
-            if (widget && (widget.style.display === 'none' || widget.style.display === '')) {
-                if (fab) fab.click();
-            }
-            if (typeof sendMiniChatPrompt === 'function') {
-                sendMiniChatPrompt('Dạ em muốn hỏi về tồn kho và các tựa sách hay tại ' + (storeName || 'chi nhánh') + ' ạ!');
+        function chatWithStore(storeId, storeName) {
+            if (typeof openChatWithStore === 'function') {
+                openChatWithStore(storeId, storeName);
+            } else if (typeof toggleAiMiniChat === 'function') {
+                toggleAiMiniChat();
             }
         }
 
