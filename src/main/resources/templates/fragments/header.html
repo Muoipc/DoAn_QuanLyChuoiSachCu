@@ -2322,8 +2322,8 @@
 
                         html += '<div class="shop-conv-row" onclick="openChatWithStore(' + s.storeId + ', \'' + escapeMiniJs(s.storeName) + '\', null, null, \'' + escapeMiniJs(avt) + '\', \'' + escapeMiniJs(s.storeDistrict) + '\')" ' +
                             'style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:10px; cursor:pointer; transition:all 0.15s; border:1px solid ' + (isPinned ? '#F5EBE1' : 'transparent') + '; background:' + (isPinned ? '#FDFBF9' : 'transparent') + '; position:relative;" ' +
-                            'onmouseover="this.style.background=\'#FAF8F5\'; this.style.borderColor=\'#ECE7DE\'; var btn=this.querySelector(\'.btn-del-conv\'); if(btn) btn.style.opacity=\'1\';" ' +
-                            'onmouseout="this.style.background=\'' + (isPinned ? '#FDFBF9' : 'transparent') + '\'; this.style.borderColor=\'' + (isPinned ? '#F5EBE1' : 'transparent') + '\'; var btn=this.querySelector(\'.btn-del-conv\'); if(btn) btn.style.opacity=\'0\';">' +
+                            'onmouseover="this.style.background=\'#FAF8F5\'; this.style.borderColor=\'#ECE7DE\'; var btn=this.querySelector(\'.btn-row-more\'); if(btn) btn.style.opacity=\'1\';" ' +
+                            'onmouseout="this.style.background=\'' + (isPinned ? '#FDFBF9' : 'transparent') + '\'; this.style.borderColor=\'' + (isPinned ? '#F5EBE1' : 'transparent') + '\'; var btn=this.querySelector(\'.btn-row-more\'); if(btn) btn.style.opacity=\'0\';">' +
                             '<div style="position:relative; width:40px; height:40px; flex-shrink:0;">' +
                                 '<img src="' + avt + '" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #E5E0D8;">' +
                                 '<span style="position:absolute; bottom:0; right:0; width:10px; height:10px; border-radius:50%; background:#10b981; border:1.5px solid #fff;"></span>' +
@@ -2340,7 +2340,7 @@
                                     '<div style="font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:185px; ' + msgStyle + '">' + safeMsg + '</div>' +
                                     '<div style="display:flex; align-items:center; gap:6px;">' +
                                         unreadBadge +
-                                        (hasHistory ? '<button type="button" class="btn-del-conv" onclick="promptDeleteStoreChat(event, ' + s.storeId + ', \'' + escapeMiniJs(s.storeName) + '\')" title="Xóa cuộc trò chuyện" style="opacity:0; transition:opacity 0.15s; background:none; border:none; color:#A8A29E; cursor:pointer; padding:2px 4px; font-size:12px; border-radius:4px;" onmouseover="this.style.color=\'#DC2626\'" onmouseout="this.style.color=\'#A8A29E\'"><i class="fa-regular fa-trash-can"></i></button>' : '') +
+                                        '<button type="button" class="btn-row-more" onclick="openRowActionsDropdown(event, ' + s.storeId + ', \'' + escapeMiniJs(s.storeName) + '\')" title="Tùy chọn hội thoại" style="opacity:0; transition:opacity 0.15s; background:none; border:none; color:#78716C; cursor:pointer; padding:2px 5px; font-size:13px; border-radius:4px;" onmouseover="this.style.color=\'#1C1917\'; this.style.background=\'#EFECE6\';" onmouseout="this.style.color=\'#78716C\'; this.style.background=\'none\';"><i class="fa-solid fa-ellipsis-vertical"></i></button>' +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
@@ -2486,6 +2486,88 @@
             backToShopList();
         }
 
+        var activeRowStoreId = null;
+        var activeRowStoreName = '';
+
+        function openRowActionsDropdown(e, storeId, storeName) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            activeRowStoreId = storeId;
+            activeRowStoreName = storeName;
+
+            var menu = document.getElementById('shopListRowDropdown');
+            if (!menu) return;
+
+            var rect = e.currentTarget.getBoundingClientRect();
+            menu.style.top = (rect.bottom + 4) + 'px';
+            menu.style.left = Math.max(10, (rect.right - 180)) + 'px';
+            menu.style.display = 'block';
+
+            var pinnedMap = getPinnedStores();
+            var mutedMap = getMutedStores();
+            var isPinned = !!pinnedMap[storeId];
+            var isMuted = !!mutedMap[storeId];
+
+            var pinText = document.getElementById('rowOptPinText');
+            if (pinText) pinText.textContent = isPinned ? 'Bỏ ghim hội thoại' : 'Ghim hội thoại';
+
+            var muteText = document.getElementById('rowOptMuteText');
+            var muteIcon = document.getElementById('rowOptMuteIcon');
+            if (muteText) muteText.textContent = isMuted ? 'Bật thông báo' : 'Tắt thông báo';
+            if (muteIcon) {
+                muteIcon.className = isMuted ? 'fa-solid fa-bell' : 'fa-solid fa-bell-slash';
+                muteIcon.style.color = isMuted ? '#10b981' : '#78716C';
+            }
+        }
+
+        function closeRowActionsDropdown() {
+            var menu = document.getElementById('shopListRowDropdown');
+            if (menu) menu.style.display = 'none';
+        }
+
+        function executeRowAction(action) {
+            closeRowActionsDropdown();
+            if (!activeRowStoreId) return;
+
+            var sid = activeRowStoreId;
+            var sname = activeRowStoreName;
+
+            if (action === 'pin') {
+                var pinnedMap = getPinnedStores();
+                if (pinnedMap[sid]) {
+                    delete pinnedMap[sid];
+                    if (typeof showFlyToast === 'function') showFlyToast('Đã bỏ ghim ' + sname);
+                } else {
+                    pinnedMap[sid] = true;
+                    if (typeof showFlyToast === 'function') showFlyToast('Đã ghim ' + sname + ' lên đầu!');
+                }
+                localStorage.setItem('PINNED_STORES_MAP', JSON.stringify(pinnedMap));
+                loadShopConversations();
+            } else if (action === 'mute') {
+                var mutedMap = getMutedStores();
+                if (mutedMap[sid]) {
+                    delete mutedMap[sid];
+                    if (typeof showFlyToast === 'function') showFlyToast('Đã bật lại thông báo cho ' + sname);
+                } else {
+                    mutedMap[sid] = true;
+                    if (typeof showFlyToast === 'function') showFlyToast('Đã tắt thông báo từ ' + sname);
+                }
+                localStorage.setItem('MUTED_STORES_MAP', JSON.stringify(mutedMap));
+                loadShopConversations();
+            } else if (action === 'unread') {
+                var manualMap = getManualUnreadStores();
+                manualMap[sid] = true;
+                localStorage.setItem('UNREAD_MANUAL_MAP', JSON.stringify(manualMap));
+                fetch('/api/chat/store/' + sid + '/mark-unread', { method: 'POST' }).catch(function(){});
+                if (typeof showFlyToast === 'function') showFlyToast('Đã đánh dấu chưa đọc với ' + sname);
+                loadShopConversations();
+            } else if (action === 'delete') {
+                promptDeleteStoreChat(null, sid, sname);
+            }
+        }
+
         document.addEventListener('click', function(e) {
             var menu = document.getElementById('storeChatOptionsDropdown');
             var btn = document.getElementById('btnStoreChatOptions');
@@ -2493,6 +2575,13 @@
                 if (btn && btn.contains(e.target)) return;
                 if (!menu.contains(e.target)) {
                     menu.style.display = 'none';
+                }
+            }
+
+            var rowMenu = document.getElementById('shopListRowDropdown');
+            if (rowMenu && rowMenu.style.display === 'block') {
+                if (!e.target.closest('.btn-row-more') && !rowMenu.contains(e.target)) {
+                    rowMenu.style.display = 'none';
                 }
             }
         });
@@ -2859,6 +2948,23 @@
                     </button>
                 </div>
             </div>
+        </div>
+
+        <!-- DROPDOWN MENU TÙY CHỌN CHO TỪNG DÒNG SHOP Ở TRANG NGOÀI (MASTER LIST) -->
+        <div id="shopListRowDropdown" style="display:none; position:fixed; background:#FFFFFF; border:1px solid #ECE7DE; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.15); width:180px; z-index:999999; padding:4px 0; font-size:12px;">
+            <button type="button" onclick="executeRowAction('pin')" style="width:100%; text-align:left; padding:8px 12px; border:none; background:none; color:#1C1917; display:flex; align-items:center; gap:8px; cursor:pointer;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='none'">
+                <i class="fa-solid fa-thumbtack" style="color:#8C4A27; font-size:12px; width:16px;"></i> <span id="rowOptPinText">Ghim hội thoại</span>
+            </button>
+            <button type="button" onclick="executeRowAction('mute')" style="width:100%; text-align:left; padding:8px 12px; border:none; background:none; color:#1C1917; display:flex; align-items:center; gap:8px; cursor:pointer;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='none'">
+                <i class="fa-solid fa-bell-slash" style="color:#78716C; font-size:12px; width:16px;" id="rowOptMuteIcon"></i> <span id="rowOptMuteText">Tắt thông báo</span>
+            </button>
+            <button type="button" onclick="executeRowAction('unread')" style="width:100%; text-align:left; padding:8px 12px; border:none; background:none; color:#1C1917; display:flex; align-items:center; gap:8px; cursor:pointer;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='none'">
+                <i class="fa-regular fa-envelope" style="color:#2563EB; font-size:12px; width:16px;"></i> <span>Đánh dấu chưa đọc</span>
+            </button>
+            <div style="height:1px; background:#ECE7DE; margin:4px 0;"></div>
+            <button type="button" onclick="executeRowAction('delete')" style="width:100%; text-align:left; padding:8px 12px; border:none; background:none; color:#DC2626; display:flex; align-items:center; gap:8px; cursor:pointer;" onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='none'">
+                <i class="fa-regular fa-trash-can" style="color:#DC2626; font-size:12px; width:16px;"></i> <span>Xóa cuộc trò chuyện</span>
+            </button>
         </div>
 
         <!-- VIEW 1: DANH SÁCH TẤT CẢ SHOP / CHI NHÁNH -->
