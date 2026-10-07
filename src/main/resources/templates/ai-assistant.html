@@ -531,6 +531,9 @@
         </div>
 
         <div class="lean-header-right">
+            <button type="button" class="lean-nav-btn" onclick="deleteActiveSessionPrompt()" style="color:#DC2626; cursor:pointer;" title="Xóa cuộc trò chuyện hiện tại">
+                <i class="fa-regular fa-trash-can"></i> <span>Xóa Đoạn Chat</span>
+            </button>
             <a th:href="@{/search}" class="lean-nav-btn"><i class="fa-solid fa-compass"></i> Tìm Sách</a>
             <a th:href="@{/cart}" class="lean-nav-btn"><i class="fa-solid fa-cart-shopping"></i> Giỏ Hàng</a>
             <a th:href="@{/}" class="lean-nav-btn" style="color:var(--color-fire); font-weight:600;"><i class="fa-solid fa-arrow-left"></i> Cửa Hàng</a>
@@ -675,6 +678,11 @@
 
         function deleteSession(e, sessionId) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
+            const target = sessions.find(s => s.id === sessionId);
+            const title = target ? target.title : 'cuộc trò chuyện này';
+            if (!confirm(`Bạn có chắc muốn xóa "${title}" không?`)) {
+                return;
+            }
             sessions = sessions.filter(s => s.id !== sessionId);
             if (activeSessionId === sessionId) {
                 activeSessionId = sessions.length > 0 ? sessions[0].id : null;
@@ -686,6 +694,11 @@
             } else {
                 loadActiveSessionToUI();
             }
+        }
+
+        function deleteActiveSessionPrompt() {
+            if (!activeSessionId) return;
+            deleteSession(null, activeSessionId);
         }
 
         function renderSessionList() {
