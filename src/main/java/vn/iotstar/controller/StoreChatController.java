@@ -212,7 +212,7 @@ public class StoreChatController {
             return ResponseEntity.ok(res);
         }
 
-        List<ChatMessage> list = chatMessageRepository.findByUserIdAndStoreIdOrderByCreatedAtAsc(currentUser.getId(), storeId);
+        List<ChatMessage> list = chatMessageRepository.findByUserIdAndStoreIdActive(currentUser.getId(), storeId);
         List<Map<String, Object>> dtos = new ArrayList<>();
 
         for (ChatMessage m : list) {
@@ -223,6 +223,7 @@ public class StoreChatController {
             map.put("mediaType", m.getMediaType());
             map.put("senderType", m.getSenderType().name());
             map.put("senderName", m.getSenderName());
+            map.put("isPinned", Boolean.TRUE.equals(m.getIsPinned()));
             map.put("createdAt", m.getCreatedAt() != null ? m.getCreatedAt().format(TIME_FMT) : "");
             if (m.getBook() != null) {
                 map.put("bookId", m.getBook().getId());
@@ -240,6 +241,52 @@ public class StoreChatController {
         res.put("storeAddress", store != null ? store.getAddress() : "");
         res.put("messages", dtos);
 
+        return ResponseEntity.ok(res);
+    }
+
+    /**
+     * API: Ghim / Bỏ ghim tin nhắn quan trọng
+     */
+    @PostMapping("/api/chat/message/{messageId}/toggle-pin")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> togglePinMessage(
+            @PathVariable Long messageId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Map<String, Object> res = new HashMap<>();
+        ChatMessage m = chatMessageRepository.findById(messageId).orElse(null);
+        if (m != null) {
+            boolean current = Boolean.TRUE.equals(m.getIsPinned());
+            m.setIsPinned(!current);
+            chatMessageRepository.save(m);
+            res.put("success", true);
+            res.put("isPinned", !current);
+        } else {
+            res.put("success", false);
+            res.put("message", "Không tìm thấy tin nhắn");
+        }
+        return ResponseEntity.ok(res);
+    }
+
+    /**
+     * API: Xóa một tin nhắn đơn lẻ
+     */
+    @PostMapping("/api/chat/message/{messageId}/delete")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteSingleMessage(
+            @PathVariable Long messageId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Map<String, Object> res = new HashMap<>();
+        ChatMessage m = chatMessageRepository.findById(messageId).orElse(null);
+        if (m != null) {
+            m.setIsDeleted(true);
+            chatMessageRepository.save(m);
+            res.put("success", true);
+        } else {
+            res.put("success", false);
+            res.put("message", "Không tìm thấy tin nhắn");
+        }
         return ResponseEntity.ok(res);
     }
 

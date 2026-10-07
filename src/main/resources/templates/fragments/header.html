@@ -2267,6 +2267,8 @@
                         var safeTime = s.lastTime || '';
                         var avt = s.storeAvatar || '/images/brand-book-icon.png';
                         var hasHistory = s.hasHistory;
+                        var isMuted = isStoreMuted(s.storeId);
+                        var muteIcon = isMuted ? '<i class="fa-solid fa-bell-slash" style="font-size:10px; color:#DC2626; margin-left:4px;" title="Đã tắt thông báo"></i>' : '';
 
                         html += '<div class="shop-conv-row" onclick="openChatWithStore(' + s.storeId + ', \'' + escapeMiniJs(s.storeName) + '\', null, null, \'' + escapeMiniJs(avt) + '\', \'' + escapeMiniJs(s.storeDistrict) + '\')" ' +
                             'style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:10px; cursor:pointer; transition:all 0.15s; border:1px solid transparent; position:relative;" ' +
@@ -2278,7 +2280,10 @@
                             '</div>' +
                             '<div style="flex:1; min-width:0;">' +
                                 '<div style="display:flex; justify-content:space-between; align-items:center;">' +
-                                    '<strong style="font-size:12.5px; color:#1C1917; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + safeName + '</strong>' +
+                                    '<div style="display:flex; align-items:center; min-width:0; overflow:hidden;">' +
+                                        '<strong style="font-size:12.5px; color:#1C1917; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + safeName + '</strong>' +
+                                        muteIcon +
+                                    '</div>' +
                                     '<span style="font-size:10.5px; color:#A8A29E; flex-shrink:0; margin-left:4px;">' + safeTime + '</span>' +
                                 '</div>' +
                                 '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">' +
@@ -2418,10 +2423,27 @@
                         '</div>';
                     body.appendChild(welcomeDiv);
 
-                    // Render các tin nhắn đã có
+                    // Render các tin nhắn đã có & cập nhật banner ghim
+                    var pinnedMsg = null;
                     messages.forEach(function(m) {
-                        appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId);
+                        if (m.isPinned && !pinnedMsg) pinnedMsg = m;
+                        appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.id, m.isPinned);
                     });
+
+                    var pinnedBanner = document.getElementById('miniChatPinnedBanner');
+                    var pinnedText = document.getElementById('pinnedBannerText');
+                    var unpinBtn = document.getElementById('btnPinnedBannerUnpin');
+                    if (pinnedBanner && pinnedText) {
+                        if (pinnedMsg) {
+                            pinnedBanner.style.display = 'flex';
+                            pinnedText.innerText = pinnedMsg.content;
+                            if (unpinBtn) {
+                                unpinBtn.onclick = function() { togglePinMessage(pinnedMsg.id); };
+                            }
+                        } else {
+                            pinnedBanner.style.display = 'none';
+                        }
+                    }
 
                     scrollMiniChatBottom();
 
@@ -2479,7 +2501,7 @@
                 var reply = data.reply || 'Dạ chi nhánh đã nhận được tin nhắn của bạn.';
                 var b = data.suggestedBook || null;
 
-                appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null);
+                appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, data.messageId || null, false);
                 scrollMiniChatBottom();
             })
             .catch(function() {
@@ -2488,16 +2510,90 @@
             });
         }
 
-        function appendChatMessageDOM(senderType, content, bookTitle, bookPrice, bookImage, conditionPercent, bookId) {
+        function togglePinMessage(messageId) {
+            fetch('/api/chat/message/' + messageId + '/toggle-pin', { method: 'POST' })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        if (typeof showFlyToast === 'function') {
+                            showFlyToast(data.isPinned ? 'Đã ghim tin nhắn!' : 'Đã bỏ ghim tin nhắn!');
+                        }
+                        loadStoreChatMessages(currentStoreId);
+                    }
+                });
+        }
+
+        function deleteSingleMessage(messageId) {
+            if (!confirm('Bạn có muốn xóa tin nhắn này không?')) return;
+            fetch('/api/chat/message/' + messageId + '/delete', { method: 'POST' })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        if (typeof showFlyToast === 'function') {
+                            showFlyToast('Đã xóa tin nhắn');
+                        }
+                        loadStoreChatMessages(currentStoreId);
+                    }
+                });
+        }
+
+        function toggleStoreMute(storeId, storeName) {
+            var muteMap = JSON.parse(localStorage.getItem('MUTED_STORES_MAP') || '{}');
+            var isMuted = !!muteMap[storeId];
+            if (isMuted) {
+                delete muteMap[storeId];
+                if (typeof showFlyToast === 'function') {
+                    showFlyToast('Đã bật lại thông báo cho ' + storeName);
+                }
+            } else {
+                muteMap[storeId] = true;
+                if (typeof showFlyToast === 'function') {
+                    showFlyToast('Đã tắt thông báo từ ' + storeName);
+                }
+            }
+            localStorage.setItem('MUTED_STORES_MAP', JSON.stringify(muteMap));
+            updateMuteButtonUI(storeId);
+            loadShopConversations();
+        }
+
+        function isStoreMuted(storeId) {
+            var muteMap = JSON.parse(localStorage.getItem('MUTED_STORES_MAP') || '{}');
+            return !!muteMap[storeId];
+        }
+
+        function updateMuteButtonUI(storeId) {
+            var btn = document.getElementById('btnMuteStore');
+            if (!btn) return;
+            var muted = isStoreMuted(storeId);
+            btn.innerHTML = muted ? '<i class="fa-solid fa-bell-slash" style="color:#DC2626;"></i>' : '<i class="fa-regular fa-bell"></i>';
+            btn.title = muted ? 'Đang tắt thông báo (Bấm để bật lại)' : 'Tắt thông báo chi nhánh này';
+        }
+
+        function appendChatMessageDOM(senderType, content, bookTitle, bookPrice, bookImage, conditionPercent, bookId, messageId, isPinned) {
             var body = document.getElementById('miniChatBody');
             if (!body) return;
 
             var row = document.createElement('div');
+            row.className = 'chat-msg-row-item';
+            row.style.cssText = 'position:relative; margin-bottom:4px;';
+
+            var pinBadge = isPinned ? '<span style="font-size:10px; color:#8C4A27; background:#FFF7ED; border:1px solid #FDBA74; border-radius:4px; padding:1px 6px; margin-bottom:4px; display:inline-flex; align-items:center; gap:3px;"><i class="fa-solid fa-thumbtack"></i> Đã ghim</span>' : '';
+
+            var actionsMenu = '';
+            if (messageId) {
+                actionsMenu = '<div class="msg-hover-actions" style="opacity:0; transition:opacity 0.15s; display:flex; gap:4px; margin-top:2px;">' +
+                    '<button type="button" onclick="togglePinMessage(' + messageId + ')" title="' + (isPinned ? 'Bỏ ghim' : 'Ghim tin nhắn') + '" style="background:none; border:none; color:#A8A29E; cursor:pointer; font-size:11px; padding:1px 3px;" onmouseover="this.style.color=\'#8C4A27\'" onmouseout="this.style.color=\'#A8A29E\'"><i class="fa-solid fa-thumbtack"></i></button>' +
+                    '<button type="button" onclick="deleteSingleMessage(' + messageId + ')" title="Xóa tin nhắn này" style="background:none; border:none; color:#A8A29E; cursor:pointer; font-size:11px; padding:1px 3px;" onmouseover="this.style.color=\'#DC2626\'" onmouseout="this.style.color=\'#A8A29E\'"><i class="fa-regular fa-trash-can"></i></button>' +
+                '</div>';
+            }
+
             if (senderType === 'CUSTOMER') {
-                row.style.cssText = 'display:flex; justify-content:flex-end;';
-                row.innerHTML = '<div style="background:#8C4A27; color:#fff; padding:9px 13px; border-radius:14px; border-top-right-radius:4px; max-width:85%; line-height:1.45; word-break:break-word; font-size:12.5px;">' + escapeMiniHtml(content) + '</div>';
+                row.style.cssText += 'display:flex; flex-direction:column; align-items:flex-end;';
+                row.innerHTML = pinBadge + 
+                    '<div style="background:#8C4A27; color:#fff; padding:9px 13px; border-radius:14px; border-top-right-radius:4px; max-width:85%; line-height:1.45; word-break:break-word; font-size:12.5px;">' + escapeMiniHtml(content) + '</div>' +
+                    actionsMenu;
             } else {
-                row.style.cssText = 'display:flex; gap:8px; align-items:flex-start;';
+                row.style.cssText += 'display:flex; gap:8px; align-items:flex-start;';
 
                 var replyHtml = (content || '')
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -2520,12 +2616,26 @@
                     '</div>';
                 }
 
-                row.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF8F5; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;"><i class="fa-solid fa-store"></i></div>' +
-                    '<div style="background:#FAF8F5; border:1px solid #ECE7DE; padding:10px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; max-width:85%; font-size:12.5px;">' +
-                        '<div>' + replyHtml + '</div>' +
-                        bookCardHtml +
+                row.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF8F5; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;"><i class="fa-solid fa-store"></i></div>' +
+                    '<div style="max-width:85%; display:flex; flex-direction:column; align-items:flex-start;">' +
+                        pinBadge +
+                        '<div style="background:#FAF8F5; border:1px solid #ECE7DE; padding:10px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; font-size:12.5px;">' +
+                            '<div>' + replyHtml + '</div>' +
+                            bookCardHtml +
+                        '</div>' +
+                        actionsMenu +
                     '</div>';
             }
+
+            row.onmouseover = function() {
+                var acts = row.querySelector('.msg-hover-actions');
+                if (acts) acts.style.opacity = '1';
+            };
+            row.onmouseout = function() {
+                var acts = row.querySelector('.msg-hover-actions');
+                if (acts) acts.style.opacity = '0';
+            };
+
             body.appendChild(row);
         }
 
@@ -2611,7 +2721,10 @@
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
-                    <button type="button" onclick="deleteCurrentActiveStoreChat()" title="Xóa toàn bộ cuộc trò chuyện với chi nhánh này" style="background:none; border:none; color:#78716C; font-size:13px; cursor:pointer; padding:3px 6px; border-radius:4px;" onmouseover="this.style.color='#DC2626'" onmouseout="this.style.color='#78716C'">
+                    <button type="button" id="btnMuteStore" onclick="toggleStoreMute(currentStoreId, currentStoreName)" title="Tắt thông báo chi nhánh này" style="background:none; border:none; color:#78716C; font-size:13px; cursor:pointer; padding:3px 5px; border-radius:4px;">
+                        <i class="fa-regular fa-bell"></i>
+                    </button>
+                    <button type="button" onclick="deleteCurrentActiveStoreChat()" title="Xóa toàn bộ cuộc trò chuyện với chi nhánh này" style="background:none; border:none; color:#78716C; font-size:13px; cursor:pointer; padding:3px 5px; border-radius:4px;" onmouseover="this.style.color='#DC2626'" onmouseout="this.style.color='#78716C'">
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
                     <a th:href="@{/ai-assistant}" target="_blank" title="Mở toàn màn hình" style="color:#78716C; font-size:12px; padding:3px 5px; text-decoration:none;">
@@ -2619,6 +2732,16 @@
                     </a>
                     <button type="button" onclick="toggleAiMiniChat()" style="background:none; border:none; color:#78716C; font-size:16px; cursor:pointer; padding:2px 5px;">&times;</button>
                 </div>
+            </div>
+
+            <!-- PINNED MESSAGE BANNER BAR -->
+            <div id="miniChatPinnedBanner" style="display:none; padding:7px 12px; background:#FFF7ED; border-bottom:1px solid #FDBA74; font-size:11.5px; color:#8C4A27; align-items:center; justify-content:space-between; gap:6px;">
+                <div style="display:flex; align-items:center; gap:6px; min-width:0; overflow:hidden;">
+                    <i class="fa-solid fa-thumbtack" style="font-size:11px; flex-shrink:0;"></i>
+                    <span style="font-weight:700; flex-shrink:0;">Ghim:</span>
+                    <span id="pinnedBannerText" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></span>
+                </div>
+                <button type="button" id="btnPinnedBannerUnpin" style="background:none; border:none; color:#8C4A27; cursor:pointer; font-size:13px; padding:0 4px; font-weight:700;" title="Bỏ ghim">&times;</button>
             </div>
 
             <!-- Khung tin nhắn của shop này -->
