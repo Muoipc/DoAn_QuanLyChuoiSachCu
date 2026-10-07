@@ -14,9 +14,6 @@ import java.util.List;
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
 
-    @Query("SELECT m FROM ChatMessage m WHERE m.user.id = :userId AND m.store.id = :storeId AND (m.isDeleted IS NULL OR m.isDeleted = false) ORDER BY m.isPinned DESC, m.createdAt ASC")
-    List<ChatMessage> findByUserIdAndStoreIdActive(@Param("userId") Long userId, @Param("storeId") Long storeId);
-
     List<ChatMessage> findByUserIdAndStoreIdOrderByCreatedAtAsc(Long userId, Long storeId);
 
     @Query("SELECT DISTINCT m.user FROM ChatMessage m WHERE m.store.id = :storeId ORDER BY m.user.fullName ASC")
