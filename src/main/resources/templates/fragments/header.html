@@ -2217,6 +2217,19 @@
         let currentStoreId = 1;
         let currentStoreName = 'Tổng Kho Sách Cũ TP.HCM';
         let currentBookId = null;
+        let pendingChatFile = null;
+        let deleteTargetStoreId = null;
+        let deleteTargetStoreName = '';
+
+        function getPinnedStores() {
+            try { return JSON.parse(localStorage.getItem('PINNED_STORES_MAP') || '{}'); } catch(e) { return {}; }
+        }
+        function getMutedStores() {
+            try { return JSON.parse(localStorage.getItem('MUTED_STORES_MAP') || '{}'); } catch(e) { return {}; }
+        }
+        function getManualUnreadStores() {
+            try { return JSON.parse(localStorage.getItem('UNREAD_MANUAL_MAP') || '{}'); } catch(e) { return {}; }
+        }
 
         function toggleAiMiniChat() {
             var widget = document.getElementById('aiMiniChatWidget');
@@ -2242,6 +2255,17 @@
             }
         }
 
+        function updateFloatingUnreadBadge(totalUnread) {
+            var badge = document.getElementById('aiFloatingUnreadBadge');
+            if (!badge) return;
+            if (totalUnread > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = totalUnread > 99 ? '99+' : totalUnread;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
         function loadShopConversations() {
             fetch('/api/chat/conversations')
                 .then(function(res) { return res.json(); })
@@ -2255,12 +2279,37 @@
 
                     if (list.length === 0) {
                         container.innerHTML = '<div style="text-align:center; padding:24px 12px; color:#A8A29E; font-size:12px;">Đang tải danh sách 5 chi nhánh TP.HCM...</div>';
+                        updateFloatingUnreadBadge(0);
                         return;
                     }
 
+                    var pinnedMap = getPinnedStores();
+                    var mutedMap = getMutedStores();
+                    var manualUnreadMap = getManualUnreadStores();
+
+                    // Sắp xếp: Shop được ghim lên đầu, tiếp theo là thời gian tin nhắn mới nhất
+                    list.sort(function(a, b) {
+                        var pinA = !!pinnedMap[a.storeId];
+                        var pinB = !!pinnedMap[b.storeId];
+                        if (pinA !== pinB) return pinA ? -1 : 1;
+                        var tA = a.lastTimestamp || '';
+                        var tB = b.lastTimestamp || '';
+                        return tB.localeCompare(tA);
+                    });
+
+                    var totalUnreadAll = 0;
                     var html = '';
                     list.forEach(function(s) {
-                        var unreadBadge = (s.unreadCount && s.unreadCount > 0) ? '<span style="background:#EE4D2D; color:#fff; font-size:10px; font-weight:700; padding:1px 6px; border-radius:9999px;">' + s.unreadCount + '</span>' : '';
+                        var isPinned = !!pinnedMap[s.storeId];
+                        var isMuted = !!mutedMap[s.storeId];
+                        var hasManualUnread = !!manualUnreadMap[s.storeId];
+                        var unreadNum = Number(s.unreadCount || 0) + (hasManualUnread ? 1 : 0);
+                        if (unreadNum > 0) totalUnreadAll += unreadNum;
+
+                        var unreadBadge = unreadNum > 0 ? '<span style="background:#EE4D2D; color:#fff; font-size:10px; font-weight:700; min-width:17px; height:17px; border-radius:9999px; display:inline-flex; align-items:center; justify-content:center; padding:0 4px;">' + (unreadNum > 99 ? '99+' : unreadNum) + '</span>' : '';
+                        var pinIcon = isPinned ? '<i class="fa-solid fa-thumbtack" style="font-size:10.5px; color:#8C4A27; margin-left:4px;" title="Đã ghim"></i>' : '';
+                        var muteIcon = isMuted ? '<i class="fa-solid fa-bell-slash" style="font-size:10px; color:#A8A29E; margin-left:4px;" title="Đã tắt thông báo"></i>' : '';
+
                         var safeName = escapeMiniHtml(s.storeName);
                         var safeDist = escapeMiniHtml(s.storeDistrict || 'TP.HCM');
                         var safeMsg = escapeMiniHtml(s.lastMessage || 'Nhắn tin hỏi sách tại quầy...');
@@ -2268,56 +2317,81 @@
                         var avt = s.storeAvatar || '/images/brand-book-icon.png';
                         var hasHistory = s.hasHistory;
 
+                        var nameStyle = unreadNum > 0 ? 'font-weight:700; color:#1C1917;' : 'font-weight:600; color:#292524;';
+                        var msgStyle = unreadNum > 0 ? 'font-weight:600; color:#1C1917;' : 'color:#78716C;';
+
                         html += '<div class="shop-conv-row" onclick="openChatWithStore(' + s.storeId + ', \'' + escapeMiniJs(s.storeName) + '\', null, null, \'' + escapeMiniJs(avt) + '\', \'' + escapeMiniJs(s.storeDistrict) + '\')" ' +
-                            'style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:10px; cursor:pointer; transition:all 0.15s; border:1px solid transparent; position:relative;" ' +
+                            'style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:10px; cursor:pointer; transition:all 0.15s; border:1px solid ' + (isPinned ? '#F5EBE1' : 'transparent') + '; background:' + (isPinned ? '#FDFBF9' : 'transparent') + '; position:relative;" ' +
                             'onmouseover="this.style.background=\'#FAF8F5\'; this.style.borderColor=\'#ECE7DE\'; var btn=this.querySelector(\'.btn-del-conv\'); if(btn) btn.style.opacity=\'1\';" ' +
-                            'onmouseout="this.style.background=\'transparent\'; this.style.borderColor=\'transparent\'; var btn=this.querySelector(\'.btn-del-conv\'); if(btn) btn.style.opacity=\'0\';">' +
+                            'onmouseout="this.style.background=\'' + (isPinned ? '#FDFBF9' : 'transparent') + '\'; this.style.borderColor=\'' + (isPinned ? '#F5EBE1' : 'transparent') + '\'; var btn=this.querySelector(\'.btn-del-conv\'); if(btn) btn.style.opacity=\'0\';">' +
                             '<div style="position:relative; width:40px; height:40px; flex-shrink:0;">' +
                                 '<img src="' + avt + '" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #E5E0D8;">' +
                                 '<span style="position:absolute; bottom:0; right:0; width:10px; height:10px; border-radius:50%; background:#10b981; border:1.5px solid #fff;"></span>' +
                             '</div>' +
                             '<div style="flex:1; min-width:0;">' +
                                 '<div style="display:flex; justify-content:space-between; align-items:center;">' +
-                                    '<strong style="font-size:12.5px; color:#1C1917; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + safeName + '</strong>' +
+                                    '<div style="display:flex; align-items:center; min-width:0; overflow:hidden;">' +
+                                        '<strong style="font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; ' + nameStyle + '">' + safeName + '</strong>' +
+                                        pinIcon + muteIcon +
+                                    '</div>' +
                                     '<span style="font-size:10.5px; color:#A8A29E; flex-shrink:0; margin-left:4px;">' + safeTime + '</span>' +
                                 '</div>' +
                                 '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">' +
-                                    '<div style="font-size:11.5px; color:#78716C; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:185px;">' + safeMsg + '</div>' +
+                                    '<div style="font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:185px; ' + msgStyle + '">' + safeMsg + '</div>' +
                                     '<div style="display:flex; align-items:center; gap:6px;">' +
                                         unreadBadge +
-                                        (hasHistory ? '<button type="button" class="btn-del-conv" onclick="deleteStoreChat(event, ' + s.storeId + ', \'' + escapeMiniJs(s.storeName) + '\')" title="Xóa cuộc trò chuyện" style="opacity:0; transition:opacity 0.15s; background:none; border:none; color:#A8A29E; cursor:pointer; padding:2px 4px; font-size:12px; border-radius:4px;" onmouseover="this.style.color=\'#DC2626\'" onmouseout="this.style.color=\'#A8A29E\'"><i class="fa-regular fa-trash-can"></i></button>' : '') +
+                                        (hasHistory ? '<button type="button" class="btn-del-conv" onclick="promptDeleteStoreChat(event, ' + s.storeId + ', \'' + escapeMiniJs(s.storeName) + '\')" title="Xóa cuộc trò chuyện" style="opacity:0; transition:opacity 0.15s; background:none; border:none; color:#A8A29E; cursor:pointer; padding:2px 4px; font-size:12px; border-radius:4px;" onmouseover="this.style.color=\'#DC2626\'" onmouseout="this.style.color=\'#A8A29E\'"><i class="fa-regular fa-trash-can"></i></button>' : '') +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
                         '</div>';
                     });
                     container.innerHTML = html;
+                    updateFloatingUnreadBadge(totalUnreadAll);
                 })
                 .catch(function(err) { console.error('Lỗi tải cuộc trò chuyện:', err); });
         }
 
-        function deleteStoreChat(e, storeId, storeName) {
+        function promptDeleteStoreChat(e, storeId, storeName) {
             if (e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
-            if (!confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện với "' + storeName + '" không?')) {
-                return;
-            }
-            fetch('/api/chat/store/' + storeId + '/delete-conversation', {
+            deleteTargetStoreId = storeId;
+            deleteTargetStoreName = storeName;
+            var modal = document.getElementById('miniChatDeleteModal');
+            var label = document.getElementById('deleteTargetStoreName');
+            if (label) label.textContent = storeName;
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeDeleteChatModal() {
+            var modal = document.getElementById('miniChatDeleteModal');
+            if (modal) modal.style.display = 'none';
+            deleteTargetStoreId = null;
+            deleteTargetStoreName = '';
+        }
+
+        function executeDeleteChat() {
+            if (!deleteTargetStoreId) return;
+            var targetId = deleteTargetStoreId;
+            var targetName = deleteTargetStoreName;
+            closeDeleteChatModal();
+
+            fetch('/api/chat/store/' + targetId + '/delete-conversation', {
                 method: 'POST'
             })
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.success) {
                     if (typeof showFlyToast === 'function') {
-                        showFlyToast('Đã xóa cuộc trò chuyện với ' + storeName);
+                        showFlyToast('Đã xóa cuộc trò chuyện với ' + targetName);
                     }
                     loadShopConversations();
-                    if (currentStoreId === storeId) {
+                    if (currentStoreId === targetId) {
                         var body = document.getElementById('miniChatBody');
                         if (body) {
-                            body.innerHTML = '<div style="text-align:center; padding:24px 12px; color:#A8A29E; font-size:12px;">Đã làm sạch lịch sử trò chuyện với ' + escapeMiniHtml(storeName) + '.</div>';
+                            body.innerHTML = '<div style="text-align:center; padding:24px 12px; color:#A8A29E; font-size:12px;">Đã làm sạch lịch sử trò chuyện với ' + escapeMiniHtml(targetName) + '.</div>';
                         }
                     }
                 } else {
@@ -2330,15 +2404,105 @@
             });
         }
 
-        function deleteCurrentActiveStoreChat() {
-            deleteStoreChat(null, currentStoreId, currentStoreName);
+        function promptDeleteCurrentStoreChat() {
+            closeStoreChatOptionsDropdown();
+            promptDeleteStoreChat(null, currentStoreId, currentStoreName);
         }
+
+        function toggleStoreChatOptionsDropdown(e) {
+            if (e) e.stopPropagation();
+            var menu = document.getElementById('storeChatOptionsDropdown');
+            if (!menu) return;
+            var isHidden = menu.style.display === 'none' || menu.style.display === '';
+            menu.style.display = isHidden ? 'block' : 'none';
+
+            if (isHidden) {
+                updateStoreChatMenuUI();
+            }
+        }
+
+        function closeStoreChatOptionsDropdown() {
+            var menu = document.getElementById('storeChatOptionsDropdown');
+            if (menu) menu.style.display = 'none';
+        }
+
+        function updateStoreChatMenuUI() {
+            var pinnedMap = getPinnedStores();
+            var mutedMap = getMutedStores();
+            var isPinned = !!pinnedMap[currentStoreId];
+            var isMuted = !!mutedMap[currentStoreId];
+
+            var optPinText = document.getElementById('optPinText');
+            if (optPinText) optPinText.textContent = isPinned ? 'Bỏ ghim hội thoại' : 'Ghim hội thoại';
+
+            var optMuteText = document.getElementById('optMuteText');
+            var optMuteIcon = document.getElementById('optMuteIcon');
+            if (optMuteText) optMuteText.textContent = isMuted ? 'Bật thông báo' : 'Tắt thông báo';
+            if (optMuteIcon) {
+                optMuteIcon.className = isMuted ? 'fa-solid fa-bell' : 'fa-solid fa-bell-slash';
+                optMuteIcon.style.color = isMuted ? '#10b981' : '#78716C';
+            }
+        }
+
+        function togglePinCurrentStore() {
+            closeStoreChatOptionsDropdown();
+            var pinnedMap = getPinnedStores();
+            if (pinnedMap[currentStoreId]) {
+                delete pinnedMap[currentStoreId];
+                if (typeof showFlyToast === 'function') showFlyToast('Đã bỏ ghim ' + currentStoreName);
+            } else {
+                pinnedMap[currentStoreId] = true;
+                if (typeof showFlyToast === 'function') showFlyToast('Đã ghim ' + currentStoreName + ' lên đầu!');
+            }
+            localStorage.setItem('PINNED_STORES_MAP', JSON.stringify(pinnedMap));
+            loadShopConversations();
+        }
+
+        function toggleMuteCurrentStore() {
+            closeStoreChatOptionsDropdown();
+            var mutedMap = getMutedStores();
+            if (mutedMap[currentStoreId]) {
+                delete mutedMap[currentStoreId];
+                if (typeof showFlyToast === 'function') showFlyToast('Đã bật lại thông báo cho ' + currentStoreName);
+            } else {
+                mutedMap[currentStoreId] = true;
+                if (typeof showFlyToast === 'function') showFlyToast('Đã tắt thông báo từ ' + currentStoreName);
+            }
+            localStorage.setItem('MUTED_STORES_MAP', JSON.stringify(mutedMap));
+            loadShopConversations();
+        }
+
+        function markCurrentStoreUnread() {
+            closeStoreChatOptionsDropdown();
+            var manualMap = getManualUnreadStores();
+            manualMap[currentStoreId] = true;
+            localStorage.setItem('UNREAD_MANUAL_MAP', JSON.stringify(manualMap));
+
+            fetch('/api/chat/store/' + currentStoreId + '/mark-unread', { method: 'POST' }).catch(function(){});
+
+            if (typeof showFlyToast === 'function') {
+                showFlyToast('Đã đánh dấu chưa đọc với ' + currentStoreName);
+            }
+            backToShopList();
+        }
+
+        document.addEventListener('click', function(e) {
+            var menu = document.getElementById('storeChatOptionsDropdown');
+            var btn = document.getElementById('btnStoreChatOptions');
+            if (menu && menu.style.display === 'block') {
+                if (btn && btn.contains(e.target)) return;
+                if (!menu.contains(e.target)) {
+                    menu.style.display = 'none';
+                }
+            }
+        });
 
         function markAllStoresRead() {
             fetch('/api/chat/conversations')
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data.success && data.conversations) {
+                        localStorage.removeItem('UNREAD_MANUAL_MAP');
                         var promises = data.conversations.map(function(s) {
                             return fetch('/api/chat/store/' + s.storeId + '/mark-read', { method: 'POST' });
                         });
@@ -2366,6 +2530,14 @@
             currentStoreName = storeName || 'Tổng Kho Sách Cũ TP.HCM';
             currentBookId = bookId || null;
 
+            // Xóa manual unread của shop này
+            var manualMap = getManualUnreadStores();
+            if (manualMap[currentStoreId]) {
+                delete manualMap[currentStoreId];
+                localStorage.setItem('UNREAD_MANUAL_MAP', JSON.stringify(manualMap));
+            }
+            fetch('/api/chat/store/' + currentStoreId + '/mark-read', { method: 'POST' }).catch(function(){});
+
             var widget = document.getElementById('aiMiniChatWidget');
             if (widget) widget.style.display = 'flex';
 
@@ -2387,6 +2559,7 @@
                 inputEl.focus();
             }
 
+            cancelChatMediaUpload();
             loadStoreChatMessages(currentStoreId, bookTitle);
         }
 
@@ -2395,7 +2568,67 @@
             var roomView = document.getElementById('miniChatRoomView');
             if (listView) listView.style.display = 'flex';
             if (roomView) roomView.style.display = 'none';
+            closeStoreChatOptionsDropdown();
+            cancelChatMediaUpload();
             loadShopConversations();
+        }
+
+        function handleClientMediaSelected(e) {
+            var file = e.target.files ? e.target.files[0] : null;
+            if (!file) return;
+
+            pendingChatFile = file;
+            var isVideo = file.type.startsWith('video/') || file.name.match(/\.(mp4|webm|mov|m4v)$/i);
+
+            var previewBar = document.getElementById('miniChatMediaPreviewBar');
+            var previewImg = document.getElementById('miniChatPreviewImg');
+            var previewVid = document.getElementById('miniChatPreviewVidIcon');
+            var nameEl = document.getElementById('miniChatMediaFileName');
+
+            if (nameEl) nameEl.textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+            if (previewBar) previewBar.style.display = 'flex';
+
+            if (isVideo) {
+                if (previewImg) previewImg.style.display = 'none';
+                if (previewVid) previewVid.style.display = 'flex';
+            } else {
+                if (previewVid) previewVid.style.display = 'none';
+                if (previewImg) {
+                    previewImg.style.display = 'block';
+                    var reader = new FileReader();
+                    reader.onload = function(evt) { previewImg.src = evt.target.result; };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function cancelChatMediaUpload() {
+            pendingChatFile = null;
+            var input = document.getElementById('clientChatMediaInput');
+            if (input) input.value = '';
+            var previewBar = document.getElementById('miniChatMediaPreviewBar');
+            if (previewBar) previewBar.style.display = 'none';
+            var statusEl = document.getElementById('miniChatUploadStatus');
+            if (statusEl) statusEl.textContent = '';
+        }
+
+        function showMiniChatTyping() {
+            var body = document.getElementById('miniChatBody');
+            if (!body) return;
+            var old = document.getElementById('miniChatTyping');
+            if (old) old.remove();
+
+            var typingRow = document.createElement('div');
+            typingRow.id = 'miniChatTyping';
+            typingRow.style.cssText = 'display:flex; gap:8px; align-items:center; color:#78716c; font-size:12px; margin-bottom:4px;';
+            typingRow.innerHTML = '<div style="width:24px; height:24px; border-radius:50%; background:#8C4A27; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px;"><i class="fa-solid fa-store"></i></div> <span style="font-style:italic;">' + escapeMiniHtml(currentStoreName) + ' đang kiểm tra...</span>';
+            body.appendChild(typingRow);
+            scrollMiniChatBottom();
+        }
+
+        function hideMiniChatTyping() {
+            var tp = document.getElementById('miniChatTyping');
+            if (tp) tp.remove();
         }
 
         function loadStoreChatMessages(storeId, autoSendBookTitle) {
@@ -2411,7 +2644,7 @@
 
                     // Tin nhắn chào mừng ban đầu
                     var welcomeDiv = document.createElement('div');
-                    welcomeDiv.style.cssText = 'display:flex; gap:8px; align-items:flex-start;';
+                    welcomeDiv.style.cssText = 'display:flex; gap:8px; align-items:flex-start; margin-bottom:4px;';
                     welcomeDiv.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF8F5; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;"><i class="fa-solid fa-store"></i></div>' +
                         '<div style="background:#FAF8F5; border:1px solid #ECE7DE; padding:9px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; max-width:85%; font-size:12.5px;">' +
                             'Chào bạn! Em là nhân viên tư vấn &amp; trực quầy tại <strong>' + escapeMiniHtml(currentStoreName) + '</strong>. Bạn đang cần kiểm tra cuốn sách nào tại chi nhánh ạ?' +
@@ -2420,7 +2653,7 @@
 
                     // Render các tin nhắn đã có
                     messages.forEach(function(m) {
-                        appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId);
+                        appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.mediaUrl, m.mediaType, m.createdAt);
                     });
 
                     scrollMiniChatBottom();
@@ -2442,29 +2675,58 @@
             var inp = document.getElementById('miniChatInput');
             if (!inp) return;
             var text = inp.value.trim();
-            if (!text) return;
+            var fileToSend = pendingChatFile;
 
-            var body = document.getElementById('miniChatBody');
+            if (!text && !fileToSend) return;
+
             inp.value = '';
+            cancelChatMediaUpload();
 
-            // User bubble
-            appendChatMessageDOM('CUSTOMER', text);
-            scrollMiniChatBottom();
+            var currentNow = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
 
-            // Typing indicator
-            var typingRow = document.createElement('div');
-            typingRow.id = 'miniChatTyping';
-            typingRow.style.cssText = 'display:flex; gap:8px; align-items:center; color:#78716c; font-size:12px;';
-            typingRow.innerHTML = '<div style="width:24px; height:24px; border-radius:50%; background:#8C4A27; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px;"><i class="fa-solid fa-store"></i></div> <span style="font-style:italic;">' + escapeMiniHtml(currentStoreName) + ' đang kiểm tra...</span>';
-            body.appendChild(typingRow);
-            scrollMiniChatBottom();
+            if (fileToSend) {
+                var formDataUpload = new FormData();
+                formDataUpload.append('file', fileToSend);
 
-            // Gửi tin nhắn đến API Store Chat
-            var formData = new URLSearchParams();
-            formData.append('content', text);
-            if (currentBookId) {
-                formData.append('bookId', currentBookId);
+                var tempPreviewUrl = URL.createObjectURL(fileToSend);
+                var isVideo = fileToSend.type.startsWith('video/') || fileToSend.name.match(/\.(mp4|webm|mov|m4v)$/i);
+                var tempMediaType = isVideo ? 'VIDEO' : 'IMAGE';
+
+                appendChatMessageDOM('CUSTOMER', text || (isVideo ? '[Video thực tế]' : '[Ảnh thực tế]'), null, null, null, null, null, tempPreviewUrl, tempMediaType, currentNow);
+                scrollMiniChatBottom();
+                showMiniChatTyping();
+
+                fetch('/api/chat/upload-media', {
+                    method: 'POST',
+                    body: formDataUpload
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(uploadRes) {
+                    if (uploadRes.success) {
+                        postChatMessageToServer(text, uploadRes.mediaUrl, uploadRes.mediaType);
+                    } else {
+                        hideMiniChatTyping();
+                        alert(uploadRes.message || 'Lỗi tải ảnh/video');
+                    }
+                })
+                .catch(function(err) {
+                    hideMiniChatTyping();
+                    console.error('Lỗi upload media:', err);
+                });
+            } else {
+                appendChatMessageDOM('CUSTOMER', text, null, null, null, null, null, null, null, currentNow);
+                scrollMiniChatBottom();
+                showMiniChatTyping();
+                postChatMessageToServer(text, null, null);
             }
+        }
+
+        function postChatMessageToServer(text, mediaUrl, mediaType) {
+            var formData = new URLSearchParams();
+            if (text) formData.append('content', text);
+            if (mediaUrl) formData.append('mediaUrl', mediaUrl);
+            if (mediaType) formData.append('mediaType', mediaType);
+            if (currentBookId) formData.append('bookId', currentBookId);
 
             fetch('/api/chat/store/' + currentStoreId + '/send', {
                 method: 'POST',
@@ -2473,31 +2735,49 @@
             })
             .then(function(res) { return res.json(); })
             .then(function(data) {
-                var tp = document.getElementById('miniChatTyping');
-                if (tp) tp.remove();
-
+                hideMiniChatTyping();
                 var reply = data.reply || 'Dạ chi nhánh đã nhận được tin nhắn của bạn.';
                 var b = data.suggestedBook || null;
+                var replyTime = data.createdAt || (new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }));
 
-                appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null);
+                appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime);
                 scrollMiniChatBottom();
             })
             .catch(function() {
-                var tp = document.getElementById('miniChatTyping');
-                if (tp) tp.remove();
+                hideMiniChatTyping();
             });
         }
 
-        function appendChatMessageDOM(senderType, content, bookTitle, bookPrice, bookImage, conditionPercent, bookId) {
+        function appendChatMessageDOM(senderType, content, bookTitle, bookPrice, bookImage, conditionPercent, bookId, mediaUrl, mediaType, createdAt) {
             var body = document.getElementById('miniChatBody');
             if (!body) return;
 
+            var timeText = createdAt || (new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }));
+
+            var mediaHtml = '';
+            if (mediaUrl) {
+                var isVid = (mediaType === 'VIDEO') || mediaUrl.match(/\.(mp4|webm|mov|m4v)$/i);
+                if (isVid) {
+                    mediaHtml = '<video src="' + mediaUrl + '" controls style="max-width:100%; max-height:220px; border-radius:8px; margin-top:6px; display:block; background:#000;"></video>';
+                } else {
+                    mediaHtml = '<img src="' + mediaUrl + '" style="max-width:100%; max-height:200px; border-radius:8px; margin-top:6px; display:block; object-fit:cover; cursor:pointer;" onclick="window.open(this.src, \'_blank\')" title="Xem ảnh">';
+                }
+            }
+
             var row = document.createElement('div');
             if (senderType === 'CUSTOMER') {
-                row.style.cssText = 'display:flex; justify-content:flex-end;';
-                row.innerHTML = '<div style="background:#8C4A27; color:#fff; padding:9px 13px; border-radius:14px; border-top-right-radius:4px; max-width:85%; line-height:1.45; word-break:break-word; font-size:12.5px;">' + escapeMiniHtml(content) + '</div>';
+                row.style.cssText = 'display:flex; flex-direction:column; align-items:flex-end; margin-bottom:4px;';
+                var textHtml = content ? ('<div>' + escapeMiniHtml(content) + '</div>') : '';
+                row.innerHTML = '<div style="background:#8C4A27; color:#fff; padding:8px 12px; border-radius:14px; border-top-right-radius:4px; max-width:85%; line-height:1.45; word-break:break-word; font-size:12.5px;">' +
+                    textHtml +
+                    mediaHtml +
+                    '<div style="font-size:9.5px; color:#E5D5C5; text-align:right; margin-top:3px; display:flex; align-items:center; justify-content:flex-end; gap:3px;">' +
+                        '<span>' + timeText + '</span>' +
+                        '<i class="fa-solid fa-check" style="font-size:9px;"></i>' +
+                    '</div>' +
+                '</div>';
             } else {
-                row.style.cssText = 'display:flex; gap:8px; align-items:flex-start;';
+                row.style.cssText = 'display:flex; gap:8px; align-items:flex-start; margin-bottom:4px;';
 
                 var replyHtml = (content || '')
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -2520,10 +2800,14 @@
                     '</div>';
                 }
 
-                row.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF8F5; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;"><i class="fa-solid fa-store"></i></div>' +
-                    '<div style="background:#FAF8F5; border:1px solid #ECE7DE; padding:10px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; max-width:85%; font-size:12.5px;">' +
+                row.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF8F5; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;"><i class="fa-solid fa-store"></i></div>' +
+                    '<div style="background:#FAF8F5; border:1px solid #ECE7DE; padding:9px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; max-width:85%; font-size:12.5px;">' +
                         '<div>' + replyHtml + '</div>' +
+                        mediaHtml +
                         bookCardHtml +
+                        '<div style="font-size:9.5px; color:#A8A29E; text-align:right; margin-top:3px;">' +
+                            '<span>' + timeText + '</span>' +
+                        '</div>' +
                     '</div>';
             }
             body.appendChild(row);
@@ -2556,6 +2840,27 @@
     <!-- WIDGET CHAT VỚI SHOP ĐA CHI NHÁNH TOÀN CỤC (GLOBAL MULTI-STORE CHAT WIDGET) -->
     <div id="aiMiniChatWidget" style="display:none; position:fixed; bottom:92px; right:28px; width:360px; height:520px; max-height:82vh; max-width:calc(100vw - 36px); z-index:999990 !important; border-radius:16px; background:#FFFFFF; border:1px solid #ECE7DE; box-shadow:0 12px 36px rgba(45, 24, 15, 0.15); flex-direction:column; overflow:hidden; transition:all 0.25s ease;">
         
+        <!-- MODAL XÁC NHẬN XÓA SHOPEE IN-APP -->
+        <div id="miniChatDeleteModal" style="display:none; position:absolute; inset:0; background:rgba(0,0,0,0.45); z-index:9999; border-radius:16px; align-items:center; justify-content:center; padding:20px;">
+            <div style="background:#FFFFFF; border-radius:14px; padding:20px 16px; width:100%; max-width:280px; box-shadow:0 12px 30px rgba(0,0,0,0.2); text-align:center;">
+                <div style="width:42px; height:42px; border-radius:50%; background:#FEE2E2; color:#DC2626; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:18px;">
+                    <i class="fa-regular fa-trash-can"></i>
+                </div>
+                <strong style="font-size:13.5px; color:#1C1917; display:block; margin-bottom:6px;">Xóa Cuộc Trò Chuyện?</strong>
+                <p style="font-size:12px; color:#78716C; line-height:1.45; margin-bottom:16px;">
+                    Toàn bộ lịch sử tin nhắn với <strong id="deleteTargetStoreName" style="color:#1C1917;"></strong> sẽ bị xóa vĩnh viễn và không thể khôi phục.
+                </p>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" onclick="closeDeleteChatModal()" style="flex:1; height:34px; border-radius:8px; border:1px solid #E5E0D8; background:#FAF8F5; color:#57534E; font-size:12px; font-weight:600; cursor:pointer;">
+                        Hủy
+                    </button>
+                    <button type="button" onclick="executeDeleteChat()" style="flex:1; height:34px; border-radius:8px; border:none; background:#DC2626; color:#FFFFFF; font-size:12px; font-weight:600; cursor:pointer;">
+                        Xác nhận xóa
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- VIEW 1: DANH SÁCH TẤT CẢ SHOP / CHI NHÁNH -->
         <div id="miniChatShopListView" style="display:flex; flex-direction:column; height:100%;">
             <!-- Header Danh Sách Shop -->
@@ -2596,8 +2901,8 @@
 
         <!-- VIEW 2: KHUNG CHAT CHI TIẾT VỚI SHOP ĐÃ CHỌN -->
         <div id="miniChatRoomView" style="display:none; flex-direction:column; height:100%;">
-            <!-- Top bar phòng chat với nút Back ← và Nút Xóa Thùng Rác 🗑 -->
-            <div style="padding:10px 14px; background:#FAF8F5; border-bottom:1px solid #ECE7DE; display:flex; justify-content:space-between; align-items:center;">
+            <!-- Top bar phòng chat với nút Back ← và Menu 3 Chấm ⋮ -->
+            <div style="padding:10px 14px; background:#FAF8F5; border-bottom:1px solid #ECE7DE; display:flex; justify-content:space-between; align-items:center; position:relative;">
                 <div style="display:flex; align-items:center; gap:8px; min-width:0;">
                     <button type="button" onclick="backToShopList()" style="background:none; border:none; color:#57534E; font-size:13px; cursor:pointer; padding:4px 6px; border-radius:4px;" title="Quay lại danh sách shop">
                         <i class="fa-solid fa-arrow-left"></i>
@@ -2610,10 +2915,30 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:6px;">
-                    <button type="button" onclick="deleteCurrentActiveStoreChat()" title="Xóa toàn bộ cuộc trò chuyện với chi nhánh này" style="background:none; border:none; color:#78716C; font-size:13px; cursor:pointer; padding:3px 6px; border-radius:4px;" onmouseover="this.style.color='#DC2626'" onmouseout="this.style.color='#78716C'">
-                        <i class="fa-regular fa-trash-can"></i>
-                    </button>
+                <div style="display:flex; align-items:center; gap:5px;">
+                    <!-- Nút Menu 3 Chấm ⋮ Chuẩn Shopee -->
+                    <div style="position:relative;">
+                        <button type="button" id="btnStoreChatOptions" onclick="toggleStoreChatOptionsDropdown(event)" title="Tùy chọn cuộc trò chuyện" style="background:none; border:none; color:#78716C; font-size:14px; cursor:pointer; padding:4px 6px; border-radius:4px;" onmouseover="this.style.color='#1C1917'" onmouseout="this.style.color='#78716C'">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                        <!-- Dropdown Menu 4 Tùy Chọn -->
+                        <div id="storeChatOptionsDropdown" style="display:none; position:absolute; right:0; top:calc(100% + 4px); background:#FFFFFF; border:1px solid #ECE7DE; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.12); width:180px; z-index:99; padding:4px 0; font-size:12px;">
+                            <button type="button" onclick="togglePinCurrentStore()" style="width:100%; text-align:left; padding:8px 12px; border:none; background:none; color:#1C1917; display:flex; align-items:center; gap:8px; cursor:pointer;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='none'">
+                                <i class="fa-solid fa-thumbtack" style="color:#8C4A27; font-size:12px; width:16px;"></i> <span id="optPinText">Ghim hội thoại</span>
+                            </button>
+                            <button type="button" onclick="toggleMuteCurrentStore()" style="width:100%; text-align:left; padding:8px 12px; border:none; background:none; color:#1C1917; display:flex; align-items:center; gap:8px; cursor:pointer;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='none'">
+                                <i class="fa-solid fa-bell-slash" style="color:#78716C; font-size:12px; width:16px;" id="optMuteIcon"></i> <span id="optMuteText">Tắt thông báo</span>
+                            </button>
+                            <button type="button" onclick="markCurrentStoreUnread()" style="width:100%; text-align:left; padding:8px 12px; border:none; background:none; color:#1C1917; display:flex; align-items:center; gap:8px; cursor:pointer;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='none'">
+                                <i class="fa-regular fa-envelope" style="color:#2563EB; font-size:12px; width:16px;"></i> <span>Đánh dấu chưa đọc</span>
+                            </button>
+                            <div style="height:1px; background:#ECE7DE; margin:4px 0;"></div>
+                            <button type="button" onclick="promptDeleteCurrentStoreChat()" style="width:100%; text-align:left; padding:8px 12px; border:none; background:none; color:#DC2626; display:flex; align-items:center; gap:8px; cursor:pointer;" onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='none'">
+                                <i class="fa-regular fa-trash-can" style="color:#DC2626; font-size:12px; width:16px;"></i> <span>Xóa cuộc trò chuyện</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <a th:href="@{/ai-assistant}" target="_blank" title="Mở toàn màn hình" style="color:#78716C; font-size:12px; padding:3px 5px; text-decoration:none;">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     </a>
@@ -2625,10 +2950,25 @@
             <div id="miniChatBody" style="flex:1; padding:12px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; font-size:13px; background:#FFFFFF;">
             </div>
 
-            <!-- Ô nhập tin nhắn -->
+            <!-- Khung xem trước Thumbnail Media (Hiện khi vừa chọn ảnh/video) -->
+            <div id="miniChatMediaPreviewBar" style="display:none; padding:6px 12px; background:#FAF8F5; border-top:1px solid #ECE7DE; align-items:center; gap:8px;">
+                <div style="position:relative; width:44px; height:44px; border-radius:6px; overflow:hidden; border:1px solid #E5E0D8; flex-shrink:0;">
+                    <img id="miniChatPreviewImg" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+                    <div id="miniChatPreviewVidIcon" style="width:100%; height:100%; display:none; align-items:center; justify-content:center; background:#1C1917; color:#fff; font-size:14px;"><i class="fa-solid fa-video"></i></div>
+                    <button type="button" onclick="cancelChatMediaUpload()" style="position:absolute; top:2px; right:2px; width:16px; height:16px; border-radius:50%; background:rgba(0,0,0,0.65); color:#fff; border:none; font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
+                </div>
+                <span id="miniChatMediaFileName" style="font-size:11.5px; color:#57534E; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></span>
+                <span id="miniChatUploadStatus" style="font-size:10.5px; color:#8C4A27; font-weight:600;"></span>
+            </div>
+
+            <!-- Ô nhập tin nhắn & nút đính kèm ảnh/video -->
             <div style="padding:10px 12px; background:#FAF8F5; border-top:1px solid #ECE7DE; display:flex; gap:8px; align-items:center;">
+                <input type="file" id="clientChatMediaInput" accept="image/*,video/*" style="display:none;" onchange="handleClientMediaSelected(event)">
+                <button type="button" onclick="document.getElementById('clientChatMediaInput').click()" title="Đính kèm ảnh hoặc video thực tế" style="width:36px; height:36px; border-radius:8px; border:1px solid #E5E0D8; background:#FFFFFF; color:#78716C; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;" onmouseover="this.style.color='#8C4A27'; this.style.borderColor='#8C4A27'" onmouseout="this.style.color='#78716C'; this.style.borderColor='#E5E0D8'">
+                    <i class="fa-regular fa-image"></i>
+                </button>
                 <input type="text" id="miniChatInput" placeholder="Nhắn tin cho chi nhánh..." style="flex:1; height:36px; border-radius:8px; border:1px solid #E5E0D8; padding:0 12px; font-size:12.5px; outline:none; background:#FFFFFF; color:#1C1917;" onkeydown="if(event.key==='Enter') sendMiniChatMessage()">
-                <button type="button" onclick="sendMiniChatMessage()" style="width:36px; height:36px; border-radius:8px; border:none; background:#8C4A27; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px;">
+                <button type="button" onclick="sendMiniChatMessage()" style="width:36px; height:36px; border-radius:8px; border:none; background:#8C4A27; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0;">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </div>
@@ -2636,10 +2976,11 @@
 
     </div>
 
-    <!-- NÚT CHAT VỚI SHOP NỔI TOÀN CỤC (FLOATING FAB) -->
-    <div id="aiFloatingBtn" class="ai-floating-widget-btn" onclick="toggleAiMiniChat()" title="Chat với Cửa Hàng">
+    <!-- NÚT CHAT VỚI SHOP NỔI TOÀN CỤC (FLOATING FAB VỚI UNREAD BADGE) -->
+    <div id="aiFloatingBtn" class="ai-floating-widget-btn" onclick="toggleAiMiniChat()" title="Chat với Cửa Hàng" style="position:relative;">
         <i class="fa-solid fa-comments"></i>
         <span class="ai-floating-status-dot"></span>
+        <span id="aiFloatingUnreadBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#EE4D2D; color:#FFFFFF; font-size:11px; font-weight:700; min-width:18px; height:18px; border-radius:9999px; align-items:center; justify-content:center; padding:0 4px; border:2px solid #FFFFFF; box-shadow:0 2px 6px rgba(0,0,0,0.2);"></span>
     </div>
 </th:block>
 
