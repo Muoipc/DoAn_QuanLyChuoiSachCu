@@ -401,99 +401,152 @@
             background: #FAF6F0;
         }
 
-        /* ================= THANH TABS CHỢ TỐT ĐỒNG BỘ ================= */
-        .chotot-feed-tabs-bar {
+        /* ================= THANH TIÊU ĐỀ & SẮP XẾP TINH GỌN 1 HÀNG ================= */
+        .search-compact-header-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 16px;
             margin-bottom: 18px;
-            border-bottom: 2px solid #F0ECE4;
-            padding-bottom: 0px;
-        }
-
-        .chotot-feed-tabs {
-            display: flex;
-            align-items: center;
-            gap: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #ECE7DE;
             flex-wrap: wrap;
         }
 
-        .chotot-feed-tab {
-            font-size: 15px;
-            font-weight: 700;
-            color: #78716C;
-            text-decoration: none;
-            padding-bottom: 10px;
-            position: relative;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .chotot-feed-tab:hover {
-            color: #1C1917;
-        }
-
-        .chotot-feed-tab.active {
-            color: #1C1917;
-            font-weight: 800;
-        }
-
-        .chotot-feed-tab.active::after {
-            content: "";
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: #1C1917;
-            border-radius: 9999px;
-        }
-
-        .pagination-mini {
+        .search-compact-title-group {
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
+            min-width: 0;
         }
-        .page-num-mini {
+
+        .search-title-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .search-heading {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1C1917;
+            margin: 0;
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+        }
+
+        .search-count-badge {
             font-size: 13px;
             color: #78716C;
-            font-weight: 600;
+            font-weight: 500;
         }
-        .page-current-mini {
+
+        .btn-clear-cat-filter {
+            font-size: 11.5px;
             color: #8C4A27;
-            font-weight: 800;
+            font-weight: 600;
+            text-decoration: none;
+            background: #FAF8F5;
+            border: 1px solid #E5E0D8;
+            padding: 2px 8px;
+            border-radius: 6px;
+            transition: all 0.15s;
+            margin-left: 4px;
         }
-        .page-nav-mini {
+
+        .btn-clear-cat-filter:hover {
+            color: #EE4D2D;
+            border-color: #EE4D2D;
+            background: #FFF5F1;
+        }
+
+        .search-compact-controls {
             display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .sort-selector-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: #FFFFFF;
+        }
+
+        .sort-label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #78716C;
+            display: flex;
+            align-items: center;
             gap: 4px;
         }
-        .page-btn-mini {
-            width: 32px;
-            height: 32px;
+
+        .sort-native-select {
+            height: 34px;
+            padding: 0 10px;
+            border-radius: 8px;
+            border: 1px solid #E5E0D8;
+            background: #FFFFFF;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #1C1917;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.15s;
+        }
+
+        .sort-native-select:focus,
+        .sort-native-select:hover {
+            border-color: #8C4A27;
+            box-shadow: 0 0 0 2px rgba(140, 74, 39, 0.08);
+        }
+
+        .pagination-mini-compact {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .page-num-compact {
+            font-size: 12px;
+            font-weight: 600;
+            color: #78716C;
+        }
+
+        .page-btn-compact {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid #E5E0D8;
+            background: #FFFFFF;
+            color: #574E45;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #ffffff;
-            border: 1px solid #E5E0D8;
-            border-radius: 6px;
-            color: #574E45;
-            font-size: 11px;
-            cursor: pointer;
+            font-size: 10.5px;
             text-decoration: none;
-            transition: all 0.15s ease;
+            transition: all 0.15s;
         }
-        .page-btn-mini.disabled {
+
+        .page-btn-compact:hover:not(.disabled) {
+            border-color: #8C4A27;
+            color: #8C4A27;
+            background: #FAF8F5;
+        }
+
+        .page-btn-compact.disabled {
             background: #F5F5F5;
             color: #D6D3D1;
             cursor: not-allowed;
             pointer-events: none;
         }
-        .page-btn-mini:not(.disabled):hover {
-            border-color: #8C4A27;
-            color: #8C4A27;
+
+        .chotot-feed-tabs-bar {
+            display: none;
         }
 
         /* ================= LƯỚI SẢN PHẨM 5 CỘT TOÀN DIỆN ================= */
@@ -1253,50 +1306,58 @@
     <!-- CONTENT CHÍNH DƯỚI NỀN TRẮNG THUẦN KHIẾT (CÁCH MÉP SEARCH BAR 24PX) -->
     <div class="container-shopee" style="padding-top: 24px;">
 
-        <!-- Tiêu đề Thể loại nếu đang duyệt theo category -->
-        <div th:if="${selectedCat != null}" style="margin: 12px 0 16px 0; display:flex; align-items:baseline; gap:10px;">
-            <h1 style="font-size: 21px; font-weight: 800; color: #1C1917; margin: 0;">
-                <th:block th:each="c : ${categories}">
-                    <span th:if="${c.id == selectedCat}" th:text="${c.categoryName}">Kinh Tế &amp; Quản Trị</span>
-                </th:block>
-            </h1>
-            <span style="font-size: 13.5px; color: #78716C; font-weight: 500;" th:text="'(' + ${totalFound} + ' sách cũ tại TP.HCM)'">(24 sách cũ tại TP.HCM)</span>
-            <a th:href="@{/search(keyword=${selectedQuery}, store=${selectedStore}, sort=${selectedSort})}" style="margin-left: 10px; font-size: 13px; color: #8C4A27; font-weight: 600; text-decoration: none;" onmouseover="this.style.color='#EE4D2D'" onmouseout="this.style.color='#8C4A27'">&times; Bỏ lọc thể loại</a>
-        </div>
+        <!-- THANH TIÊU ĐỀ & SẮP XẾP TINH GỌN 1 HÀNG CHUẨN MINIMALIST -->
+        <div class="search-compact-header-bar">
+            <!-- Bên trái: Tiêu đề Thể loại / Từ khóa + Số lượng + Bỏ lọc -->
+            <div class="search-compact-title-group">
+                <div th:if="${selectedCat != null}" class="search-title-wrap">
+                    <h1 class="search-heading">
+                        <th:block th:each="c : ${categories}">
+                            <span th:if="${c.id == selectedCat}" th:text="${c.categoryName}">Kinh Tế &amp; Quản Trị</span>
+                        </th:block>
+                    </h1>
+                    <span class="search-count-badge" th:text="'(' + ${totalFound} + ' sách cũ tại TP.HCM)'">(24 sách cũ tại TP.HCM)</span>
+                    <a th:href="@{/search(keyword=${selectedQuery}, store=${selectedStore}, sort=${selectedSort})}" class="btn-clear-cat-filter" title="Bỏ lọc thể loại">&times; Bỏ lọc</a>
+                </div>
 
-        <!-- Tiêu đề Từ khóa nếu tìm kiếm không theo category -->
-        <div th:if="${selectedCat == null and selectedQuery != null and selectedQuery != ''}" style="margin: 4px 0 14px 0; display:flex; align-items:baseline; gap:10px;">
-            <h1 style="font-size: 20px; font-weight: 800; color: #1C1917; margin: 0;" th:text="'Kết quả tìm kiếm cho: &quot;' + ${selectedQuery} + '&quot;'">Kết quả tìm kiếm</h1>
-            <span style="font-size: 13.5px; color: #78716C; font-weight: 500;" th:text="'(' + ${totalFound} + ' sách cũ)'">(12 sách cũ)</span>
-        </div>
+                <div th:if="${selectedCat == null and selectedQuery != null and selectedQuery != ''}" class="search-title-wrap">
+                    <h1 class="search-heading" th:text="'Kết quả: &quot;' + ${selectedQuery} + '&quot;'">Kết quả tìm kiếm</h1>
+                    <span class="search-count-badge" th:text="'(' + ${totalFound} + ' sách cũ)'">(12 sách cũ)</span>
+                </div>
 
-        <!-- THANH TAB SẮP XẾP TINH GỌN CHUẨN CHỢ TỐT -->
-        <div class="chotot-feed-tabs-bar">
-            <div class="chotot-feed-tabs">
-                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='popular')}" 
-                   class="chotot-feed-tab" th:classappend="${selectedSort == 'popular' or selectedSort == null} ? 'active' : ''">Phổ Biến</a>
-                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='latest')}" 
-                   class="chotot-feed-tab" th:classappend="${selectedSort == 'latest'} ? 'active' : ''">Mới Nhất</a>
-                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='sales')}" 
-                   class="chotot-feed-tab" th:classappend="${selectedSort == 'sales'} ? 'active' : ''">Bán Chạy Nhất</a>
-                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='price-asc')}" 
-                   class="chotot-feed-tab" th:classappend="${selectedSort == 'price-asc'} ? 'active' : ''">Giá Thấp &rarr; Cao</a>
-                <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='price-desc')}" 
-                   class="chotot-feed-tab" th:classappend="${selectedSort == 'price-desc'} ? 'active' : ''">Giá Cao &rarr; Thấp</a>
+                <div th:if="${selectedCat == null and (selectedQuery == null or selectedQuery == '')}" class="search-title-wrap">
+                    <h1 class="search-heading">Tất Cả Sách Cũ</h1>
+                    <span class="search-count-badge" th:text="'(' + ${totalFound} + ' sách tại TP.HCM)'">(150 sách)</span>
+                </div>
             </div>
 
-            <!-- Cụm Phân Trang Mini Góc Phải -->
-            <div class="pagination-mini" th:if="${totalPages != null and totalPages > 1}">
-                <div class="page-num-mini">
-                    <span class="page-current-mini" th:text="${currentPage != null ? currentPage : 1}">1</span>/<span th:text="${totalPages != null ? totalPages : 1}">1</span>
+            <!-- Bên phải: Dropdown Sắp xếp + Phân trang Mini -->
+            <div class="search-compact-controls">
+                <div class="sort-selector-wrapper">
+                    <span class="sort-label"><i class="fa-solid fa-arrow-down-short-wide"></i> Sắp xếp:</span>
+                    <select class="sort-native-select" onchange="location.href=this.value">
+                        <option th:value="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='popular')}"
+                                th:selected="${selectedSort == 'popular' or selectedSort == null}">Phổ Biến</option>
+                        <option th:value="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='latest')}"
+                                th:selected="${selectedSort == 'latest'}">Mới Nhất</option>
+                        <option th:value="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='sales')}"
+                                th:selected="${selectedSort == 'sales'}">Bán Chạy Nhất</option>
+                        <option th:value="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='price-asc')}"
+                                th:selected="${selectedSort == 'price-asc'}">Giá Thấp → Cao</option>
+                        <option th:value="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='price-desc')}"
+                                th:selected="${selectedSort == 'price-desc'}">Giá Cao → Thấp</option>
+                    </select>
                 </div>
-                <div class="page-nav-mini">
+
+                <!-- Phân trang mini góc phải -->
+                <div class="pagination-mini-compact" th:if="${totalPages != null and totalPages > 1}">
+                    <span class="page-num-compact"><span th:text="${currentPage != null ? currentPage : 1}">1</span>/<span th:text="${totalPages}">1</span></span>
                     <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage != null and currentPage > 1 ? currentPage - 1 : 1})}"
-                       class="page-btn-mini" th:classappend="${!hasPrev} ? 'disabled' : ''" aria-label="Trang trước">
+                       class="page-btn-compact" th:classappend="${!hasPrev} ? 'disabled' : ''" aria-label="Trang trước">
                         <i class="fa-solid fa-chevron-left"></i>
                     </a>
                     <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort=${selectedSort}, page=${currentPage != null and currentPage < totalPages ? currentPage + 1 : totalPages})}"
-                       class="page-btn-mini" th:classappend="${!hasNext} ? 'disabled' : ''" aria-label="Trang sau">
+                       class="page-btn-compact" th:classappend="${!hasNext} ? 'disabled' : ''" aria-label="Trang sau">
                         <i class="fa-solid fa-chevron-right"></i>
                     </a>
                 </div>

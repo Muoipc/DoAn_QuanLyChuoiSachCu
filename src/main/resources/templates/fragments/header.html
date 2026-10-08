@@ -3001,10 +3001,7 @@
                         <i class="fa-solid fa-comments"></i>
                     </div>
                     <div>
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <strong style="font-size:14.5px; color:#18181B; letter-spacing:-0.2px;">Tin Nhắn Chi Nhánh</strong>
-                            <span style="background:#FAF5F0; color:#8C4A27; font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:9999px;" id="shopConvCount">5</span>
-                        </div>
+                        <strong style="font-size:14.5px; color:#18181B; letter-spacing:-0.2px;">Tin Nhắn Chi Nhánh</strong>
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
@@ -3051,33 +3048,7 @@
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:2px; flex-shrink:0;">
-                    <!-- Nút Menu 3 Chấm ⋮ Chuẩn Shopee -->
-                    <div style="position:relative;">
-                        <button type="button" id="btnStoreChatOptions" onclick="toggleStoreChatOptionsDropdown(event)" title="Tùy chọn cuộc trò chuyện" style="width:26px; height:26px; border-radius:50%; background:none; border:none; color:#71717A; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;" onmouseover="this.style.background='#F4F4F5'; this.style.color='#18181B';" onmouseout="this.style.background='none'; this.style.color='#71717A';">
-                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                        </button>
-                        <!-- Dropdown Menu 4 Tùy Chọn -->
-                        <div id="storeChatOptionsDropdown" style="display:none; position:absolute; right:0; top:calc(100% + 6px); background:#FFFFFF; border:1px solid rgba(0,0,0,0.08); border-radius:12px; box-shadow:0 12px 28px -4px rgba(0,0,0,0.15), 0 4px 8px -2px rgba(0,0,0,0.05); width:184px; z-index:99; padding:5px; font-size:12.5px;">
-                            <button type="button" onclick="togglePinCurrentStore()" style="width:100%; text-align:left; padding:8px 10px; border-radius:8px; border:none; background:none; color:#18181B; display:flex; align-items:center; gap:9px; cursor:pointer; font-weight:500;" onmouseover="this.style.background='#F4F4F5'" onmouseout="this.style.background='none'">
-                                <i class="fa-solid fa-thumbtack" style="color:#8C4A27; font-size:12px; width:16px;"></i> <span id="optPinText">Ghim hội thoại</span>
-                            </button>
-                            <button type="button" onclick="toggleMuteCurrentStore()" style="width:100%; text-align:left; padding:8px 10px; border-radius:8px; border:none; background:none; color:#18181B; display:flex; align-items:center; gap:9px; cursor:pointer; font-weight:500;" onmouseover="this.style.background='#F4F4F5'" onmouseout="this.style.background='none'">
-                                <i class="fa-solid fa-bell-slash" style="color:#71717A; font-size:12px; width:16px;" id="optMuteIcon"></i> <span id="optMuteText">Tắt thông báo</span>
-                            </button>
-                            <button type="button" onclick="markCurrentStoreUnread()" style="width:100%; text-align:left; padding:8px 10px; border-radius:8px; border:none; background:none; color:#18181B; display:flex; align-items:center; gap:9px; cursor:pointer; font-weight:500;" onmouseover="this.style.background='#F4F4F5'" onmouseout="this.style.background='none'">
-                                <i class="fa-regular fa-envelope" style="color:#2563EB; font-size:12px; width:16px;"></i> <span>Đánh dấu chưa đọc</span>
-                            </button>
-                            <div style="height:1px; background:#F4F4F5; margin:4px 0;"></div>
-                            <button type="button" onclick="promptDeleteCurrentStoreChat()" style="width:100%; text-align:left; padding:8px 10px; border-radius:8px; border:none; background:none; color:#DC2626; display:flex; align-items:center; gap:9px; cursor:pointer; font-weight:500;" onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='none'">
-                                <i class="fa-regular fa-trash-can" style="color:#DC2626; font-size:12px; width:16px;"></i> <span>Xóa cuộc trò chuyện</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <a th:href="@{/ai-assistant}" target="_blank" title="Mở toàn màn hình" style="width:26px; height:26px; border-radius:50%; color:#71717A; font-size:11.5px; display:flex; align-items:center; justify-content:center; text-decoration:none; transition:background 0.15s;" onmouseover="this.style.background='#F4F4F5'; this.style.color='#18181B';" onmouseout="this.style.background='none'; this.style.color='#71717A';">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
-                    <button type="button" onclick="toggleAiMiniChat()" style="width:26px; height:26px; border-radius:50%; background:none; border:none; color:#71717A; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.15s;" onmouseover="this.style.background='#F4F4F5'; this.style.color='#18181B';" onmouseout="this.style.background='none'; this.style.color='#71717A';">&times;</button>
+                    <button type="button" onclick="toggleAiMiniChat()" style="width:28px; height:28px; border-radius:50%; background:none; border:none; color:#71717A; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.15s;" onmouseover="this.style.background='#F4F4F5'; this.style.color='#18181B';" onmouseout="this.style.background='none'; this.style.color='#71717A';">&times;</button>
                 </div>
             </div>
 
