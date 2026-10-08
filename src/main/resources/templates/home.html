@@ -1275,28 +1275,31 @@
             border-bottom-left-radius: 0 !important;
             border-bottom-right-radius: 0 !important;
             border-bottom: 1px solid #ECE7DE !important;
-            box-shadow: 0 -4px 16px rgba(0,0,0,0.04) !important;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
         }
 
-        /* Khung Dropdown Omnibox Floating Card */
+        /* Khung Dropdown Omnibox Liền Mạch (Không có khe hở đứt đoạn) */
         .google-omnibox-dropdown {
             position: absolute;
-            top: calc(100% + 8px);
+            top: 100%;
             left: 0;
             right: 0;
+            margin-top: -1px;
             background: #FFFFFF;
             border: 1px solid #ECE7DE;
-            border-radius: 18px;
-            box-shadow: 0 16px 44px rgba(45, 24, 15, 0.14), 0 2px 8px rgba(0, 0, 0, 0.04);
+            border-top: none;
+            border-bottom-left-radius: 18px;
+            border-bottom-right-radius: 18px;
+            box-shadow: 0 16px 36px rgba(45, 24, 15, 0.12);
             overflow: hidden;
             max-height: 480px;
             overflow-y: auto;
             z-index: 10000;
-            animation: omniboxFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: omniboxFadeIn 0.15s ease-out;
         }
         @keyframes omniboxFadeIn {
-            from { opacity: 0; transform: translateY(-4px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* CARD TRỢ LÝ AI NHỎ GỌN TINH TẾ (COMPACT GEN AI CARD) */
