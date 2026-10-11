@@ -972,24 +972,43 @@
             }
         });
 
-        // Tự động kích hoạt active sidebar item theo URL hiện tại (bổ trợ cho Thymeleaf)
+        // Tự động kích hoạt duy nhất 1 active sidebar item chính xác nhất theo URL hiện tại
         document.addEventListener('DOMContentLoaded', function() {
             const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
             const sidebarLinks = document.querySelectorAll('.sidebar-item a');
-            let matched = false;
+
+            // Xóa hết trạng thái active cũ để tránh đánh dấu trùng lặp
+            sidebarLinks.forEach(link => link.parentElement.classList.remove('active'));
+
+            let bestMatchLink = null;
+            let bestMatchLength = -1;
+
+            // 1. Ưu tiên khớp chính xác tuyệt đối (Exact Match)
             sidebarLinks.forEach(link => {
                 const href = (link.getAttribute('href') || '').replace(/\/$/, '');
+                if (!href || href === '/') return;
+
                 if (href === currentPath || (href === '/admin/reports' && (currentPath === '/admin' || currentPath === '/admin/dashboard'))) {
-                    link.parentElement.classList.add('active');
-                    matched = true;
-                } else if (href && href !== '/admin' && href !== '/' && currentPath.startsWith(href)) {
-                    link.parentElement.classList.add('active');
-                    matched = true;
+                    bestMatchLink = link;
+                    bestMatchLength = 9999; // Ưu tiên tối đa cho exact match
                 }
             });
-            if (!matched && (currentPath === '/admin' || currentPath === '/admin/dashboard')) {
-                const reportItem = document.querySelector('a[href*="/admin/reports"]');
-                if (reportItem) reportItem.parentElement.classList.add('active');
+
+            // 2. Nếu đang ở trang con (VD: /admin/books/edit/1, /admin/consignments/3), chọn prefix dài nhất có dấu '/' phân cách
+            if (!bestMatchLink) {
+                sidebarLinks.forEach(link => {
+                    const href = (link.getAttribute('href') || '').replace(/\/$/, '');
+                    if (!href || href === '/' || href === '/admin') return;
+
+                    if (currentPath.startsWith(href + '/') && href.length > bestMatchLength) {
+                        bestMatchLink = link;
+                        bestMatchLength = href.length;
+                    }
+                });
+            }
+
+            if (bestMatchLink) {
+                bestMatchLink.parentElement.classList.add('active');
             }
         });
 
