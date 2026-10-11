@@ -497,18 +497,19 @@ public class StoreChatController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model) {
 
-        List<Store> stores = storeRepository.findByIsActiveTrue();
-        Long activeStoreId = storeId;
+        boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
+        List<Store> stores;
+        Long activeStoreId;
 
-        // Nếu là Quản lý chi nhánh Thủ Đức, mặc định chọn Store ID 1
-        if (activeStoreId == null) {
-            if (userDetails != null && userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
-                activeStoreId = 1L;
-            } else if (!stores.isEmpty()) {
-                activeStoreId = stores.get(0).getId();
-            } else {
-                activeStoreId = 1L;
-            }
+        if (isAdmin) {
+            stores = storeRepository.findByIsActiveTrue();
+            activeStoreId = (storeId != null) ? storeId : (!stores.isEmpty() ? stores.get(0).getId() : 1L);
+        } else {
+            List<Store> managedStores = (userDetails != null)
+                    ? storeRepository.findByManagerId(userDetails.getId())
+                    : Collections.emptyList();
+            stores = managedStores;
+            activeStoreId = !managedStores.isEmpty() ? managedStores.get(0).getId() : 1L;
         }
 
         Store currentStore = storeRepository.findById(activeStoreId).orElse(!stores.isEmpty() ? stores.get(0) : null);
