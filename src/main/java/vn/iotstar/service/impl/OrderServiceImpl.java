@@ -480,6 +480,16 @@ public class OrderServiceImpl implements IOrderService {
             order.setPaymentStatus(Order.PaymentStatus.PAID);
         }
 
+        // Ghi nhận ghi chú hoặc lý do giao hàng từ Shipper
+        if (note != null && !note.trim().isEmpty()) {
+            String prefix = "[Lý do Shipper]: " + note.trim();
+            if (order.getCustomerNotes() == null || order.getCustomerNotes().isBlank()) {
+                order.setCustomerNotes(prefix);
+            } else {
+                order.setCustomerNotes(order.getCustomerNotes() + " | " + prefix);
+            }
+        }
+
         order.setOrderStatus(newStatus);
         Order updated = orderRepository.save(order);
 
@@ -541,6 +551,30 @@ public class OrderServiceImpl implements IOrderService {
     @Transactional(readOnly = true)
     public long countByStatus(Order.OrderStatus status) {
         return orderRepository.countByOrderStatus(status);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countByStoreIdAndStatus(Long storeId, Order.OrderStatus status) {
+        if (storeId == null) return 0;
+        return orderRepository.countByStoreIdAndOrderStatus(storeId, status);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countOrdersForShipper(Long shipperId, Order.OrderStatus status) {
+        if (shipperId == null) return 0;
+        if (status != null) {
+            return orderRepository.countByShipperIdAndOrderStatus(shipperId, status);
+        }
+        return orderRepository.countByShipperId(shipperId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public java.math.BigDecimal sumCodCollectedByShipper(Long shipperId) {
+        if (shipperId == null) return java.math.BigDecimal.ZERO;
+        return orderRepository.sumCodCollectedByShipper(shipperId);
     }
 
     @Override

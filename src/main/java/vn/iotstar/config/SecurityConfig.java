@@ -78,9 +78,30 @@ public class SecurityConfig {
                     "/ai-assistant", "/ai-assistant/**", "/help", "/help/**"
                 ).permitAll()
                 // Phân quyền phân hệ nghiệp vụ nội bộ
-                .requestMatchers("/admin/users", "/admin/users/**").hasRole("ADMIN")
-                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "MANAGER")
-                .requestMatchers("/store-manager/**").hasAnyRole("ADMIN", "MANAGER")
+                // 1. Quản trị viên toàn hệ thống (ADMIN ONLY)
+                .requestMatchers(
+                    "/admin/users", "/admin/users/**",
+                    "/admin/vouchers", "/admin/vouchers/**",
+                    "/admin/shipping-units", "/admin/shipping-units/**",
+                    "/admin/stores/create", "/admin/stores/delete/**",
+                    "/admin/categories/create", "/admin/categories/edit/**",
+                    "/admin/categories/save", "/admin/categories/delete/**"
+                ).hasRole("ADMIN")
+                // 2. Phân hệ vận hành chi nhánh & chuỗi (ADMIN & STORE MANAGER)
+                .requestMatchers(
+                    "/admin", "/admin/", "/admin/dashboard",
+                    "/admin/books", "/admin/books/**",
+                    "/admin/categories",
+                    "/admin/inventory", "/admin/inventory/**",
+                    "/admin/stores", "/admin/stores/edit/**", "/admin/stores/save",
+                    "/admin/chat", "/admin/chat/**",
+                    "/admin/orders", "/admin/orders/**",
+                    "/admin/consignments", "/admin/consignments/**",
+                    "/admin/reports", "/admin/reports/**",
+                    "/store-manager/**"
+                ).hasAnyRole("ADMIN", "MANAGER")
+                // 3. Mọi route admin còn lại mặc định thuộc ADMIN
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/shipper/**").hasAnyRole("ADMIN", "SHIPPER")
                 // Route yêu cầu người dùng phải đăng nhập (Bảo mật tài khoản & Đơn mua)
                 .requestMatchers(

@@ -145,6 +145,54 @@ public class ShipperRestController {
         }
     }
 
+    /**
+     * Tiện ích nhanh: Báo giao hàng thất bại / hoàn hàng kèm lý do
+     * POST /api/shipper/orders/{id}/fail
+     */
+    @PostMapping("/orders/{id}/fail")
+    public ResponseEntity<?> deliverFail(
+            @PathVariable("id") Long id,
+            @RequestBody(required = false) Map<String, String> payload
+    ) {
+        String reason = (payload != null && payload.get("reason") != null && !payload.get("reason").isBlank())
+                ? payload.get("reason").trim()
+                : "Khách không nhận hàng";
+        try {
+            orderService.updateOrderStatus(id, Order.OrderStatus.RETURNED, reason);
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", true);
+            resp.put("message", "Đã ghi nhận giao thất bại / hoàn hàng đơn #" + id);
+            return ResponseEntity.ok(resp);
+        } catch (Exception e) {
+            Map<String, Object> err = new HashMap<>();
+            err.put("success", false);
+            err.put("message", "Lỗi: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(err);
+        }
+    }
+
+    /**
+     * Lấy thống kê số lượng đơn và tổng tiền COD của Shipper
+     * GET /api/shipper/stats
+     */
+    @GetMapping("/stats")
+    public ResponseEntity<?> getShipperStats() {
+        Long shipperId = getCurrentShipperId();
+        if (shipperId == null) {
+            shipperId = 6L;
+        }
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("shipperId", shipperId);
+        resp.put("countAll", orderService.countOrdersForShipper(shipperId, null));
+        resp.put("countShipping", orderService.countOrdersForShipper(shipperId, Order.OrderStatus.SHIPPING));
+        resp.put("countDelivered", orderService.countOrdersForShipper(shipperId, Order.OrderStatus.DELIVERED));
+        resp.put("countReturned", orderService.countOrdersForShipper(shipperId, Order.OrderStatus.RETURNED));
+        resp.put("totalCodCollected", orderService.sumCodCollectedByShipper(shipperId));
+        return ResponseEntity.ok(resp);
+    }
+
     private Long getCurrentShipperId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {

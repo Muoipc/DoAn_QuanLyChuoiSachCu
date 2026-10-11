@@ -709,127 +709,164 @@
                 <i class="fa-solid fa-book-bookmark"></i>
             </div>
             <div class="sidebar-brand-text">
-                <h5>CHUỖI SÁCH CŨ</h5>
-                <small>Admin &amp; Manager Portal</small>
+                <h5>ReBook</h5>
+                <small th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Hệ Thống Chuỗi Sách Cũ</small>
+                <small th:if="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}">Kênh Giao Hàng Shipper</small>
+                <small th:if="${#authorization.expression('hasRole(''MANAGER'') and !hasRole(''ADMIN'')')}" th:text="${currentManagedStore != null ? currentManagedStore.storeName : 'Cổng Quản Lý Chi Nhánh'}">Quản Lý Chi Nhánh</small>
             </div>
         </a>
 
         <ul class="sidebar-menu">
-            <li class="sidebar-heading">
-                <i class="fa-solid fa-layer-group text-warning opacity-75" style="font-size: 10px;"></i>
-                <span>Kho &amp; Sách Cũ</span>
-            </li>
-            
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/books')} ? 'active' : ''">
-                <a th:href="@{/admin/books}">
-                    <i class="fa-solid fa-book"></i>
-                    <span>Quản Lý Sách Cũ</span>
-                </a>
-            </li>
+            <!-- 1. PHÂN HỆ DÀNH RIÊNG CHO SHIPPER (ROLE_SHIPPER) -->
+            <th:block th:if="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}">
+                <li class="sidebar-heading">
+                    <i class="fa-solid fa-motorcycle text-warning opacity-75" style="font-size: 10px;"></i>
+                    <span>Nghiệp Vụ Giao Hàng</span>
+                </li>
+                <li class="sidebar-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'active' : ''">
+                    <a th:href="@{/shipper/orders(status='SHIPPING')}">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <span>Đơn Cần Đi Giao</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'DELIVERED'} ? 'active' : ''">
+                    <a th:href="@{/shipper/orders(status='DELIVERED')}">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Giao Thành Công</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'RETURNED'} ? 'active' : ''">
+                    <a th:href="@{/shipper/orders(status='RETURNED')}">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Giao Thất Bại / Hoàn</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" th:classappend="${selectedStatus == null and #httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/shipper')} ? 'active' : ''">
+                    <a th:href="@{/shipper/orders}">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span>Tất Cả Đơn Hàng</span>
+                    </a>
+                </li>
+            </th:block>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/categories')} ? 'active' : ''">
-                <a th:href="@{/admin/categories}">
-                    <i class="fa-solid fa-tags"></i>
-                    <span>Danh Mục Thể Loại</span>
-                </a>
-            </li>
+            <!-- 2. PHÂN HỆ QUẢN TRỊ ADMIN & STORE MANAGER -->
+            <th:block th:unless="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}">
+                <li class="sidebar-heading">
+                    <i class="fa-solid fa-layer-group text-warning opacity-75" style="font-size: 10px;"></i>
+                    <span>Kho &amp; Sách Cũ</span>
+                </li>
+                
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/books')} ? 'active' : ''">
+                    <a th:href="@{/admin/books}">
+                        <i class="fa-solid fa-book"></i>
+                        <span>Quản Lý Sách Cũ</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory'} ? 'active' : ''">
-                <a th:href="@{/admin/inventory}">
-                    <i class="fa-solid fa-boxes-stacked"></i>
-                    <span>Quản Lý Tồn Kho</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/categories')} ? 'active' : ''">
+                    <a th:href="@{/admin/categories}">
+                        <i class="fa-solid fa-tags"></i>
+                        <span>Danh Mục Thể Loại</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory/transfer'} ? 'active' : ''">
-                <a th:href="@{/admin/inventory/transfer}">
-                    <i class="fa-solid fa-dolly"></i>
-                    <span>Tạo Chuyển Kho</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory'} ? 'active' : ''">
+                    <a th:href="@{/admin/inventory}">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <span>Quản Lý Tồn Kho</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/inventory/transfers')} ? 'active' : ''">
-                <a th:href="@{/admin/inventory/transfers}">
-                    <i class="fa-solid fa-list-check"></i>
-                    <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Duyệt Điều Chuyển' : 'Tiến Độ Chuyển Kho'}">Duyệt Điều Chuyển</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory/transfer'} ? 'active' : ''">
+                    <a th:href="@{/admin/inventory/transfer}">
+                        <i class="fa-solid fa-dolly"></i>
+                        <span>Tạo Chuyển Kho</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/stores')} ? 'active' : ''">
-                <a th:href="@{/admin/stores}">
-                    <i class="fa-solid fa-store"></i>
-                    <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Chuỗi Chi Nhánh' : 'Chi Nhánh Của Bạn'}">Chuỗi Chi Nhánh</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/inventory/transfers')} ? 'active' : ''">
+                    <a th:href="@{/admin/inventory/transfers}">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Duyệt Điều Chuyển' : 'Tiến Độ Chuyển Kho'}">Duyệt Điều Chuyển</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/chat')} ? 'active' : ''">
-                <a th:href="@{/admin/chat}">
-                    <i class="fa-solid fa-comments text-warning"></i>
-                    <span>Tin Nhắn Khách Hàng</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/stores')} ? 'active' : ''">
+                    <a th:href="@{/admin/stores}">
+                        <i class="fa-solid fa-store"></i>
+                        <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Chuỗi Chi Nhánh' : 'Chi Nhánh Của Bạn'}">Chuỗi Chi Nhánh</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-heading">
-                <i class="fa-solid fa-cart-shopping text-warning opacity-75" style="font-size: 10px;"></i>
-                <span>Đơn Hàng &amp; Ký Gửi</span>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/chat')} ? 'active' : ''">
+                    <a th:href="@{/admin/chat}">
+                        <i class="fa-solid fa-comments text-warning"></i>
+                        <span>Tin Nhắn Khách Hàng</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/orders')} ? 'active' : ''">
-                <a th:href="@{/admin/orders}">
-                    <i class="fa-solid fa-clipboard-list"></i>
-                    <span>Xử Lý Đơn Hàng</span>
-                </a>
-            </li>
+                <li class="sidebar-heading">
+                    <i class="fa-solid fa-cart-shopping text-warning opacity-75" style="font-size: 10px;"></i>
+                    <span>Đơn Hàng &amp; Ký Gửi</span>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/consignments')} ? 'active' : ''">
-                <a th:href="@{/admin/consignments}">
-                    <i class="fa-solid fa-hand-holding-dollar"></i>
-                    <span>Thẩm Định Ký Gửi</span>
-                    <span class="badge bg-danger rounded-pill ms-auto" id="sidebarConsignmentBadge"
-                          th:if="${pendingConsignmentCount != null and pendingConsignmentCount > 0}"
-                          th:text="${pendingConsignmentCount}">0</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/orders')} ? 'active' : ''">
+                    <a th:href="@{/admin/orders}">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span>Xử Lý Đơn Hàng</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/shipper')} ? 'active' : ''">
-                <a th:href="@{/shipper/orders}">
-                    <i class="fa-solid fa-motorcycle"></i>
-                    <span>Phân Hệ Shipper</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/consignments')} ? 'active' : ''">
+                    <a th:href="@{/admin/consignments}">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                        <span>Thẩm Định Ký Gửi</span>
+                        <span class="badge bg-danger rounded-pill ms-auto" id="sidebarConsignmentBadge"
+                              th:if="${pendingConsignmentCount != null and pendingConsignmentCount > 0}"
+                              th:text="${pendingConsignmentCount}">0</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-heading">
-                <i class="fa-solid fa-sliders text-warning opacity-75" style="font-size: 10px;"></i>
-                <span>Hệ Thống &amp; Báo Cáo</span>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/shipper')} ? 'active' : ''">
+                    <a th:href="@{/shipper/orders}">
+                        <i class="fa-solid fa-motorcycle"></i>
+                        <span>Phân Hệ Shipper</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/users')} ? 'active' : ''">
-                <a th:href="@{/admin/users}">
-                    <i class="fa-solid fa-users-gear"></i>
-                    <span>Người Dùng &amp; Quyền</span>
-                </a>
-            </li>
+                <li class="sidebar-heading">
+                    <i class="fa-solid fa-sliders text-warning opacity-75" style="font-size: 10px;"></i>
+                    <span>Hệ Thống &amp; Báo Cáo</span>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/vouchers')} ? 'active' : ''">
-                <a th:href="@{/admin/vouchers}">
-                    <i class="fa-solid fa-ticket"></i>
-                    <span>Mã Giảm Giá</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/users')} ? 'active' : ''">
+                    <a th:href="@{/admin/users}">
+                        <i class="fa-solid fa-users-gear"></i>
+                        <span>Người Dùng &amp; Quyền</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/shipping-units')} ? 'active' : ''">
-                <a th:href="@{/admin/shipping-units}">
-                    <i class="fa-solid fa-truck-fast"></i>
-                    <span>Đơn Vị Vận Chuyển</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/vouchers')} ? 'active' : ''">
+                    <a th:href="@{/admin/vouchers}">
+                        <i class="fa-solid fa-ticket"></i>
+                        <span>Mã Giảm Giá</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/reports')} ? 'active' : ''">
-                <a th:href="@{/admin/reports}">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <span>Thống Kê Báo Cáo</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/shipping-units')} ? 'active' : ''">
+                    <a th:href="@{/admin/shipping-units}">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <span>Đơn Vị Vận Chuyển</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/reports')} ? 'active' : ''">
+                    <a th:href="@{/admin/reports}">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Thống Kê Báo Cáo' : 'Báo Cáo Chi Nhánh'}">Thống Kê Báo Cáo</span>
+                    </a>
+                </li>
+            </th:block>
 
             <li class="sidebar-heading">
                 <i class="fa-solid fa-compass text-warning opacity-75" style="font-size: 10px;"></i>
@@ -860,11 +897,14 @@
                 <button type="button" class="navbar-toggle-btn" id="toggleSidebarBtn" title="Thu gọn / Mở rộng Sidebar">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-                <div class="branch-badge d-none d-sm-inline-flex gap-2">
-                    <i class="fa-solid fa-store text-danger"></i>
+                <div class="branch-badge d-none d-sm-inline-flex gap-2 align-items-center">
+                    <i class="fa-solid fa-motorcycle text-warning" th:if="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}"></i>
+                    <i class="fa-solid fa-store text-danger" th:unless="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}"></i>
                     <span class="fw-semibold" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Hệ Thống Chuỗi 5 Chi Nhánh TP.HCM</span>
-                    <span class="fw-semibold" th:unless="${#authorization.expression('hasRole(''ADMIN'')')}">Cổng Quản Lý Chi Nhánh Cửa Hàng</span>
-                    <span class="badge bg-success-subtle text-success border border-success-subtle py-1 px-2" style="font-size: 10px;">Hoạt Động</span>
+                    <span class="fw-semibold" th:if="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}">Cổng Điều Phối Giao Hàng Shipper</span>
+                    <span class="fw-semibold" th:if="${#authorization.expression('hasRole(''MANAGER'') and !hasRole(''ADMIN'')')}" th:text="${currentManagedStore != null ? currentManagedStore.storeName : 'Chưa Được Gán Chi Nhánh'}">Cổng Quản Lý Chi Nhánh Cửa Hàng</span>
+                    <span th:if="${#authorization.expression('hasRole(''ADMIN'') or hasRole(''SHIPPER'')') or currentManagedStore != null}" class="badge bg-success-subtle text-success border border-success-subtle py-1 px-2" style="font-size: 10px;">Hoạt Động</span>
+                    <span th:if="${#authorization.expression('hasRole(''MANAGER'') and !hasRole(''ADMIN'')') and currentManagedStore == null}" class="badge bg-warning-subtle text-warning border border-warning-subtle py-1 px-2" style="font-size: 10px;">Chưa Gán</span>
                 </div>
             </div>
 
@@ -934,6 +974,14 @@
 
         <!-- BODY CONTENT -->
         <main class="admin-content-body">
+            <!-- Cảnh báo nếu tài khoản Manager chưa được phân công chi nhánh -->
+            <div th:if="${#authorization.expression('hasRole(''MANAGER'')') and currentManagedStore == null}" class="alert alert-warning border border-warning-subtle shadow-sm d-flex align-items-center mb-3" role="alert">
+                <i class="fa-solid fa-triangle-exclamation me-2 fs-5 text-warning"></i>
+                <div>
+                    <strong>Chưa gán chi nhánh:</strong> Tài khoản quản lý của bạn chưa được liên kết với chi nhánh nào. Vui lòng liên hệ Quản trị viên (Admin) để được phân công cửa hàng phụ trách!
+                </div>
+            </div>
+
             <!-- Thông báo thành công hoặc lỗi -->
             <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
                 <i class="fa-solid fa-circle-check me-2"></i><span th:text="${successMessage}"></span>

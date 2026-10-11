@@ -62,6 +62,13 @@ public class ShipperController {
         model.addAttribute("totalPages", orderPage.getTotalPages());
         model.addAttribute("totalElements", orderPage.getTotalElements());
 
+        // 4 Chỉ số KPI vận hành thực tế cho Shipper
+        model.addAttribute("countAll", orderService.countOrdersForShipper(currentShipperId, null));
+        model.addAttribute("countShipping", orderService.countOrdersForShipper(currentShipperId, Order.OrderStatus.SHIPPING));
+        model.addAttribute("countDelivered", orderService.countOrdersForShipper(currentShipperId, Order.OrderStatus.DELIVERED));
+        model.addAttribute("countReturned", orderService.countOrdersForShipper(currentShipperId, Order.OrderStatus.RETURNED));
+        model.addAttribute("totalCodCollected", orderService.sumCodCollectedByShipper(currentShipperId));
+
         return "shipper/orders";
     }
 

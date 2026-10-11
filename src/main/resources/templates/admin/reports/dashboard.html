@@ -229,14 +229,15 @@
                 <span class="header-icon-box">
                     <i class="fa-solid fa-chart-pie" style="color: #EE4D2D;"></i>
                 </span>
-                <span>Thống Kê Doanh Thu &amp; Báo Cáo Hệ Thống</span>
+                <span th:text="${isAdmin ? 'Thống Kê Doanh Thu & Báo Cáo Hệ Thống' : 'Báo Cáo Doanh Thu & Hiệu Quả Chi Nhánh'}">Thống Kê Doanh Thu &amp; Báo Cáo Hệ Thống</span>
             </h4>
-            <p class="text-muted small mb-0">Theo dõi doanh số chuỗi 5 chi nhánh, phân tích thị phần và xuất báo cáo kiểm toán.</p>
+            <p class="text-muted small mb-0" th:if="${isAdmin}">Theo dõi doanh số chuỗi 5 chi nhánh, phân tích thị phần và xuất báo cáo kiểm toán.</p>
+            <p class="text-muted small mb-0" th:unless="${isAdmin}" th:text="'Báo cáo doanh số, cơ cấu đơn hàng và hiệu quả kinh doanh tại ' + (${managedStore != null} ? ${managedStore.storeName} : 'chi nhánh của bạn') + '.'">Báo cáo doanh số chi nhánh.</p>
         </div>
         <div class="d-flex gap-2">
             <a th:href="@{/admin/reports/export-excel}" class="btn-glass-excel">
                 <i class="fa-solid fa-file-excel fs-6" style="color: #10B981;"></i>
-                <span>Xuất Báo Cáo Excel (.xlsx)</span>
+                <span th:text="${isAdmin ? 'Xuất Báo Cáo Excel (.xlsx)' : 'Xuất Đơn Chi Nhánh (.xlsx)'}">Xuất Báo Cáo Excel (.xlsx)</span>
             </a>
         </div>
     </div>
@@ -274,7 +275,7 @@
             <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
                 <div>
                     <div class="kpi-title">Sách Đã Bán</div>
-                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalBooks != null ? summary.totalBooks : 0}">0</h4>
+                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary['totalBooks'] != null ? summary['totalBooks'] : 0}">0</h4>
                 </div>
                 <div class="kpi-icon-orb amber-gold">
                     <i class="fa-solid fa-book-bookmark"></i>
@@ -287,7 +288,7 @@
             <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
                 <div>
                     <div class="kpi-title">Sách Ký Gửi Mới</div>
-                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary.pendingConsignments != null ? summary.pendingConsignments : (summary.totalUsers != null ? summary.totalUsers : 0)}">0</h4>
+                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary['pendingConsignments'] != null ? summary['pendingConsignments'] : (summary['totalUsers'] != null ? summary['totalUsers'] : 0)}">0</h4>
                 </div>
                 <div class="kpi-icon-orb herbal-green">
                     <i class="fa-solid fa-handshake"></i>

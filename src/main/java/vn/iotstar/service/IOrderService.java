@@ -103,5 +103,11 @@ public interface IOrderService {
 
     long countByStatus(Order.OrderStatus status);
 
+    long countByStoreIdAndStatus(Long storeId, Order.OrderStatus status);
+
+    long countOrdersForShipper(Long shipperId, Order.OrderStatus status);
+
+    java.math.BigDecimal sumCodCollectedByShipper(Long shipperId);
+
     java.util.List<vn.iotstar.entity.User> findAllShippers();
 }

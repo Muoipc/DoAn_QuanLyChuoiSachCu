@@ -15,4 +15,11 @@ public interface IReportService {
     Map<String, Long> getOrderStatusDistribution();
     List<Book> getTopSellingBooks(int limit);
     void exportOrdersToExcel(HttpServletResponse response) throws IOException;
+
+    // === BÁO CÁO PHÂN QUYỀN THEO CHI NHÁNH (STORE MANAGER) ===
+    Map<String, Object> getDashboardSummaryByStore(Long storeId);
+    Map<Integer, BigDecimal> getMonthlyRevenueByStore(int year, Long storeId);
+    Map<String, Long> getOrderStatusDistributionByStore(Long storeId);
+    List<Book> getTopSellingBooksByStore(Long storeId, int limit);
+    void exportStoreOrdersToExcel(HttpServletResponse response, Long storeId) throws IOException;
 }

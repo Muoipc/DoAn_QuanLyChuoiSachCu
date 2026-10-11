@@ -69,6 +69,9 @@ public class StoreChatController {
             boolean isVideo = ext.equals(".mp4") || ext.equals(".webm") || ext.equals(".mov") || ext.equals(".m4v") ||
                     (file.getContentType() != null && file.getContentType().startsWith("video/"));
             String mediaType = isVideo ? "VIDEO" : "IMAGE";
+            if (isVideo && !ext.matches("\\.(mp4|webm|mov|m4v|mkv|avi)")) {
+                ext = ".mp4";
+            }
             String filename = "chat_" + (isVideo ? "vid_" : "img_") + System.currentTimeMillis() + "_" + UUID.randomUUID().toString().substring(0, 8) + ext;
 
             Path targetPath = Paths.get("target/classes/static/uploads/chat", filename);
@@ -374,7 +377,14 @@ public class StoreChatController {
         String lower = userText.toLowerCase().trim();
 
         // 1. NHÓM CÂU HỎI ĐẶC BIỆT CẦN THỦ KHO / QUẢN LÝ TRỰC TIẾP TRẢ LỜI
-        // (Mặc cả giá, đặt cọc giữ sách, xem góc rách/chữ ký cụ thể, khiếu nại, mua sỉ, hoặc yêu cầu gặp người thật)
+        // (Khách gửi video kiểm tra thực tế, mặc cả giá, đặt cọc giữ sách, xem góc rách/chữ ký, khiếu nại, gặp người thật)
+        if (lower.contains("[video thực tế]") || lower.contains("video") || lower.contains("clip")) {
+            String vidMsg = "Dạ chi nhánh đã nhận được video kiểm tra sách từ bạn ạ! Thủ kho / Quản lý " + store.getStoreName() + " sẽ xem video và phản hồi cho bạn ngay ít phút nữa nhé! 📹✨";
+            result.put("reply", vidMsg);
+            result.put("needsStaff", true);
+            return result;
+        }
+
         boolean isSpecial = lower.contains("giảm giá thêm") || lower.contains("bớt giá") || lower.contains("fix giá") ||
                 lower.contains("bớt không") || lower.contains("chiết khấu riêng") ||
                 lower.contains("giữ sách") || lower.contains("cọc trước") || lower.contains("đặt cọc") ||
