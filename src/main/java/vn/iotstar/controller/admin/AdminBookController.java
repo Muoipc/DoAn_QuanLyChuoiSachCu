@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,10 +14,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.iotstar.dto.BookAdminDTO;
 import vn.iotstar.entity.Book;
 import vn.iotstar.entity.Inventory;
+import vn.iotstar.entity.Store;
+import vn.iotstar.security.CustomUserDetails;
 import vn.iotstar.service.IBookService;
 import vn.iotstar.service.IInventoryService;
 import vn.iotstar.service.IStoreService;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +37,15 @@ public class AdminBookController {
 
     @Autowired
     private IInventoryService inventoryService;
+
+    private List<Store> resolveAllowedStores(CustomUserDetails userDetails) {
+        boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
+        if (isAdmin) {
+            return storeService.findActiveStores();
+        }
+        Store managedStore = (userDetails != null) ? storeService.findByManagerId(userDetails.getId()) : null;
+        return (managedStore != null) ? List.of(managedStore) : Collections.emptyList();
+    }
 
     /**
      * Danh sách sách cũ trong hệ thống (Hỗ trợ tìm kiếm, lọc theo thể loại, độ mới %, trạng thái)
@@ -67,7 +80,7 @@ public class AdminBookController {
      * Trang hiển thị form thêm mới sách cũ
      */
     @GetMapping("/create")
-    public String createForm(Model model) {
+    public String createForm(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         BookAdminDTO dto = new BookAdminDTO();
         dto.setConditionPercent(90);
         dto.setIsActive(true);
@@ -75,7 +88,7 @@ public class AdminBookController {
 
         model.addAttribute("bookDto", dto);
         model.addAttribute("categories", bookService.findAllCategories());
-        model.addAttribute("stores", storeService.findActiveStores());
+        model.addAttribute("stores", resolveAllowedStores(userDetails));
         model.addAttribute("isEdit", false);
 
         return "admin/books/form";
@@ -85,7 +98,12 @@ public class AdminBookController {
      * Trang hiển thị form chỉnh sửa sách cũ
      */
     @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable("id") Long id, Model model, RedirectAttributes redirect) {
+    public String editForm(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            Model model,
+            RedirectAttributes redirect
+    ) {
         Book book = bookService.findById(id);
         if (book == null) {
             redirect.addFlashAttribute("errorMessage", "Không tìm thấy sách với mã ID: " + id);
@@ -109,7 +127,7 @@ public class AdminBookController {
         dto.setIsActive(book.getIsActive());
         dto.setIsFeatured(book.getIsFeatured());
 
-        // Lấy số lượng tồn kho hiện tại tại các chi nhánh
+        // Lấy số lượng tồn kho hiện tại tại các chi nhánh được phép quản lý
         List<Inventory> inventories = inventoryService.findByBookId(book.getId());
         Map<Long, Integer> storeQuantities = new HashMap<>();
         for (Inventory inv : inventories) {
@@ -122,7 +140,7 @@ public class AdminBookController {
         model.addAttribute("bookDto", dto);
         model.addAttribute("book", book);
         model.addAttribute("categories", bookService.findAllCategories());
-        model.addAttribute("stores", storeService.findActiveStores());
+        model.addAttribute("stores", resolveAllowedStores(userDetails));
         model.addAttribute("isEdit", true);
 
         return "admin/books/form";
@@ -135,17 +153,30 @@ public class AdminBookController {
     public String saveBook(
             @Valid @ModelAttribute("bookDto") BookAdminDTO bookDto,
             BindingResult bindingResult,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model,
             RedirectAttributes redirect
     ) {
+        List<Store> allowedStores = resolveAllowedStores(userDetails);
         if (bindingResult.hasErrors()) {
             model.addAttribute("categories", bookService.findAllCategories());
-            model.addAttribute("stores", storeService.findActiveStores());
+            model.addAttribute("stores", allowedStores);
             model.addAttribute("isEdit", bookDto.getId() != null);
             if (bookDto.getId() != null) {
                 model.addAttribute("book", bookService.findById(bookDto.getId()));
             }
             return "admin/books/form";
+        }
+
+        // Nếu là Manager, chỉ cho phép cập nhật tồn kho của chi nhánh mình phụ trách
+        boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
+        if (!isAdmin && bookDto.getStoreQuantities() != null) {
+            Store managedStore = (userDetails != null) ? storeService.findByManagerId(userDetails.getId()) : null;
+            Map<Long, Integer> filtered = new HashMap<>();
+            if (managedStore != null && bookDto.getStoreQuantities().containsKey(managedStore.getId())) {
+                filtered.put(managedStore.getId(), bookDto.getStoreQuantities().get(managedStore.getId()));
+            }
+            bookDto.setStoreQuantities(filtered);
         }
 
         try {
