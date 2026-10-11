@@ -737,7 +737,7 @@
             <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory'} ? 'active' : ''">
                 <a th:href="@{/admin/inventory}">
                     <i class="fa-solid fa-boxes-stacked"></i>
-                    <span>Tồn Kho Chi Nhánh</span>
+                    <span>Quản Lý Tồn Kho</span>
                 </a>
             </li>
 
@@ -759,6 +759,13 @@
                 <a th:href="@{/admin/stores}">
                     <i class="fa-solid fa-store"></i>
                     <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Chuỗi Chi Nhánh' : 'Chi Nhánh Của Bạn'}">Chuỗi Chi Nhánh</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/chat')} ? 'active' : ''">
+                <a th:href="@{/admin/chat}">
+                    <i class="fa-solid fa-comments text-warning"></i>
+                    <span>Tin Nhắn Khách Hàng</span>
                 </a>
             </li>
 

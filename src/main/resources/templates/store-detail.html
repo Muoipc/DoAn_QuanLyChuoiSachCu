@@ -13,19 +13,19 @@
 
     <style>
         :root {
-            --color-fire: #ee4d2d;
-            --color-fire-dark: #d03b1b;
+            --color-fire: #8C4A27;
+            --color-fire-dark: #733615;
             --color-wood: #8C4A27;
             --color-wood-dark: #2D180F;
-            --color-paper: #FAF6F0;
-            --color-border: rgba(232, 222, 200, 0.7);
+            --color-paper: #FFFFFF;
+            --color-border: #ECE7DE;
             --color-text-main: #1C1917;
             --color-text-sub: #78716C;
         }
 
         body {
-            font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--color-paper);
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #FFFFFF;
             color: var(--color-text-main);
             margin: 0;
             padding: 0;
@@ -37,67 +37,65 @@
             margin: 0 auto;
         }
 
-        /* 2. SHOP BANNER & PROFILE HEADER (CHUẨN SHOPEE IMAGE_F83F6B.PNG) */
+        /* 2. SHOP BANNER & PROFILE HEADER (MINIMALISM STOREFRONT) */
         .shop-storefront-header {
             background: #ffffff;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-            margin: 20px 0 12px;
-            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid #ECE7DE;
+            box-shadow: none;
+            margin: 16px 0 12px;
+            padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 28px;
         }
 
-        /* Khối Card bên trái nền tối đặc trưng Shopee */
+        /* Khối Card bên trái phong cách Minimal */
         .shop-profile-dark-card {
-            width: 390px;
-            min-width: 390px;
-            height: 135px;
-            background: linear-gradient(135deg, rgba(40, 24, 15, 0.95) 0%, rgba(60, 32, 20, 0.92) 100%), 
-                        url('/images/hero-books-vintage.jpg') center/cover no-repeat;
-            background-blend-mode: overlay;
-            border-radius: 4px;
+            width: 380px;
+            min-width: 380px;
+            height: 130px;
+            background: #FAF8F5;
+            border: 1px solid #ECE7DE;
+            border-radius: 12px;
             padding: 14px 18px;
             display: flex;
             align-items: center;
             gap: 16px;
             box-sizing: border-box;
-            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.15);
+            box-shadow: none;
         }
 
         .shop-avatar-container {
             position: relative;
-            width: 70px;
-            height: 70px;
+            width: 68px;
+            height: 68px;
             flex-shrink: 0;
         }
         .shop-avatar-img {
-            width: 70px;
-            height: 70px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.9);
+            border: 2px solid #ffffff;
             background: #ffffff;
             object-fit: cover;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
         }
         .shop-official-badge {
             position: absolute;
             bottom: -4px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #ee4d2d, #d94420);
+            background: #EE4D2D;
             color: #ffffff;
             font-size: 9px;
             font-weight: 700;
-            padding: 2px 8px;
+            padding: 1px 7px;
             border-radius: 9999px;
             white-space: nowrap;
             border: 1.5px solid #ffffff;
-            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.3);
             z-index: 2;
-            letter-spacing: 0.3px;
         }
 
         .shop-meta-titles {
@@ -108,9 +106,9 @@
             min-width: 0;
         }
         .shop-title-h1 {
-            font-size: 14px;
+            font-size: 14.5px;
             font-weight: 700;
-            color: #ffffff;
+            color: #1C1917;
             margin: 0;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -119,8 +117,8 @@
             line-height: 1.35;
         }
         .shop-status-line {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 11.5px;
+            color: #78716C;
             margin: 2px 0 8px;
         }
 
@@ -130,13 +128,13 @@
             gap: 8px;
         }
         .btn-shop-follow {
-            background: transparent;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.75);
-            border-radius: 2px;
-            padding: 4px 14px;
+            background: #FFFFFF;
+            color: #1C1917;
+            border: 1px solid #D6CEBE;
+            border-radius: 6px;
+            padding: 5px 14px;
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -145,22 +143,24 @@
             white-space: nowrap;
         }
         .btn-shop-follow:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: #ffffff;
+            border-color: #8C4A27;
+            color: #8C4A27;
+            background: #FAF8F5;
         }
         .btn-shop-follow.followed {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.5);
+            background: #FAF8F5;
+            border-color: #ECE7DE;
+            color: #78716C;
             cursor: default;
         }
         .btn-shop-chat-top {
-            background: transparent;
+            background: #8C4A27;
             color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.75);
-            border-radius: 2px;
-            padding: 4px 14px;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 14px;
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -169,11 +169,10 @@
             white-space: nowrap;
         }
         .btn-shop-chat-top:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: #ffffff;
+            background: #733615;
         }
 
-        /* 2 CỘT CHỈ SỐ UY TÍN (KHỚP 100% ẢNH SHOPEE IMAGE_F83F6B.PNG) */
+        /* 2 CỘT CHỈ SỐ UY TÍN (MINIMALISM) */
         .shop-stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -213,14 +212,14 @@
             margin-left: 2px;
         }
 
-        /* 2.5 VOUCHERS CAROUSEL (MINI COMPACT CHUẨN SHOPEE) */
+        /* 2.5 VOUCHERS CAROUSEL (MINIMALISM) */
         .shop-vouchers-carousel {
-            background: #ffffff;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 8px 14px;
-            margin-bottom: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            background: #FAF8F5;
+            border-radius: 12px;
+            border: 1px solid #ECE7DE;
+            padding: 10px 16px;
+            margin-bottom: 16px;
+            box-shadow: none;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -250,18 +249,19 @@
             height: 3px;
         }
         .voucher-cards-flex::-webkit-scrollbar-thumb {
-            background: #e2d2b8;
+            background: #E5E0D8;
             border-radius: 3px;
         }
         .shop-voucher-badge-item {
-            background: linear-gradient(135deg, #FFF9F6 0%, #FFFFFF 100%);
-            border: 1px dashed rgba(238, 77, 45, 0.35);
-            border-radius: 3px;
-            padding: 4px 8px 4px 10px;
+            background: #FFFFFF;
+            border: 1px solid #E5E0D8;
+            border-radius: 8px;
+            padding: 6px 12px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
         .voucher-info-col {
             display: flex;
@@ -270,53 +270,56 @@
             white-space: nowrap;
         }
         .voucher-badge-val {
-            font-size: 12px;
+            font-size: 12.5px;
             font-weight: 700;
             color: var(--color-fire);
         }
         .voucher-badge-sub {
-            font-size: 11px;
+            font-size: 11.5px;
             color: #78716C;
         }
         .btn-save-shop-vc {
-            background: var(--color-fire);
-            color: #ffffff;
-            border: none;
-            border-radius: 2px;
-            padding: 2px 8px;
-            font-size: 11px;
+            background: #FAF8F5;
+            color: var(--color-fire);
+            border: 1px solid #E5E0D8;
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-size: 11.5px;
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.15s;
         }
         .btn-save-shop-vc:hover {
-            opacity: 0.9;
+            background: var(--color-fire);
+            color: #ffffff;
+            border-color: var(--color-fire);
         }
         .btn-save-shop-vc.saved {
-            background: #E8DEC8;
-            color: #78716C;
+            background: #F5F5F4;
+            color: #A8A29E;
+            border-color: #E7E5E4;
             cursor: default;
         }
 
-        /* 3. SHOP NAVIGATION TABS (CHUẨN SHOPEE IMAGE_F83F6B.PNG) */
+        /* 3. SHOP NAVIGATION TABS (MINIMALISM) */
         .shop-tabs-bar {
             background: #ffffff;
-            border-radius: 2px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
+            border-radius: 0;
+            border-bottom: 1px solid #ECE7DE;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
-            padding: 0 10px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            padding: 0 4px;
+            box-shadow: none;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
         .shop-tab-item {
-            padding: 14px 22px;
-            font-size: 14px;
+            padding: 12px 18px;
+            font-size: 13.5px;
             font-weight: 500;
-            color: #1C1917;
+            color: #57534E;
             text-decoration: none;
             position: relative;
             transition: color 0.15s;
@@ -327,7 +330,7 @@
             color: var(--color-fire);
         }
         .shop-tab-item.active {
-            font-weight: 600;
+            font-weight: 700;
         }
         .shop-tab-item.active::after {
             content: '';
@@ -335,8 +338,9 @@
             bottom: 0;
             left: 14px;
             right: 14px;
-            height: 3px;
+            height: 2.5px;
             background: var(--color-fire);
+            border-radius: 2px 2px 0 0;
         }
         .tab-divider-vertical {
             height: 16px;
@@ -438,9 +442,9 @@
 
         /* Thanh sắp xếp chuẩn Shopee - FLEX RESPONSIVE */
         .shop-sort-bar {
-            background: #ffffff;
-            border-radius: 8px;
-            border: 1px solid var(--color-border);
+            background: #FAF8F5;
+            border-radius: 10px;
+            border: 1px solid #ECE7DE;
             padding: 10px 16px;
             display: flex;
             align-items: center;
@@ -448,11 +452,11 @@
             flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            box-shadow: none;
         }
         .sort-label {
-            font-size: 13.5px;
-            color: var(--color-text-sub);
+            font-size: 13px;
+            color: #78716C;
             margin-right: 6px;
             white-space: nowrap;
         }
@@ -463,27 +467,27 @@
             gap: 8px;
         }
         .btn-sort-item {
-            background: #FAF6F0;
-            border: 1px solid var(--color-border);
-            border-radius: 4px;
+            background: #FFFFFF;
+            border: 1px solid #E5E0D8;
+            border-radius: 6px;
             padding: 6px 14px;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 500;
-            color: var(--color-text-main);
+            color: #57534E;
             text-decoration: none;
             cursor: pointer;
             transition: all 0.15s;
-            white-space: nowrap; /* Chống vỡ rớt dòng chữ */
+            white-space: nowrap;
         }
         .btn-sort-item:hover {
-            background: #ffffff;
-            color: var(--color-fire);
+            border-color: #8C4A27;
+            color: #8C4A27;
         }
         .btn-sort-item.active {
-            background: var(--color-fire);
+            background: #8C4A27;
             color: #ffffff;
-            border-color: var(--color-fire);
-            font-weight: 700;
+            border-color: #8C4A27;
+            font-weight: 600;
         }
 
         /* THANH PHÂN TRANG 20 ĐẦU SÁCH CỦA SHOP */
@@ -551,21 +555,21 @@
 
         .book-card-item {
             background: #ffffff;
-            border-radius: 8px;
-            border: 1px solid var(--color-border);
-            box-shadow: 0 3px 12px rgba(45, 24, 15, 0.04);
+            border-radius: 10px;
+            border: 1px solid #ECE7DE;
+            box-shadow: none;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.15s ease;
             position: relative;
             text-decoration: none;
             color: inherit;
         }
         .book-card-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.1);
-            border-color: #e2d2b8;
+            transform: translateY(-2px);
+            border-color: #8C4A27;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
         }
 
         .book-thumb-box {
@@ -670,14 +674,14 @@
             color: var(--color-text-sub);
         }
 
-        /* 5. KHỐI KỆ SÁCH SHOPEE: GỢI Ý CHO BẠN & SẢN PHẨM BÁN CHẠY (IMAGE_452C85.PNG & IMAGE_BE2A12.PNG) */
+        /* 5. KHỐI KỆ SÁCH SHOPEE: GỢI Ý CHO BẠN & SẢN PHẨM BÁN CHẠY (MINIMALISM) */
         .shop-shelf-section {
             background: #ffffff;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 16px 20px 20px;
+            border-radius: 12px;
+            border: 1px solid #ECE7DE;
+            padding: 18px 20px 20px;
             margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            box-shadow: none;
         }
         .shelf-header-row {
             display: flex;
@@ -875,8 +879,9 @@
                             <i class="fa-solid fa-plus"></i> Theo Dõi
                         </button>
                         <button type="button" class="btn-shop-chat-top" 
+                                th:data-store-id="${store.id}"
                                 th:data-store-name="${store.storeName}"
-                                onclick="chatWithStore(this.dataset.storeName)">
+                                onclick="chatWithStore(this.dataset.storeId, this.dataset.storeName)">
                             <i class="fa-regular fa-comment-dots"></i> Chat
                         </button>
                     </div>
@@ -1200,14 +1205,11 @@
         }
 
         // 2. Chat trực tiếp với chi nhánh qua Mini Chatbot
-        function chatWithStore(storeName) {
-            var fab = document.getElementById('aiFloatingBtn');
-            var widget = document.getElementById('aiMiniChatWidget');
-            if (widget && (widget.style.display === 'none' || widget.style.display === '')) {
-                if (fab) fab.click();
-            }
-            if (typeof sendMiniChatPrompt === 'function') {
-                sendMiniChatPrompt('Dạ em muốn hỏi về tồn kho và các tựa sách hay tại ' + (storeName || 'chi nhánh') + ' ạ!');
+        function chatWithStore(storeId, storeName) {
+            if (typeof openChatWithStore === 'function') {
+                openChatWithStore(storeId, storeName);
+            } else if (typeof toggleAiMiniChat === 'function') {
+                toggleAiMiniChat();
             }
         }
 
@@ -1317,13 +1319,6 @@
             window.addEventListener('popstate', function() {
                 loadStoreProductsAjax(window.location.href, false);
             });
-
-            // Nếu truy cập từ link bên ngoài có sẵn categoryId/sort/page thì cuộn mượt xuống phần sản phẩm
-            if (window.location.search.includes('categoryId=') || window.location.search.includes('cat=') || window.location.search.includes('sort=') || window.location.search.includes('page=')) {
-                if (window.scrollY < 200 && layout) {
-                    layout.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
         });
     </script>
 

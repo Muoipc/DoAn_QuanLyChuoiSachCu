@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chuỗi Sách Cũ — Sàn Mua Bán &amp; Ký Gửi Sách Cũ Giá Tốt Nhất</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +25,7 @@
             --color-discount-gold: #ffbe00;
             --color-gold-text: #b7791f;
 
-            --color-bg-body: #F8F5EE;
+            --color-bg-body: #ffffff;
             --color-card-bg: #ffffff;
             
             /* TƯƠNG PHẢN ĐẬM NÉT ĐẶC TRƯNG THEO YÊU CẦU */
@@ -47,7 +48,7 @@
         }
 
         body {
-            background-color: var(--color-bg-body);
+            background-color: #ffffff !important;
             color: var(--color-text-main);
             font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
             font-size: 14px;
@@ -335,12 +336,10 @@
 
         /* ================= 5. SHOPEE FLASH SALE SECTION ================= */
         .shopee-flash-sale {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(28px) saturate(190%) brightness(103%);
-            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%);
-            border-radius: 20px;
-            border: 1.5px solid rgba(255, 255, 255, 0.92);
-            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
+            background: #ffffff !important;
+            border-radius: 16px;
+            border: 1px solid #ECE7DE !important;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
             margin-bottom: 24px;
             overflow: hidden;
         }
@@ -603,64 +602,85 @@
             color: #78716C;
         }
 
-        /* ================= 7. GỢI Ý HÔM NAY (DAILY DISCOVER - 6 CỘT CHUẨN SHOPEE) ================= */
+        /* ================= 7. GỢI Ý HÔM NAY (FEED LISTING CHUẨN CHỢ TỐT) ================= */
         .daily-discover-section {
+            margin-top: 16px;
             margin-bottom: 40px;
         }
 
-        .daily-sticky-tab-bar {
-            background: #ffffff;
-            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-            border-top: 4px solid var(--color-fire);
-            border-bottom: 1px solid var(--color-border);
-            padding: 14px 24px;
+        .chotot-feed-tabs-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: var(--color-shadow-card);
+            border-bottom: 2px solid #F0ECE4;
+            padding-bottom: 4px;
+            margin-bottom: 16px;
         }
 
-        .daily-tab-title {
-            font-size: 16px;
-            font-weight: 900;
-            color: var(--color-fire);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .chotot-feed-tabs {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 28px;
         }
 
-        /* Lưới 6 cột sản phẩm Shopee */
+        .chotot-feed-tab {
+            font-size: 16px;
+            font-weight: 700;
+            color: #78716C;
+            text-decoration: none;
+            padding: 8px 0;
+            position: relative;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+        .chotot-feed-tab:hover {
+            color: var(--color-fire);
+        }
+        .chotot-feed-tab.active {
+            color: #1C1917;
+            font-weight: 900;
+        }
+        .chotot-feed-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #1C1917;
+            border-radius: 9999px;
+        }
+
+        /* Lưới 5 cột sản phẩm chuẩn Chợ Tốt / Sàn Sách Cũ */
         .daily-grid-6cols {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-            margin-top: 10px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-top: 12px;
         }
 
         .shopee-product-card {
             background: #ffffff;
-            border: 1px solid #f0eae1;
-            border-radius: var(--radius-sm);
+            border: 1px solid #ECE7DE;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             text-decoration: none;
             overflow: hidden;
-            box-shadow: var(--color-shadow-card);
-            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
         .shopee-product-card:hover {
-            border-color: var(--color-fire);
-            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.08);
-            transform: none;
+            border-color: rgba(140, 74, 39, 0.35);
+            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.09);
+            transform: translateY(-3px);
             z-index: 2;
         }
 
         .product-thumb-wrap {
             position: relative;
-            height: 180px;
+            height: 200px;
             width: 100%;
             background: #faf8f5;
             display: flex;
@@ -993,98 +1013,963 @@
             color: #8C4A27;
         }
 
+        /* ================= KHỐI ĐẦU TRANG ĐỒNG BỘ 1 ẢNH LIỀN MẠCH (HEADER + BANNER CHỢ TỐT) ================= */
+        .chotot-unified-top-wrapper {
+            position: relative;
+            background: transparent;
+        }
+
+        /* 1 ẢNH NỀN 3D MINH HỌA SÁCH CỔ ĐIỂN - DỊCH LÊN TRÊN HIỂN THỊ RÕ SÀN SÁCH VÀ ĐỒ HỌA */
+        .chotot-unified-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background-color: #3E2314;
+            background-image: url('/images/vintage-book-hero-bg.png');
+            background-position: center 75%; /* Dịch ảnh lên trên để lộ rõ sàn sách và chi tiết 3D */
+            background-repeat: no-repeat;
+            background-size: cover; /* Phủ kín 100% toàn bộ khung, không bao giờ bị hụt hay thiếu mảng nền */
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .chotot-hero-wrapper {
+            position: relative;
+            z-index: 10;
+            background: transparent !important;
+            padding: clamp(20px, 2.5vw, 36px) 0 clamp(70px, 10.5vw, 145px) 0 !important; /* Tự động co giãn đệm theo tỷ lệ màn hình */
+            border-bottom: none !important;
+            text-align: center;
+        }
+
+        .chotot-hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .chotot-hero-content {
+            text-align: center;
+            max-width: 780px;
+            margin: 0 auto clamp(50px, 8vw, 110px) auto !important; /* Đẩy chữ lên trên vào vùng trống màu nâu */
+            position: relative;
+        }
+
+        .chotot-hero-title {
+            font-size: clamp(22px, 2.2vw, 30px);
+            font-weight: 900;
+            color: #FFFDF9 !important;
+            letter-spacing: -0.5px;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+        }
+
+        .chotot-hero-desc {
+            font-size: clamp(12.5px, 1.1vw, 14.5px);
+            color: #F5E6D8 !important;
+            line-height: 1.4;
+            margin: 0 auto;
+            font-weight: 600;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+        }
+
+        /* ================= THANH TÌM KIẾM THU NHỎ TINH TẾ CHUẨN MOCKUP ================= */
+        .chotot-search-form-card {
+            max-width: min(680px, 92vw);
+            width: 100%;
+            height: 52px;
+            margin: 0 auto 0 auto !important;
+            transform: none !important;
+            position: relative;
+            z-index: 30;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 6px 8px 6px 18px;
+            box-shadow: 0 4px 16px rgba(34, 34, 34, 0.12);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            box-sizing: border-box;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .chotot-search-form-card:focus-within {
+            box-shadow: 0 8px 24px rgba(34, 34, 34, 0.18), 0 2px 6px rgba(0, 0, 0, 0.05);
+            transform: translateY(-1px) !important;
+        }
+
+        .chotot-input-field-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            overflow: hidden;
+        }
+
+        .chotot-lens-svg {
+            color: #8C8C8C;
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+        }
+
+        .chotot-native-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14.5px;
+            line-height: 1.4;
+            font-weight: 400;
+            color: #1C1917;
+            font-family: inherit;
+        }
+        .chotot-native-input::placeholder {
+            color: #8C8C8C;
+            font-weight: 400;
+        }
+
+        .chotot-form-actions-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Nút chọn khu vực / bộ lọc chuẩn Chợ Tốt thu nhỏ */
+        .chotot-location-button-wrap {
+            height: 38px;
+            border: 1px solid #DADADA;
+            border-radius: 10px;
+            background: #FFFFFF;
+            color: #1C1917;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s ease;
+            font-size: 13px;
+        }
+        .chotot-location-button-wrap:hover {
+            border-color: #FFAE00;
+            background: #FFFDF8;
+        }
+
+        .location-pin-svg {
+            color: #EE4D2D;
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+        }
+
+        .chotot-location-select {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 700;
+            color: #1C1917;
+            cursor: pointer;
+            padding: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: inherit;
+        }
+
+        .chevron-down-svg {
+            color: #222222;
+            flex-shrink: 0;
+            pointer-events: none;
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Nút Tìm kiếm màu nâu gỗ cổ điển thu nhỏ */
+        .chotot-submit-button {
+            height: 38px;
+            min-width: 92px;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            background: #8C4A27 !important;
+            color: #ffffff !important;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 0 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(140, 74, 39, 0.25);
+        }
+        .chotot-submit-button:hover {
+            background: #733615 !important;
+            box-shadow: 0 4px 12px rgba(115, 54, 21, 0.35);
+            transform: scale(1.02);
+        }
+        .chotot-submit-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Nút Hỏi AI trên thanh tìm kiếm (Chuẩn mượt mà & Nổi bật) */
+        .chotot-ai-spark-button {
+            height: 38px;
+            background: #FFFDF9;
+            color: #8C4A27;
+            border: 1.5px solid #E5D5C5;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 0 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: inherit;
+            white-space: nowrap;
+            box-shadow: 0 1px 4px rgba(140, 74, 39, 0.08);
+        }
+        .chotot-ai-spark-button:hover {
+            background: #8C4A27;
+            color: #FFFFFF;
+            border-color: #8C4A27;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.25);
+        }
+        .chotot-ai-spark-button:hover .ai-spark-icon {
+            transform: scale(1.15) rotate(10deg);
+        }
+        .chotot-ai-spark-button:active {
+            transform: scale(0.97);
+        }
+        .chotot-ai-spark-button .ai-spark-icon {
+            font-size: 14px;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+
+        /* ================= GOOGLE AI OVERVIEW OMNIBOX STYLES (TỐI GIẢN & TỰ ĐỘNG) ================= */
+        .search-omnibox-wrapper {
+            position: relative;
+            max-width: min(680px, 92vw);
+            margin: 0 auto;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        /* Khi mở dropdown: mép đáy của search bar phẳng ra để nối liền mạch */
+        .search-omnibox-wrapper.is-open .chotot-search-form-card {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+            border-bottom: 1px solid #ECE7DE !important;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+        }
+
+        /* Khung Dropdown Omnibox Liền Mạch (Không có khe hở đứt đoạn) */
+        .google-omnibox-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: -1px;
+            background: #FFFFFF;
+            border: 1px solid #ECE7DE;
+            border-top: none;
+            border-bottom-left-radius: 18px;
+            border-bottom-right-radius: 18px;
+            box-shadow: 0 16px 36px rgba(45, 24, 15, 0.12);
+            overflow: hidden;
+            max-height: 480px;
+            overflow-y: auto;
+            z-index: 10000;
+            animation: omniboxFadeIn 0.15s ease-out;
+        }
+        @keyframes omniboxFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* CARD TRỢ LÝ AI NHỎ GỌN TINH TẾ (COMPACT GEN AI CARD) */
+        .ai-overview-card {
+            background: #FAFAF9;
+            border: 1px solid #ECE7DE;
+            border-radius: 12px;
+            margin: 10px 12px 8px 12px;
+            padding: 10px 14px 12px 14px;
+            text-align: left !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            animation: aiCardSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes aiCardSlide {
+            from { opacity: 0; transform: translateY(-3px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ai-card-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .ai-sparkle-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #FFF7ED;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+            color: #D97706;
+            font-size: 11px;
+        }
+        .btn-clear-ai-overview {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.04);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #78716C;
+            font-size: 10.5px;
+            line-height: 1;
+            padding: 0;
+            transition: all 0.15s ease;
+        }
+        .btn-clear-ai-overview:hover {
+            color: #1C1917;
+            background: rgba(0, 0, 0, 0.09);
+        }
+
+        /* HIỆU ỨNG 3 CHẤM GEN AI ĐANG SOẠN CÂU TRẢ LỜI (SIGNATURE AI TYPING DOTS) */
+        .ai-overview-loading {
+            padding: 2px 0;
+        }
+        .ai-gen-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 0;
+        }
+        .ai-gen-dots .dot {
+            width: 5.5px;
+            height: 5.5px;
+            background: #D97706;
+            border-radius: 50%;
+            animation: aiTypingWave 1.4s infinite ease-in-out both;
+        }
+        .ai-gen-dots .dot:nth-child(1) { animation-delay: -0.32s; }
+        .ai-gen-dots .dot:nth-child(2) { animation-delay: -0.16s; }
+        .ai-gen-dots .dot:nth-child(3) { animation-delay: 0s; }
+        @keyframes aiTypingWave {
+            0%, 80%, 100% {
+                transform: scale(0.6);
+                opacity: 0.35;
+            }
+            40% {
+                transform: scale(1.15);
+                opacity: 1;
+                background: #8C4A27;
+            }
+        }
+
+        /* CON TRỎ STREAMING THANH MẢNH ĐẶC TRƯNG CỦA GEN AI */
+        .ai-stream-cursor {
+            display: inline-block;
+            width: 1.5px;
+            height: 13px;
+            background: #D97706;
+            margin-left: 2px;
+            vertical-align: -2px;
+            border-radius: 1px;
+            animation: aiStreamBlink 0.8s infinite;
+        }
+        @keyframes aiStreamBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* AI Overview Content CANH TRÁI & PHÂN CẤP RÕ RÀNG */
+        .ai-overview-content {
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: #1C1917;
+            max-height: 160px;
+            overflow-y: auto;
+            text-align: left !important;
+            direction: ltr !important;
+            scrollbar-width: thin;
+            scrollbar-color: #D7CCC8 #FAF8F5;
+        }
+        .ai-overview-content * {
+            text-align: left !important;
+        }
+        .ai-overview-content strong {
+            color: #8C4A27;
+            font-weight: 700;
+        }
+        .ai-overview-content p, .ai-overview-content ul {
+            margin: 0 0 4px 0;
+            text-align: left !important;
+        }
+
+        /* AI Overview Book Cards Carousel Compact */
+        .ai-overview-books {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            padding-top: 6px;
+            border-top: 1px solid #ECE7DE;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            scrollbar-width: none;
+        }
+        .ai-overview-books::-webkit-scrollbar { display: none; }
+        .ai-book-mini-card {
+            flex: 0 0 105px;
+            background: #fff;
+            border: 1px solid #ECE7DE;
+            border-radius: 8px;
+            overflow: hidden;
+            text-decoration: none;
+            color: #1C1917;
+            transition: all 0.15s;
+        }
+        .ai-book-mini-card:hover {
+            border-color: #8C4A27;
+            box-shadow: 0 2px 8px rgba(140,74,39,0.12);
+            transform: translateY(-2px);
+        }
+        .ai-book-mini-card img {
+            width: 100%;
+            height: 64px;
+            object-fit: cover;
+        }
+        .ai-book-mini-info {
+            padding: 3px 5px;
+        }
+        .ai-book-mini-info .mini-title {
+            font-size: 10.5px;
+            font-weight: 700;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .ai-book-mini-info .mini-price {
+            font-size: 11px;
+            font-weight: 800;
+            color: #EE4D2D;
+            margin-top: 1px;
+        }
+
+        /* Nút chuyển tiếp sang trang Chat AI chuyên sâu */
+        .ai-deep-chat-row {
+            margin-top: 9px;
+            padding-top: 7px;
+            border-top: 1px dashed #E5E0D8;
+            text-align: right;
+        }
+        .btn-ai-deep-chat {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #8C4A27;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 3px 9px;
+            border-radius: 6px;
+            background: #FFF7ED;
+            border: 1px solid rgba(217, 119, 6, 0.22);
+            transition: all 0.15s ease;
+        }
+        .btn-ai-deep-chat:hover {
+            color: #733615;
+            background: #FED7AA;
+            border-color: #EA580C;
+            transform: translateY(-1px);
+        }
+
+        /* Recent Queries & History Section */
+        .omnibox-recent-section {
+            padding: 8px 0;
+        }
+        .omnibox-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 20px 4px 20px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #78716C;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-clear-recent-all {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            color: #A8A29E;
+            padding: 0;
+            text-transform: none;
+            transition: color 0.15s;
+        }
+        .btn-clear-recent-all:hover {
+            color: #EE4D2D;
+        }
+        .omnibox-history-list {
+            padding: 4px 0 6px 0;
+        }
+        .omnibox-history-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 20px;
+            cursor: pointer;
+            transition: background 0.12s ease;
+            user-select: none;
+        }
+        .omnibox-history-row:hover {
+            background: #F8F9FA;
+        }
+        .omnibox-row-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            overflow: hidden;
+            flex: 1;
+        }
+        .omnibox-clock-icon {
+            color: #70757A;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .omnibox-query-text {
+            font-size: 14px;
+            color: #202124;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .omnibox-mode-label {
+            font-size: 13px;
+            color: #70757A;
+            font-weight: 400;
+            margin-left: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .omnibox-mode-label.ai-tag {
+            color: #1967D2;
+            font-weight: 600;
+        }
+
+        /* ================= THANH DANH MỤC GỌN GÀNG, MỎNG NHẸ TINH TẾ (SLIM COMPACT) ================= */
+        .chotot-category-section {
+            margin-top: 24px !important;
+            margin-bottom: 22px;
+        }
+
+        .chotot-category-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            padding: 10px 16px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .chotot-cat-list {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+            width: 100%;
+            padding: 2px;
+        }
+        .chotot-cat-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chotot-cat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 78px;
+            max-width: 115px;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 4px 2px;
+            border-radius: 10px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+
+        .chotot-cat-icon-box {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 4px;
+        }
+
+        .chotot-cat-3d-img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 5px rgba(45, 24, 15, 0.1));
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+        }
+        .chotot-cat-item:hover .chotot-cat-3d-img {
+            transform: translateY(-3px) scale(1.08);
+            filter: drop-shadow(0 4px 10px rgba(140, 74, 39, 0.2));
+        }
+
+        .cat-pill-badge {
+            position: absolute;
+            top: -2px;
+            right: -6px;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 1px 5px;
+            border-radius: 9999px;
+            color: #ffffff;
+            line-height: 1.1;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+        }
+        .badge-red { background: #EE4D2D; }
+        .badge-blue { background: #0284C7; }
+
+        .chotot-cat-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1C1917;
+            text-align: center;
+            line-height: 1.25;
+            height: 28px;
+            max-width: 95px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow: hidden;
+            transition: color 0.15s ease;
+        }
+        .chotot-cat-item:hover .chotot-cat-label {
+            color: var(--color-fire);
+        }
+
+        /* Nút mũi tên cuộn tròn & vệt mờ bên phải */
+        .chotot-cat-right-fade {
+            display: none;
+        }
+
+        .chotot-cat-scroll-arrow {
+            display: none;
+        }
+
     </style>
     <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
     <link rel="stylesheet" href="/css/liquid-glass.css">
 </head>
 <body>
 
-    <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
-    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+    <!-- KHỐI ĐẦU TRANG ĐỒNG BỘ 1 ẢNH LIỀN MẠCH (HEADER + BANNER CHỢ TỐT TỪ ĐỈNH ĐẾN 50% THANH SEARCH) -->
+    <div class="chotot-unified-top-wrapper">
+        <div class="chotot-unified-backdrop"></div>
 
+        <!-- 1. HEADER TRONG SUỐT TRÊN NỀN ẢNH BANNER -->
+        <th:block th:with="isHome=true">
+            <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+        </th:block>
+
+        <!-- 2. HERO BANNER CHUẨN CHỢ TỐT VỚI HÌNH NỀN MASCOT & DẢI VÀNG 3D -->
+        <section class="chotot-hero-wrapper">
+            <div class="chotot-hero-container">
+                <!-- Slogan trung tâm -->
+                <div class="chotot-hero-content">
+                    <h1 class="chotot-hero-title">Sách Cũ Trao Tay — Tri Thức Đong Đầy</h1>
+                    <p class="chotot-hero-desc">
+                        Hơn 10.000 đầu sách chọn lọc tại 5 chi nhánh TP.HCM · Tiết kiệm đến 70% · Định giá ký gửi nhanh 24H
+                    </p>
+                </div>
+
+                <!-- THANH TÌM KIẾM TO TRÒN CHUẨN GOOGLE / CHỢ TỐT KÈM OMNIBOX DROPDOWN NỐI LIỀN (KHỚP 100% IMAGE_9A9EC6.PNG) -->
+                <div class="search-omnibox-wrapper" id="searchOmniboxWrapper">
+                    <form th:action="@{/search}" method="get" class="chotot-search-form-card" id="homeSearchForm" autocomplete="off">
+                        <!-- 1. Search Icon & Input Field -->
+                        <div class="chotot-input-field-wrap">
+                            <svg class="chotot-lens-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none">
+                                <path d="M18.2798 11.4399C18.2797 7.66239 15.2175 4.6001 11.4399 4.6001C7.66244 4.60018 4.60018 7.66244 4.6001 11.4399C4.6001 15.2175 7.66239 18.2797 11.4399 18.2798C15.2176 18.2798 18.2798 15.2176 18.2798 11.4399ZM20.2798 11.4399C20.2798 13.5439 19.5432 15.4748 18.3159 16.9927L21.0952 19.6812C21.4922 20.1438 21.4786 20.7232 21.1187 21.0952C20.7586 21.4674 20.1798 21.5 19.7817 21.186L16.8901 18.396C15.3881 19.5745 13.4972 20.2798 11.4399 20.2798C6.55782 20.2797 2.6001 16.3221 2.6001 11.4399C2.60018 6.55787 6.55787 2.60018 11.4399 2.6001C16.3221 2.6001 20.2797 6.55782 20.2798 11.4399Z" fill="currentColor"></path>
+                            </svg>
+                            <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm kiếm sách cũ hoặc hỏi bất kỳ điều gì..." class="chotot-native-input" id="homeSearchInput" autocomplete="off">
+                        </div>
+
+                        <!-- 2. Right Actions: Filter Button + Google AI Mode Button + Search Button -->
+                        <div class="chotot-form-actions-group">
+                            <!-- Multi-Criteria Filter Trigger Button (Sắp xếp, Thể loại, Giá, Chi nhánh) -->
+                            <div class="chotot-filter-trigger-wrap">
+                                <button type="button" class="chotot-location-button-wrap" id="homeFilterBtn" onclick="toggleHeroFilterPopover(event)">
+                                    <i class="fa-solid fa-sliders" style="color:#EE4D2D; font-size:14px; margin-right:2px;"></i>
+                                    <span id="homeFilterBtnLabel" style="font-size:14px; font-weight:700; color:#1C1917;">Bộ lọc</span>
+                                    <svg class="chevron-down-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none">
+                                        <path d="M12.4495 14.8316C12.2013 15.0561 11.7987 15.0561 11.5505 14.8316L6.18623 9.98133C6.0044 9.81692 5.95001 9.56967 6.04841 9.35486C6.14682 9.14006 6.37864 9 6.63578 9L17.3642 9C17.6214 9 17.8532 9.14006 17.9516 9.35487C18.05 9.56967 17.9956 9.81693 17.8138 9.98133L12.4495 14.8316Z" fill="currentColor"></path>
+                                    </svg>
+                                </button>
+
+                                <!-- BẢNG BỘ LỌC CHUYÊN SÂU NẰM TRONG NÚT TÌM KIẾM (SẮP XẾP, THỂ LOẠI, KHOẢNG GIÁ, CHI NHÁNH) -->
+                                <div class="chotot-filter-modal-popover" id="heroFilterPopover" style="display:none;">
+                                    <div class="filter-popover-header">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <i class="fa-solid fa-sliders text-danger" style="color:#EE4D2D;"></i>
+                                            <span style="font-weight:800; font-size:14px; color:#1C1917;">Bộ Lọc Tìm Kiếm</span>
+                                        </div>
+                                        <button type="button" class="btn-close-filter-popover" onclick="closeHeroFilterPopover(event)">&times;</button>
+                                    </div>
+
+                                    <div class="filter-popover-body">
+                                        <!-- 1. TIÊU CHÍ SẮP XẾP (Phổ biến, Mới nhất, Bán chạy, Giá) -->
+                                        <div class="filter-section-row">
+                                            <label class="filter-field-label">Sắp xếp theo</label>
+                                            <div class="sort-chips-grid">
+                                                <label class="sort-chip">
+                                                    <input type="radio" name="sort" value="popular" th:checked="${selectedSort == null or selectedSort == 'popular'}">
+                                                    <span><i class="fa-solid fa-fire me-1" style="color:#EE4D2D;"></i>Phổ biến</span>
+                                                </label>
+                                                <label class="sort-chip">
+                                                    <input type="radio" name="sort" value="latest" th:checked="${selectedSort == 'latest'}">
+                                                    <span><i class="fa-solid fa-sparkles me-1" style="color:#F59E0B;"></i>Mới nhất</span>
+                                                </label>
+                                                <label class="sort-chip">
+                                                    <input type="radio" name="sort" value="sales" th:checked="${selectedSort == 'sales'}">
+                                                    <span><i class="fa-solid fa-chart-line me-1" style="color:#10B981;"></i>Bán chạy</span>
+                                                </label>
+                                                <label class="sort-chip">
+                                                    <input type="radio" name="sort" value="price-asc" th:checked="${selectedSort == 'price-asc'}">
+                                                    <span><i class="fa-solid fa-arrow-up-1-9 me-1" style="color:#6366F1;"></i>Giá: Thấp → Cao</span>
+                                                </label>
+                                                <label class="sort-chip">
+                                                    <input type="radio" name="sort" value="price-desc" th:checked="${selectedSort == 'price-desc'}">
+                                                    <span><i class="fa-solid fa-arrow-down-9-1 me-1" style="color:#EC4899;"></i>Giá: Cao → Thấp</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- 2. DANH MỤC THỂ LOẠI -->
+                                        <div class="filter-section-row">
+                                            <label class="filter-field-label">Danh mục thể loại</label>
+                                            <div class="custom-select-wrap">
+                                                <select name="cat" id="heroFilterCatSelect" class="custom-filter-select">
+                                                    <option value="">Tất cả thể loại</option>
+                                                    <option th:if="${categories != null}" th:each="c : ${categories}" th:value="${c.id}" th:text="${c.categoryName}" th:selected="${selectedCat != null and selectedCat == c.id}">Văn Học</option>
+                                                </select>
+                                                <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
+                                            </div>
+                                        </div>
+
+                                        <!-- 3. KHOẢNG GIÁ (₫) -->
+                                        <div class="filter-section-row">
+                                            <label class="filter-field-label">Khoảng giá (₫)</label>
+                                            <div class="price-preset-chips" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+                                                <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('', '50000')">Dưới 50k</button>
+                                                <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('50000', '100000')">50k - 100k</button>
+                                                <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('100000', '200000')">100k - 200k</button>
+                                                <button type="button" class="btn-price-preset" onclick="setHeroPriceRange('200000', '')">Trên 200k</button>
+                                            </div>
+                                            <div class="price-range-inputs">
+                                                <input type="number" name="minPrice" id="heroMinPrice" th:value="${selectedMinPrice}" placeholder="Từ ₫" class="price-input-box" min="0" step="1000">
+                                                <span class="price-sep" style="color:#78716C; font-weight:700;">&mdash;</span>
+                                                <input type="number" name="maxPrice" id="heroMaxPrice" th:value="${selectedMaxPrice}" placeholder="Đến ₫" class="price-input-box" min="0" step="1000">
+                                            </div>
+                                        </div>
+
+                                        <!-- 4. CHI NHÁNH CỬA HÀNG -->
+                                        <div class="filter-section-row">
+                                            <label class="filter-field-label">Chi nhánh TP.HCM</label>
+                                            <div class="custom-select-wrap">
+                                                <select name="store" id="heroFilterStoreSelect" class="custom-filter-select">
+                                                    <option value="">Toàn TP.HCM (5 Shop)</option>
+                                                    <option th:if="${stores != null}" th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStore != null and selectedStore == st.id}">Thủ Đức</option>
+                                                </select>
+                                                <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FOOTER: XOÁ LỌC & ÁP DỤNG -->
+                                    <div class="filter-popover-footer">
+                                        <button type="button" class="btn-popover-reset" onclick="resetHeroFilterPopover(event)">Xoá lọc</button>
+                                        <button type="button" class="btn-popover-apply" onclick="applyHeroFilterPopover(event)">Áp dụng</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Search Submit Button -->
+                            <button type="submit" class="chotot-submit-button">
+                                <span>Tìm kiếm</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- OMNIBOX DROPDOWN (FLOATING CARD GỢI Ý & TRỢ LÝ AI TỰ ĐỘNG) -->
+                    <div class="google-omnibox-dropdown" id="googleOmniboxDropdown" style="display:none;">
+                        <!-- KHỐI 1: TỔNG QUAN TRỢ LÝ AI (CÂN XỨNG & HIỆU ỨNG GEN CHỮ) -->
+                        <div class="ai-overview-card" id="aiOverviewCard" style="display:none;">
+                            <div class="ai-card-top-row">
+                                <span class="ai-sparkle-pill">✨</span>
+                                <button type="button" class="btn-clear-ai-overview" onclick="closeAiOverview(event)" title="Đóng">&times;</button>
+                            </div>
+
+                            <!-- Trạng thái lúc bắt đầu: 3 chấm Gen AI nhấp nháy chuyển động sóng êm ái -->
+                            <div class="ai-overview-loading" id="aiOverviewLoading" style="display:none;">
+                                <div class="ai-gen-dots">
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                </div>
+                            </div>
+
+                            <!-- Trạng thái chữ đang gen ra từng từ -->
+                            <div class="ai-overview-content" id="aiOverviewContent"></div>
+
+                            <!-- Trạng thái Thẻ sách gợi ý -->
+                            <div class="ai-overview-books" id="aiOverviewBooks" style="display:none;"></div>
+
+                            <!-- Link chuyển tiếp sang trang Chat AI chuyên sâu -->
+                            <div class="ai-deep-chat-row" id="aiDeepChatRow" style="display:none;">
+                                <a href="/ai-assistant" class="btn-ai-deep-chat" onclick="goToDeepAiChat(event)">
+                                    <i class="fa-solid fa-comments"></i>
+                                    <span>Trò chuyện sâu hơn với AI &rarr;</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- KHỐI 2: TÌM KIẾM GẦN ĐÂY & GỢI Ý (RECENT SEARCHES) -->
+                        <div class="omnibox-recent-section" id="omniboxRecentSection">
+                            <div class="omnibox-section-title">
+                                <span>Tìm kiếm gần đây &amp; Gợi ý</span>
+                                <button type="button" class="btn-clear-recent-all" onclick="clearAllRecentQueries(event)">Xóa lịch sử</button>
+                            </div>
+                            <div class="omnibox-history-list" id="omniboxHistoryList">
+                                <!-- Render động bằng JS từ localStorage -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 4. THANH DANH MỤC NỔI (CHỈ CHỨA CÁC THỂ LOẠI SÁCH - KHÔNG TÍNH NĂNG PHỤ) -->
+    <section class="container-shopee chotot-category-section">
+        <div class="chotot-category-card">
+            <div class="chotot-cat-list" id="chototCatList">
+                <!-- 1. Văn Học -->
+                <a th:href="@{/search(cat=1)}" class="chotot-cat-item">
+                    <div class="chotot-cat-icon-box">
+                        <img th:src="@{/images/categories/van-hoc.png}" alt="Văn Học" class="chotot-cat-3d-img">
+                    </div>
+                    <span class="chotot-cat-label">Văn Học</span>
+                </a>
+
+                <!-- 2. CNTT & Kỹ Thuật -->
+                <a th:href="@{/search(cat=2)}" class="chotot-cat-item">
+                    <div class="chotot-cat-icon-box">
+                        <img th:src="@{/images/categories/cntt.png}" alt="CNTT & Kỹ Thuật" class="chotot-cat-3d-img">
+                    </div>
+                    <span class="chotot-cat-label">CNTT &amp; Kỹ Thuật</span>
+                </a>
+
+                <!-- 3. Kinh Tế & QTKD -->
+                <a th:href="@{/search(cat=3)}" class="chotot-cat-item">
+                    <div class="chotot-cat-icon-box">
+                        <img th:src="@{/images/categories/kinh-te.png}" alt="Kinh Tế & QTKD" class="chotot-cat-3d-img">
+                    </div>
+                    <span class="chotot-cat-label">Kinh Tế &amp; QTKD</span>
+                </a>
+
+                <!-- 4. Kỹ Năng Sống -->
+                <a th:href="@{/search(cat=6)}" class="chotot-cat-item">
+                    <div class="chotot-cat-icon-box">
+                        <img th:src="@{/images/categories/ky-nang.png}" alt="Kỹ Năng Sống" class="chotot-cat-3d-img">
+                    </div>
+                    <span class="chotot-cat-label">Kỹ Năng Sống</span>
+                </a>
+
+                <!-- 5. Ngoại Ngữ -->
+                <a th:href="@{/search(cat=5)}" class="chotot-cat-item">
+                    <div class="chotot-cat-icon-box">
+                        <img th:src="@{/images/categories/ngoai-ngu.png}" alt="Ngoại Ngữ" class="chotot-cat-3d-img">
+                    </div>
+                    <span class="chotot-cat-label">Ngoại Ngữ</span>
+                </a>
+
+                <!-- 6. Lịch Sử & Văn Hóa -->
+                <a th:href="@{/search(cat=4)}" class="chotot-cat-item">
+                    <div class="chotot-cat-icon-box">
+                        <img th:src="@{/images/categories/lich-su.png}" alt="Lịch Sử & Văn Hóa" class="chotot-cat-3d-img">
+                    </div>
+                    <span class="chotot-cat-label">Lịch Sử &amp; Văn Hóa</span>
+                </a>
+
+                <!-- 7. Giáo Trình ĐH -->
+                <a th:href="@{/search(cat=7)}" class="chotot-cat-item">
+                    <div class="chotot-cat-icon-box">
+                        <img th:src="@{/images/categories/giao-trinh.png}" alt="Giáo Trình ĐH" class="chotot-cat-3d-img">
+                        <span class="cat-pill-badge badge-blue">HCMUTE</span>
+                    </div>
+                    <span class="chotot-cat-label">Giáo Trình ĐH</span>
+                </a>
+
+                <!-- 8. Truyện Tranh -->
+                <a th:href="@{/search(cat=8)}" class="chotot-cat-item">
+                    <div class="chotot-cat-icon-box">
+                        <img th:src="@{/images/categories/truyen-tranh.png}" alt="Truyện Tranh" class="chotot-cat-3d-img">
+                    </div>
+                    <span class="chotot-cat-label">Truyện Tranh</span>
+                </a>
+
+                <!-- 9. Tất Cả Thể Loại -->
+                <a th:href="@{/search}" class="chotot-cat-item">
+                    <div class="chotot-cat-icon-box">
+                        <img th:src="@{/images/categories/sach-moi.png}" alt="Tất Cả Thể Loại" class="chotot-cat-3d-img">
+                    </div>
+                    <span class="chotot-cat-label">Tất Cả Thể Loại</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
     <main class="container-shopee">
-
-        <!-- 3. SHOPEE HERO BANNERS (2/3 SLIDER + 1/3 SUB BANNERS) -->
-        <section class="shopee-hero-banners">
-            <div class="hero-banner-grid">
-                <!-- Banner Slider Lớn (2/3) -->
-                <div class="main-slider-card liquid-sheen">
-                    <div class="slider-content">
-                        <span class="slider-tag"><i class="fa-solid fa-fire me-1"></i> SÁCH BÁN CHẠY NHẤT THÁNG</span>
-                        <h2 class="slider-title">Yêu Những Điều Không Hoàn Hảo</h2>
-                        <p class="slider-desc">
-                            Tác phẩm bán chạy hàng đầu từ Đại đức Hae Min. Bản in nguyên vẹn 95%, gáy sách thẳng tắp, sẵn sàng nhận tại 5 chi nhánh TP.HCM hoặc giao tận nơi.
-                        </p>
-                        <a th:href="@{/books/1}" class="slider-btn">
-                            <span>Mua Ngay — ₫68.000</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    <img th:src="@{/images/books/book_1.jpg}" alt="Yêu Những Điều Không Hoàn Hảo" class="slider-book-img">
-                </div>
-
-                <!-- 2 Banner Phụ Xếp Chồng (1/3) -->
-                <div class="sub-banners-stack">
-                    <a th:href="@{/consignments/create}" class="sub-banner-item">
-                        <div>
-                            <div class="sub-banner-title">KÝ GỬI SÁCH CŨ 24H</div>
-                            <div class="sub-banner-sub">Định giá tự động, nhận tiền ngay</div>
-                            <span class="sub-banner-cta">Đăng Ký Ký Gửi &gt;</span>
-                        </div>
-                        <i class="fa-solid fa-hand-holding-dollar text-warning" style="font-size:36px;"></i>
-                    </a>
-
-                    <a th:href="@{/search(cond=95)}" class="sub-banner-item">
-                        <div>
-                            <div class="sub-banner-title">KHO SÁCH MỚI 95% - 99%</div>
-                            <div class="sub-banner-sub">Đồng kiểm khi nhận, không mất trang</div>
-                            <span class="sub-banner-cta">Khám Phá Ngay &gt;</span>
-                        </div>
-                        <i class="fa-solid fa-award text-success" style="font-size:36px;"></i>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. DẢI 8 BIỂU TƯỢNG TIỆN ÍCH DỊCH VỤ CHUỖI SÁCH CŨ -->
-        <section class="shopee-shortcuts-section">
-            <div class="shortcuts-grid">
-                <a th:href="@{/consignments/create}" class="shortcut-item">
-                    <div class="shortcut-icon-circle icon-gold"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
-                    <span class="shortcut-label">Ký Gửi Sách</span>
-                </a>
-                <a th:href="@{/search(maxPrice=35000)}" class="shortcut-item">
-                    <div class="shortcut-icon-circle icon-fire"><i class="fa-solid fa-tags"></i></div>
-                    <span class="shortcut-label">Đồng Giá 29K</span>
-                </a>
-                <a th:href="@{/search(cond=95)}" class="shortcut-item">
-                    <div class="shortcut-icon-circle icon-green"><i class="fa-solid fa-medal"></i></div>
-                    <span class="shortcut-label">Mới &ge; 95%</span>
-                </a>
-                <a th:href="@{/search(cat=3)}" class="shortcut-item">
-                    <div class="shortcut-icon-circle icon-blue"><i class="fa-solid fa-graduation-cap"></i></div>
-                    <span class="shortcut-label">Giáo Trình ĐH</span>
-                </a>
-                <a th:href="@{/search(cat=1)}" class="shortcut-item">
-                    <div class="shortcut-icon-circle icon-purple"><i class="fa-solid fa-book-bookmark"></i></div>
-                    <span class="shortcut-label">Văn Học</span>
-                </a>
-                <a th:href="@{/vouchers}" class="shortcut-item">
-                    <div class="shortcut-icon-circle icon-amber"><i class="fa-solid fa-ticket"></i></div>
-                    <span class="shortcut-label">Kho Voucher</span>
-                </a>
-                <a th:href="@{/vouchers(tab='shipping')}" class="shortcut-item">
-                    <div class="shortcut-icon-circle icon-green"><i class="fa-solid fa-truck-fast"></i></div>
-                    <span class="shortcut-label">Freeship 150K</span>
-                </a>
-                <!-- Nút bật modal xem 5 cửa hàng -->
-                <div class="shortcut-item" onclick="openStoreModal()">
-                    <div class="shortcut-icon-circle icon-fire"><i class="fa-solid fa-store"></i></div>
-                    <span class="shortcut-label">Chuỗi 5 Shop</span>
-                </div>
-            </div>
-        </section>
 
         <!-- 5. SHOPEE FLASH SALE SÁCH CŨ -->
         <section class="shopee-flash-sale" id="flash-sale">
@@ -1127,41 +2012,20 @@
                         <div class="flash-progress-fill" th:style="'width: ' + (${book.totalSold != null ? (book.totalSold * 3 + 40) : 75}) + '%;'"></div>
                         <span class="flash-progress-text"><i class="fa-solid fa-fire me-1"></i>ĐÃ BÁN <span th:text="${book.totalSold != null ? book.totalSold : 24}">24</span></span>
                     </div>
-                    <button type="button" class="btn-card-buy-now" 
-                            th:attr="onclick=|quickBuyNow(event, '${book.id}')|">
-                        <i class="fa-solid fa-bolt-lightning"></i> Mua Ngay
-                    </button>
                 </a>
             </div>
         </section>
 
-        <!-- 6. DANH MỤC NỔI BẬT (SHOPEE CATEGORY GRID) -->
-        <section class="shopee-categories-section">
-            <div class="section-header-shopee">
-                <span><i class="fa-solid fa-border-all text-danger me-2"></i> DANH MỤC SÁCH CŨ NỔI BẬT</span>
-                <a th:href="@{/search}" style="font-size: 13px; color: var(--color-text-secondary); text-transform:none; font-weight:700;">Xem tất cả &gt;</a>
-            </div>
-
-            <div class="categories-grid-2rows">
-                <a th:each="cat : ${categories}" th:href="@{'/search?cat=' + ${cat.id}}" class="cat-box-item">
-                    <div class="cat-icon-wrap">
-                        <i th:class="${cat.icon != null ? 'fa-solid ' + cat.icon : 'fa-solid fa-book'}"></i>
-                    </div>
-                    <div class="cat-name-text" th:text="${cat.categoryName}">Văn Học</div>
-                    <div class="cat-count-sub">Tuyển chọn</div>
-                </a>
-            </div>
-        </section>
-
-        <!-- 7. GỢI Ý HÔM NAY (DAILY DISCOVER - LƯỚI 6 CỘT CHUẨN SHOPEE) -->
+        <!-- 6. KHÁM PHÁ DANH SÁCH SÁCH CŨ (FEED CHỢ TỐT) -->
         <section class="daily-discover-section">
-            <div class="daily-sticky-tab-bar">
-                <div class="daily-tab-title">
-                    <i class="fa-solid fa-wand-magic-sparkles text-warning me-2"></i>
-                    <span>GỢI Ý HÔM NAY CHO BẠN</span>
+            <div class="chotot-feed-tabs-bar">
+                <div class="chotot-feed-tabs">
+                    <span class="chotot-feed-tab active">Dành cho bạn</span>
+                    <a th:href="@{/search(sort='newest')}" class="chotot-feed-tab">Mới nhất</a>
+                    <a th:href="@{/search(sort='bestseller')}" class="chotot-feed-tab">Bán chạy nhất</a>
                 </div>
-                <div style="font-size: 13px; font-weight: 700; color: #1C1917;">
-                    <i class="fa-solid fa-rotate text-danger me-1"></i> Cập nhật liên tục từ 5 chi nhánh TP.HCM
+                <div style="font-size: 13px; font-weight: 600; color: #78716C;">
+                    <i class="fa-solid fa-circle-check text-success me-1"></i> Kiểm định 100% trước khi giao
                 </div>
             </div>
 
@@ -1178,7 +2042,7 @@
                     <div class="product-info-wrap">
                         <h4 class="product-title" th:text="${book.title}">Tên sách cũ tuyển chọn</h4>
 
-                        <!-- Tag chi nhánh thông minh, tinh tế thay vì khối thô kệch -->
+                        <!-- Tag chi nhánh thông minh, tinh tế -->
                         <div class="product-store-smart-tag">
                             <i class="fa-solid fa-location-dot text-danger"></i>
                             <span>Có tại: CN Thủ Đức, Q.1</span>
@@ -1188,11 +2052,6 @@
                             <span class="price-current" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
                             <span class="price-sold-count" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
                         </div>
-
-                        <button type="button" class="btn-card-buy-now" 
-                                th:attr="onclick=|quickBuyNow(event, '${book.id}')|">
-                            <i class="fa-solid fa-bolt-lightning"></i> Mua Ngay
-                        </button>
                     </div>
                 </a>
             </div>
@@ -1314,6 +2173,12 @@
             document.getElementById('storeModal').classList.remove('open');
         }
 
+        // Cuộn danh mục Chợ Tốt
+        function scrollChototCat(dir) {
+            const el = document.getElementById('chototCatList');
+            if (el) el.scrollBy({ left: dir * 260, behavior: 'smooth' });
+        }
+
         // Mua ngay trực tiếp 1 click
         function quickBuyNow(event, bookId) {
             if (event) {
@@ -1349,9 +2214,490 @@
                 document.getElementById('flashSeconds').innerText = s;
             }
         }, 1000);
+
+        // Điều khiển bảng Bộ Lọc Tìm Kiếm (Hero Filter Popover)
+        function toggleHeroFilterPopover(event) {
+            if (event) event.stopPropagation();
+            const pop = document.getElementById('heroFilterPopover');
+            if (!pop) return;
+            pop.style.display = (pop.style.display === 'none' || !pop.style.display) ? 'block' : 'none';
+        }
+
+        function closeHeroFilterPopover(event) {
+            if (event) event.stopPropagation();
+            const pop = document.getElementById('heroFilterPopover');
+            if (pop) pop.style.display = 'none';
+        }
+
+        function resetHeroFilterPopover(event) {
+            if (event) event.stopPropagation();
+            // Đặt lại sắp xếp về popular
+            const sortInp = document.querySelector('#heroFilterPopover input[name="sort"][value="popular"]');
+            if (sortInp) sortInp.checked = true;
+            // Đặt lại thể loại
+            const catSelect = document.getElementById('heroFilterCatSelect');
+            if (catSelect) catSelect.value = '';
+            // Đặt lại khoảng giá
+            const minPrice = document.getElementById('heroMinPrice');
+            const maxPrice = document.getElementById('heroMaxPrice');
+            if (minPrice) minPrice.value = '';
+            if (maxPrice) maxPrice.value = '';
+            // Đặt lại chi nhánh
+            const storeSelect = document.getElementById('heroFilterStoreSelect');
+            if (storeSelect) storeSelect.value = '';
+        }
+
+        function applyHeroFilterPopover(event) {
+            if (event) event.stopPropagation();
+            const form = document.getElementById('homeSearchForm') || document.getElementById('smartSearchForm');
+            if (form) form.submit();
+        }
+
+        function setHeroPriceRange(min, max) {
+            const minInput = document.getElementById('heroMinPrice');
+            const maxInput = document.getElementById('heroMaxPrice');
+            if (minInput) minInput.value = min;
+            if (maxInput) maxInput.value = max;
+        }
+
+        // Đóng popover khi nhấn bên ngoài
+        document.addEventListener('click', function(e) {
+            const pop = document.getElementById('heroFilterPopover');
+            const btn = document.getElementById('homeFilterBtn') || document.getElementById('heroFilterBtn');
+            if (pop && pop.style.display === 'block') {
+                if (!pop.contains(e.target) && (!btn || !btn.contains(e.target))) {
+                    pop.style.display = 'none';
+                }
+            }
+        });
     </script>
 
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>
+
+    <script>
+    // ================= GOOGLE AI OVERVIEW OMNIBOX (TỐI GIẢN & TỰ ĐỘNG) =================
+    (function() {
+        const wrapper = document.getElementById('searchOmniboxWrapper');
+        const dropdown = document.getElementById('googleOmniboxDropdown');
+        const searchInput = document.getElementById('homeSearchInput');
+        const searchForm = document.getElementById('homeSearchForm');
+        const aiOverviewCard = document.getElementById('aiOverviewCard');
+        const aiOverviewLoading = document.getElementById('aiOverviewLoading');
+        const aiOverviewContent = document.getElementById('aiOverviewContent');
+        const aiOverviewBooks = document.getElementById('aiOverviewBooks');
+        const historyListContainer = document.getElementById('omniboxHistoryList');
+
+        const STORAGE_RECENT_KEY = 'CHOSACHCU_SEARCH_RECENT_V2';
+        const STORAGE_LAST_AI_KEY = 'CHOSACHCU_LAST_AI_OVERVIEW_V2';
+
+        const DEFAULT_QUERIES = [
+            { query: 'Sách chữa lành tâm hồn, giảm áp lực', isAi: true },
+            { query: 'Giáo trình CNTT & Lập trình Web HCMUTE', isAi: true },
+            { query: 'Kinh tế, khởi nghiệp dưới 70k', isAi: true },
+            { query: 'Yêu Những Điều Không Hoàn Hảo', isAi: false },
+            { query: 'Kiểm tra tồn kho 5 chi nhánh TP.HCM', isAi: true },
+            { query: 'Đắc Nhân Tâm', isAi: false },
+            { query: 'Nguyễn Nhật Ánh', isAi: false },
+            { query: 'Clean Code (Mã Sạch)', isAi: false }
+        ];
+
+        let debounceTimer = null;
+        let isFetchingAi = false;
+
+        // 1. Nhận diện truy vấn mang tính đàm thoại / câu hỏi tự nhiên / tính toán
+        function isQuestionQuery(text) {
+            if (!text) return false;
+            const t = text.trim().toLowerCase();
+            // Ký tự toán học, dấu hỏi hoặc câu tính toán
+            if (t.includes('?') || /[0-9\+\-\*\/\=\%]/.test(t)) {
+                if (t.includes('?') || t.includes('+') || t.includes('-') || t.includes('*') || t.includes('/') || t.includes('=') || t.includes('cộng') || t.includes('trừ') || t.includes('nhân') || t.includes('chia') || t.includes('bằng') || t.includes('mấy')) {
+                    return true;
+                }
+            }
+            const questionKeywords = [
+                'mấy', 'bằng', 'cộng', 'trừ', 'nhân', 'chia', 'là gì', 'là ai', 'ở đâu',
+                'tại sao', 'vì sao', 'thế nào', 'ra sao', 'bao nhiêu', 'ai', 'gì', 'nào',
+                'đâu', 'sao', 'gợi ý', 'tư vấn', 'tìm sách', 'sách gì', 'cuốn nào', 'chi nhánh',
+                'tồn kho', 'còn không', 'hcmute', 'giảm giá', 'chữa lành', 'kinh tế', 'cho mình',
+                'có nên', 'học lập trình', 'thể loại', 'review', 'nói về', 'đọc gì', 'mới nhất',
+                'phù hợp', 'giải thích', 'tóm tắt', 'nghĩa là', 'bao tiền', 'ở tp', 'giúp mình',
+                'chỉ mình', 'hỏi', 'bạn là', 'ai là', 'tác giả', 'năm nào'
+            ];
+            const words = t.split(/\s+/).filter(Boolean);
+            if (questionKeywords.some(k => t.includes(k))) return true;
+            return words.length >= 3;
+        }
+
+        // 2. Quản lý lịch sử tìm kiếm gần đây
+        function loadRecentQueries() {
+            try {
+                const raw = localStorage.getItem(STORAGE_RECENT_KEY);
+                return raw ? JSON.parse(raw) : DEFAULT_QUERIES;
+            } catch (e) {
+                return DEFAULT_QUERIES;
+            }
+        }
+
+        function saveRecentQuery(query, isAi) {
+            if (!query || !query.trim()) return;
+            const q = query.trim();
+            let list = loadRecentQueries();
+            list = list.filter(item => item.query.toLowerCase() !== q.toLowerCase());
+            list.unshift({ query: q, isAi: !!isAi, time: Date.now() });
+            if (list.length > 10) list = list.slice(0, 10);
+            try {
+                localStorage.setItem(STORAGE_RECENT_KEY, JSON.stringify(list));
+            } catch (e) {}
+            renderRecentQueries();
+        }
+
+        function renderRecentQueries() {
+            if (!historyListContainer) return;
+            let queries = loadRecentQueries();
+            const isOverviewVisible = aiOverviewCard && aiOverviewCard.style.display !== 'none';
+            if (isOverviewVisible && queries.length > 4) {
+                queries = queries.slice(0, 4);
+            }
+            let html = '';
+            queries.forEach(item => {
+                const isAi = item.isAi;
+                const safeQuery = item.query.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const tagClass = isAi ? 'omnibox-mode-label ai-tag' : 'omnibox-mode-label';
+                const tagText = isAi ? '✨ AI' : 'Sách Cũ';
+                html += `
+                    <div class="omnibox-history-row" onclick="handleSelectQuery('${safeQuery}', ${isAi})">
+                        <div class="omnibox-row-left">
+                            <i class="fa-regular fa-clock omnibox-clock-icon"></i>
+                            <span class="omnibox-query-text">${escapeHtml(item.query)}</span>
+                        </div>
+                        <span class="${tagClass}">${tagText}</span>
+                    </div>
+                `;
+            });
+            historyListContainer.innerHTML = html;
+        }
+
+        window.clearAllRecentQueries = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            try {
+                localStorage.setItem(STORAGE_RECENT_KEY, JSON.stringify([]));
+            } catch (err) {}
+            renderRecentQueries();
+        };
+
+        // 3. Quản lý Trợ Lý AI (Siêu mượt, Cache tức thì, AbortController chống giật lag)
+        const aiCache = new Map();
+        let aiAbortController = null;
+
+        function loadLastAiOverview() {
+            try {
+                const raw = localStorage.getItem(STORAGE_LAST_AI_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function saveLastAiOverview(overview) {
+            try {
+                if (overview) {
+                    localStorage.setItem(STORAGE_LAST_AI_KEY, JSON.stringify(overview));
+                } else {
+                    localStorage.removeItem(STORAGE_LAST_AI_KEY);
+                }
+            } catch (e) {}
+        }
+
+        let typingInterval = null;
+
+        window.closeAiOverview = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            if (typingInterval) {
+                clearInterval(typingInterval);
+                typingInterval = null;
+            }
+            if (aiAbortController) {
+                aiAbortController.abort();
+                aiAbortController = null;
+            }
+            if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+            const deepRow = document.getElementById('aiDeepChatRow');
+            if (deepRow) deepRow.style.display = 'none';
+            saveLastAiOverview(null);
+        };
+
+        window.goToDeepAiChat = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            const q = searchInput ? searchInput.value.trim() : '';
+            window.location.href = '/ai-assistant' + (q ? '?q=' + encodeURIComponent(q) : '');
+        };
+
+        function renderAiBooks(books) {
+            if (books && books.length > 0 && aiOverviewBooks) {
+                let booksHtml = '';
+                books.forEach(b => {
+                    const price = b.price ? '₫' + Number(b.price).toLocaleString('vi-VN') : '';
+                    booksHtml += `
+                        <a href="${b.detailUrl || '/books/' + b.id}" class="ai-book-mini-card">
+                            <img src="${b.imageUrl || '/images/books/book_1.jpg'}" alt="${escapeHtml(b.title || '')}">
+                            <div class="ai-book-mini-info">
+                                <div class="mini-title">${escapeHtml(b.title || 'Sách')}</div>
+                                <div class="mini-price">${price}</div>
+                            </div>
+                        </a>
+                    `;
+                });
+                aiOverviewBooks.innerHTML = booksHtml;
+                aiOverviewBooks.style.display = 'flex';
+            } else if (aiOverviewBooks) {
+                aiOverviewBooks.innerHTML = '';
+                aiOverviewBooks.style.display = 'none';
+            }
+        }
+
+        function streamAiTypewriter(replyText, books) {
+            if (!aiOverviewCard || !aiOverviewContent) return;
+            aiOverviewCard.style.display = 'block';
+            if (aiOverviewLoading) aiOverviewLoading.style.display = 'none';
+
+            if (typingInterval) {
+                clearInterval(typingInterval);
+                typingInterval = null;
+            }
+
+            if (aiOverviewBooks) {
+                aiOverviewBooks.innerHTML = '';
+                aiOverviewBooks.style.display = 'none';
+            }
+            const deepRow = document.getElementById('aiDeepChatRow');
+            if (deepRow) deepRow.style.display = 'none';
+
+            let formattedHtml = (replyText || '')
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/(^|\n)\s*[\*\-\•]\s+/g, '$1&bull; ')
+                .replace(/\n\n/g, '<br><br>')
+                .replace(/\n/g, '<br>');
+
+            const tokens = formattedHtml.split(/(\s+|<br>|<br><br>|<strong>.*?<\/strong>)/).filter(Boolean);
+            let currentIdx = 0;
+            let currentText = '';
+
+            aiOverviewContent.innerHTML = '<span class="ai-stream-cursor"></span>';
+
+            typingInterval = setInterval(() => {
+                if (currentIdx < tokens.length) {
+                    currentText += tokens[currentIdx];
+                    aiOverviewContent.innerHTML = currentText + '<span class="ai-stream-cursor"></span>';
+                    currentIdx++;
+                } else {
+                    clearInterval(typingInterval);
+                    typingInterval = null;
+                    aiOverviewContent.innerHTML = currentText;
+                    renderAiBooks(books);
+                    if (deepRow) deepRow.style.display = 'block';
+                }
+            }, 18);
+        }
+
+        function fetchAiOverview(queryText) {
+            if (!queryText) return;
+
+            const qClean = queryText.trim();
+            const qKey = qClean.toLowerCase();
+
+            // Mở dropdown
+            openGoogleOmnibox();
+
+            // 1. Kiểm tra Cache tức thì (0ms latency, mượt mà như bơ)
+            if (aiCache.has(qKey)) {
+                const cached = aiCache.get(qKey);
+                streamAiTypewriter(cached.reply, cached.books);
+                saveLastAiOverview({ query: qClean, reply: cached.reply, books: cached.books, time: Date.now() });
+                return;
+            }
+
+            // Hủy request cũ nếu đang chạy
+            if (aiAbortController) {
+                aiAbortController.abort();
+            }
+            aiAbortController = new AbortController();
+
+            // Mở trạng thái loading mượt mà
+            if (aiOverviewCard) aiOverviewCard.style.display = 'block';
+            if (aiOverviewLoading) aiOverviewLoading.style.display = 'block';
+            if (aiOverviewContent) aiOverviewContent.innerHTML = '';
+            if (aiOverviewBooks) aiOverviewBooks.style.display = 'none';
+            const footerBar = document.getElementById('aiOverviewFooterBar');
+            if (footerBar) footerBar.style.display = 'none';
+
+            // Ẩn dòng trigger để tránh lặp
+            const aiActionRow = document.getElementById('omniboxAiActionRow');
+            if (aiActionRow) aiActionRow.style.display = 'none';
+
+            // Lưu vào lịch sử tìm kiếm dạng AI
+            saveRecentQuery(qClean, true);
+
+            fetch('/ai-assistant/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: qClean, history: [] }),
+                signal: aiAbortController.signal
+            })
+            .then(r => r.json())
+            .then(data => {
+                const reply = data.reply || 'Dạ Chuỗi Sách Cũ đã ghi nhận yêu cầu của bạn.';
+                const books = data.suggestedBooks || [];
+                // Lưu cache
+                aiCache.set(qKey, { reply, books });
+                streamAiTypewriter(reply, books);
+                saveLastAiOverview({ query: qClean, reply: reply, books: books, time: Date.now() });
+            })
+            .catch(err => {
+                if (err.name === 'AbortError') return; // Bỏ qua nếu bị abort chủ động
+                if (aiOverviewLoading) aiOverviewLoading.style.display = 'none';
+                if (aiOverviewContent) {
+                    aiOverviewContent.innerHTML = 'Dạ hệ thống AI đang cập nhật dữ liệu từ 5 chi nhánh, bạn có thể nhấn <strong>Tìm kiếm</strong> để xem danh sách sách trực tiếp nhé!';
+                }
+            })
+            .finally(() => {
+                aiAbortController = null;
+            });
+        }
+
+        // 4. Dropdown Show / Hide
+        function openGoogleOmnibox() {
+            if (!wrapper || !dropdown) return;
+            wrapper.classList.add('is-open');
+            dropdown.style.display = 'block';
+        }
+
+        function closeGoogleOmnibox() {
+            if (!wrapper || !dropdown) return;
+            wrapper.classList.remove('is-open');
+            dropdown.style.display = 'none';
+        }
+
+        window.searchCurrentQueryFull = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            closeGoogleOmnibox();
+            if (searchForm) searchForm.submit();
+        };
+
+        // 5. Sự kiện Input & Tự động gọi AI mượt mà (Tự động sau 650ms, không chặn submit)
+        if (searchInput) {
+            searchInput.addEventListener('focus', function() {
+                openGoogleOmnibox();
+                const val = searchInput.value.trim();
+                if (val.length >= 2) {
+                    const qKey = val.toLowerCase();
+                    if (aiCache.has(qKey)) {
+                        const cached = aiCache.get(qKey);
+                        streamAiTypewriter(cached.reply, cached.books);
+                    } else {
+                        fetchAiOverview(val);
+                    }
+                } else {
+                    if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+                }
+                renderRecentQueries();
+            });
+
+            searchInput.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openGoogleOmnibox();
+            });
+
+            searchInput.addEventListener('input', function() {
+                const val = searchInput.value.trim();
+                openGoogleOmnibox();
+
+                if (debounceTimer) {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = null;
+                }
+
+                if (val.length >= 2) {
+                    const qKey = val.toLowerCase();
+                    // Nếu đã có sẵn trong cache -> render tức thì 0ms, siêu mượt
+                    if (aiCache.has(qKey)) {
+                        const cached = aiCache.get(qKey);
+                        streamAiTypewriter(cached.reply, cached.books);
+                    } else {
+                        // Hiển thị khung chờ êm ái và tự động gọi sau 650ms khi ngừng gõ
+                        if (aiOverviewCard) aiOverviewCard.style.display = 'block';
+                        if (aiOverviewLoading) aiOverviewLoading.style.display = 'block';
+                        if (aiOverviewContent) aiOverviewContent.innerHTML = '';
+                        if (aiOverviewBooks) aiOverviewBooks.style.display = 'none';
+                        const footerBar = document.getElementById('aiOverviewFooterBar');
+                        if (footerBar) footerBar.style.display = 'none';
+
+                        debounceTimer = setTimeout(function() {
+                            fetchAiOverview(val);
+                        }, 650);
+                    }
+                } else {
+                    if (aiOverviewCard) aiOverviewCard.style.display = 'none';
+                    if (aiAbortController) {
+                        aiAbortController.abort();
+                        aiAbortController = null;
+                    }
+                }
+
+                renderRecentQueries();
+            });
+
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    if (debounceTimer) clearTimeout(debounceTimer);
+                    const val = searchInput.value.trim();
+                    if (val) {
+                        saveRecentQuery(val, false);
+                    }
+                    closeGoogleOmnibox();
+                    // Cho phép form submit bình thường sang trang /search
+                }
+            });
+        }
+
+        if (searchForm) {
+            searchForm.addEventListener('submit', function() {
+                if (debounceTimer) clearTimeout(debounceTimer);
+                const val = searchInput ? searchInput.value.trim() : '';
+                if (val) {
+                    saveRecentQuery(val, false);
+                }
+                closeGoogleOmnibox();
+                // Không chặn e.preventDefault() -> Luồng tìm kiếm luôn thông suốt, tức thì
+            });
+        }
+
+        // 6. Xử lý click dòng lịch sử / gợi ý
+        window.handleSelectQuery = function(queryText, isAi) {
+            if (searchInput) searchInput.value = queryText;
+            if (isAi || isQuestionQuery(queryText)) {
+                fetchAiOverview(queryText);
+            } else {
+                saveRecentQuery(queryText, false);
+                if (searchForm) searchForm.submit();
+            }
+        };
+
+        function escapeHtml(str) {
+            return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Đóng dropdown khi click bên ngoài wrapper
+        document.addEventListener('click', function(e) {
+            if (wrapper && !wrapper.contains(e.target)) {
+                closeGoogleOmnibox();
+            }
+        });
+
+        // Khởi động
+        renderRecentQueries();
+    })();
+    </script>
 </body>
 </html>

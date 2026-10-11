@@ -94,4 +94,26 @@ public interface BookRepository extends JpaRepository<Book, Long> {
         @Param("isActive") Boolean isActive,
         Pageable pageable
     );
+
+    /**
+     * [TỐI ƯU AI - RAG Context] Lấy tối đa 50 cuốn sách bán chạy nhất kèm ảnh để đưa vào
+     * system prompt của AI. Giới hạn 50 thay vì toàn bộ catalog để tiết kiệm token API.
+     */
+    @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.category LEFT JOIN FETCH b.images WHERE b.isActive = true ORDER BY b.totalSold DESC")
+    List<Book> findTop50ForAiContext(Pageable pageable);
+
+    /**
+     * [TỐI ƯU AI - RAG Context] Tìm kiếm sách theo từ khóa người dùng để bổ sung vào RAG Context.
+     * Dùng để lọc sách liên quan trực tiếp đến câu hỏi của khách, thay vì gửi toàn bộ catalog.
+     */
+    @Query("SELECT DISTINCT b FROM Book b LEFT JOIN FETCH b.category LEFT JOIN FETCH b.images WHERE b.isActive = true AND (LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(b.author) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    List<Book> findActiveByKeywordWithImages(@Param("keyword") String keyword);
+
+    /**
+     * [TỐI ƯU AI - Định Giá] Tính giá bán trung bình thực tế từ CSDL theo thể loại sách.
+     * Dùng trong AiValuationService để ước tính giá bìa gốc chính xác hơn thay vì giá hardcode.
+     */
+    @Query("SELECT AVG(b.originalPrice) FROM Book b WHERE b.isActive = true AND b.originalPrice > 0 AND LOWER(b.category.categoryName) LIKE LOWER(CONCAT('%', :categoryKeyword, '%'))")
+    BigDecimal findAvgOriginalPriceByCategory(@Param("categoryKeyword") String categoryKeyword);
 }
+
