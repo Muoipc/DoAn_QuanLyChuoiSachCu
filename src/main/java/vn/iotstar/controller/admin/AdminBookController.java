@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.iotstar.dto.BookAdminDTO;
 import vn.iotstar.entity.Book;
+import vn.iotstar.entity.BookConsignment;
 import vn.iotstar.entity.Inventory;
 import vn.iotstar.entity.Store;
+import vn.iotstar.repository.BookConsignmentRepository;
 import vn.iotstar.security.CustomUserDetails;
 import vn.iotstar.service.IBookService;
 import vn.iotstar.service.IInventoryService;
@@ -37,6 +39,9 @@ public class AdminBookController {
 
     @Autowired
     private IInventoryService inventoryService;
+
+    @Autowired
+    private BookConsignmentRepository consignmentRepository;
 
     private List<Store> resolveAllowedStores(CustomUserDetails userDetails) {
         boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
@@ -63,7 +68,23 @@ public class AdminBookController {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Book> bookPage = bookService.searchAdminBooks(keyword, categoryId, minCondition, isActive, pageable);
 
+        // Ánh xạ các cuốn sách có nguồn gốc từ Tin Ký Gửi của khách hàng (Mô hình Chợ Tốt Recommerce)
+        List<BookConsignment> allConsignments = consignmentRepository.findAll();
+        Map<Long, BookConsignment> consignedBookMap = new HashMap<>();
+        for (Book b : bookPage.getContent()) {
+            if (b.getTitle() == null) continue;
+            for (BookConsignment c : allConsignments) {
+                if (c.getStatus() == BookConsignment.ConsignmentStatus.STORED
+                        && c.getBookTitle() != null
+                        && c.getBookTitle().trim().equalsIgnoreCase(b.getTitle().trim())) {
+                    consignedBookMap.put(b.getId(), c);
+                    break;
+                }
+            }
+        }
+
         model.addAttribute("bookPage", bookPage);
+        model.addAttribute("consignedBookMap", consignedBookMap);
         model.addAttribute("categories", bookService.findAllCategories());
         model.addAttribute("keyword", keyword);
         model.addAttribute("selectedCategoryId", categoryId);

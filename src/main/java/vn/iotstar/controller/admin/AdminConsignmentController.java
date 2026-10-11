@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.iotstar.entity.Book;
 import vn.iotstar.entity.BookConsignment;
 import vn.iotstar.entity.Store;
+import vn.iotstar.repository.BookRepository;
 import vn.iotstar.repository.CategoryRepository;
 import vn.iotstar.security.CustomUserDetails;
 import vn.iotstar.service.IConsignmentService;
@@ -36,6 +37,9 @@ public class AdminConsignmentController {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -129,7 +133,16 @@ public class AdminConsignmentController {
             }
         }
 
+        Book storedBook = null;
+        if (c.getStatus() == BookConsignment.ConsignmentStatus.STORED && c.getBookTitle() != null) {
+            List<Book> matched = bookRepository.findByTitleContainingIgnoreCase(c.getBookTitle().trim());
+            if (!matched.isEmpty()) {
+                storedBook = matched.get(0);
+            }
+        }
+
         model.addAttribute("consignment", c);
+        model.addAttribute("storedBook", storedBook);
         model.addAttribute("photos", photos);
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("isAdmin", isAdmin);

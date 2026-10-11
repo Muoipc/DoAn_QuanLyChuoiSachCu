@@ -53,12 +53,18 @@ public class ReportServiceImpl implements IReportService {
         long totalBooks = bookRepository.count();
         long totalUsers = userRepository.count();
         long pendingConsignments = consignmentRepository.countByStatus(BookConsignment.ConsignmentStatus.PENDING);
+        long approvedConsignments = consignmentRepository.countByStatus(BookConsignment.ConsignmentStatus.APPROVED);
+        long storedConsignments = consignmentRepository.countByStatus(BookConsignment.ConsignmentStatus.STORED);
+        BigDecimal platformCommission = totalRevenue.multiply(new BigDecimal("0.20")).setScale(0, java.math.RoundingMode.HALF_UP);
 
         summary.put("totalRevenue", totalRevenue);
         summary.put("totalOrders", totalOrders);
         summary.put("totalBooks", totalBooks);
         summary.put("totalUsers", totalUsers);
         summary.put("pendingConsignments", pendingConsignments);
+        summary.put("approvedConsignments", approvedConsignments);
+        summary.put("storedConsignments", storedConsignments);
+        summary.put("platformCommission", platformCommission);
 
         return summary;
     }

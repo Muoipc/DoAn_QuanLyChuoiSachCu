@@ -459,6 +459,7 @@
                     <thead>
                         <tr>
                             <th class="ps-4">Sách &amp; Tác giả</th>
+                            <th>Nguồn / Người bán</th>
                             <th>Thể loại</th>
                             <th class="text-center">Tình trạng (% mới)</th>
                             <th class="text-end">Giá bán / Giá gốc</th>
@@ -471,7 +472,7 @@
                     <tbody>
                         <!-- Trống -->
                         <tr th:if="${bookPage.empty}">
-                            <td colspan="8" class="text-center py-5 text-muted">
+                            <td colspan="9" class="text-center py-5 text-muted">
                                 <div class="py-4">
                                     <div class="mb-3">
                                         <i class="fa-solid fa-box-archive fa-3x text-secondary opacity-50"></i>
@@ -505,6 +506,33 @@
                                             <span class="badge bg-light text-secondary border px-1 py-0" style="font-size: 10px;">ISBN</span>
                                             <span th:text="${book.isbn}"></span>
                                         </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Nguồn sách (Phân biệt Sách Cửa Hàng vs Tin Ký Gửi Chợ Tốt) -->
+                            <td>
+                                <div th:if="${consignedBookMap != null and consignedBookMap.containsKey(book.id)}"
+                                     th:with="cons=${consignedBookMap.get(book.id)}">
+                                    <a th:href="@{/admin/consignments/{id}(id=${cons.id})}"
+                                       class="text-decoration-none d-inline-flex align-items-center gap-1 px-2 py-1 rounded-2 fw-bold"
+                                       style="font-size: 11.5px; background: rgba(238, 77, 45, 0.12); color: #C2410C; border: 1px solid rgba(238, 77, 45, 0.3);"
+                                       title="Xem hồ sơ thẩm định ký gửi">
+                                        <i class="fa-solid fa-handshake"></i>
+                                        <span th:text="'Tin Ký Gửi #KG-' + ${cons.id}">Tin Ký Gửi</span>
+                                    </a>
+                                    <div class="text-muted mt-1" style="font-size: 11px;">
+                                        <i class="fa-regular fa-user me-1"></i>Người bán: <strong class="text-dark" th:text="${cons.user != null ? cons.user.fullName : 'Độc giả'}">Nguyễn Văn A</strong>
+                                    </div>
+                                </div>
+                                <div th:unless="${consignedBookMap != null and consignedBookMap.containsKey(book.id)}">
+                                    <span class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded-2 fw-semibold"
+                                          style="font-size: 11.5px; background: rgba(2, 132, 199, 0.1); color: #0369A1; border: 1px solid rgba(2, 132, 199, 0.25);">
+                                        <i class="fa-solid fa-store"></i>
+                                        <span>Kho Chính Hãng</span>
+                                    </span>
+                                    <div class="text-muted mt-1" style="font-size: 11px;">
+                                        <i class="fa-solid fa-circle-check text-success me-1" style="font-size: 9px;"></i>Chuỗi cửa hàng
                                     </div>
                                 </div>
                             </td>
@@ -574,6 +602,9 @@
                             <!-- Thao tác -->
                             <td class="text-end pe-4">
                                 <div class="d-inline-flex gap-1">
+                                    <a th:href="@{/books/{id}(id=${book.id})}" target="_blank" class="btn-glass-action" title="Xem bài đăng trên sàn">
+                                        <i class="fa-solid fa-up-right-from-square text-primary"></i>
+                                    </a>
                                     <a th:href="@{/admin/books/edit/{id}(id=${book.id})}" class="btn-glass-action" title="Chỉnh sửa chi tiết">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
