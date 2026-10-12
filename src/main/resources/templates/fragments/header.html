@@ -546,7 +546,7 @@
             color: #8C4A27;
         }
 
-        /* 2. MAIN HEADER - BẠCH NGỌC KÍNH LỎNG (WHITE IVORY APPLE LIQUID GLASS) */
+        /* 2. MAIN HEADER - BẠCH NGỌC KÍNH LỎNG GHIM CỐ ĐỊNH TRÊN CÙNG (STICKY) */
         .shopee-header-section {
             background: rgba(250, 247, 242, 0.85) !important;
             backdrop-filter: blur(28px) saturate(190%) brightness(102%) !important;
@@ -554,22 +554,15 @@
             border-bottom: 1.5px solid rgba(230, 222, 210, 0.90) !important;
             box-shadow: 0 10px 30px -4px rgba(45, 24, 15, 0.05), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
             padding: 10px 0 !important;
-            position: sticky;
-            top: 0;
+            position: sticky !important;
+            top: 0 !important;
             z-index: 99999 !important;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease, box-shadow 0.35s ease !important;
-        }
-        .shopee-header-section.header-hidden {
-            transform: translateY(-100%) !important;
-            box-shadow: none !important;
-            pointer-events: none !important;
         }
         .chotot-home-header {
             background: transparent !important;
             position: relative !important;
             border-bottom: none !important;
             box-shadow: none !important;
-            transform: none !important;
         }
         /* Chữ Nav Tabs nổi bật trên nền nâu cổ điển */
         .chotot-home-header .chotot-nav-tab {
@@ -1960,42 +1953,6 @@
 
     <!-- SCRIPT ĐIỀU KHIỂN CHUNG CHO HEADER & TOAST/MODAL TOÀN CỤC -->
     <script>
-        // ================= TỰ ĐỘNG ẨN HEADER KHI CUỘN TRANG XUỐNG (SMART AUTO-HIDE) =================
-        (function() {
-            let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
-            let ticking = false;
-            const threshold = 12; // Ngưỡng cuộn để tránh rung lắc (anti-jitter)
-            const minScroll = 60; // Vượt quá chiều cao header mới bắt đầu ẩn
-
-            window.addEventListener('scroll', function() {
-                if (!ticking) {
-                    window.requestAnimationFrame(function() {
-                        const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
-                        const header = document.querySelector('.shopee-header-section:not(.chotot-home-header)');
-                        
-                        if (header) {
-                            const diff = currentScrollY - lastScrollY;
-                            if (currentScrollY > minScroll && diff > threshold) {
-                                // Cuộn xuống -> Tự ẩn thanh header
-                                header.classList.add('header-hidden');
-                                const pop = document.getElementById('chototFilterPopover');
-                                if (pop && pop.style.display === 'block') {
-                                    pop.style.display = 'none';
-                                }
-                            } else if (diff < -threshold || currentScrollY <= minScroll) {
-                                // Cuộn lên hoặc ở đầu trang -> Hiện lại thanh header
-                                header.classList.remove('header-hidden');
-                            }
-                        }
-                        
-                        lastScrollY = Math.max(0, currentScrollY);
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            }, { passive: true });
-        })();
-
         // ================= HÀM ĐIỀU KHIỂN BỘ LỌC CHỢ TỐT POPOVER (KHỚP 100% ẢNH IMAGE_6B7338.PNG) =================
         function toggleChototFilterPopover(event) {
             if (event) {
