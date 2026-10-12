@@ -60,17 +60,32 @@
             border-color: var(--color-fire); color: var(--color-fire);
         }
 
-        /* ================= HERO BANNER - NỀN ẢNH 3D TRỌN VẸN ================= */
-        .consignment-hero {
-            background: linear-gradient(rgba(20, 10, 5, 0.38), rgba(20, 10, 5, 0.30)),
-                        url('/images/consignment-hero-banner.jpg') no-repeat center 15% / cover;
-            color: white;
-            padding: 64px 0 74px 0;
-            min-height: 500px;
-            margin-bottom: 32px;
+        /* ================= KHỐI ĐẦU TRANG LIỀN MẠCH (HEADER TRONG SUỐT TRÊN BANNER 3D) ================= */
+        .consignment-unified-top-wrapper {
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            background: transparent;
+            margin-bottom: 32px;
+        }
+        .consignment-unified-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(20, 10, 5, 0.40), rgba(20, 10, 5, 0.32)),
+                        url('/images/consignment-hero-banner.jpg') no-repeat center 18% / cover;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .consignment-hero {
+            position: relative;
+            z-index: 10;
+            background: transparent !important;
+            color: white;
+            padding: 32px 0 68px 0;
+            margin-bottom: 0;
+            box-shadow: none;
+            overflow: visible;
         }
         .consignment-hero-content {
             margin-left: 140px;
@@ -443,60 +458,65 @@
 </head>
 <body>
 
-    <!-- HEADER -->
-    <!-- 1. HEADER CHUẨN ĐỒNG BỘ 100% KẾ THỪA TỪ TRANG HOME -->
-    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+    <!-- KHỐI ĐẦU TRANG ĐỒNG BỘ 1 ẢNH LIỀN MẠCH (HEADER TRONG SUỐT ĐÈ LÊN ẢNH HERO 3D) -->
+    <div class="consignment-unified-top-wrapper">
+        <div class="consignment-unified-backdrop"></div>
 
+        <!-- 1. HEADER TRONG SUỐT TRÊN NỀN ẢNH BANNER (ĐỒNG BỘ 100% VỚI TRANG HOME) -->
+        <th:block th:with="isHome=true, activeTab='consignment'">
+            <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+        </th:block>
 
-    <!-- HERO BANNER & 4 BƯỚC (PHONG CÁCH TIỆM SÁCH CŨ TỐI GIẢN) -->
-    <section class="consignment-hero">
-        <div class="container">
-            <div class="consignment-hero-content">
-                <span class="hero-tag">
-                    <i class="fa-solid fa-book-bookmark"></i> Dịch Vụ Ký Gửi Sách ReBook
-                </span>
-                <h1 class="hero-title">Trao Lại Sách Hay, Nhận Tiền Ngay</h1>
-                <p class="hero-desc">
-                    Hồi sinh những cuốn sách không dùng đến cùng ReBook. Tiếp nhận tại 5 chi nhánh TP.HCM, thẩm định minh bạch bằng công cụ AI và thanh toán trong 24 giờ.
-                </p>
+        <!-- 2. HERO BANNER & 4 BƯỚC (PHONG CÁCH TIỆM SÁCH CŨ TỐI GIẢN) -->
+        <section class="consignment-hero">
+            <div class="container">
+                <div class="consignment-hero-content">
+                    <span class="hero-tag">
+                        <i class="fa-solid fa-book-bookmark"></i> Dịch Vụ Ký Gửi Sách ReBook
+                    </span>
+                    <h1 class="hero-title">Trao Lại Sách Hay, Nhận Tiền Ngay</h1>
+                    <p class="hero-desc">
+                        Hồi sinh những cuốn sách không dùng đến cùng ReBook. Tiếp nhận tại 5 chi nhánh TP.HCM, thẩm định minh bạch bằng công cụ AI và thanh toán trong 24 giờ.
+                    </p>
 
-                <div class="process-steps-grid">
-                    <div class="step-item-card">
-                        <div class="step-card-top">
-                            <span class="step-num-text">01</span>
-                            <i class="fa-solid fa-pen-nib step-card-icon"></i>
+                    <div class="process-steps-grid">
+                        <div class="step-item-card">
+                            <div class="step-card-top">
+                                <span class="step-num-text">01</span>
+                                <i class="fa-solid fa-pen-nib step-card-icon"></i>
+                            </div>
+                            <div class="step-title">Khai Báo Sách</div>
+                            <div class="step-desc">Điền tựa sách, tác giả &amp; AI gợi ý định giá</div>
                         </div>
-                        <div class="step-title">Khai Báo Sách</div>
-                        <div class="step-desc">Điền tựa sách, tác giả &amp; AI gợi ý định giá</div>
-                    </div>
-                    <div class="step-item-card">
-                        <div class="step-card-top">
-                            <span class="step-num-text">02</span>
-                            <i class="fa-solid fa-location-dot step-card-icon"></i>
+                        <div class="step-item-card">
+                            <div class="step-card-top">
+                                <span class="step-num-text">02</span>
+                                <i class="fa-solid fa-location-dot step-card-icon"></i>
+                            </div>
+                            <div class="step-title">Chọn Chi Nhánh</div>
+                            <div class="step-desc">Gửi sách đến 1 trong 5 chi nhánh gần nhất</div>
                         </div>
-                        <div class="step-title">Chọn Chi Nhánh</div>
-                        <div class="step-desc">Gửi sách đến 1 trong 5 chi nhánh gần nhất</div>
-                    </div>
-                    <div class="step-item-card">
-                        <div class="step-card-top">
-                            <span class="step-num-text">03</span>
-                            <i class="fa-solid fa-magnifying-glass step-card-icon"></i>
+                        <div class="step-item-card">
+                            <div class="step-card-top">
+                                <span class="step-num-text">03</span>
+                                <i class="fa-solid fa-magnifying-glass step-card-icon"></i>
+                            </div>
+                            <div class="step-title">Thẩm Định 24 Giờ</div>
+                            <div class="step-desc">Kiểm tra thực tế và xác nhận mức giá</div>
                         </div>
-                        <div class="step-title">Thẩm Định 24 Giờ</div>
-                        <div class="step-desc">Kiểm tra thực tế và xác nhận mức giá</div>
-                    </div>
-                    <div class="step-item-card">
-                        <div class="step-card-top">
-                            <span class="step-num-text">04</span>
-                            <i class="fa-solid fa-money-bill-transfer step-card-icon"></i>
+                        <div class="step-item-card">
+                            <div class="step-card-top">
+                                <span class="step-num-text">04</span>
+                                <i class="fa-solid fa-money-bill-transfer step-card-icon"></i>
+                            </div>
+                            <div class="step-title">Nhận Thanh Toán</div>
+                            <div class="step-desc">Chuyển khoản tức thì hoặc đổi voucher mua sách</div>
                         </div>
-                        <div class="step-title">Nhận Thanh Toán</div>
-                        <div class="step-desc">Chuyển khoản tức thì hoặc đổi voucher mua sách</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <!-- MAIN FORM ĐĂNG KÝ KÝ GỬI -->
     <main class="container">
