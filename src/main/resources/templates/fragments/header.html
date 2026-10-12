@@ -546,19 +546,24 @@
             color: #8C4A27;
         }
 
-        /* 2. MAIN HEADER - MÀU NÂU NHẠT HOÀI CỔ SANG TRỌNG */
+        /* 2. MAIN HEADER - BẠCH NGỌC KÍNH LỎNG (WHITE IVORY APPLE LIQUID GLASS) */
         .shopee-header-section {
-            background: #8C6849 !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
-            box-shadow: 0 2px 10px rgba(45, 24, 15, 0.06) !important;
+            background: rgba(250, 247, 242, 0.85) !important;
+            backdrop-filter: blur(28px) saturate(190%) brightness(102%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%) !important;
+            border-bottom: 1.5px solid rgba(230, 222, 210, 0.90) !important;
+            box-shadow: 0 10px 30px -4px rgba(45, 24, 15, 0.05), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
             padding: 10px 0 !important;
             position: sticky;
             top: 0;
             z-index: 99999 !important;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .chotot-home-header {
             background: transparent !important;
             position: relative !important;
+            border-bottom: none !important;
+            box-shadow: none !important;
         }
         /* Chữ Nav Tabs nổi bật trên nền nâu cổ điển */
         .chotot-home-header .chotot-nav-tab {
@@ -819,16 +824,17 @@
         }
 
         .chotot-brand-pill {
-            background: transparent;
-            padding: 4px 0;
-            border: none;
-            box-shadow: none;
-            transition: opacity 0.2s ease;
+            background: #FFFFFF !important;
+            border: 1.5px solid #E5DFD5 !important;
+            border-radius: 9999px !important;
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.04), inset 0 1px 1px #FFFFFF !important;
+            padding: 6px 16px !important;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .chotot-brand-pill:hover {
-            background: transparent;
-            box-shadow: none;
-            opacity: 0.85;
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 18px rgba(140, 74, 39, 0.12), inset 0 1px 1px #FFFFFF !important;
+            border-color: #D7CBB8 !important;
         }
 
         /* Nav Tabs Chợ Tốt */
@@ -864,16 +870,16 @@
             content: none !important;
         }
 
-        /* Capsule Search Form in Header (Đồng bộ 100% Home & Search) */
+        /* Capsule Search Form in Header (Apple Liquid Glass) */
         .chotot-header-search-form {
             flex: 1;
             max-width: 560px;
             height: 42px;
-            background: #ffffff;
-            border-radius: 9999px;
-            border: 1.5px solid #D5D5D5;
+            background: #FFFFFF !important;
+            border-radius: 9999px !important;
+            border: 1.5px solid #E5DFD5 !important;
             padding: 3px 4px 3px 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 3px 12px rgba(45, 24, 15, 0.05), inset 0 1px 1px #FFFFFF !important;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -882,8 +888,8 @@
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .chotot-header-search-form:focus-within {
-            border-color: rgba(140, 74, 39, 0.5);
-            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.12);
+            border-color: #8C4A27 !important;
+            box-shadow: 0 6px 20px rgba(140, 74, 39, 0.14), inset 0 1px 1px #FFFFFF !important;
         }
 
         .chotot-header-search-form .chotot-input-field-wrap {
@@ -1179,29 +1185,30 @@
             transform: scale(0.98);
         }
 
-        /* Action buttons hình tròn màu trắng trên nền vàng Chợ Tốt */
+        /* Action buttons hình tròn Apple Liquid Glass */
         .chotot-circle-btn {
             width: 38px;
             height: 38px;
-            border-radius: 50%;
-            background: #ffffff !important;
-            border: none !important;
+            border-radius: 50% !important;
+            background: #FFFFFF !important;
+            border: 1.5px solid #E5DFD5 !important;
             color: #1C1917 !important;
             font-size: 15px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.04), inset 0 1px 1px #FFFFFF !important;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             text-decoration: none;
             position: relative;
             flex-shrink: 0;
         }
         .chotot-circle-btn:hover {
-            color: #EE4D2D !important;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.14);
+            color: #8C4A27 !important;
+            transform: translateY(-2px) scale(1.04);
+            border-color: #D7CBB8 !important;
+            box-shadow: 0 6px 16px rgba(140, 74, 39, 0.12), inset 0 1px 1px #FFFFFF !important;
         }
 
         .chotot-badge-dot {
@@ -1219,10 +1226,26 @@
         }
 
         .btn-chotot-login {
-            background: #ffffff !important;
+            background: #FFFFFF !important;
+            border: 1.5px solid #E5DFD5 !important;
             color: #1C1917 !important;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 700;
+            padding: 7px 18px;
+            border-radius: 9999px !important;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.04), inset 0 1px 1px #FFFFFF !important;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+        .btn-chotot-login:hover {
+            color: #8C4A27 !important;
+            border-color: #D7CBB8 !important;
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 16px rgba(140, 74, 39, 0.12), inset 0 1px 1px #FFFFFF !important;
+        }
             padding: 0 20px;
             height: 38px;
             border-radius: 9999px;
@@ -1451,9 +1474,9 @@
     <!-- 2. HEADER CHÍNH CHUẨN CHỢ TỐT VINTAGE (STICKY TOP 0) -->
     <header class="shopee-header-section" th:classappend="${isHome == true} ? 'chotot-home-header' : ''">
         <div class="container-shopee header-main-row" style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
-            <!-- Brand Logo dạng pill trắng nổi bật trên nền vàng Chợ Tốt -->
+            <!-- Brand Logo dạng pill trắng nổi bật chuẩn Apple Liquid Glass -->
             <div class="chotot-header-left" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
-                <a th:href="@{/}" class="shopee-brand-logo chotot-brand-pill" style="display:inline-flex; align-items:center; gap:8px; padding:6px 16px; background:#FFFFFF; border-radius:9999px; box-shadow:0 2px 8px rgba(0,0,0,0.08); text-decoration:none;">
+                <a th:href="@{/}" class="shopee-brand-logo chotot-brand-pill" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none;">
                     <img th:src="@{/images/brand-book-icon.png}" alt="ReBook" style="width:32px; height:32px; object-fit:contain; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.15));">
                     <span style="font-size:16px; font-weight:900; color:#1C1917; letter-spacing:0.2px; white-space:nowrap;">ReBook</span>
                 </a>
@@ -1640,7 +1663,7 @@
 
                 <!-- User Popover nếu Authenticated -->
                 <div sec:authorize="isAuthenticated()" class="shopee-user-wrapper">
-                    <div class="shopee-user-trigger" style="display:flex; align-items:center; gap:6px; cursor:pointer; background:#FFFFFF; border-radius:9999px; padding:4px 14px 4px 5px; box-shadow:0 2px 6px rgba(0,0,0,0.08);">
+                    <div class="shopee-user-trigger" style="display:flex; align-items:center; gap:6px; cursor:pointer; background:rgba(255, 255, 255, 0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1.5px solid rgba(255, 255, 255, 0.95); border-radius:9999px; padding:4px 14px 4px 5px; box-shadow:0 4px 16px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);">
                         <img th:src="${user != null and user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
                              alt="Avatar" class="shopee-user-avatar">
                         <span class="shopee-user-name" sec:authentication="name" style="max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; font-size:13px; color:#1C1917;">Tài khoản</span>

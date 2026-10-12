@@ -816,9 +816,9 @@ body {
 
 /* ================= 11. HỆ THỐNG GIAO DIỆN CO GIÃN LINH HOẠT (RESPONSIVE & FLUID ADAPTATION) ================= */
 
-/* 11.1 Chống tràn ngang và tự động thích ứng khung chứa */
+/* 11.1 Chống tràn ngang và tự động thích ứng khung chứa (Dùng clip để bảo vệ position: sticky cho Header) */
 html, body {
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
   width: 100% !important;
   box-sizing: border-box !important;
 }
