@@ -554,10 +554,12 @@
                         </div>
                     </th:block>
 
-                    <!-- Nút Mua Lại -->
-                    <a th:href="@{/}" class="btn-order-action btn-action-outline btn-reorder">
-                        <i class="fa-solid fa-rotate-right"></i> Mua Lại
-                    </a>
+                    <!-- Nút Mua Lại (Thực tế thêm sách vào giỏ) -->
+                    <form th:action="@{'/orders/reorder/' + ${order.orderCode}}" method="post" style="display:inline;">
+                        <button type="submit" class="btn-order-action btn-action-outline btn-reorder" style="cursor:pointer;">
+                            <i class="fa-solid fa-rotate-right"></i> Mua Lại
+                        </button>
+                    </form>
                 </div>
 
             </div>

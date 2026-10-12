@@ -874,9 +874,12 @@
                     <div class="shop-status-line">Online 5 Phút Trước</div>
                     <div class="shop-header-actions">
                         <button type="button" class="btn-shop-follow" 
+                                th:classappend="${isFollowed} ? 'followed' : ''"
+                                th:data-store-id="${store.id}"
                                 th:data-is-logged-in="${isLoggedIn}"
                                 onclick="toggleFollowShop(this)">
-                            <i class="fa-solid fa-plus"></i> Theo Dõi
+                            <i th:class="${isFollowed} ? 'fa-solid fa-check me-1' : 'fa-solid fa-plus me-1'"></i> 
+                            <span th:text="${isFollowed} ? 'Đã Theo Dõi' : 'Theo Dõi'">Theo Dõi</span>
                         </button>
                         <button type="button" class="btn-shop-chat-top" 
                                 th:data-store-id="${store.id}"
@@ -1179,9 +1182,10 @@
 
     <!-- JAVASCRIPT TƯƠNG TÁC -->
     <script th:inline="javascript">
-        // 1. Kiểm tra đăng nhập khi bấm Theo Dõi Shop
+        // 1. Kiểm tra đăng nhập và lưu trạng thái Theo Dõi Shop
         function toggleFollowShop(btn) {
             var isLoggedIn = btn.getAttribute('data-is-logged-in') === 'true';
+            var storeId = btn.getAttribute('data-store-id') || 1;
             if (!isLoggedIn) {
                 if (confirm('Vui lòng đăng nhập để theo dõi chi nhánh cửa hàng này!\nBạn có muốn chuyển đến trang Đăng nhập ngay không?')) {
                     window.location.href = '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search);
@@ -1189,19 +1193,25 @@
                 return;
             }
 
-            // Nếu đã đăng nhập: Chuyển đổi trạng thái
-            if (btn.classList.contains('followed')) {
-                btn.classList.remove('followed');
-                btn.innerHTML = '<i class="fa-solid fa-plus"></i> Theo Dõi';
-            } else {
-                btn.classList.add('followed');
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> Đã Theo Dõi';
-                if (typeof showFlyToast === 'function') {
-                    showFlyToast('Đã theo dõi cửa hàng thành công!');
-                } else {
-                    alert('Đã theo dõi cửa hàng thành công!');
-                }
-            }
+            fetch('/stores/api/toggle-follow/' + storeId, { method: 'POST' })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        if (data.followed) {
+                            btn.classList.add('followed');
+                            btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Đã Theo Dõi';
+                        } else {
+                            btn.classList.remove('followed');
+                            btn.innerHTML = '<i class="fa-solid fa-plus me-1"></i> Theo Dõi';
+                        }
+                    } else if (data.requireLogin) {
+                        window.location.href = '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search);
+                    }
+                })
+                .catch(function() {
+                    // Fallback client toggle
+                    btn.classList.toggle('followed');
+                });
         }
 
         // 2. Chat trực tiếp với chi nhánh qua Mini Chatbot

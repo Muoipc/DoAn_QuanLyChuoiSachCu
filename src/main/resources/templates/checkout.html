@@ -823,15 +823,36 @@
                         </div>
 
                         <!-- Đơn vị vận chuyển -->
-                        <div class="shipping-service-box">
-                            <div class="shipping-header-flex">
-                                <span class="shipping-type-title">
-                                    <i class="fa-solid fa-truck-fast"></i> Phương thức vận chuyển: Nhanh
-                                </span>
-                                <span class="shipping-fee-amount" id="shippingFeeDisplay">₫0</span>
+                        <div class="shipping-service-box" style="flex:1;">
+                            <div style="font-size:13px; font-weight:700; color:#1C1917; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
+                                <span><i class="fa-solid fa-truck-fast text-success me-1"></i> Phương thức vận chuyển:</span>
+                                <span class="shipping-fee-amount" id="shippingFeeDisplay">₫0 (Freeship)</span>
                             </div>
-                            <div class="shipping-sub-notes">
-                                Đồng kiểm khi nhận hàng. Nhận hàng dự kiến: <strong>26 Th09 - 28 Th09</strong>
+                            <div style="display:flex; flex-direction:column; gap:8px;" th:if="${shippingUnits != null and !shippingUnits.isEmpty()}">
+                                <label th:each="unit, stat : ${shippingUnits}" 
+                                       class="shipping-unit-option"
+                                       style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:#ffffff; border:1px solid #ECE7DE; border-radius:10px; cursor:pointer; transition:all 0.15s ease;">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <input type="radio" name="shippingUnitRadio" 
+                                               th:value="${unit.id}" 
+                                               th:data-fee="${unit.baseFee != null ? unit.baseFee : 0}"
+                                               th:data-days="${unit.estimatedDays}"
+                                               th:data-name="${unit.name}"
+                                               th:checked="${stat.first}"
+                                               onchange="selectShippingUnit(this)">
+                                        <div>
+                                            <strong style="font-size:13px; color:#1C1917;" th:text="${unit.name}">Giao Hàng Nhanh</strong>
+                                            <div style="font-size:11.5px; color:#78716C;" class="shipping-est-date">
+                                                Đồng kiểm. Dự kiến giao: <span class="est-date-text" th:text="${unit.estimatedDays}">2-3 ngày</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span style="font-size:13px; font-weight:700; color:#8C4A27;" 
+                                          th:text="'₫' + ${#numbers.formatDecimal(unit.baseFee != null ? unit.baseFee : 0, 0, 'POINT', 0, 'COMMA')}">₫25.000</span>
+                                </label>
+                            </div>
+                            <div th:unless="${shippingUnits != null and !shippingUnits.isEmpty()}" style="font-size:12.5px; color:#78716C;">
+                                Đồng kiểm khi nhận hàng. Giao tiêu chuẩn toàn quốc.
                             </div>
                         </div>
                     </div>
@@ -1063,6 +1084,38 @@
             document.getElementById('finalTotalPayDisplay').innerText = formatVND(finalTotal);
         }
 
+        function selectShippingUnit(radio) {
+            if (!radio) return;
+            const fee = parseFloat(radio.getAttribute('data-fee')) || 0;
+            const inputId = document.getElementById('inputShippingUnitId');
+            if (inputId) inputId.value = radio.value;
+
+            // Nếu đơn >= 150k được freeship, nếu không thì tính phí đơn vị
+            if (rawSubtotal >= 150000) {
+                currentShippingFee = 0;
+                document.getElementById('shippingFeeDisplay').innerText = '₫0 (Freeship)';
+                document.getElementById('summaryShippingFee').innerText = '₫0';
+            } else {
+                currentShippingFee = fee;
+                document.getElementById('shippingFeeDisplay').innerText = formatVND(fee);
+                document.getElementById('summaryShippingFee').innerText = formatVND(fee);
+            }
+            calculateFinalTotal();
+        }
+
+        // Tính ngày nhận hàng động theo thời gian thực (Hôm nay + 2 đến + 4 ngày)
+        function initEstimatedDates() {
+            const today = new Date();
+            const d1 = new Date(today);
+            d1.setDate(today.getDate() + 2);
+            const d2 = new Date(today);
+            d2.setDate(today.getDate() + 4);
+            const dateStr = `${d1.getDate()} Th${d1.getMonth() + 1} - ${d2.getDate()} Th${d2.getMonth() + 1}`;
+            document.querySelectorAll('.est-date-text').forEach(el => {
+                el.innerText = dateStr;
+            });
+        }
+
         // 1. Chuyển đổi phương thức nhận hàng (Giao tận nơi vs Nhận tại cửa hàng)
         function selectDeliveryMode(mode) {
             const btnHome = document.getElementById('btnModeHome');
@@ -1212,6 +1265,7 @@
         }
 
         // Khởi tạo ban đầu
+        initEstimatedDates();
         calculateFinalTotal();
         const initialVoucherInput = document.getElementById('voucherCodeInput');
         if (initialVoucherInput && initialVoucherInput.value && initialVoucherInput.value.trim() !== '') {

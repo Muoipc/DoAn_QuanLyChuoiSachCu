@@ -72,6 +72,7 @@ public class StoreController {
             @RequestParam(value = "sort", defaultValue = "popular") String sort,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @AuthenticationPrincipal CustomUserDetails userDetails,
+            jakarta.servlet.http.HttpServletRequest request,
             Model model) {
 
         Store store = storeRepository.findById(id).orElse(null);
@@ -205,6 +206,12 @@ public class StoreController {
         model.addAttribute("storeCategories", storeCategories);
         boolean isLoggedIn = (userDetails != null && userDetails.getId() != null);
         model.addAttribute("isLoggedIn", isLoggedIn);
+
+        @SuppressWarnings("unchecked")
+        Set<Long> followed = (Set<Long>) request.getSession().getAttribute("FOLLOWED_STORES");
+        boolean isFollowed = (followed != null && followed.contains(id));
+        model.addAttribute("isFollowed", isFollowed);
+
         model.addAttribute("categoryCountMap", categoryCountMap);
         model.addAttribute("selectedCategoryId", effectiveCatId);
         model.addAttribute("selectedCategory", currentCategory);
@@ -234,11 +241,54 @@ public class StoreController {
             @RequestParam(value = "sort", defaultValue = "popular") String sort,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @AuthenticationPrincipal CustomUserDetails userDetails,
+            jakarta.servlet.http.HttpServletRequest request,
             Model model) {
         Store store = storeRepository.findBySlug(slug).orElse(null);
         if (store != null) {
-            return storeDetail(store.getId(), categoryId, null, minCondition, minPrice, maxPrice, entryPoint, itemId, sort, page, userDetails, model);
+            return storeDetail(store.getId(), categoryId, null, minCondition, minPrice, maxPrice, entryPoint, itemId, sort, page, userDetails, request, model);
         }
         return "redirect:/stores";
+    }
+
+    /**
+     * API Toggle Theo Dõi chi nhánh cửa hàng.
+     * Lưu trạng thái vào Session để khi F5 trang không bị mất trạng thái.
+     * URL: POST /stores/api/toggle-follow/{id}
+     */
+    @PostMapping("/api/toggle-follow/{id}")
+    @ResponseBody
+    public org.springframework.http.ResponseEntity<Map<String, Object>> toggleFollowStore(
+            @PathVariable("id") Long storeId,
+            jakarta.servlet.http.HttpServletRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Map<String, Object> resp = new HashMap<>();
+        if (userDetails == null || userDetails.getId() == null) {
+            resp.put("success", false);
+            resp.put("requireLogin", true);
+            resp.put("message", "Vui lòng đăng nhập để theo dõi chi nhánh!");
+            return org.springframework.http.ResponseEntity.status(401).body(resp);
+        }
+
+        @SuppressWarnings("unchecked")
+        Set<Long> followed = (Set<Long>) request.getSession().getAttribute("FOLLOWED_STORES");
+        if (followed == null) {
+            followed = new HashSet<>();
+        }
+
+        boolean isNowFollowed;
+        if (followed.contains(storeId)) {
+            followed.remove(storeId);
+            isNowFollowed = false;
+        } else {
+            followed.add(storeId);
+            isNowFollowed = true;
+        }
+        request.getSession().setAttribute("FOLLOWED_STORES", followed);
+
+        resp.put("success", true);
+        resp.put("followed", isNowFollowed);
+        resp.put("message", isNowFollowed ? "Đã theo dõi chi nhánh thành công!" : "Đã hủy theo dõi chi nhánh!");
+        return org.springframework.http.ResponseEntity.ok(resp);
     }
 }

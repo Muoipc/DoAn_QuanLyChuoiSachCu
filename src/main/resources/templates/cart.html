@@ -779,18 +779,6 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="voucher-row" style="border-bottom:none;">
-                    <div class="voucher-left">
-                        <i class="fa-solid fa-coins text-warning" style="font-size:20px;"></i>
-                        <span>Điểm Tích Lũy Sách Cũ</span>
-                        <span style="font-size:12px; color:#78716C; font-weight:400;">(Dùng 2.000 Điểm tiết kiệm ₫2.000)</span>
-                    </div>
-                    <div class="voucher-right">
-                        <span id="cartCoinsDiscountDisplay" style="font-size:13.5px; color:#ee4d2d; font-weight:800;">-₫2.000</span>
-                        <input type="checkbox" class="checkbox-custom" id="cartCoinsCheckbox" checked onchange="toggleCartCoins(this)">
-                    </div>
-                </div>
             </div>
 
             <!-- 5. THANH THANH TOÁN DÍNH ĐÁY (SHOPEE STICKY BOTTOM CHECKOUT BAR) -->
@@ -834,35 +822,11 @@
                     <i class="fa-solid fa-heart text-danger"></i> CÓ THỂ BẠN CŨNG THÍCH
                 </div>
                 <div class="recommend-grid">
-                    <a th:href="@{/books/2}" class="recommend-card">
-                        <img src="/images/books/book_2.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Yêu Những Điều Không Hoàn Hảo</div>
-                        <div class="recommend-price">₫45.000</div>
-                    </a>
-                    <a th:href="@{/books/3}" class="recommend-card">
-                        <img src="/images/books/book_3.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Học Cách Mặc Kệ Điểm Yếu</div>
-                        <div class="recommend-price">₫52.000</div>
-                    </a>
-                    <a th:href="@{/books/4}" class="recommend-card">
-                        <img src="/images/books/book_4.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Đắc Nhân Tâm (Bản Cũ Đẹp)</div>
-                        <div class="recommend-price">₫45.000</div>
-                    </a>
-                    <a th:href="@{/books/5}" class="recommend-card">
-                        <img src="/images/books/book_5.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Nhà Giả Kim (Paulo Coelho)</div>
-                        <div class="recommend-price">₫38.000</div>
-                    </a>
-                    <a th:href="@{/books/6}" class="recommend-card">
-                        <img src="/images/books/book_6.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Kính Vạn Hoa (Nguyễn Nhật Ánh)</div>
-                        <div class="recommend-price">₫35.000</div>
-                    </a>
-                    <a th:href="@{/books/7}" class="recommend-card">
-                        <img src="/images/books/book_7.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Cho Tôi Xin Một Vé Đi Tuổi Thơ</div>
-                        <div class="recommend-price">₫42.000</div>
+                    <a th:each="rb : ${recommendedBooks}" th:href="@{'/books/' + ${rb.id}}" class="recommend-card">
+                        <img th:src="${rb.primaryImageUrl != null ? rb.primaryImageUrl : '/images/books/book_1.jpg'}" 
+                             th:alt="${rb.title}" class="recommend-thumb" onerror="this.src='/images/books/book_1.jpg';">
+                        <div class="recommend-name" th:text="${rb.title}">Tên sách</div>
+                        <div class="recommend-price" th:text="'₫' + ${#numbers.formatDecimal(rb.minPrice != null ? rb.minPrice : rb.price, 0, 'POINT', 0, 'COMMA')}">₫45.000</div>
                     </a>
                 </div>
             </section>
@@ -1060,7 +1024,7 @@
         }
 
         function calculateCartFinalTotal() {
-            const coinsVal = document.getElementById('cartCoinsCheckbox')?.checked ? coinsDiscount : 0;
+            const coinsVal = 0;
             const finalTotal = Math.max(0, rawSubtotal - appliedVoucherDiscount - coinsVal);
             
             const displayEl = document.getElementById('cartFinalTotalDisplay');

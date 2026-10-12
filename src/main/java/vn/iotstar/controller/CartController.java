@@ -17,6 +17,7 @@ import vn.iotstar.repository.InventoryRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Controller điều hướng và xử lý giỏ hàng lưu CSDL MySQL.
@@ -41,6 +42,9 @@ public class CartController {
     /** Repository tồn kho — dùng để kiểm tra số lượng có sẵn trước khi thêm giỏ hàng */
     @Autowired
     private InventoryRepository inventoryRepository;
+
+    @Autowired
+    private vn.iotstar.repository.BookRepository bookRepository;
 
     /**
      * Xác định userId của phiên hiện tại: ưu tiên tài khoản đã đăng nhập Spring Security.
@@ -77,12 +81,19 @@ public class CartController {
 
         List<vn.iotstar.entity.Voucher> vouchers = voucherRepository.findByIsActiveTrue();
 
+        // Nạp sách gợi ý động (Top bán chạy / nổi bật) thay vì hardcode HTML tĩnh
+        List<vn.iotstar.entity.Book> recommendedBooks = bookRepository.findTopSoldWithImages(6);
+        if (recommendedBooks == null || recommendedBooks.isEmpty()) {
+            recommendedBooks = bookRepository.findAllActiveWithImages().stream().limit(6).collect(Collectors.toList());
+        }
+
         model.addAttribute("cart", cart);
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("totalSavings", totalSavings);
         model.addAttribute("totalQuantity", totalQuantity);
         model.addAttribute("vouchers", vouchers);
+        model.addAttribute("recommendedBooks", recommendedBooks);
         model.addAttribute("isGuestMode", userDetails == null);
         model.addAttribute("pageTitle", "Giỏ Hàng (" + totalQuantity + " cuốn sách) - Chuỗi Sách Cũ");
 

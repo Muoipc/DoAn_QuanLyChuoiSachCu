@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import vn.iotstar.entity.SupportTicket;
 import vn.iotstar.repository.StoreRepository;
+import vn.iotstar.repository.SupportTicketRepository;
 
 /**
  * ============================================================================
@@ -29,6 +31,9 @@ public class HelpController {
 
     @Autowired
     private StoreRepository storeRepository;
+
+    @Autowired
+    private SupportTicketRepository supportTicketRepository;
 
     /**
      * Hiển thị trang chủ Trung Tâm Trợ Giúp
@@ -58,9 +63,19 @@ public class HelpController {
             @RequestParam("message") String message,
             RedirectAttributes redirectAttributes) {
 
-        // Ghi nhận yêu cầu hỗ trợ
+        // Ghi nhận và lưu phiếu hỗ trợ vào Database
+        SupportTicket ticket = new SupportTicket();
+        ticket.setFullName(fullName);
+        ticket.setEmail(email);
+        ticket.setPhone(phone);
+        ticket.setOrderCode(orderCode);
+        ticket.setCategory(category);
+        ticket.setMessage(message);
+        ticket.setStatus(SupportTicket.TicketStatus.OPEN);
+        supportTicketRepository.save(ticket);
+
         redirectAttributes.addFlashAttribute("successMessage", 
-            "Cảm ơn " + fullName + "! Yêu cầu hỗ trợ về [" + category + "] của bạn đã được ghi nhận. Bộ phận CSKH Chuỗi Sách Cũ sẽ phản hồi qua email " + email + " trong vòng 24 giờ làm việc.");
+            "Cảm ơn " + fullName + "! Yêu cầu hỗ trợ về [" + category + "] của bạn đã được ghi nhận trong hệ thống (Mã phiếu #" + ticket.getId() + "). Bộ phận CSKH Chuỗi Sách Cũ sẽ phản hồi qua email " + email + " trong vòng 24 giờ làm việc.");
 
         return "redirect:/help#contact-form";
     }

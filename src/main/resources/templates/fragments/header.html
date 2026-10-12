@@ -1579,11 +1579,11 @@
 
             <!-- Nhóm nút hành động Header bên phải -->
             <div style="display:flex; align-items:center; gap:14px; flex-shrink:0;">
-                <!-- 1. Nút Thông Báo hình tròn ngoài Header kèm badge & Popover -->
+                <!-- 1. Nút Thông Báo hình tròn ngoài Header kèm Popover -->
                 <div class="shopee-noti-wrapper">
-                    <a th:href="@{/help}" class="chotot-circle-btn" aria-label="Thông báo" title="Thông báo">
+                    <a th:href="@{/orders}" class="chotot-circle-btn" aria-label="Thông báo" title="Thông báo">
                         <i class="fa-regular fa-bell"></i>
-                        <span class="notification-badge" style="position:absolute; top:-4px; right:-4px; background:#EE4D2D; color:#ffffff; font-size:11px; font-weight:800; min-width:18px; height:18px; border-radius:9999px; display:flex; align-items:center; justify-content:center; padding:0 4px; border:2px solid #ffffff; box-shadow:0 1px 4px rgba(0,0,0,0.2);">5</span>
+                        <span sec:authorize="isAuthenticated()" class="notification-badge" style="position:absolute; top:-2px; right:-2px; background:#EE4D2D; width:8px; height:8px; border-radius:9999px; border:1.5px solid #ffffff;"></span>
                     </a>
                     <div class="shopee-noti-popover">
                         <div class="noti-popover-header">Thông Báo Mới Nhận</div>
@@ -1601,8 +1601,8 @@
                             <a th:href="@{/orders}" class="noti-item unread">
                                 <img th:src="@{/images/books/book_2.jpg}" alt="Đơn hàng" class="noti-thumb">
                                 <div class="noti-body">
-                                    <h4 class="noti-title">Đơn hàng #ORD259683735 đã được kho Thủ Đức xác nhận</h4>
-                                    <p class="noti-desc">📦 Đang chuẩn bị cuốn "Đắc Nhân Tâm (Khổ Lớn)". Đơn vị vận chuyển sẽ giao trong 1-2 ngày tới.</p>
+                                    <h4 class="noti-title">Theo dõi tiến trình đơn hàng &amp; giao nhận</h4>
+                                    <p class="noti-desc">📦 Toàn bộ đơn hàng được đóng gói và giao nhanh trong 1-2 ngày. Bấm để xem chi tiết lịch sử đơn.</p>
                                 </div>
                             </a>
 
@@ -1621,7 +1621,7 @@
                                 </div>
                             </a>
                         </div>
-                        <a th:href="@{/help}" class="noti-popover-footer">Xem Tất Cả Thông Báo</a>
+                        <a th:href="@{/orders}" class="noti-popover-footer">Xem Lịch Sử Đơn Hàng</a>
                     </div>
                 </div>
 

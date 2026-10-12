@@ -2200,8 +2200,10 @@
             } else if (network === 'messenger') {
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(url).then(function() {
-                        if (typeof showLiquidToast === 'function') {
-                            showLiquidToast('Đã sao chép liên kết sách để gửi qua Messenger!', 'success');
+                        if (typeof showShopeeToast === 'function') {
+                            showShopeeToast('Đã sao chép liên kết sách để gửi qua Messenger!');
+                        } else {
+                            alert('Đã sao chép liên kết sách để gửi qua Messenger!');
                         }
                     });
                 }
