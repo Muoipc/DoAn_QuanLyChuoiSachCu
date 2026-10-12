@@ -350,8 +350,6 @@
             // Nâng cấp z-index của header cha lên mức cao nhất
             let parentHeader = wrap.closest('header, .header-wrap, .shopee-header-section, .cart-header-main, .search-header-main');
             if (parentHeader) {
-                parentHeader.style.setProperty('position', 'sticky', 'important');
-                parentHeader.style.setProperty('top', '0', 'important');
                 parentHeader.style.setProperty('z-index', '99999', 'important');
             }
 
