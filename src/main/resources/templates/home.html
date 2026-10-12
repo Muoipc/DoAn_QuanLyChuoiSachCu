@@ -662,95 +662,82 @@
         .shopee-product-card {
             background: #ffffff;
             border: 1px solid #ECE7DE;
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             flex-direction: column;
             text-decoration: none;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 1px 4px rgba(45, 24, 15, 0.03);
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
+            height: 100%;
         }
         .shopee-product-card:hover {
             border-color: rgba(140, 74, 39, 0.35);
-            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.09);
-            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(45, 24, 15, 0.08);
+            transform: translateY(-4px);
             z-index: 2;
         }
 
         .product-thumb-wrap {
             position: relative;
-            height: 200px;
+            height: 210px;
             width: 100%;
-            background: #faf8f5;
+            background: #FAF8F5;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 12px;
             overflow: hidden;
         }
 
         .product-thumb-img {
-            max-height: 92%;
-            max-width: 92%;
+            max-height: 100%;
+            max-width: 100%;
             object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+            transition: transform 0.25s ease;
         }
         .shopee-product-card:hover .product-thumb-img {
-            transform: none;
+            transform: scale(1.03);
         }
 
-        /* Nút Mua Ngay Nhanh trên Thẻ Sách */
-        .btn-card-buy-now {
-            margin-top: 8px;
-            background: #ee4d2d;
-            color: #ffffff;
-            border: 1px solid #ee4d2d;
+        /* Badge Độ Mới Tinh Tế (Thanh nhã, không che khuất bìa sách) */
+        .card-condition-pill {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(232, 222, 200, 0.95);
+            color: #57534E;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 3px 8px;
             border-radius: 9999px;
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            width: 100%;
-            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.25);
-            transition: background-color 0.15s ease, border-color 0.15s ease;
-        }
-        .btn-card-buy-now:hover {
-            background: #d73211;
-            border-color: #d73211;
-            transform: none !important;
-        }
-        .btn-card-buy-now:active {
-            transform: scale(0.96) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            letter-spacing: 0.2px;
         }
 
-        .card-discount-tag {
+        /* Badge Giảm Giá Nhẹ Nhàng (Chỉ hiện khi có sale) */
+        .card-discount-pill {
             position: absolute;
-            top: 0; right: 0;
-            background: rgba(255, 218, 0, 0.95);
-            color: #b73a00;
-            font-weight: 900;
-            font-size: 11px;
-            padding: 2px 6px;
-            border-bottom-left-radius: 4px;
-        }
-
-        .card-condition-tag {
-            position: absolute;
-            bottom: 6px; left: 6px;
-            background: rgba(0, 122, 87, 0.9);
-            color: white;
-            font-size: 10px;
+            top: 10px;
+            right: 10px;
+            background: rgba(254, 242, 242, 0.95);
+            color: #DC2626;
+            border: 1px solid rgba(254, 202, 202, 0.85);
+            font-size: 10.5px;
             font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 3px;
+            padding: 3px 7px;
+            border-radius: 9999px;
+            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.08);
         }
 
         .product-info-wrap {
-            padding: 10px;
+            padding: 14px 14px 12px;
             display: flex;
             flex-direction: column;
             flex: 1;
@@ -758,29 +745,28 @@
         }
 
         .product-title {
-            font-size: 13px;
+            font-size: 13.5px;
             font-weight: 700;
             color: #1C1917;
-            line-height: 1.35;
+            line-height: 1.4;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            margin-bottom: 6px;
-            height: 35px;
+            margin-bottom: 4px;
+            height: 38px;
         }
 
-        /* Tag chi nhánh thông minh, tinh tế trên thẻ sách */
-        .product-store-smart-tag {
-            font-size: 11px;
+        .product-author-meta {
+            font-size: 11.5px;
             color: #78716C;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .product-price-row {
@@ -788,17 +774,21 @@
             align-items: baseline;
             justify-content: space-between;
             margin-top: auto;
+            padding-top: 8px;
+            border-top: 1px solid #F5F2EB;
         }
 
         .price-current {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
-            color: #ee4d2d !important;
+            color: #8C4A27 !important;
+            letter-spacing: -0.2px;
         }
 
         .price-sold-count {
             font-size: 11px;
-            color: #78716C;
+            color: #A8A29E;
+            font-weight: 500;
         }
 
         /* Nút xem thêm chuẩn Apple Capsule Pill căn giữa */
@@ -2034,18 +2024,23 @@
                 <a th:each="book : ${dailyBooks}" th:href="@{'/books/' + ${book.id}}" class="shopee-product-card">
                     <div class="product-thumb-wrap">
                         <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" 
-                             th:alt="${book.title}" class="product-thumb-img">
-                        <span class="card-discount-tag" th:text="'-' + ${book.maxDiscountPercent} + '%'">-40%</span>
-                        <span class="card-condition-tag" th:text="'TỪ ' + ${book.conditionPercent} + '% MỚI'">95% MỚI</span>
+                             th:alt="${book.title}" class="product-thumb-img" loading="lazy"
+                             onerror="this.src='/images/books/book_1.jpg';">
+                        
+                        <!-- Badge Độ mới thanh lịch -->
+                        <span class="card-condition-pill" th:text="${book.conditionPercent} + '% mới'">95% mới</span>
+
+                        <!-- Badge Giảm giá nhẹ nhàng (chỉ hiện khi có sale) -->
+                        <span class="card-discount-pill" th:if="${book.maxDiscountPercent > 0}" th:text="'-' + ${book.maxDiscountPercent} + '%'">-40%</span>
                     </div>
 
                     <div class="product-info-wrap">
                         <h4 class="product-title" th:text="${book.title}">Tên sách cũ tuyển chọn</h4>
 
-                        <!-- Tag chi nhánh thông minh, tinh tế -->
-                        <div class="product-store-smart-tag">
-                            <i class="fa-solid fa-location-dot text-danger"></i>
-                            <span>Có tại: CN Thủ Đức, Q.1</span>
+                        <!-- Tác giả sách hoài cổ -->
+                        <div class="product-author-meta">
+                            <i class="fa-solid fa-pen-nib text-muted" style="font-size: 10px;"></i>
+                            <span th:text="${book.author != null && !#strings.isEmpty(book.author) ? book.author : 'Nhiều tác giả'}">Tác giả</span>
                         </div>
 
                         <div class="product-price-row">
