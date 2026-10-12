@@ -50,6 +50,7 @@ public class AdminInventoryController {
     public String viewInventory(
             @RequestParam(name = "storeId", required = false) Long storeId,
             @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "stockFilter", required = false) String stockFilter,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model
     ) {
@@ -96,17 +97,29 @@ public class AdminInventoryController {
                     .toList();
         }
 
-        model.addAttribute("stores", stores);
-        model.addAttribute("currentStoreId", currentStoreId);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("inventoryList", inventoryList);
-        model.addAttribute("isAdmin", isAdmin);
-        model.addAttribute("managedStore", managedStore);
-
-        // Đếm số lượng cảnh báo hết hàng / sắp hết
+        // Đếm số lượng cảnh báo hết hàng / sắp hết trước khi lọc stockFilter
         long outOfStock = inventoryList.stream().filter(i -> i.getQuantity() <= 0).count();
         long lowStock = inventoryList.stream().filter(i -> i.getQuantity() > 0 && i.getQuantity() <= 3).count();
         long normalStock = inventoryList.stream().filter(i -> i.getQuantity() > 3).count();
+
+        // Lọc theo trạng thái mức tồn kho nếu có
+        if (stockFilter != null && !stockFilter.isBlank()) {
+            if ("OUT_OF_STOCK".equalsIgnoreCase(stockFilter)) {
+                inventoryList = inventoryList.stream().filter(i -> i.getQuantity() <= 0).toList();
+            } else if ("LOW_STOCK".equalsIgnoreCase(stockFilter)) {
+                inventoryList = inventoryList.stream().filter(i -> i.getQuantity() > 0 && i.getQuantity() <= 3).toList();
+            } else if ("NORMAL".equalsIgnoreCase(stockFilter)) {
+                inventoryList = inventoryList.stream().filter(i -> i.getQuantity() > 3).toList();
+            }
+        }
+
+        model.addAttribute("stores", stores);
+        model.addAttribute("currentStoreId", currentStoreId);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedStockFilter", stockFilter);
+        model.addAttribute("inventoryList", inventoryList);
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("managedStore", managedStore);
 
         model.addAttribute("outOfStockCount", outOfStock);
         model.addAttribute("lowStockCount", lowStock);

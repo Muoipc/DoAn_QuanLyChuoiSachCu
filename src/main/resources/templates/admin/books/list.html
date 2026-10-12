@@ -183,17 +183,17 @@
             width: 52px;
             height: 74px;
             border-radius: 8px;
-            overflow: hidden;
+            overflow: visible;
             box-shadow: 0 6px 14px rgba(45, 24, 15, 0.12);
             border: 1px solid rgba(255, 255, 255, 0.8);
             flex-shrink: 0;
             background: #f1f5f9;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
+            cursor: zoom-in;
         }
 
-        .table-liquid tbody tr:hover .book-cover-frame {
-            transform: scale(1.05) rotate(-1deg);
-            box-shadow: 0 10px 20px rgba(45, 24, 15, 0.18);
+        .book-cover-frame:hover {
+            z-index: 100;
         }
 
         .book-cover-frame img {
@@ -201,6 +201,15 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            border-radius: 8px;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+        }
+
+        .book-cover-frame:hover img {
+            transform: scale(2.6) translateX(24px);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+            z-index: 999;
+            position: relative;
         }
 
         /* Tags 4px bo góc thanh lịch */

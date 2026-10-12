@@ -777,17 +777,10 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory/transfer'} ? 'active' : ''">
-                    <a th:href="@{/admin/inventory/transfer}">
-                        <i class="fa-solid fa-dolly"></i>
-                        <span>Tạo Chuyển Kho</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/inventory/transfers')} ? 'active' : ''">
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/inventory/transfer')} ? 'active' : ''">
                     <a th:href="@{/admin/inventory/transfers}">
-                        <i class="fa-solid fa-list-check"></i>
-                        <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Duyệt Điều Chuyển' : 'Tiến Độ Chuyển Kho'}">Duyệt Điều Chuyển</span>
+                        <i class="fa-solid fa-dolly"></i>
+                        <span>Điều Chuyển Kho</span>
                     </a>
                 </li>
 
@@ -824,13 +817,6 @@
                         <span class="badge bg-danger rounded-pill ms-auto" id="sidebarConsignmentBadge"
                               th:if="${pendingConsignmentCount != null and pendingConsignmentCount > 0}"
                               th:text="${pendingConsignmentCount}">0</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/shipper')} ? 'active' : ''">
-                    <a th:href="@{/shipper/orders}">
-                        <i class="fa-solid fa-motorcycle"></i>
-                        <span>Phân Hệ Shipper</span>
                     </a>
                 </li>
 

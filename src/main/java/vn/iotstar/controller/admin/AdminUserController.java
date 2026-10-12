@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,9 @@ public class AdminUserController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Danh sách tài khoản người dùng và phân quyền (CHỈ DÀNH RIÊNG CHO QUẢN TRỊ VIÊN - ADMIN)
@@ -112,6 +116,85 @@ public class AdminUserController {
         } catch (Exception e) {
             redirect.addFlashAttribute("errorMessage", "Lỗi: " + e.getMessage());
         }
+        return "redirect:/admin/users";
+    }
+
+    /**
+     * Tạo tài khoản nhân viên mới (Manager, Shipper) trực tiếp từ Admin
+     * POST /admin/users/create-staff
+     */
+    @PostMapping("/create-staff")
+    public String createStaff(
+            @RequestParam("fullName") String fullName,
+            @RequestParam("username") String username,
+            @RequestParam("email") String email,
+            @RequestParam("phone") String phone,
+            @RequestParam("password") String password,
+            @RequestParam("roleId") Integer roleId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect
+    ) {
+        if (userDetails == null || !"ROLE_ADMIN".equals(userDetails.getRoleName())) {
+            redirect.addFlashAttribute("errorMessage", "Không có quyền thực hiện!");
+            return "redirect:/admin";
+        }
+
+        try {
+            if (userRepository.existsByUsername(username.trim().toLowerCase())) {
+                redirect.addFlashAttribute("errorMessage", "Tên đăng nhập '" + username + "' đã tồn tại trên hệ thống!");
+                return "redirect:/admin/users";
+            }
+
+            Role role = roleRepository.findById(roleId)
+                    .orElseThrow(() -> new IllegalArgumentException("Vai trò không hợp lệ"));
+
+            User user = new User();
+            user.setFullName(fullName.trim());
+            user.setUsername(username.trim().toLowerCase());
+            user.setEmail(email.trim());
+            user.setPhone(phone.trim());
+            user.setPassword(passwordEncoder.encode(password));
+            user.setRole(role);
+            user.setEnabled(true);
+
+            userRepository.save(user);
+            redirect.addFlashAttribute("successMessage", "Đã cấp tài khoản nhân viên '" + username + "' (" + role.getName() + ") thành công!");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("errorMessage", "Lỗi tạo tài khoản: " + e.getMessage());
+        }
+
+        return "redirect:/admin/users";
+    }
+
+    /**
+     * Đặt lại mật khẩu nhân viên về mặc định (123456)
+     * POST /admin/users/{id}/reset-password
+     */
+    @PostMapping("/{id}/reset-password")
+    public String resetPassword(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect
+    ) {
+        if (userDetails == null || !"ROLE_ADMIN".equals(userDetails.getRoleName())) {
+            redirect.addFlashAttribute("errorMessage", "Không có quyền thực hiện!");
+            return "redirect:/admin";
+        }
+
+        try {
+            User user = userRepository.findById(id).orElse(null);
+            if (user == null) {
+                redirect.addFlashAttribute("errorMessage", "Không tìm thấy người dùng!");
+                return "redirect:/admin/users";
+            }
+
+            user.setPassword(passwordEncoder.encode("123456"));
+            userRepository.save(user);
+            redirect.addFlashAttribute("successMessage", "Đã đặt lại mật khẩu cho tài khoản '" + user.getUsername() + "' về mặc định (123456)!");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("errorMessage", "Lỗi reset mật khẩu: " + e.getMessage());
+        }
+
         return "redirect:/admin/users";
     }
 }
