@@ -1468,46 +1468,59 @@
                     <input type="text" name="keyword" th:value="${selectedQuery}" placeholder="Tìm sản phẩm, tên sách cũ, tác giả, giáo trình..." class="chotot-native-input" autocomplete="off">
                 </div>
 
-                <!-- Nút chọn khu vực / Mở bộ lọc popover (Khớp 100% ảnh image_6b7338.png) -->
+                <!-- Nút mở bộ lọc popover (Đồng bộ 100% với trang đầu home.html) -->
                 <div class="chotot-filter-trigger-wrap">
                     <button type="button" class="chotot-location-button-wrap" id="headerFilterBtn" onclick="toggleChototFilterPopover(event)">
-                        <svg class="location-pin-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M20.0005 10.0439C20.0004 11.4492 19.4826 12.8887 18.7915 14.2021C18.0937 15.5284 17.1749 16.8075 16.2759 17.9131C15.3742 19.0219 14.4755 19.9768 13.8032 20.6533C13.4666 20.992 13.1851 21.2623 12.9868 21.4492C12.8876 21.5427 12.8088 21.6161 12.7544 21.666L12.0005 22.3418L11.2466 21.666C11.1921 21.6161 11.1134 21.5427 11.0142 21.4492C10.8158 21.2623 10.5344 20.992 10.1978 20.6533C9.52545 19.9768 8.62674 19.0219 7.7251 17.9131C6.82612 16.8075 5.90731 15.5284 5.20947 14.2021C4.51839 12.8887 4.0006 11.4492 4.00049 10.0439C4.00049 5.6075 7.57638 2 12.0005 2C16.4246 2 20.0005 5.6075 20.0005 10.0439ZM12.0005 13C13.7936 13 15.2368 11.5391 15.2368 9.75C15.2367 7.96099 13.7935 6.5 12.0005 6.5C10.2076 6.50015 8.76521 7.96108 8.76514 9.75C8.76514 11.539 10.2075 12.9998 12.0005 13Z" fill="#EE4D2D"></path>
-                        </svg>
-                        <span id="filterBtnLabel">Toàn TP.HCM</span>
-                        <svg class="chevron-down-svg" id="filterBtnArrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="10" height="10" fill="none">
+                        <i class="fa-solid fa-sliders" style="color:#EE4D2D; font-size:13px; margin-right:3px;"></i>
+                        <span id="filterBtnLabel" style="font-size:13.5px; font-weight:700; color:#1C1917;">Bộ lọc</span>
+                        <svg class="chevron-down-svg" id="filterBtnArrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="none">
                             <path d="M12.4495 14.8316C12.2013 15.0561 11.7987 15.0561 11.5505 14.8316L6.18623 9.98133C6.0044 9.81692 5.95001 9.56967 6.04841 9.35486C6.14682 9.14006 6.37864 9 6.63578 9L17.3642 9C17.6214 9 17.8532 9.14006 17.9516 9.35487C18.05 9.56967 17.9956 9.81693 17.8138 9.98133L12.4495 14.8316Z" fill="currentColor"></path>
                         </svg>
                     </button>
 
-                    <!-- BẢNG BỘ LỌC HIỆN RA CHUẨN TRẮNG CHỢ TỐT (KHÔNG DÙNG BẢNG ĐEN OS) -->
+                    <!-- BẢNG BỘ LỌC HIỆN RA CHUẨN ĐỒNG BỘ TRANG ĐẦU HOME.HTML -->
                     <div class="chotot-filter-modal-popover" id="chototFilterPopover" style="display:none;">
                         <div class="filter-popover-header">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <i class="fa-solid fa-sliders text-danger"></i>
-                                <span style="font-weight:800; font-size:14px; color:#1C1917;">Bộ Lọc &amp; Khu Vực</span>
+                                <i class="fa-solid fa-sliders text-danger" style="color:#EE4D2D;"></i>
+                                <span style="font-weight:800; font-size:14px; color:#1C1917;">Bộ Lọc Tìm Kiếm</span>
                             </div>
                             <button type="button" class="btn-close-filter-popover" onclick="closeChototFilterPopover(event)">&times;</button>
                         </div>
 
                         <div class="filter-popover-body">
-                            <!-- 1. Chọn Chi Nhánh / Tỉnh thành -->
+                            <!-- 1. TIÊU CHÍ SẮP XẾP (Phổ biến, Mới nhất, Bán chạy, Giá) -->
                             <div class="filter-section-row">
-                                <label class="filter-field-label">Chi nhánh cửa hàng</label>
-                                <div class="custom-select-wrap">
-                                    <select name="store" id="filterStoreSelect" class="custom-filter-select" onchange="updateFilterLabel(this)">
-                                        <option value="">Toàn TP.HCM (5 Shop)</option>
-                                        <option th:if="${stores != null}" th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStore != null and selectedStore == st.id}">Thủ Đức</option>
-                                    </select>
-                                    <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
+                                <label class="filter-field-label">Sắp xếp theo</label>
+                                <div class="sort-chips-grid">
+                                    <label class="sort-chip">
+                                        <input type="radio" name="sort" value="popular" th:checked="${selectedSort == null or selectedSort == 'popular'}">
+                                        <span><i class="fa-solid fa-fire me-1" style="color:#EE4D2D;"></i>Phổ biến</span>
+                                    </label>
+                                    <label class="sort-chip">
+                                        <input type="radio" name="sort" value="latest" th:checked="${selectedSort == 'latest'}">
+                                        <span><i class="fa-solid fa-sparkles me-1" style="color:#F59E0B;"></i>Mới nhất</span>
+                                    </label>
+                                    <label class="sort-chip">
+                                        <input type="radio" name="sort" value="sales" th:checked="${selectedSort == 'sales'}">
+                                        <span><i class="fa-solid fa-chart-line me-1" style="color:#10B981;"></i>Bán chạy</span>
+                                    </label>
+                                    <label class="sort-chip">
+                                        <input type="radio" name="sort" value="price-asc" th:checked="${selectedSort == 'price-asc'}">
+                                        <span><i class="fa-solid fa-arrow-up-1-9 me-1" style="color:#6366F1;"></i>Giá: Thấp → Cao</span>
+                                    </label>
+                                    <label class="sort-chip">
+                                        <input type="radio" name="sort" value="price-desc" th:checked="${selectedSort == 'price-desc'}">
+                                        <span><i class="fa-solid fa-arrow-down-9-1 me-1" style="color:#EC4899;"></i>Giá: Cao → Thấp</span>
+                                    </label>
                                 </div>
                             </div>
 
-                            <!-- 2. Danh mục thể loại -->
+                            <!-- 2. DANH MỤC THỂ LOẠI -->
                             <div class="filter-section-row">
                                 <label class="filter-field-label">Danh mục thể loại</label>
                                 <div class="custom-select-wrap">
-                                    <select name="cat" id="filterCatSelect" class="custom-filter-select">
+                                    <select name="cat" id="headerFilterCatSelect" class="custom-filter-select">
                                         <option value="">Tất cả thể loại</option>
                                         <option th:if="${categories != null}" th:each="c : ${categories}" th:value="${c.id}" th:text="${c.categoryName}" th:selected="${selectedCat != null and selectedCat == c.id}">Văn Học</option>
                                     </select>
@@ -1515,50 +1528,42 @@
                                 </div>
                             </div>
 
-                            <!-- 3. Độ mới thẩm định -->
+                            <!-- 3. KHOẢNG GIÁ (₫) KÈM CHIP NHANH -->
                             <div class="filter-section-row">
-                                <label class="filter-field-label">Độ mới thẩm định</label>
-                                <div class="condition-chips-grid">
-                                    <label class="condition-chip">
-                                        <input type="radio" name="cond" value="" th:checked="${selectedCond == null}">
-                                        <span>Tất cả</span>
-                                    </label>
-                                    <label class="condition-chip">
-                                        <input type="radio" name="cond" value="95" th:checked="${selectedCond == 95}">
-                                        <span>&ge; 95%</span>
-                                    </label>
-                                    <label class="condition-chip">
-                                        <input type="radio" name="cond" value="90" th:checked="${selectedCond == 90}">
-                                        <span>&ge; 90%</span>
-                                    </label>
-                                    <label class="condition-chip">
-                                        <input type="radio" name="cond" value="80" th:checked="${selectedCond == 80}">
-                                        <span>&ge; 80%</span>
-                                    </label>
+                                <label class="filter-field-label">Khoảng giá (₫)</label>
+                                <div class="price-preset-chips" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+                                    <button type="button" class="btn-price-preset" onclick="setHeaderPriceRange('', '50000')">Dưới 50k</button>
+                                    <button type="button" class="btn-price-preset" onclick="setHeaderPriceRange('50000', '100000')">50k - 100k</button>
+                                    <button type="button" class="btn-price-preset" onclick="setHeaderPriceRange('100000', '200000')">100k - 200k</button>
+                                    <button type="button" class="btn-price-preset" onclick="setHeaderPriceRange('200000', '')">Trên 200k</button>
+                                </div>
+                                <div class="price-range-inputs">
+                                    <input type="number" name="minPrice" id="headerMinPrice" th:value="${selectedMinPrice}" placeholder="Từ ₫" class="price-input-box" min="0" step="1000">
+                                    <span class="price-sep" style="color:#78716C; font-weight:700;">&mdash;</span>
+                                    <input type="number" name="maxPrice" id="headerMaxPrice" th:value="${selectedMaxPrice}" placeholder="Đến ₫" class="price-input-box" min="0" step="1000">
                                 </div>
                             </div>
 
-                            <!-- 4. Khoảng giá -->
+                            <!-- 4. CHI NHÁNH TP.HCM -->
                             <div class="filter-section-row">
-                                <label class="filter-field-label">Khoảng giá (₫)</label>
-                                <div class="price-range-inputs">
-                                    <input type="number" name="minPrice" id="filterMinPrice" class="price-input-box" placeholder="Từ ₫" th:value="${selectedMinPrice}">
-                                    <span style="color:#A8A29E;">-</span>
-                                    <input type="number" name="maxPrice" id="filterMaxPrice" class="price-input-box" placeholder="Đến ₫" th:value="${selectedMaxPrice}">
+                                <label class="filter-field-label">Chi nhánh TP.HCM</label>
+                                <div class="custom-select-wrap">
+                                    <select name="store" id="headerFilterStoreSelect" class="custom-filter-select">
+                                        <option value="">Toàn TP.HCM (5 Shop)</option>
+                                        <option th:if="${stores != null}" th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStore != null and selectedStore == st.id}">Thủ Đức</option>
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down custom-select-arrow"></i>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Footer Actions: Xoá lọc & Áp dụng -->
                         <div class="filter-popover-footer">
-                            <button type="button" class="btn-popover-reset" onclick="resetPopoverFilters(event)">Xoá lọc</button>
-                            <button type="button" class="btn-popover-apply" onclick="applyPopoverFilters(event)">Áp dụng</button>
+                            <button type="button" class="btn-popover-reset" onclick="resetHeaderPopoverFilters(event)">Xoá lọc</button>
+                            <button type="button" class="btn-popover-apply" onclick="applyHeaderPopoverFilters(event)">Áp dụng</button>
                         </div>
                     </div>
                 </div>
-
-                <input type="hidden" name="cat" th:if="${selectedCat != null}" th:value="${selectedCat}">
-                <input type="hidden" name="sort" th:if="${selectedSort != null and selectedSort != ''}" th:value="${selectedSort}">
 
                 <!-- Nút tìm kiếm -->
                 <button type="submit" class="chotot-submit-button">
@@ -1950,34 +1955,29 @@
             if (pop) pop.style.display = 'none';
             if (arrow) arrow.style.transform = 'rotate(0deg)';
         }
-        function resetPopoverFilters(event) {
+        function resetHeaderPopoverFilters(event) {
             if (event) event.preventDefault();
-            var storeSel = document.getElementById('filterStoreSelect');
-            if (storeSel) storeSel.value = '';
-            var catSel = document.getElementById('filterCatSelect');
+            var sortInp = document.querySelector('#chototFilterPopover input[name="sort"][value="popular"]');
+            if (sortInp) sortInp.checked = true;
+            var catSel = document.getElementById('headerFilterCatSelect');
             if (catSel) catSel.value = '';
-            document.querySelectorAll('input[name="cond"]').forEach(function(r, idx) {
-                r.checked = (idx === 0);
-            });
-            var minP = document.getElementById('filterMinPrice');
+            var minP = document.getElementById('headerMinPrice');
             if (minP) minP.value = '';
-            var maxP = document.getElementById('filterMaxPrice');
+            var maxP = document.getElementById('headerMaxPrice');
             if (maxP) maxP.value = '';
-            var lbl = document.getElementById('filterBtnLabel');
-            if (lbl) lbl.textContent = 'Toàn TP.HCM';
+            var storeSel = document.getElementById('headerFilterStoreSelect');
+            if (storeSel) storeSel.value = '';
         }
-        function applyPopoverFilters(event) {
+        function applyHeaderPopoverFilters(event) {
             if (event) event.preventDefault();
             var form = document.getElementById('headerSearchForm');
             if (form) form.submit();
         }
-        function updateFilterLabel(sel) {
-            var lbl = document.getElementById('filterBtnLabel');
-            if (lbl && sel) {
-                var opt = sel.options[sel.selectedIndex];
-                var text = (opt && opt.text) ? opt.text : 'Toàn TP.HCM';
-                lbl.textContent = text.replace(' (5 Shop)', '');
-            }
+        function setHeaderPriceRange(min, max) {
+            var minInput = document.getElementById('headerMinPrice');
+            var maxInput = document.getElementById('headerMaxPrice');
+            if (minInput) minInput.value = min;
+            if (maxInput) maxInput.value = max;
         }
         document.addEventListener('click', function(e) {
             var triggerWrap = document.querySelector('.chotot-filter-trigger-wrap');
