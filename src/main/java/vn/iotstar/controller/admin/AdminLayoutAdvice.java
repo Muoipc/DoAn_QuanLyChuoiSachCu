@@ -19,7 +19,7 @@ import java.util.List;
  * Tự động cung cấp dữ liệu chuông thông báo và số lượng sách ký gửi chờ duyệt
  * cho thanh điều hướng Sidebar và Topbar trên tất cả các trang Quản trị (Admin & Manager).
  */
-@ControllerAdvice(basePackages = "vn.iotstar.controller.admin")
+@ControllerAdvice(basePackages = {"vn.iotstar.controller.admin", "vn.iotstar.controller"})
 public class AdminLayoutAdvice {
 
     @Autowired

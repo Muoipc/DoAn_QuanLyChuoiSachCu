@@ -1,12 +1,14 @@
 package vn.iotstar.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.iotstar.entity.*;
 import vn.iotstar.repository.*;
 import vn.iotstar.security.CustomUserDetails;
@@ -498,30 +500,42 @@ public class StoreChatController {
     }
 
     /**
-     * Trang Kênh Quản Trị: Quản lý Chat của Chi Nhánh (Dành cho Quản lý / Thủ kho / Admin)
+     * Trang Kênh Quản Trị: Quản lý Chat của Chi Nhánh (Dành riêng cho Quản lý chi nhánh - ROLE_MANAGER)
+     * Admin hệ thống được chuyển hướng vì chat trực tiếp thuộc thẩm quyền từng cửa hàng.
      */
     @GetMapping("/admin/chat")
     public String adminChatView(
-            @RequestParam(value = "storeId", required = false) Long storeId,
             @RequestParam(value = "userId", required = false) Long targetUserId,
             @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect,
             Model model) {
 
-        List<Store> stores = storeRepository.findByIsActiveTrue();
-        Long activeStoreId = storeId;
-
-        // Nếu là Quản lý chi nhánh Thủ Đức, mặc định chọn Store ID 1
-        if (activeStoreId == null) {
-            if (userDetails != null && userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
-                activeStoreId = 1L;
-            } else if (!stores.isEmpty()) {
-                activeStoreId = stores.get(0).getId();
-            } else {
-                activeStoreId = 1L;
-            }
+        boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
+        if (isAdmin) {
+            redirect.addFlashAttribute("errorMessage", "Kênh tin nhắn trực tiếp do Quản lý từng chi nhánh cửa hàng phụ trách. Admin hệ thống chỉ quản lý cấu hình chuỗi và báo cáo tổng quan.");
+            return "redirect:/admin";
         }
 
-        Store currentStore = storeRepository.findById(activeStoreId).orElse(!stores.isEmpty() ? stores.get(0) : null);
+        // Quản lý chi nhánh: Chỉ được xem hội thoại thuộc chi nhánh mình phụ trách
+        Store managedStore = (userDetails != null && userDetails.getId() != null)
+                ? storeRepository.findByManagerId(userDetails.getId()).stream().findFirst().orElse(null)
+                : null;
+
+        if (managedStore == null) {
+            model.addAttribute("stores", Collections.emptyList());
+            model.addAttribute("currentStore", null);
+            model.addAttribute("currentStoreId", null);
+            model.addAttribute("customers", Collections.emptyList());
+            model.addAttribute("activeCustomer", null);
+            model.addAttribute("conversation", Collections.emptyList());
+            model.addAttribute("needAttentionUserIds", Collections.emptyList());
+            model.addAttribute("activeCustomerNeedsAttention", false);
+            model.addAttribute("pageTitle", "Kênh Tin Nhắn Chi Nhánh");
+            return "admin/chat/index";
+        }
+
+        Long activeStoreId = managedStore.getId();
+        Store currentStore = managedStore;
         List<User> customers = chatMessageRepository.findDistinctUsersByStoreId(activeStoreId);
 
         User activeCustomer = null;
@@ -533,7 +547,7 @@ public class StoreChatController {
             activeCustomer = customers.get(0);
         }
 
-        if (activeCustomer != null && currentStore != null) {
+        if (activeCustomer != null) {
             conversation = chatMessageRepository.findConversation(currentStore.getId(), activeCustomer.getId());
             // Đánh dấu đã đọc
             for (ChatMessage m : conversation) {
@@ -547,15 +561,16 @@ public class StoreChatController {
         List<Long> needAttentionUserIds = chatMessageRepository.findUserIdsNeedingAttention(activeStoreId);
         boolean activeCustomerNeedsAttention = activeCustomer != null && needAttentionUserIds.contains(activeCustomer.getId());
 
-        model.addAttribute("stores", stores);
+        model.addAttribute("stores", List.of(managedStore));
         model.addAttribute("currentStore", currentStore);
+        model.addAttribute("currentManagedStore", currentStore);
         model.addAttribute("currentStoreId", activeStoreId);
         model.addAttribute("customers", customers);
         model.addAttribute("activeCustomer", activeCustomer);
         model.addAttribute("conversation", conversation);
         model.addAttribute("needAttentionUserIds", needAttentionUserIds);
         model.addAttribute("activeCustomerNeedsAttention", activeCustomerNeedsAttention);
-        model.addAttribute("pageTitle", "Kênh Tin Nhắn Chi Nhánh — " + (currentStore != null ? currentStore.getStoreName() : ""));
+        model.addAttribute("pageTitle", "Kênh Tin Nhắn — " + currentStore.getStoreName());
 
         return "admin/chat/index";
     }
@@ -574,6 +589,18 @@ public class StoreChatController {
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Map<String, Object> res = new HashMap<>();
+
+        // Kiểm tra quyền: Manager chỉ được trả lời tin nhắn của chi nhánh mình
+        if (userDetails != null && "ROLE_MANAGER".equals(userDetails.getRoleName())) {
+            List<Store> managerStores = storeRepository.findByManagerId(userDetails.getId());
+            boolean ownsStore = managerStores.stream().anyMatch(s -> s.getId().equals(storeId));
+            if (!ownsStore) {
+                res.put("success", false);
+                res.put("message", "Bạn không có quyền trả lời tin nhắn của chi nhánh khác!");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
+            }
+        }
+
         Store store = storeRepository.findById(storeId).orElse(null);
         User customer = userRepository.findById(customerId).orElse(null);
 
