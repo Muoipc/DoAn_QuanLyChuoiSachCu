@@ -136,6 +136,7 @@
                         <!-- LẶP CÁC TIN NHẮN -->
                         <div th:each="m : ${conversation}"
                              class="d-flex flex-column"
+                             th:attr="data-admin-msg-id=${m.id}"
                              th:classappend="${m.senderType == T(vn.iotstar.entity.ChatMessage.SenderType).CUSTOMER ? 'align-items-start' : 'align-items-end'}">
 
                             <!-- TÊN NGƯỜI GỬI & THỜI GIAN -->
@@ -354,7 +355,14 @@
         }
 
         // Live Polling 3s: Tự động nạp tin nhắn mới từ khách hàng
-        let lastAdminMsgCount = 0;
+        const renderedAdminMsgIds = new Set();
+        function initAdminRenderedIds() {
+            document.querySelectorAll('#adminChatBody [data-admin-msg-id]').forEach(el => {
+                const id = el.getAttribute('data-admin-msg-id');
+                if (id) renderedAdminMsgIds.add(String(id));
+            });
+        }
+
         function pollAdminMessages() {
             if (!currentStoreId || !activeCustomerId) return;
             fetch('/api/chat/staff/conversation?storeId=' + currentStoreId + '&userId=' + activeCustomerId)
@@ -363,39 +371,33 @@
                     if (data.success && data.messages) {
                         const body = document.getElementById('adminChatBody');
                         if (!body) return;
-                        if (lastAdminMsgCount === 0) {
-                            lastAdminMsgCount = data.messages.length;
-                            return;
-                        }
-                        if (data.messages.length > lastAdminMsgCount) {
-                            for (let i = lastAdminMsgCount; i < data.messages.length; i++) {
-                                const m = data.messages[i];
-                                if (m.senderType === 'CUSTOMER') {
-                                    const row = document.createElement('div');
-                                    row.className = 'd-flex flex-column align-items-start';
-                                    let mHtml = '';
-                                    if (m.mediaUrl) {
-                                        if (m.mediaType === 'VIDEO') {
-                                            mHtml = '<video src="' + m.mediaUrl + '" controls style="max-width:280px; max-height:200px; border-radius:8px; margin-top:4px; display:block;"></video>';
-                                        } else {
-                                            mHtml = '<img src="' + m.mediaUrl + '" style="max-width:260px; max-height:180px; border-radius:8px; margin-top:4px; display:block; object-fit:cover;">';
-                                        }
+                        data.messages.forEach(m => {
+                            if (m.id && !renderedAdminMsgIds.has(String(m.id)) && m.senderType === 'CUSTOMER') {
+                                renderedAdminMsgIds.add(String(m.id));
+                                const row = document.createElement('div');
+                                row.className = 'd-flex flex-column align-items-start';
+                                row.setAttribute('data-admin-msg-id', String(m.id));
+                                let mHtml = '';
+                                if (m.mediaUrl) {
+                                    if (m.mediaType === 'VIDEO') {
+                                        mHtml = '<video src="' + m.mediaUrl + '" controls style="max-width:280px; max-height:200px; border-radius:8px; margin-top:4px; display:block;"></video>';
+                                    } else {
+                                        mHtml = '<img src="' + m.mediaUrl + '" style="max-width:260px; max-height:180px; border-radius:8px; margin-top:4px; display:block; object-fit:cover;">';
                                     }
-                                    row.innerHTML = 
-                                        '<div class="small text-muted mb-1 px-1" style="font-size: 11px;">' +
-                                            '<strong class="text-dark">' + (m.senderName || 'Khách hàng') + '</strong>' +
-                                            '<span class="ms-1">' + (m.createdAt || '') + '</span>' +
-                                        '</div>' +
-                                        '<div class="p-2.5 rounded-3 border shadow-xs bg-white text-dark" style="max-width: 75%; font-size: 13.5px; border-color: rgba(232, 222, 200, 0.8) !important; border-top-left-radius: 4px !important;">' +
-                                            (m.content ? '<div>' + m.content + '</div>' : '') +
-                                            mHtml +
-                                        '</div>';
-                                    body.appendChild(row);
-                                    body.scrollTop = body.scrollHeight;
                                 }
+                                row.innerHTML = 
+                                    '<div class="small text-muted mb-1 px-1" style="font-size: 11px;">' +
+                                        '<strong class="text-dark">' + (m.senderName || 'Khách hàng') + '</strong>' +
+                                        '<span class="ms-1">' + (m.createdAt || '') + '</span>' +
+                                    '</div>' +
+                                    '<div class="p-2.5 rounded-3 border shadow-xs bg-white text-dark" style="max-width: 75%; font-size: 13.5px; border-color: rgba(232, 222, 200, 0.8) !important; border-top-left-radius: 4px !important;">' +
+                                        (m.content ? '<div>' + m.content + '</div>' : '') +
+                                        mHtml +
+                                    '</div>';
+                                body.appendChild(row);
+                                body.scrollTop = body.scrollHeight;
                             }
-                            lastAdminMsgCount = data.messages.length;
-                        }
+                        });
                     }
                 })
                 .catch(e => console.debug(e));
@@ -405,6 +407,7 @@
         window.addEventListener('load', function() {
             const box = document.getElementById('adminChatBody');
             if (box) box.scrollTop = box.scrollHeight;
+            initAdminRenderedIds();
             setInterval(pollAdminMessages, 3000);
         });
         /*]]>*/
