@@ -93,12 +93,25 @@
                                 </span>
                             </div>
                         </div>
-                        <div th:if="${activeCustomer == null}" class="text-muted small">
-                            Vui lòng chọn khách hàng bên cột trái để xem tin nhắn.
+                        <div class="d-flex align-items-center gap-3">
+                            <!-- CÔNG TẮC BẬT/TẮT CHẾ ĐỘ AI TRẢ LỜI THAY -->
+                            <div class="d-flex align-items-center gap-2 bg-white px-3 py-1.5 rounded-pill border shadow-sm" style="border-color: rgba(232, 222, 200, 0.8) !important;">
+                                <span class="small fw-bold text-dark" style="font-size: 11.5px;"><i class="fa-solid fa-robot text-primary me-1"></i>Trợ lý AI trả lời thay:</span>
+                                <div class="form-check form-switch m-0 p-0 d-flex align-items-center" style="min-height:auto;">
+                                    <input class="form-check-input ms-0 mt-0" type="checkbox" id="aiReplyToggleInput" 
+                                           style="cursor:pointer; width:34px; height:18px;"
+                                           th:checked="${currentStore != null and currentStore.aiReplyEnabled == true}" 
+                                           onchange="toggleAiReplyMode(this.checked)">
+                                </div>
+                                <span id="aiReplyStatusLabel" class="badge rounded-pill" 
+                                      th:classappend="${currentStore != null and currentStore.aiReplyEnabled == true} ? 'bg-success text-white' : 'bg-secondary text-white'"
+                                      style="font-size: 9.5px; padding: 3px 8px;"
+                                      th:text="${currentStore != null and currentStore.aiReplyEnabled == true ? 'ĐANG BẬT' : 'ĐANG TẮT'}">ĐANG TẮT</span>
+                            </div>
+                            <span class="text-muted small" th:if="${currentStore != null}">
+                                <i class="fa-solid fa-location-dot me-1 text-warning"></i><span th:text="${currentStore.address}">Địa chỉ</span>
+                            </span>
                         </div>
-                        <span class="text-muted small" th:if="${currentStore != null}">
-                            <i class="fa-solid fa-location-dot me-1 text-warning"></i><span th:text="${currentStore.address}">Địa chỉ</span>
-                        </span>
                     </div>
 
                     <!-- BANNER CẢNH BÁO CÂU HỎI ĐẶC BIỆT CẦN QUẦY TRẢ LỜI -->
@@ -268,6 +281,27 @@
             postAdminReply(text, null, null);
         }
 
+        function toggleAiReplyMode(isChecked) {
+            fetch('/api/chat/store/' + currentStoreId + '/toggle-ai', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const label = document.getElementById('aiReplyStatusLabel');
+                        if (label) {
+                            label.textContent = data.aiReplyEnabled ? 'ĐANG BẬT' : 'ĐANG TẮT';
+                            label.className = 'badge rounded-pill ' + (data.aiReplyEnabled ? 'bg-success text-white' : 'bg-secondary text-white');
+                        }
+                    } else {
+                        alert(data.message || 'Lỗi cập nhật');
+                        document.getElementById('aiReplyToggleInput').checked = !isChecked;
+                    }
+                })
+                .catch(err => {
+                    console.error('Lỗi toggle AI:', err);
+                    document.getElementById('aiReplyToggleInput').checked = !isChecked;
+                });
+        }
+
         function postAdminReply(content, mediaUrl, mediaType) {
             const params = new URLSearchParams();
             params.append('storeId', currentStoreId);
@@ -284,21 +318,94 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    location.reload();
+                    // Append tin nhắn vào giao diện tức thì không reload
+                    const body = document.getElementById('adminChatBody');
+                    if (body) {
+                        const now = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                        let mediaHtml = '';
+                        if (mediaUrl) {
+                            if (mediaType === 'VIDEO') {
+                                mediaHtml = '<video src="' + mediaUrl + '" controls style="max-width:280px; max-height:200px; border-radius:8px; margin-top:4px; display:block;"></video>';
+                            } else {
+                                mediaHtml = '<img src="' + mediaUrl + '" style="max-width:260px; max-height:180px; border-radius:8px; margin-top:4px; display:block; object-fit:cover;">';
+                            }
+                        }
+                        const row = document.createElement('div');
+                        row.className = 'd-flex flex-column align-items-end';
+                        row.innerHTML = 
+                            '<div class="small text-muted mb-1 px-1" style="font-size: 11px;">' +
+                                '<strong class="text-dark">Quản lý quầy</strong>' +
+                                '<span class="ms-1">' + now + '</span>' +
+                            '</div>' +
+                            '<div class="p-2.5 rounded-3 shadow-xs text-white" style="max-width: 75%; font-size: 13.5px; background: #8C4A27; border-top-right-radius: 4px !important;">' +
+                                (content ? '<div>' + content + '</div>' : '') +
+                                mediaHtml +
+                            '</div>';
+                        body.appendChild(row);
+                        body.scrollTop = body.scrollHeight;
+                    }
                 } else {
                     alert(data.message || 'Lỗi gửi tin nhắn');
                 }
             })
             .catch(err => {
                 console.error(err);
-                location.reload();
             });
         }
 
-        // Tự cuộn xuống đáy khung chat
+        // Live Polling 3s: Tự động nạp tin nhắn mới từ khách hàng
+        let lastAdminMsgCount = 0;
+        function pollAdminMessages() {
+            if (!currentStoreId || !activeCustomerId) return;
+            fetch('/api/chat/staff/conversation?storeId=' + currentStoreId + '&userId=' + activeCustomerId)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.messages) {
+                        const body = document.getElementById('adminChatBody');
+                        if (!body) return;
+                        if (lastAdminMsgCount === 0) {
+                            lastAdminMsgCount = data.messages.length;
+                            return;
+                        }
+                        if (data.messages.length > lastAdminMsgCount) {
+                            for (let i = lastAdminMsgCount; i < data.messages.length; i++) {
+                                const m = data.messages[i];
+                                if (m.senderType === 'CUSTOMER') {
+                                    const row = document.createElement('div');
+                                    row.className = 'd-flex flex-column align-items-start';
+                                    let mHtml = '';
+                                    if (m.mediaUrl) {
+                                        if (m.mediaType === 'VIDEO') {
+                                            mHtml = '<video src="' + m.mediaUrl + '" controls style="max-width:280px; max-height:200px; border-radius:8px; margin-top:4px; display:block;"></video>';
+                                        } else {
+                                            mHtml = '<img src="' + m.mediaUrl + '" style="max-width:260px; max-height:180px; border-radius:8px; margin-top:4px; display:block; object-fit:cover;">';
+                                        }
+                                    }
+                                    row.innerHTML = 
+                                        '<div class="small text-muted mb-1 px-1" style="font-size: 11px;">' +
+                                            '<strong class="text-dark">' + (m.senderName || 'Khách hàng') + '</strong>' +
+                                            '<span class="ms-1">' + (m.createdAt || '') + '</span>' +
+                                        '</div>' +
+                                        '<div class="p-2.5 rounded-3 border shadow-xs bg-white text-dark" style="max-width: 75%; font-size: 13.5px; border-color: rgba(232, 222, 200, 0.8) !important; border-top-left-radius: 4px !important;">' +
+                                            (m.content ? '<div>' + m.content + '</div>' : '') +
+                                            mHtml +
+                                        '</div>';
+                                    body.appendChild(row);
+                                    body.scrollTop = body.scrollHeight;
+                                }
+                            }
+                            lastAdminMsgCount = data.messages.length;
+                        }
+                    }
+                })
+                .catch(e => console.debug(e));
+        }
+
+        // Tự cuộn xuống đáy khung chat & khởi động polling
         window.addEventListener('load', function() {
             const box = document.getElementById('adminChatBody');
             if (box) box.scrollTop = box.scrollHeight;
+            setInterval(pollAdminMessages, 3000);
         });
         /*]]>*/
     </script>

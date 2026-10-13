@@ -2354,6 +2354,7 @@
                 }
             } else {
                 widget.style.display = 'none';
+                stopMiniChatPolling();
                 if (fab && window.location.pathname.indexOf('/ai-assistant') === -1) {
                     fab.classList.remove('hidden-fab');
                 }
@@ -2761,6 +2762,7 @@
         }
 
         function backToShopList() {
+            stopMiniChatPolling();
             var listView = document.getElementById('miniChatShopListView');
             var roomView = document.getElementById('miniChatRoomView');
             if (listView) listView.style.display = 'flex';
@@ -2875,6 +2877,74 @@
             }
         }
 
+        var miniChatPollingTimer = null;
+        var lastClientRenderedCount = 0;
+
+        function startMiniChatPolling() {
+            stopMiniChatPolling();
+            miniChatPollingTimer = setInterval(function() {
+                var room = document.getElementById('miniChatRoomView');
+                if (!currentStoreId || !room || room.style.display === 'none') {
+                    stopMiniChatPolling();
+                    return;
+                }
+                fetch('/api/chat/store/' + currentStoreId + '/messages')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        if (data && data.success && data.messages) {
+                            var statusEl = document.getElementById('activeStoreStaffStatus');
+                            if (statusEl) {
+                                if (data.aiReplyEnabled) {
+                                    statusEl.innerHTML = '<span style="color:#8C4A27; font-weight:700;">🤖 Trợ lý AI đang trực</span>';
+                                } else {
+                                    statusEl.innerHTML = '<span style="color:#059669; font-weight:700;">🟢 ' + escapeMiniHtml(data.managerName || 'Quản lý quầy') + ' đang trực</span>';
+                                }
+                            }
+                            if (data.messages.length > lastClientRenderedCount) {
+                                for (var i = lastClientRenderedCount; i < data.messages.length; i++) {
+                                    var m = data.messages[i];
+                                    appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.mediaUrl, m.mediaType, m.createdAt, m.senderName);
+                                }
+                                lastClientRenderedCount = data.messages.length;
+                                scrollMiniChatBottom();
+                            }
+                        }
+                    })
+                    .catch(function(e) { console.debug(e); });
+            }, 3000);
+        }
+
+        function stopMiniChatPolling() {
+            if (miniChatPollingTimer) {
+                clearInterval(miniChatPollingTimer);
+                miniChatPollingTimer = null;
+            }
+        }
+
+        function requestHumanStaffDirectly() {
+            if (!currentStoreId) return;
+            var btn = document.getElementById('btnRequestStaff');
+            if (btn) btn.disabled = true;
+
+            fetch('/api/chat/store/' + currentStoreId + '/request-staff', { method: 'POST' })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data && data.success) {
+                        appendChatMessageDOM('CUSTOMER', '[Khách hàng yêu cầu gặp nhân viên quầy trực tiếp]', null, null, null, null, null, null, null, data.createdAt);
+                        appendChatMessageDOM('STORE_STAFF', data.reply, null, null, null, null, null, null, null, data.createdAt, data.senderName);
+                        scrollMiniChatBottom();
+                        var statusEl = document.getElementById('activeStoreStaffStatus');
+                        if (statusEl) {
+                            statusEl.innerHTML = '<span style="color:#059669; font-weight:700;">🟢 Quản lý quầy tiếp quản</span>';
+                        }
+                    }
+                })
+                .catch(function(err) { console.error('Lỗi yêu cầu nhân viên:', err); })
+                .finally(function() {
+                    if (btn) btn.disabled = false;
+                });
+        }
+
         function loadStoreChatMessages(storeId, autoSendBookTitle) {
             var body = document.getElementById('miniChatBody');
             if (!body) return;
@@ -2885,6 +2955,15 @@
                 .then(function(data) {
                     body.innerHTML = '';
                     var messages = (data && data.messages) ? data.messages : [];
+
+                    var statusEl = document.getElementById('activeStoreStaffStatus');
+                    if (statusEl) {
+                        if (data.aiReplyEnabled) {
+                            statusEl.innerHTML = '<span style="color:#8C4A27; font-weight:700;">🤖 Trợ lý AI đang trực</span>';
+                        } else {
+                            statusEl.innerHTML = '<span style="color:#059669; font-weight:700;">🟢 ' + escapeMiniHtml(data.managerName || 'Quản lý quầy') + ' đang trực</span>';
+                        }
+                    }
 
                     // Tin nhắn chào mừng ban đầu
                     var welcomeDiv = document.createElement('div');
@@ -2907,10 +2986,12 @@
 
                     // Render các tin nhắn đã có
                     messages.forEach(function(m) {
-                        appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.mediaUrl, m.mediaType, m.createdAt);
+                        appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.mediaUrl, m.mediaType, m.createdAt, m.senderName);
                     });
 
+                    lastClientRenderedCount = messages.length;
                     scrollMiniChatBottom();
+                    startMiniChatPolling();
 
                     // Nếu có yêu cầu hỏi sách tự động từ nút "Chat Ngay" trên PDP
                     if (autoSendBookTitle) {
@@ -2990,11 +3071,13 @@
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 hideMiniChatTyping();
-                var reply = data.reply || 'Dạ chi nhánh đã nhận được tin nhắn của bạn.';
+                var reply = data.reply || null;
                 var b = data.suggestedBook || null;
                 var replyTime = data.createdAt || (new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }));
 
-                appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime);
+                if (reply) {
+                    appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime, data.senderName);
+                }
                 scrollMiniChatBottom();
             })
             .catch(function() {
@@ -3002,11 +3085,23 @@
             });
         }
 
-        function appendChatMessageDOM(senderType, content, bookTitle, bookPrice, bookImage, conditionPercent, bookId, mediaUrl, mediaType, createdAt) {
+        function appendChatMessageDOM(senderType, content, bookTitle, bookPrice, bookImage, conditionPercent, bookId, mediaUrl, mediaType, createdAt, senderName) {
             var body = document.getElementById('miniChatBody');
             if (!body) return;
 
             var timeText = createdAt || (new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }));
+
+            // 1. Kiểm tra tin nhắn chuyển giao hệ thống
+            if (content && (content.indexOf('[Khách hàng yêu cầu gặp nhân viên') !== -1 || content.indexOf('Hệ thống chuyển giao') !== -1)) {
+                var sysRow = document.createElement('div');
+                sysRow.style.cssText = 'display:flex; justify-content:center; margin:8px 0; width:100%;';
+                sysRow.innerHTML = '<div style="background:#FEF3C7; border:1px solid #FDE68A; color:#92400E; padding:4px 12px; border-radius:9999px; font-size:11px; font-weight:600; display:inline-flex; align-items:center; gap:5px; box-shadow:0 1px 2px rgba(0,0,0,0.03);">' +
+                    '<i class="fa-solid fa-headset" style="font-size:10.5px;"></i>' +
+                    '<span>' + (content.indexOf('yêu cầu') !== -1 ? 'Đã gửi yêu cầu kết nối Quản lý quầy' : escapeMiniHtml(content)) + '</span>' +
+                    '</div>';
+                body.appendChild(sysRow);
+                return;
+            }
 
             var mediaHtml = '';
             if (mediaUrl) {
@@ -3037,6 +3132,19 @@
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                     .replace(/\n/g, '<br>');
 
+                var isAiMessage = (senderName && senderName.indexOf('Trợ lý AI') !== -1);
+                var avatarHtml = isAiMessage
+                    ? '<div style="width:26px; height:26px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;" title="Trợ lý AI tự động"><i class="fa-solid fa-robot"></i></div>'
+                    : '<div style="width:26px; height:26px; border-radius:50%; background:#ECFDF5; border:1px solid #A7F3D0; color:#059669; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;" title="Nhân viên quầy"><i class="fa-solid fa-user-tie"></i></div>';
+
+                var senderBadge = isAiMessage
+                    ? '<div style="font-size:10px; font-weight:700; color:#8C4A27; margin-bottom:2px; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-robot" style="font-size:9.5px;"></i> Trợ lý AI ReBook</div>'
+                    : '<div style="font-size:10px; font-weight:800; color:#059669; margin-bottom:2px; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-circle-check" style="font-size:9px;"></i> ' + escapeMiniHtml(senderName || 'Quản lý quầy') + '</div>';
+
+                var bubbleStyle = isAiMessage
+                    ? 'background:#FAF8F5; border:1px solid #ECE7DE;'
+                    : 'background:#FFFFFF; border:1px solid #E5DFD5; box-shadow:0 1px 3px rgba(0,0,0,0.04);';
+
                 var bookCardHtml = '';
                 if (bookTitle) {
                     var p = Number(bookPrice || 0).toLocaleString('vi-VN');
@@ -3054,8 +3162,9 @@
                     '</div>';
                 }
 
-                row.innerHTML = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF8F5; border:1px solid #E5E0D8; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;"><i class="fa-solid fa-store"></i></div>' +
-                    '<div style="background:#FAF8F5; border:1px solid #ECE7DE; padding:9px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; max-width:85%; font-size:12.5px;">' +
+                row.innerHTML = avatarHtml +
+                    '<div style="' + bubbleStyle + ' padding:9px 12px; border-radius:14px; border-top-left-radius:4px; color:#1C1917; line-height:1.5; max-width:85%; font-size:12.5px;">' +
+                        senderBadge +
                         '<div>' + replyHtml + '</div>' +
                         mediaHtml +
                         bookCardHtml +
@@ -3168,8 +3277,9 @@
                     </div>
                     <div style="min-width:0; flex:1;">
                         <div id="activeStoreName" style="font-weight:700; font-size:12.5px; color:#18181B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-0.1px;">Chi Nhánh 1: Thủ Đức</div>
-                        <div style="font-size:10.5px; color:#059669; display:flex; align-items:center; gap:4px; font-weight:500;">
-                            <span id="activeStoreDistrict">TP. Thủ Đức</span> · Đang hoạt động
+                        <div style="font-size:10.5px; display:flex; align-items:center; gap:4px; font-weight:500;">
+                            <span id="activeStoreDistrict">TP. Thủ Đức</span> · 
+                            <span id="activeStoreStaffStatus" style="color:#059669; font-weight:600;">Đang kết nối</span>
                         </div>
                     </div>
                 </div>
@@ -3195,6 +3305,16 @@
                 </div>
                 <span id="miniChatMediaFileName" style="font-size:12px; color:#52525B; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></span>
                 <span id="miniChatUploadStatus" style="font-size:11px; color:#8C4A27; font-weight:600;"></span>
+            </div>
+
+            <!-- Thanh tác vụ nhanh: Chuyển sang gặp nhân viên trực quầy -->
+            <div id="miniChatQuickBar" style="padding:4px 14px 4px; background:#FFFFFF; border-top:1px solid #F0EFEA; display:flex; align-items:center; justify-content:space-between;">
+                <button type="button" id="btnRequestStaff" onclick="requestHumanStaffDirectly()" title="Chuyển sang trò chuyện trực tiếp với Quản lý quầy" style="border:1px solid #ECE7DE; background:#FAF8F5; color:#8C4A27; font-size:11px; font-weight:700; padding:2px 10px; border-radius:9999px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:all 0.15s;" onmouseover="this.style.background='#F5EFEB'" onmouseout="this.style.background='#FAF8F5'">
+                    <i class="fa-solid fa-user-tie"></i> <span>Gặp nhân viên quầy</span>
+                </button>
+                <span id="miniChatModeBadge" style="font-size:10.5px; color:#78716C; font-weight:500;">
+                    <i class="fa-solid fa-shield-halved text-success me-1" style="font-size:9.5px;"></i>ReBook Direct
+                </span>
             </div>
 
             <!-- Ô nhập tin nhắn & nút đính kèm ảnh/video -->

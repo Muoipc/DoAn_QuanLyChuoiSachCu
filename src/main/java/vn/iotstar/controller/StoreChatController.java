@@ -269,6 +269,8 @@ public class StoreChatController {
         res.put("storeName", store != null ? store.getStoreName() : "Chi Nhánh");
         res.put("storeAvatar", (store != null && store.getImage() != null) ? store.getImage() : "/images/logo-books-badge.png");
         res.put("storeAddress", store != null ? store.getAddress() : "");
+        res.put("aiReplyEnabled", store != null ? Boolean.TRUE.equals(store.getAiReplyEnabled()) : false);
+        res.put("managerName", (store != null && store.getManager() != null) ? store.getManager().getFullName() : "Quản lý cửa hàng");
         res.put("messages", dtos);
 
         return ResponseEntity.ok(res);
@@ -308,6 +310,9 @@ public class StoreChatController {
 
         Book book = (bookId != null) ? bookRepository.findById(bookId).orElse(null) : null;
 
+        // Lấy lịch sử tin nhắn trước khi lưu tin mới
+        List<ChatMessage> prevMessages = chatMessageRepository.findByUserIdAndStoreIdOrderByCreatedAtAsc(currentUser.getId(), storeId);
+
         // Lưu tin nhắn của khách hàng
         ChatMessage userMsg = new ChatMessage();
         userMsg.setUser(currentUser);
@@ -318,47 +323,96 @@ public class StoreChatController {
         userMsg.setMediaType(mediaType);
         userMsg.setSenderType(ChatMessage.SenderType.CUSTOMER);
         userMsg.setSenderName(currentUser.getFullName() != null ? currentUser.getFullName() : currentUser.getUsername());
+        userMsg.setNeedsAttention(true);
         chatMessageRepository.save(userMsg);
 
-        // TÍCH HỢP TRÍ TUỆ NHÂN TẠO (AI STORE ASSISTANT):
-        // - Với các câu thông thường (tồn kho, tình trạng độ mới, giá bán, địa chỉ, giờ mở cửa, phí ship, đổi trả): AI tự động tra cứu CSDL & phản hồi ngay lập tức.
-        // - Với các câu đặc biệt (mặc cả giá, đặt cọc giữ sách, xem chi tiết trang rách/bung keo, khiếu nại, yêu cầu gặp người thật):
-        //   AI thông báo chuyển tiếp cho Thủ kho/Quản lý chi nhánh và đánh dấu [CẦN QUẦY TRẢ LỜI] trên trang quản trị.
-        Map<String, Object> aiResult = generateStoreAiReply(store, book, userMsg.getContent());
-        boolean needsStaff = Boolean.TRUE.equals(aiResult.get("needsStaff"));
+        boolean isAiEnabled = Boolean.TRUE.equals(store.getAiReplyEnabled());
+        String lower = userMsg.getContent().toLowerCase();
+        boolean customerExplicitlyWantsHuman = lower.contains("gặp người thật") || lower.contains("nhân viên đâu")
+                || lower.contains("alo shop") || lower.contains("thủ kho") || lower.contains("khiếu nại")
+                || lower.contains("bớt giá") || lower.contains("trả giá") || lower.contains("[khách hàng yêu cầu gặp nhân viên");
 
-        if (needsStaff) {
-            userMsg.setNeedsAttention(true);
-            chatMessageRepository.save(userMsg);
+        // 1. Nếu khách yêu cầu gặp người thật hoặc hỏi các câu mặc cả/khiếu nại
+        if (customerExplicitlyWantsHuman) {
+            ChatMessage handoffMsg = new ChatMessage();
+            handoffMsg.setUser(currentUser);
+            handoffMsg.setStore(store);
+            handoffMsg.setSenderType(ChatMessage.SenderType.STORE_STAFF);
+            handoffMsg.setSenderName("Hệ thống chuyển giao");
+            handoffMsg.setContent("Dạ chi nhánh đã nhận được yêu cầu gặp nhân viên! Quản lý quầy " + store.getStoreName() + " sẽ tiếp quản cuộc trò chuyện và phản hồi trực tiếp cho bạn ngay nhé ạ! 👨‍💼✨");
+            handoffMsg.setNeedsAttention(true);
+            chatMessageRepository.save(handoffMsg);
+
+            res.put("success", true);
+            res.put("needsStaff", true);
+            res.put("reply", handoffMsg.getContent());
+            res.put("senderName", handoffMsg.getSenderName());
+            res.put("storeId", storeId);
+            res.put("createdAt", handoffMsg.getCreatedAt().format(TIME_FMT));
+            return ResponseEntity.ok(res);
         }
 
-        ChatMessage aiMsg = new ChatMessage();
-        aiMsg.setUser(currentUser);
-        aiMsg.setStore(store);
-        aiMsg.setSenderType(ChatMessage.SenderType.STORE_STAFF);
-        aiMsg.setSenderName("Trợ lý AI - " + store.getStoreName());
-        aiMsg.setContent((String) aiResult.get("reply"));
-        aiMsg.setNeedsAttention(needsStaff);
-        if (aiResult.containsKey("suggestedBook")) {
-            aiMsg.setBook((Book) aiResult.get("suggestedBook"));
-        }
-        chatMessageRepository.save(aiMsg);
+        // 2. Nếu Shop đang BẬT chế độ Trợ lý AI trả lời thay
+        if (isAiEnabled) {
+            Map<String, Object> aiResult = generateStoreAiReply(store, book, userMsg.getContent());
+            boolean needsStaff = Boolean.TRUE.equals(aiResult.get("needsStaff"));
 
+            ChatMessage aiMsg = new ChatMessage();
+            aiMsg.setUser(currentUser);
+            aiMsg.setStore(store);
+            aiMsg.setSenderType(ChatMessage.SenderType.STORE_STAFF);
+            aiMsg.setSenderName("Trợ lý AI - " + store.getStoreName());
+            aiMsg.setContent((String) aiResult.get("reply"));
+            aiMsg.setNeedsAttention(needsStaff);
+            if (aiResult.containsKey("suggestedBook")) {
+                aiMsg.setBook((Book) aiResult.get("suggestedBook"));
+            }
+            chatMessageRepository.save(aiMsg);
+
+            res.put("success", true);
+            res.put("needsStaff", needsStaff);
+            res.put("reply", aiMsg.getContent());
+            res.put("senderName", aiMsg.getSenderName());
+            res.put("storeId", storeId);
+            res.put("createdAt", aiMsg.getCreatedAt() != null ? aiMsg.getCreatedAt().format(TIME_FMT) : "");
+            if (aiMsg.getBook() != null) {
+                Map<String, Object> bMap = new HashMap<>();
+                bMap.put("id", aiMsg.getBook().getId());
+                bMap.put("title", aiMsg.getBook().getTitle());
+                bMap.put("price", aiMsg.getBook().getPrice());
+                bMap.put("imageUrl", aiMsg.getBook().getPrimaryImageUrl());
+                bMap.put("conditionPercent", aiMsg.getBook().getConditionPercent());
+                res.put("suggestedBook", bMap);
+            }
+            return ResponseEntity.ok(res);
+        }
+
+        // 3. Nếu Shop đang TẮT chế độ AI (Chế độ Nhân viên trực quầy đối thoại)
+        if (prevMessages.isEmpty()) {
+            // Tin nhắn đầu tiên: gửi 1 câu chào tiếp nhận tự động
+            ChatMessage greeting = new ChatMessage();
+            greeting.setUser(currentUser);
+            greeting.setStore(store);
+            greeting.setSenderType(ChatMessage.SenderType.STORE_STAFF);
+            greeting.setSenderName("Quản lý quầy - " + store.getStoreName());
+            greeting.setContent("Dạ chào bạn! " + store.getStoreName() + " đã nhận được tin nhắn. Quản lý cửa hàng đang kiểm tra quầy và sẽ phản hồi cho bạn ngay trong ít phút nhé ạ! ✨");
+            greeting.setNeedsAttention(true);
+            chatMessageRepository.save(greeting);
+
+            res.put("success", true);
+            res.put("needsStaff", true);
+            res.put("reply", greeting.getContent());
+            res.put("senderName", greeting.getSenderName());
+            res.put("storeId", storeId);
+            res.put("createdAt", greeting.getCreatedAt().format(TIME_FMT));
+            return ResponseEntity.ok(res);
+        }
+
+        // Các tin nhắn tiếp theo: Chờ nhân viên quầy trả lời trực tiếp
         res.put("success", true);
-        res.put("needsStaff", needsStaff);
-        res.put("reply", aiMsg.getContent());
-        res.put("senderName", aiMsg.getSenderName());
+        res.put("needsStaff", true);
+        res.put("reply", null);
         res.put("storeId", storeId);
-        res.put("createdAt", aiMsg.getCreatedAt() != null ? aiMsg.getCreatedAt().format(TIME_FMT) : "");
-        if (aiMsg.getBook() != null) {
-            Map<String, Object> bMap = new HashMap<>();
-            bMap.put("id", aiMsg.getBook().getId());
-            bMap.put("title", aiMsg.getBook().getTitle());
-            bMap.put("price", aiMsg.getBook().getPrice());
-            bMap.put("imageUrl", aiMsg.getBook().getPrimaryImageUrl());
-            bMap.put("conditionPercent", aiMsg.getBook().getConditionPercent());
-            res.put("suggestedBook", bMap);
-        }
         return ResponseEntity.ok(res);
     }
 
@@ -639,6 +693,118 @@ public class StoreChatController {
         chatMessageRepository.saveAll(unhandled);
 
         res.put("success", true);
+        return ResponseEntity.ok(res);
+    }
+
+    /**
+     * API: Quản lý bật/tắt chế độ AI trả lời tự động thay nhân viên
+     */
+    @PostMapping("/api/chat/store/{storeId}/toggle-ai")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> toggleAiReply(
+            @PathVariable Long storeId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Map<String, Object> res = new HashMap<>();
+        if (userDetails != null && "ROLE_MANAGER".equals(userDetails.getRoleName())) {
+            List<Store> managerStores = storeRepository.findByManagerId(userDetails.getId());
+            boolean ownsStore = managerStores.stream().anyMatch(s -> s.getId().equals(storeId));
+            if (!ownsStore) {
+                res.put("success", false);
+                res.put("message", "Bạn không có quyền quản lý chi nhánh này!");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
+            }
+        }
+        Store store = storeRepository.findById(storeId).orElse(null);
+        if (store == null) {
+            res.put("success", false);
+            res.put("message", "Chi nhánh không tồn tại.");
+            return ResponseEntity.badRequest().body(res);
+        }
+        boolean newState = !Boolean.TRUE.equals(store.getAiReplyEnabled());
+        store.setAiReplyEnabled(newState);
+        storeRepository.save(store);
+
+        res.put("success", true);
+        res.put("aiReplyEnabled", newState);
+        res.put("message", newState ? "Đã bật chế độ Trợ lý AI trả lời tự động." : "Đã chuyển sang chế độ Nhân viên trực quầy.");
+        return ResponseEntity.ok(res);
+    }
+
+    /**
+     * API: Khách hàng bấm nút yêu cầu gặp nhân viên quầy trực tiếp
+     */
+    @PostMapping("/api/chat/store/{storeId}/request-staff")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> requestHumanStaff(
+            @PathVariable Long storeId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        User currentUser = resolveCurrentUser(userDetails);
+        Store store = storeRepository.findById(storeId).orElse(null);
+        Map<String, Object> res = new HashMap<>();
+
+        if (currentUser == null || store == null) {
+            res.put("success", false);
+            return ResponseEntity.badRequest().body(res);
+        }
+
+        ChatMessage reqMsg = new ChatMessage();
+        reqMsg.setUser(currentUser);
+        reqMsg.setStore(store);
+        reqMsg.setSenderType(ChatMessage.SenderType.CUSTOMER);
+        reqMsg.setSenderName(currentUser.getFullName() != null ? currentUser.getFullName() : currentUser.getUsername());
+        reqMsg.setContent("[Khách hàng yêu cầu gặp nhân viên quầy trực tiếp]");
+        reqMsg.setNeedsAttention(true);
+        chatMessageRepository.save(reqMsg);
+
+        ChatMessage noticeMsg = new ChatMessage();
+        noticeMsg.setUser(currentUser);
+        noticeMsg.setStore(store);
+        noticeMsg.setSenderType(ChatMessage.SenderType.STORE_STAFF);
+        noticeMsg.setSenderName("Hệ thống chuyển giao");
+        noticeMsg.setContent("Dạ chi nhánh đã nhận được yêu cầu gặp nhân viên! Quản lý quầy " + store.getStoreName() + " sẽ tiếp quản cuộc trò chuyện và phản hồi trực tiếp cho bạn ngay nhé ạ! 👨‍💼✨");
+        noticeMsg.setNeedsAttention(true);
+        chatMessageRepository.save(noticeMsg);
+
+        res.put("success", true);
+        res.put("reply", noticeMsg.getContent());
+        res.put("senderName", noticeMsg.getSenderName());
+        res.put("createdAt", noticeMsg.getCreatedAt().format(TIME_FMT));
+        return ResponseEntity.ok(res);
+    }
+
+    /**
+     * API: Nạp hội thoại thời gian thực cho trang Quản trị chi nhánh (Live Polling 3s)
+     */
+    @GetMapping("/api/chat/staff/conversation")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getStaffConversation(
+            @RequestParam("storeId") Long storeId,
+            @RequestParam("userId") Long customerId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Map<String, Object> res = new HashMap<>();
+        if (userDetails != null && "ROLE_MANAGER".equals(userDetails.getRoleName())) {
+            List<Store> managerStores = storeRepository.findByManagerId(userDetails.getId());
+            boolean ownsStore = managerStores.stream().anyMatch(s -> s.getId().equals(storeId));
+            if (!ownsStore) {
+                res.put("success", false);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
+            }
+        }
+        List<ChatMessage> conversation = chatMessageRepository.findConversation(storeId, customerId);
+        List<Map<String, Object>> dtos = new ArrayList<>();
+        for (ChatMessage m : conversation) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", m.getId());
+            map.put("content", m.getContent());
+            map.put("mediaUrl", m.getMediaUrl());
+            map.put("mediaType", m.getMediaType());
+            map.put("senderType", m.getSenderType().name());
+            map.put("senderName", m.getSenderName());
+            map.put("createdAt", m.getCreatedAt() != null ? m.getCreatedAt().format(TIME_FMT) : "");
+            dtos.add(map);
+        }
+        res.put("success", true);
+        res.put("messages", dtos);
         return ResponseEntity.ok(res);
     }
 }
