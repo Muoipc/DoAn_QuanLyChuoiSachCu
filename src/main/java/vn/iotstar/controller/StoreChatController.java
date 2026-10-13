@@ -447,84 +447,150 @@ public class StoreChatController {
      * - Tự động phát hiện "câu hỏi đặc biệt" (trả giá, giữ cọc, chụp ảnh góc rách, khiếu nại, yêu cầu gặp người thật)
      *   để thông báo chuyển tiếp cho Thủ kho/Quản lý chi nhánh trực tiếp trả lời.
      */
+    private static String removeDiacritics(String str) {
+        if (str == null) return "";
+        String nfd = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(nfd)
+                .replaceAll("")
+                .replace('đ', 'd')
+                .replace('Đ', 'd')
+                .toLowerCase()
+                .trim();
+    }
+
     private Map<String, Object> generateStoreAiReply(Store store, Book book, String userText) {
         Map<String, Object> result = new HashMap<>();
         if (userText == null || userText.isBlank()) {
-            result.put("reply", "Dạ chào bạn! Em là Trợ lý AI của " + store.getStoreName() + ". Em có thể giải đáp về tồn kho sách, độ mới, giá bán, địa chỉ và giờ mở cửa của chi nhánh ạ!");
+            result.put("reply", "Dạ ReBook xin chào bạn! Em là Trợ lý AI của " + store.getStoreName() + " 📚. Em có thể tra cứu tồn kho sách, độ mới, giá bán và chính sách tại quầy cho mình ạ!");
             result.put("needsStaff", false);
             return result;
         }
 
-        String lower = userText.toLowerCase().trim();
+        String rawLower = userText.toLowerCase().trim();
+        String unaccentQuery = removeDiacritics(userText);
 
         // 1. NHÓM CÂU HỎI ĐẶC BIỆT CẦN THỦ KHO / QUẢN LÝ TRỰC TIẾP TRẢ LỜI
-        // (Khách gửi video kiểm tra thực tế, mặc cả giá, đặt cọc giữ sách, xem góc rách/chữ ký, khiếu nại, gặp người thật)
-        if (lower.contains("[video thực tế]") || lower.contains("video") || lower.contains("clip")) {
-            String vidMsg = "Dạ chi nhánh đã nhận được video kiểm tra sách từ bạn ạ! Thủ kho / Quản lý " + store.getStoreName() + " sẽ xem video và phản hồi cho bạn ngay ít phút nữa nhé! 📹✨";
+        if (rawLower.contains("[video thực tế]") || rawLower.contains("video") || rawLower.contains("clip")) {
+            String vidMsg = "Dạ chi nhánh đã nhận được video kiểm tra sách từ bạn ạ! Quản lý quầy " + store.getStoreName() + " sẽ xem video và phản hồi cho bạn ngay ít phút nữa nhé! 📹✨";
             result.put("reply", vidMsg);
             result.put("needsStaff", true);
             return result;
         }
 
-        boolean isSpecial = lower.contains("giảm giá thêm") || lower.contains("bớt giá") || lower.contains("fix giá") ||
-                lower.contains("bớt không") || lower.contains("chiết khấu riêng") ||
-                lower.contains("giữ sách") || lower.contains("cọc trước") || lower.contains("đặt cọc") ||
-                lower.contains("để riêng") || lower.contains("để dành") ||
-                lower.contains("chụp góc") || lower.contains("trang 50") || lower.contains("mục lục") ||
-                lower.contains("chữ ký") || lower.contains("rách mép") || lower.contains("bung keo") ||
-                lower.contains("gặp quản lý") || lower.contains("gặp chủ") || lower.contains("gặp người thật") ||
-                lower.contains("nhân viên đâu") || lower.contains("thủ kho đâu") || lower.contains("người thật") ||
-                lower.contains("khiếu nại") || lower.contains("bị ướt") || lower.contains("giao sai") ||
-                lower.contains("mua sỉ") || lower.contains("số lượng lớn");
+        boolean isSpecial = rawLower.contains("giảm giá thêm") || rawLower.contains("bớt giá") || rawLower.contains("fix giá") ||
+                rawLower.contains("bớt không") || rawLower.contains("chiết khấu riêng") ||
+                rawLower.contains("giữ sách") || rawLower.contains("cọc trước") || rawLower.contains("đặt cọc") ||
+                rawLower.contains("để riêng") || rawLower.contains("để dành") ||
+                rawLower.contains("chụp góc") || rawLower.contains("trang 50") || rawLower.contains("mục lục") ||
+                rawLower.contains("chữ ký") || rawLower.contains("rách mép") || rawLower.contains("bung keo") ||
+                rawLower.contains("gặp quản lý") || rawLower.contains("gặp chủ") || rawLower.contains("gặp người thật") ||
+                rawLower.contains("nhân viên đâu") || rawLower.contains("thủ kho đâu") || rawLower.contains("người thật") ||
+                rawLower.contains("khiếu nại") || rawLower.contains("bị ướt") || rawLower.contains("giao sai") ||
+                rawLower.contains("mua sỉ") || rawLower.contains("số lượng lớn");
 
         if (isSpecial) {
-            String escortMsg = "Dạ đây là yêu cầu đặc biệt cần nhân viên kiểm tra thực tế tại kệ/kho sách. Em đã chuyển tiếp tin nhắn đến Thủ kho / Quản lý chi nhánh " + store.getStoreName() + ". Nhân viên quầy sẽ trực tiếp phản hồi anh/chị ngay ít phút nữa ạ! ⏳";
+            String escortMsg = "Dạ đây là yêu cầu đặc biệt cần nhân viên kiểm tra thực tế tại kệ/kho sách. Em đã chuyển tiếp tin nhắn đến Quản lý chi nhánh " + store.getStoreName() + ". Quản lý quầy sẽ trực tiếp phản hồi bạn ngay ít phút nữa nhé! ⏳👨‍💼";
             result.put("reply", escortMsg);
             result.put("needsStaff", true);
             return result;
         }
 
-        // 2. TRƯỜNG HỢP: KHÁCH HỎI VỀ ĐỊA CHỈ, VỊ TRÍ, ĐƯỜNG ĐI
-        if (lower.contains("ở đâu") || lower.contains("địa chỉ") || lower.contains("vị trí") || lower.contains("chỗ nào") || lower.contains("gần đâu")) {
-            String addrMsg = "Dạ chi nhánh " + store.getStoreName() + " có địa chỉ tại: " + store.getAddress() + " (" + store.getDistrict() + "). Cửa hàng có chỗ để xe máy miễn phí và bàn đọc sách trải nghiệm, rất mong được đón tiếp anh/chị ghé quầy ạ! 📍";
+        // 2. CHÀO HỎI & BẮT ĐẦU TRÒ CHUYỆN (GREETING INTENT)
+        boolean isGreeting = rawLower.matches(".*\\b(chào|chao|hi|hello|alo|shop ơi|shop oi|ad ơi|ad oi|bạn ơi|ban oi|hey|helo)\\b.*")
+                || rawLower.equals("hi") || rawLower.equals("hello") || rawLower.equals("alo") || rawLower.equals("chao shop") || rawLower.equals("chào shop");
+
+        if (isGreeting) {
+            String greetMsg = "Dạ ReBook xin chào bạn! Em là Trợ lý AI của **" + store.getStoreName() + "** 📚✨\n" +
+                    "Hiện tại quầy đang có sẵn rất nhiều đầu sách cũ tuyển chọn (Văn học, Kinh tế, Kỹ năng, Ngoại ngữ, CNTT...). Bạn đang tìm tựa sách, tác giả hay cần em gợi ý sách hay tại quầy ạ?";
+            result.put("reply", greetMsg);
+            result.put("needsStaff", false);
+            return result;
+        }
+
+        // 3. ĐỊA CHỈ, VỊ TRÍ, ĐƯỜNG ĐI
+        if (unaccentQuery.contains("o dau") || unaccentQuery.contains("dia chi") || unaccentQuery.contains("vi tri") || unaccentQuery.contains("cho nao") || unaccentQuery.contains("gan dau")) {
+            String addrMsg = "Dạ chi nhánh **" + store.getStoreName() + "** có địa chỉ tại: " + store.getAddress() + " (" + store.getDistrict() + "). Cửa hàng có chỗ để xe máy miễn phí và bàn đọc sách trải nghiệm, rất mong được đón tiếp bạn ghé quầy ạ! 📍";
             result.put("reply", addrMsg);
             result.put("needsStaff", false);
             return result;
         }
 
-        // 3. TRƯỜNG HỢP: KHÁCH HỎI VỀ GIỜ MỞ CỬA, THỜI GIAN HOẠT ĐỘNG
-        if (lower.contains("mở cửa") || lower.contains("đóng cửa") || lower.contains("mấy giờ") || lower.contains("giờ làm việc") || lower.contains("thời gian")) {
-            String hoursMsg = "Dạ chi nhánh " + store.getStoreName() + " mở cửa phục vụ từ 08:00 sáng đến 21:30 tối hàng ngày (kể cả Thứ 7, Chủ Nhật và ngày lễ) ạ! Anh/chị có thể ghé bất cứ lúc nào trong khung giờ này nhé! ⏰";
+        // 4. GIỜ MỞ CỬA, THỜI GIAN HOẠT ĐỘNG
+        if (unaccentQuery.contains("mo cua") || unaccentQuery.contains("dong cua") || unaccentQuery.contains("may gio") || unaccentQuery.contains("gio lam viec") || unaccentQuery.contains("thoi gian")) {
+            String hoursMsg = "Dạ chi nhánh **" + store.getStoreName() + "** mở cửa phục vụ từ 08:00 sáng đến 21:30 tối hàng ngày (kể cả Thứ 7, Chủ Nhật và ngày lễ) ạ! Bạn có thể ghé bất cứ lúc nào trong khung giờ này nhé! ⏰";
             result.put("reply", hoursMsg);
             result.put("needsStaff", false);
             return result;
         }
 
-        // 4. TRƯỜNG HỢP: KHÁCH HỎI VỀ PHÍ SHIP, GIAO HỎA TỐC, THỜI GIAN GIAO
-        if (lower.contains("ship") || lower.contains("giao hàng") || lower.contains("hỏa tốc") || lower.contains("vận chuyển") || lower.contains("bao lâu")) {
-            String shipMsg = "Dạ chi nhánh có hỗ trợ giao hỏa tốc 2-4h nội thành TP.HCM (phí từ 18.000₫ - 25.000₫) và Freeship cho đơn từ 150.000₫ ạ. Anh/chị luôn được ĐỒNG KIỂM - kiểm tra tình trạng sách thực tế trước khi thanh toán nhận hàng nhé! 🚀";
+        // 5. PHÍ SHIP, GIAO HÀNG HỎA TỐC
+        if (unaccentQuery.contains("ship") || unaccentQuery.contains("giao hang") || unaccentQuery.contains("hoa toc") || unaccentQuery.contains("van chuyen") || unaccentQuery.contains("bao lau")) {
+            String shipMsg = "Dạ chi nhánh hỗ trợ giao hỏa tốc 2-4h nội thành TP.HCM (phí từ 18.000₫ - 25.000₫) và Freeship cho đơn từ 150.000₫ ạ. Bạn luôn được ĐỒNG KIỂM - kiểm tra tình trạng sách thực tế trước khi thanh toán nhận hàng nhé! 🚀";
             result.put("reply", shipMsg);
             result.put("needsStaff", false);
             return result;
         }
 
-        // 5. TRƯỜNG HỢP: KHÁCH HỎI VỀ ĐỔI TRẢ, BẢO HÀNH, CHẤT LƯỢNG SÁCH
-        if (lower.contains("đổi trả") || lower.contains("bảo hành") || lower.contains("đồng kiểm") || lower.contains("chất lượng")) {
-            String policyMsg = "Dạ toàn bộ sách cũ tại " + store.getStoreName() + " đều qua quy trình kiểm định 4 bước: kiểm tra đủ trang, vệ sinh gáy bìa và phân loại độ mới rõ ràng. Chuỗi hỗ trợ đổi trả miễn phí trong 3 ngày nếu sách bị lỗi hoặc không đúng mô tả ạ! 🛡️";
+        // 6. ĐỔI TRẢ, BẢO HÀNH, CHẤT LƯỢNG SÁCH
+        if (unaccentQuery.contains("doi tra") || unaccentQuery.contains("bao hanh") || unaccentQuery.contains("dong kiem") || unaccentQuery.contains("chat luong")) {
+            String policyMsg = "Dạ toàn bộ sách cũ tại **" + store.getStoreName() + "** đều qua quy trình kiểm định 4 bước: kiểm tra đủ trang, vệ sinh gáy bìa và phân loại độ mới rõ ràng. Chuỗi hỗ trợ đổi trả miễn phí trong 3 ngày nếu sách bị lỗi hoặc không đúng mô tả ạ! 🛡️";
             result.put("reply", policyMsg);
             result.put("needsStaff", false);
             return result;
         }
 
-        // 6. TRƯỜNG HỢP: HỎI VỀ TỒN KHO, ĐỘ MỚI, GIÁ CỦA CUỐN SÁCH CỤ THỂ (HOẶC SÁCH ĐANG GHIM)
+        // 7. TRA CỨU SÁCH CỤ THỂ THEO TỰA HOẶC TÁC GIẢ (HỖ TRỢ CẢ CÓ DẤU & KHÔNG DẤU)
         Book targetBook = book;
         if (targetBook == null) {
             List<Book> allBooks = bookRepository.findAllActiveWithImages();
+            int bestScore = 0;
+
             for (Book b : allBooks) {
-                String cleanT = b.getTitle().toLowerCase().replaceAll("\\(.*?\\)", "").trim();
-                if (cleanT.length() >= 3 && lower.contains(cleanT)) {
+                String bTitle = b.getTitle() != null ? b.getTitle() : "";
+                String bAuthor = b.getAuthor() != null ? b.getAuthor() : "";
+                String unaccentTitle = removeDiacritics(bTitle);
+                String unaccentAuthor = removeDiacritics(bAuthor);
+
+                int score = 0;
+                // 1. Kiểm tra khớp toàn bộ tựa sách
+                if (unaccentQuery.contains(unaccentTitle) || unaccentTitle.contains(unaccentQuery)) {
+                    score += 15;
+                }
+                // 2. Tách cụm từ tựa sách chính (bỏ ngoặc)
+                String mainTitle = unaccentTitle.replaceAll("\\(.*?\\)", "").trim();
+                if (mainTitle.length() >= 3 && (unaccentQuery.contains(mainTitle) || mainTitle.contains(unaccentQuery))) {
+                    score += 12;
+                }
+                // 3. Kiểm tra cụm tiếng Anh / phụ đề trong ngoặc đơn (ví dụ: The Alchemist, Atomic Habits...)
+                java.util.regex.Matcher mPar = java.util.regex.Pattern.compile("\\((.*?)\\)").matcher(unaccentTitle);
+                while (mPar.find()) {
+                    String inside = mPar.group(1).trim();
+                    if (inside.length() >= 3 && (unaccentQuery.contains(inside) || inside.contains(unaccentQuery))) {
+                        score += 14;
+                    }
+                }
+                // 4. Khớp tác giả
+                if (!unaccentAuthor.isEmpty() && (unaccentQuery.contains(unaccentAuthor) || unaccentAuthor.contains(unaccentQuery))) {
+                    score += 10;
+                }
+                // 5. Khớp từng từ khóa chính (Keywords >= 3 ký tự)
+                String[] qWords = unaccentQuery.replaceAll("[^a-z0-9\\s]", " ").split("\\s+");
+                int wordHits = 0;
+                for (String w : qWords) {
+                    if (w.length() >= 3 && !w.equals("cuon") && !w.equals("sach") && !w.equals("khong") && !w.equals("chua") && !w.equals("con") && !w.equals("shop")) {
+                        if (unaccentTitle.contains(w)) {
+                            wordHits++;
+                        }
+                    }
+                }
+                if (wordHits >= 2 || (wordHits >= 1 && mainTitle.length() <= 8)) {
+                    score += wordHits * 3;
+                }
+
+                if (score > bestScore) {
+                    bestScore = score;
                     targetBook = b;
-                    break;
                 }
             }
         }
@@ -534,45 +600,81 @@ public class StoreChatController {
             int stock = invOpt.map(Inventory::getQuantity).orElse(0);
             int cond = targetBook.getConditionPercent() != null ? targetBook.getConditionPercent() : 90;
             String priceStr = String.format("%,d", targetBook.getPrice().longValue()).replace(',', '.') + "₫";
+            String authorName = targetBook.getAuthor() != null ? targetBook.getAuthor() : "Tác giả nổi tiếng";
 
             if (stock > 0) {
-                String stockMsg = "Dạ cuốn sách \"" + targetBook.getTitle() + "\" hiện ĐANG CÓ SẴN tại " + store.getStoreName() +
-                        " (tồn kho: " + stock + " cuốn) ạ!\n" +
-                        "• Tình trạng: Độ mới " + cond + "%, bìa gáy nguyên vẹn, trang giấy sạch đẹp.\n" +
-                        "• Giá bán sách cũ: " + priceStr + ".\n" +
-                        "Anh/chị có thể bấm đặt mua trực tiếp hoặc ghé quầy xem nhé!";
+                String stockMsg = "Dạ cuốn sách **\"" + targetBook.getTitle() + "\"** (" + authorName + ") hiện **ĐANG CÓ SẴN** tại " + store.getStoreName() + " ạ!\n" +
+                        "• Tồn kho quầy: **" + stock + " cuốn** trên kệ.\n" +
+                        "• Tình trạng: Độ mới **" + cond + "%**, gáy bìa nguyên vẹn, trang giấy sạch đẹp.\n" +
+                        "• Giá bán cũ: **" + priceStr + "**.\n" +
+                        "Bạn có thể bấm nút **Mua** ngay bên dưới để đặt giao tận nơi hoặc ghé quầy đọc thử nhé! ✨";
                 result.put("reply", stockMsg);
                 result.put("needsStaff", false);
                 result.put("suggestedBook", targetBook);
                 return result;
             } else {
-                String outMsg = "Dạ cuốn \"" + targetBook.getTitle() + "\" tại " + store.getStoreName() + " tạm thời vừa hết hàng ạ. Tuy nhiên chuỗi vẫn còn tại các chi nhánh khác trong hệ thống. Anh/chị có thể đặt ship trực tiếp trên web để chuỗi điều chuyển giao tận nơi nhé!";
-                result.put("reply", outMsg);
+                // Kiểm tra xem các chi nhánh khác có còn hàng không
+                List<Inventory> otherInvs = inventoryRepository.findByBookIdWithStore(targetBook.getId());
+                List<String> availableBranches = new ArrayList<>();
+                for (Inventory oi : otherInvs) {
+                    if (oi.getQuantity() != null && oi.getQuantity() > 0 && oi.getStore() != null && !oi.getStore().getId().equals(store.getId())) {
+                        availableBranches.add("• " + oi.getStore().getStoreName() + " (còn " + oi.getQuantity() + " cuốn)");
+                    }
+                }
+
+                StringBuilder outMsg = new StringBuilder("Dạ cuốn sách **\"" + targetBook.getTitle() + "\"** tại quầy " + store.getStoreName() + " vừa tạm hết trên kệ ạ.\n");
+                if (!availableBranches.isEmpty()) {
+                    outMsg.append("Tuy nhiên, hệ thống ReBook kiểm tra thấy vẫn còn tại:\n");
+                    for (String bInfo : availableBranches) {
+                        outMsg.append(bInfo).append("\n");
+                    }
+                    outMsg.append("Bạn có thể đặt trực tiếp trên web để chuỗi điều chuyển giao nhanh 2-4h nhé!");
+                } else {
+                    outMsg.append("Hiện tại toàn bộ chuỗi đang tạm hết tựa sách này. Bạn có thể để lại số điện thoại hoặc bấm nút [Gặp nhân viên quầy] để khi sách về chi nhánh sẽ báo bạn ngay nhé!");
+                }
+                result.put("reply", outMsg.toString());
                 result.put("needsStaff", false);
+                result.put("suggestedBook", targetBook);
                 return result;
             }
         }
 
-        // 7. HỎI GỢI Ý SÁCH HAY THEO CHỦ ĐỀ
-        if (lower.contains("gợi ý") || lower.contains("sách hay") || lower.contains("sách nên đọc") || lower.contains("tâm lý") || lower.contains("kinh tế") || lower.contains("văn học")) {
+        // 8. HỎI GỢI Ý THEO CHỦ ĐỀ / THỂ LOẠI
+        boolean isRecommendation = unaccentQuery.contains("goi y") || unaccentQuery.contains("sach hay") || unaccentQuery.contains("nen doc")
+                || unaccentQuery.contains("tam ly") || unaccentQuery.contains("kinh te") || unaccentQuery.contains("van hoc")
+                || unaccentQuery.contains("cntt") || unaccentQuery.contains("lap trinh") || unaccentQuery.contains("ky nang")
+                || unaccentQuery.contains("ngoai ngu") || unaccentQuery.contains("lich su") || unaccentQuery.contains("tieu thuyet");
+
+        if (isRecommendation) {
             List<Inventory> storeInvs = inventoryRepository.findByStoreIdWithBooks(store.getId());
-            StringBuilder suggMsg = new StringBuilder("Dạ tại quầy " + store.getStoreName() + " đang có rất nhiều đầu sách cũ được bạn đọc yêu thích:\n");
+            StringBuilder suggMsg = new StringBuilder("Dạ tại quầy **" + store.getStoreName() + "** đang có các đầu sách nổi bật được bạn đọc yêu thích:\n");
             int count = 0;
+            Book topBook = null;
             for (Inventory inv : storeInvs) {
                 if (inv.getQuantity() > 0 && inv.getBook() != null) {
-                    suggMsg.append("📖 \"").append(inv.getBook().getTitle()).append("\" - ₫").append(String.format("%,d", inv.getBook().getPrice().longValue()).replace(',', '.')).append("\n");
+                    if (topBook == null) topBook = inv.getBook();
+                    suggMsg.append("📖 **").append(inv.getBook().getTitle()).append("** - ")
+                            .append(String.format("%,d", inv.getBook().getPrice().longValue()).replace(',', '.')).append("₫")
+                            .append(" (mới ").append(inv.getBook().getConditionPercent() != null ? inv.getBook().getConditionPercent() : 90).append("%)\n");
                     count++;
                     if (count >= 3) break;
                 }
             }
-            suggMsg.append("Anh/chị muốn tìm sách theo thể loại hay tác giả cụ thể nào để em tra cứu thêm ạ?");
+            suggMsg.append("\nBạn có thể nhắn tên tựa sách cụ thể để em kiểm tra chi tiết độ mới và tồn kho kệ sách nhé! ✨");
             result.put("reply", suggMsg.toString());
             result.put("needsStaff", false);
+            if (topBook != null) {
+                result.put("suggestedBook", topBook);
+            }
             return result;
         }
 
-        // 8. CÂU HỎI CHUNG / CHƯA RÕ NGHĨA -> AI CHÀO HỎI VÀ HỎI THÊM
-        String defaultMsg = "Dạ em là Trợ lý AI của " + store.getStoreName() + ". Em đã ghi nhận câu hỏi của mình. Nếu anh/chị cần kiểm tra tồn kho cuốn sách nào hoặc cần thủ kho chụp ảnh thực tế tại quầy, anh/chị cứ nhắn tựa sách hoặc gửi ảnh cho em nhé ạ! ✨";
+        // 9. CÂU HỎI CHUNG / CHƯA RÕ NGHĨA -> PHẢN HỒI THÔNG MINH, TỰ NHIÊN
+        String defaultMsg = "Dạ hiện tại em chưa tìm thấy sách khớp chính xác với từ khóa **\"" + userText + "\"** tại quầy " + store.getStoreName() + ".\n\n" +
+                "Bạn có thể thử:\n" +
+                "1. Nhắn tên tựa sách cụ thể (ví dụ: *Đắc Nhân Tâm*, *Nhà Giả Kim*, *Hoàng Tử Bé*...)\n" +
+                "2. Nhắn thể loại bạn quan tâm (ví dụ: *sách kinh tế*, *sách kỹ năng*, *văn học*...)\n" +
+                "3. Hoặc bấm nút **[👨‍💼 Gặp nhân viên quầy]** bên dưới để Quản lý chi nhánh hỗ trợ tra cứu kho sách giúp mình nhé! 📖✨";
         result.put("reply", defaultMsg);
         result.put("needsStaff", false);
         return result;
