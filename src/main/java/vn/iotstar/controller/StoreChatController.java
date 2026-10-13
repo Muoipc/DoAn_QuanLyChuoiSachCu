@@ -26,6 +26,25 @@ public class StoreChatController {
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm dd/MM");
     private static final Long DEFAULT_GUEST_USER_ID = 4L; // Nguyễn Song Hoàng Phúc
 
+    // Presence Tracking: Quản lý liveness của Quản lý từng chi nhánh (Thread-safe)
+    private static final java.util.concurrent.ConcurrentMap<Long, Long> STORE_LAST_SEEN = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final long PRESENCE_TIMEOUT_MS = 5 * 60 * 1000L; // 5 phút
+
+    public static void touchStorePresence(Long storeId) {
+        if (storeId != null) {
+            STORE_LAST_SEEN.put(storeId, System.currentTimeMillis());
+        }
+    }
+
+    public static boolean isStoreOnline(Store store) {
+        if (store == null) return false;
+        if (Boolean.TRUE.equals(store.getAiReplyEnabled())) {
+            return true; // Chế độ AI trực 24/7
+        }
+        Long lastSeen = STORE_LAST_SEEN.get(store.getId());
+        return lastSeen != null && (System.currentTimeMillis() - lastSeen) < PRESENCE_TIMEOUT_MS;
+    }
+
     @Autowired
     private ChatMessageRepository chatMessageRepository;
 
@@ -125,6 +144,7 @@ public class StoreChatController {
             item.put("storeName", store.getStoreName());
             item.put("storeAvatar", store.getImage() != null ? store.getImage() : "/images/brand-book-icon.png");
             item.put("storeDistrict", store.getDistrict());
+            item.put("isOnline", isStoreOnline(store));
 
             if (!messages.isEmpty()) {
                 ChatMessage last = messages.get(messages.size() - 1);
@@ -270,6 +290,7 @@ public class StoreChatController {
         res.put("storeAvatar", (store != null && store.getImage() != null) ? store.getImage() : "/images/logo-books-badge.png");
         res.put("storeAddress", store != null ? store.getAddress() : "");
         res.put("aiReplyEnabled", store != null ? Boolean.TRUE.equals(store.getAiReplyEnabled()) : false);
+        res.put("isOnline", isStoreOnline(store));
         res.put("managerName", (store != null && store.getManager() != null) ? store.getManager().getFullName() : "Quản lý cửa hàng");
         res.put("messages", dtos);
 
@@ -794,6 +815,7 @@ public class StoreChatController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
             }
         }
+        touchStorePresence(storeId);
         List<ChatMessage> conversation = chatMessageRepository.findConversation(storeId, customerId);
         List<Map<String, Object>> dtos = new ArrayList<>();
         for (ChatMessage m : conversation) {
@@ -810,5 +832,16 @@ public class StoreChatController {
         res.put("success", true);
         res.put("messages", dtos);
         return ResponseEntity.ok(res);
+    }
+
+    /**
+     * API: Heartbeat ghi nhận Quản lý chi nhánh đang mở tab chat
+     */
+    @PostMapping("/api/chat/staff/heartbeat")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> staffHeartbeat(
+            @RequestParam("storeId") Long storeId) {
+        touchStorePresence(storeId);
+        return ResponseEntity.ok(Map.of("success", true));
     }
 }

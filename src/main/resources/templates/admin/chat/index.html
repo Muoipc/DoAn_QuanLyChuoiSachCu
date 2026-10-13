@@ -403,12 +403,25 @@
                 .catch(e => console.debug(e));
         }
 
-        // Tự cuộn xuống đáy khung chat & khởi động polling
+        function sendStaffHeartbeat() {
+            if (!currentStoreId) return;
+            const params = new URLSearchParams();
+            params.append('storeId', currentStoreId);
+            fetch('/api/chat/staff/heartbeat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            }).catch(e => console.debug(e));
+        }
+
+        // Tự cuộn xuống đáy khung chat & khởi động polling và heartbeat
         window.addEventListener('load', function() {
             const box = document.getElementById('adminChatBody');
             if (box) box.scrollTop = box.scrollHeight;
             initAdminRenderedIds();
             setInterval(pollAdminMessages, 3000);
+            sendStaffHeartbeat();
+            setInterval(sendStaffHeartbeat, 30000);
         });
         /*]]>*/
     </script>

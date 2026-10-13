@@ -23,11 +23,17 @@ Hoàn thiện tính năng hiển thị trạng thái hoạt động thực tế 
       1. Quản lý chi nhánh có hoạt động trong vòng 5 phút gần nhất (`now - lastSeen < 300,000ms`), HOẶC
       2. Chi nhánh đang BẬT chế độ Trợ lý AI (`aiReplyEnabled = true` — sẵn sàng hỗ trợ tự động 24/7).
     - `isOnline = false` (Offline) khi: Quản lý không hoạt động quá 5 phút VÀ chế độ AI đang tắt.
-- **Tối Giản Hóa Trực Quan (Minimalist Status Indicator):**
+- **Tối Giản Hóa Trực Quan & Đa Ngôn Ngữ (i18n Multi-Language Integration):**
+  - Trạng thái trực tiếp hiển thị linh hoạt theo ngôn ngữ người dùng đang chọn (`getCurrentLang()` từ `i18n.js` / cookie `app_lang`):
+    - **Khi chọn Tiếng Việt (`vi`):**
+      - Online: `🟢 Trực tiếp`
+      - Offline: `⚪ Vắng mặt` (hoặc `Ngoại tuyến`)
+    - **Khi chọn Tiếng Anh (`en`):**
+      - Online: `🟢 Online`
+      - Offline: `⚪ Offline`
   - **Trên Header Room View (`header.html`):**
     - Loại bỏ hoàn toàn câu chữ dài dòng.
-    - Khi Online: `TP. Thủ Đức · <span style="color:#059669;"><span class="status-dot-green"></span> Online</span>`.
-    - Khi Offline: `TP. Thủ Đức · <span style="color:#78716C;"><span class="status-dot-gray"></span> Offline</span>`.
+    - Hiển thị ngắn gọn: `TP. Thủ Đức · <span style="color:#059669;"><span class="status-dot-green"></span> Trực tiếp</span>` (hoặc `Online` nếu là tiếng Anh).
     - Chấm tròn góc ảnh đại diện chi nhánh tự động chuyển xanh (`#10B981`) khi Online, hoặc xám (`#A8A29E`) khi Offline.
   - **Trên Danh Sách 5 Chi Nhánh (`miniChatShopListView`):**
     - Hiển thị chấm trạng thái tương ứng ngay góc avatar mỗi chi nhánh, giúp khách hàng nhận biết ngay shop nào đang online trước khi bấm vào.
@@ -105,15 +111,25 @@ Hoàn thiện tính năng hiển thị trạng thái hoạt động thực tế 
 ```
 ```javascript
 // CẬP NHẬT TRONG HÀM loadStoreChatMessages & startMiniChatPolling
+function getOnlineStatusText(isOnline) {
+    var lang = (typeof getCurrentLang === 'function') ? getCurrentLang() : 'vi';
+    if (isOnline) {
+        return lang === 'en' ? 'Online' : 'Trực tiếp';
+    } else {
+        return lang === 'en' ? 'Offline' : 'Vắng mặt';
+    }
+}
+
 function updateStoreStatusUI(isOnline) {
     var statusEl = document.getElementById('activeStoreStaffStatus');
     var dotEl = document.getElementById('activeStoreAvatarDot');
+    var text = getOnlineStatusText(isOnline);
     if (statusEl) {
         if (isOnline) {
-            statusEl.innerHTML = '<span style="display:inline-flex; align-items:center; gap:3.5px; color:#059669; font-weight:600;"><span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 0 2px rgba(16,185,129,0.2);"></span> Online</span>';
+            statusEl.innerHTML = '<span style="display:inline-flex; align-items:center; gap:3.5px; color:#059669; font-weight:600;"><span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 0 2px rgba(16,185,129,0.2);"></span> ' + text + '</span>';
             if (dotEl) dotEl.style.background = '#10B981';
         } else {
-            statusEl.innerHTML = '<span style="display:inline-flex; align-items:center; gap:3.5px; color:#78716C; font-weight:500;"><span style="width:6px; height:6px; border-radius:50%; background:#A8A29E; display:inline-block;"></span> Offline</span>';
+            statusEl.innerHTML = '<span style="display:inline-flex; align-items:center; gap:3.5px; color:#78716C; font-weight:500;"><span style="width:6px; height:6px; border-radius:50%; background:#A8A29E; display:inline-block;"></span> ' + text + '</span>';
             if (dotEl) dotEl.style.background = '#A8A29E';
         }
     }

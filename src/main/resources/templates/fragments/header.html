@@ -2436,6 +2436,7 @@
                             'onmouseout="this.style.background=\'transparent\'; var btn=this.querySelector(\'.btn-row-more\'); if(btn) btn.style.display=\'none\'; var m=this.querySelector(\'.shop-meta-right\'); if(m) m.style.opacity=\'1\';">' +
                             '<div style="position:relative; width:40px; height:40px; flex-shrink:0;">' +
                                 '<img src="' + avt + '" onerror="this.onerror=null; this.src=\'/images/brand-book-icon.png\';" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">' +
+                                '<span style="position:absolute; bottom:0; right:0; width:9px; height:9px; border-radius:50%; background:' + (s.isOnline ? '#10B981' : '#A8A29E') + '; border:2px solid #FFFFFF;" title="' + getStorePresenceText(s.isOnline) + '"></span>' +
                                 (unreadNum > 0 ? '<span style="position:absolute; top:-1px; right:-1px; width:9px; height:9px; border-radius:50%; background:#EE4D2D; border:2px solid #FFFFFF;"></span>' : '') +
                             '</div>' +
                             '<div style="flex:1; min-width:0; padding-right:12px;">' +
@@ -2890,6 +2891,36 @@
             return h + ':' + m + ' ' + day + '/' + month;
         }
 
+        function getStorePresenceText(isOnline) {
+            var lang = 'vi';
+            if (typeof getCurrentLang === 'function') {
+                lang = getCurrentLang();
+            } else {
+                var m = document.cookie.match(/(^|;)\s*app_lang\s*=\s*([^;]+)/);
+                if (m) lang = m[2].trim();
+            }
+            if (isOnline) {
+                return (lang === 'en') ? 'Online' : 'Trực tiếp';
+            } else {
+                return (lang === 'en') ? 'Offline' : 'Vắng mặt';
+            }
+        }
+
+        function updateStorePresenceUI(isOnline) {
+            var statusEl = document.getElementById('activeStoreStaffStatus');
+            var dotEl = document.getElementById('activeStoreAvatarDot');
+            var txt = getStorePresenceText(isOnline);
+            if (statusEl) {
+                if (isOnline) {
+                    statusEl.innerHTML = '<span style="display:inline-flex; align-items:center; gap:3.5px; color:#059669; font-weight:600;"><span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 0 2px rgba(16,185,129,0.2);"></span> ' + txt + '</span>';
+                    if (dotEl) dotEl.style.background = '#10B981';
+                } else {
+                    statusEl.innerHTML = '<span style="display:inline-flex; align-items:center; gap:3.5px; color:#78716C; font-weight:500;"><span style="width:6px; height:6px; border-radius:50%; background:#A8A29E; display:inline-block;"></span> ' + txt + '</span>';
+                    if (dotEl) dotEl.style.background = '#A8A29E';
+                }
+            }
+        }
+
         function startMiniChatPolling() {
             stopMiniChatPolling();
             miniChatPollingTimer = setInterval(function() {
@@ -2902,14 +2933,7 @@
                     .then(function(res) { return res.json(); })
                     .then(function(data) {
                         if (data && data.success && data.messages) {
-                            var statusEl = document.getElementById('activeStoreStaffStatus');
-                            if (statusEl) {
-                                if (data.aiReplyEnabled) {
-                                    statusEl.innerHTML = '<span style="color:#8C4A27; font-weight:700;">🤖 Trợ lý AI đang trực</span>';
-                                } else {
-                                    statusEl.innerHTML = '<span style="color:#059669; font-weight:700;">🟢 ' + escapeMiniHtml(data.managerName || 'Quản lý quầy') + ' đang trực</span>';
-                                }
-                            }
+                            updateStorePresenceUI(Boolean(data.isOnline));
                             var hasNew = false;
                             data.messages.forEach(function(m) {
                                 if (m.id && !renderedMsgIds.has(String(m.id))) {
@@ -2970,14 +2994,7 @@
                     body.innerHTML = '';
                     var messages = (data && data.messages) ? data.messages : [];
 
-                    var statusEl = document.getElementById('activeStoreStaffStatus');
-                    if (statusEl) {
-                        if (data.aiReplyEnabled) {
-                            statusEl.innerHTML = '<span style="color:#8C4A27; font-weight:700;">🤖 Trợ lý AI đang trực</span>';
-                        } else {
-                            statusEl.innerHTML = '<span style="color:#059669; font-weight:700;">🟢 ' + escapeMiniHtml(data.managerName || 'Quản lý quầy') + ' đang trực</span>';
-                        }
-                    }
+                    updateStorePresenceUI(Boolean(data.isOnline));
 
                     // Tin nhắn chào mừng ban đầu
                     var welcomeDiv = document.createElement('div');
@@ -3312,7 +3329,7 @@
                     </button>
                     <div style="position:relative; width:32px; height:32px; flex-shrink:0;">
                         <img id="activeStoreAvatar" src="/images/brand-book-icon.png" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
-                        <span style="position:absolute; bottom:0; right:0; width:8px; height:8px; border-radius:50%; background:#10b981; border:1.5px solid #fff;"></span>
+                        <span id="activeStoreAvatarDot" style="position:absolute; bottom:0; right:0; width:8px; height:8px; border-radius:50%; background:#10b981; border:1.5px solid #fff;"></span>
                     </div>
                     <div style="min-width:0; flex:1;">
                         <div id="activeStoreName" style="font-weight:700; font-size:12.5px; color:#18181B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-0.1px;">Chi Nhánh 1: Thủ Đức</div>

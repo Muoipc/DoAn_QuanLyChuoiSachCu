@@ -37,7 +37,10 @@ const I18N_DICTIONARY = {
         'Tổng thanh toán': 'Tổng thanh toán',
         'Tiết kiệm được': 'Tiết kiệm được',
         'Đã Bán': 'Đã Bán',
-        'Đánh Giá': 'Đánh Giá'
+        'Đánh Giá': 'Đánh Giá',
+        'Trực tiếp': 'Trực tiếp',
+        'Vắng mặt': 'Vắng mặt',
+        'Gặp nhân viên quầy': 'Gặp nhân viên quầy'
     },
     en: {
         'Ký Gửi Sách Cũ': 'Book Consignments',

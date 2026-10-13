@@ -76,4 +76,26 @@ class StoreChatBranchTest {
         assertTrue(aiMsg.getSenderName().startsWith("Trợ lý AI"), "Tin nhắn AI phải có tiền tố Trợ lý AI");
         assertFalse(staffMsg.getSenderName().startsWith("Trợ lý AI"), "Tin nhắn nhân viên thật không mang tiền tố AI");
     }
+
+    @Test
+    @DisplayName("Kiểm tra cơ chế Presence Tracking: Online/Offline theo hoạt động thực tế và chế độ AI")
+    void testStorePresenceTracking() {
+        Store store = new Store();
+        store.setId(100L);
+        store.setStoreName("Chi Nhánh Test Presence");
+        store.setAiReplyEnabled(false);
+
+        // Ban đầu chưa có hoạt động và AI tắt -> Offline
+        assertFalse(vn.iotstar.controller.StoreChatController.isStoreOnline(store), "Chưa có hoạt động và AI tắt thì phải Offline");
+
+        // Quản lý quầy mở tab chat / gửi tin -> Online
+        vn.iotstar.controller.StoreChatController.touchStorePresence(store.getId());
+        assertTrue(vn.iotstar.controller.StoreChatController.isStoreOnline(store), "Sau khi touch presence thì phải Online");
+
+        // Khi bật AI -> Luôn Online
+        Store aiStore = new Store();
+        aiStore.setId(200L);
+        aiStore.setAiReplyEnabled(true);
+        assertTrue(vn.iotstar.controller.StoreChatController.isStoreOnline(aiStore), "Bật AI thì luôn Online 24/7");
+    }
 }
