@@ -1624,25 +1624,33 @@
         }
 
         .chotot-cat-icon-box {
-            width: 40px;
-            height: 40px;
+            width: 54px;
+            height: 54px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .chotot-cat-item:hover .chotot-cat-icon-box {
+            transform: translateY(-3px);
         }
 
         .chotot-cat-3d-img {
-            width: 38px;
-            height: 38px;
+            width: 52px;
+            height: 52px;
             object-fit: contain;
-            filter: drop-shadow(0 2px 5px rgba(45, 24, 15, 0.1));
+            filter: drop-shadow(0 4px 8px rgba(140, 74, 39, 0.16));
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+            image-rendering: -webkit-optimize-contrast;
         }
         .chotot-cat-item:hover .chotot-cat-3d-img {
-            transform: translateY(-3px) scale(1.08);
-            filter: drop-shadow(0 4px 10px rgba(140, 74, 39, 0.2));
+            transform: scale(1.12) rotate(-2deg);
+            filter: drop-shadow(0 8px 16px rgba(140, 74, 39, 0.25));
         }
 
         .cat-pill-badge {
@@ -1662,17 +1670,16 @@
         .badge-blue { background: #0284C7; }
 
         .chotot-cat-label {
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11.5px;
+            font-weight: 700;
             color: #1C1917;
             text-align: center;
             line-height: 1.25;
-            height: 28px;
-            max-width: 95px;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
+            white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: block;
             transition: color 0.15s ease;
         }
         .chotot-cat-item:hover .chotot-cat-label {
