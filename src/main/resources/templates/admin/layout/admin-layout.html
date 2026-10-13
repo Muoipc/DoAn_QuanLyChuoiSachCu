@@ -764,7 +764,7 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory'} ? 'active' : ''">
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/inventory') and !#httpServletRequest.requestURI.startsWith('/admin/inventory/transfer')} ? 'active' : ''">
                     <a th:href="@{/admin/inventory}">
                         <i class="fa-solid fa-boxes-stacked"></i>
                         <span>Quản Lý Tồn Kho</span>
@@ -1010,21 +1010,38 @@
         // Tự động kích hoạt active sidebar item theo URL hiện tại (bổ trợ cho Thymeleaf)
         document.addEventListener('DOMContentLoaded', function() {
             const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
-            const sidebarLinks = document.querySelectorAll('.sidebar-item a');
-            let matched = false;
-            sidebarLinks.forEach(link => {
+            const sidebarLinks = Array.from(document.querySelectorAll('.sidebar-item a'));
+            
+            // Xóa active cũ để tránh lỗi kích hoạt kép
+            sidebarLinks.forEach(link => link.parentElement.classList.remove('active'));
+
+            // 1. Tìm exact match trước (ưu tiên số 1)
+            let targetLink = sidebarLinks.find(link => {
                 const href = (link.getAttribute('href') || '').replace(/\/$/, '');
-                if (href === currentPath || (href === '/admin/reports' && (currentPath === '/admin' || currentPath === '/admin/dashboard'))) {
-                    link.parentElement.classList.add('active');
-                    matched = true;
-                } else if (href && href !== '/admin' && href !== '/' && currentPath.startsWith(href)) {
-                    link.parentElement.classList.add('active');
-                    matched = true;
-                }
+                return href === currentPath || (href === '/admin/reports' && (currentPath === '/admin' || currentPath === '/admin/dashboard'));
             });
-            if (!matched && (currentPath === '/admin' || currentPath === '/admin/dashboard')) {
-                const reportItem = document.querySelector('a[href*="/admin/reports"]');
-                if (reportItem) reportItem.parentElement.classList.add('active');
+
+            // 2. Nếu không có exact match, tìm prefix match dài nhất (longest prefix match)
+            if (!targetLink) {
+                let longestLength = 0;
+                sidebarLinks.forEach(link => {
+                    const href = (link.getAttribute('href') || '').replace(/\/$/, '');
+                    if (href && href !== '/admin' && href !== '/' && (currentPath + '/').startsWith(href + '/')) {
+                        if (href.length > longestLength) {
+                            longestLength = href.length;
+                            targetLink = link;
+                        }
+                    }
+                });
+            }
+
+            // 3. Fallback cho dashboard
+            if (!targetLink && (currentPath === '/admin' || currentPath === '/admin/dashboard')) {
+                targetLink = document.querySelector('a[href*="/admin/reports"]');
+            }
+
+            if (targetLink) {
+                targetLink.parentElement.classList.add('active');
             }
         });
 
