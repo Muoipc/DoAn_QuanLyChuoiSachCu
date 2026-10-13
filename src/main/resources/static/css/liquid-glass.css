@@ -1194,21 +1194,30 @@ img, video {
   position: fixed !important;
   bottom: 24px !important;
   right: 24px !important;
-  width: 58px !important;
-  height: 58px !important;
-  border-radius: 50% !important;
-  background: linear-gradient(135deg, #8C4A27 0%, #EE4D2D 100%) !important;
-  border: 2px solid #ffffff !important;
-  box-shadow: 0 8px 24px rgba(140, 74, 39, 0.35), 0 2px 6px rgba(0, 0, 0, 0.1) !important;
-  color: #ffffff !important;
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 12px 32px rgba(45, 24, 15, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1.5px 2px #FFFFFF !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 22px !important;
   z-index: 99999 !important;
   cursor: pointer !important;
   text-decoration: none !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.chat-3d-floating-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(140, 74, 39, 0.18));
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
 
 #aiFloatingBtn.hidden-fab,
@@ -1222,7 +1231,13 @@ img, video {
 #aiFloatingBtn:hover,
 .ai-floating-widget-btn:hover {
   transform: translateY(-4px) scale(1.06) !important;
-  box-shadow: 0 12px 30px rgba(140, 74, 39, 0.45) !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 16px 40px rgba(140, 74, 39, 0.22), 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1.5px 2px #FFFFFF !important;
+  border-color: #FFFFFF !important;
+}
+
+#aiFloatingBtn:hover .chat-3d-floating-icon {
+  transform: scale(1.10) rotate(-4deg);
 }
 
 #aiFloatingBtn:active,
