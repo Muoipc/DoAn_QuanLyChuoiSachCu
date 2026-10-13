@@ -77,11 +77,11 @@
             outline: none;
         }
 
-        /* Primary Submit Button: Warm Wood Brown & Burnt Orange */
+        /* Primary Submit Button: Warm ReBook Leather */
         .btn-liquid-save {
-            background: linear-gradient(135deg, #8C4A27 0%, #A0522D 45%, #EE4D2D 100%);
+            background: var(--rebook-leather) !important;
             color: #ffffff !important;
-            border: 1.5px solid rgba(255, 255, 255, 0.45);
+            border: 1px solid var(--rebook-leather) !important;
             border-radius: 9999px;
             padding: 12px 28px;
             font-weight: 700;
@@ -90,10 +90,8 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 
-                0 10px 28px rgba(140, 74, 39, 0.35),
-                inset 0 1.5px 1.5px rgba(255, 255, 255, 0.5);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 14px var(--rebook-leather-glow), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             text-decoration: none;
             width: 100%;
             cursor: pointer;
@@ -101,9 +99,9 @@
 
         .btn-liquid-save:hover {
             transform: translateY(-2px);
-            box-shadow: 
-                0 16px 36px rgba(140, 74, 39, 0.45),
-                inset 0 2px 2px rgba(255, 255, 255, 0.7);
+            background: var(--rebook-leather-hover) !important;
+            border-color: var(--rebook-leather-hover) !important;
+            box-shadow: 0 8px 24px var(--rebook-leather-glow);
             color: #ffffff !important;
         }
 

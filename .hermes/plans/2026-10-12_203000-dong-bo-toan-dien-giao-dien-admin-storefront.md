@@ -1,7 +1,7 @@
-# Kế Hoạch Đồng Bộ Toàn Diện Kênh Quản Trị Với Trang Bán Hàng Kết Hợp Hiệu Ứng Bạch Ngọc Kính Lỏng (White Apple Liquid Glass on Warm Book Canvas)
+# Kế Hoạch Đồng Bộ Toàn Diện Kênh Quản Trị Với Trang Bán Hàng Kết Hợp Hiệu Ứng Bạch Ngọc Kính Lỏng & Hệ Thống Icon Đồng Bộ (White Apple Liquid Glass & Claymorphism / Squircle Icons)
 
 ## 1. Mục Tiêu (Goal)
-Đồng bộ hóa 100% ngôn ngữ thiết kế giữa Kênh Quản Trị (Admin / Store Manager / Shipper) và Trang Bán Hàng (Storefront ReBook), kết hợp toàn diện hiệu ứng **Bạch Ngọc Kính Lỏng (White Apple Liquid Glass)** khúc xạ ánh sáng cao cấp trên nền canvas ngà tối giản; đồng thời xử lý triệt để thẻ sách storefront hoà mình vào 1 màu trắng liền mạch, kích hoạt hiệu ứng kính lỏng nổi bật khi hover theo đúng yêu cầu người dùng.
+Đồng bộ hóa 100% ngôn ngữ thiết kế giữa Kênh Quản Trị (Admin / Store Manager / Shipper) và Trang Bán Hàng (Storefront ReBook), kết hợp toàn diện hiệu ứng **Bạch Ngọc Kính Lỏng (White Apple Liquid Glass)** khúc xạ ánh sáng cao cấp cùng hệ thống **Icon Squircle Kính Lỏng / Soft 3D Accent** đồng điệu với phong cách Claymorphism; đồng thời xử lý triệt để thẻ sách storefront hoà mình vào 1 màu trắng liền mạch không viền hộp theo đúng yêu cầu người dùng.
 
 ---
 
@@ -25,9 +25,16 @@
      - Vát mép thấu kính phản quang đón sáng (`inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98)`).
      - Màu điểm nhấn thống nhất: Nâu da bò vintage `#8C4A27`, chữ mực than `#1C1917`.
 
+3. **Hệ Thống Icon Thiếu Đồng Bộ:**
+   - Storefront đã có bộ icon 3D Claymorphism mềm mại ngoài trang chủ và icon bong bóng thoại 3D Claymorphism cho chat button.
+   - Tuy nhiên, trong Admin: Icon sidebar chỉ là glyph trần trụi, icon KPI dùng bóng đổ tròn đơn điệu, bảng thể loại dùng icon xanh dương Bootstrap, các nút thao tác (Xem/Sửa/Xóa) dùng nút Bootstrap thô cứng.
+   - **Giải pháp:** Chuẩn hóa toàn bộ icon trong Admin thành **Squircle Kính Lỏng Bo Mềm (Soft Squircle Liquid Glass Icons)**:
+     - Đặt icon trong khung thấu kính squircle Apple 34x34px hoặc 48x48px.
+     - Phối màu gradient ấm áp (nâu da bò, vàng hổ phách, ngọc bích, cam đất) đồng điệu với thẩm mỹ Claymorphism.
+
 ---
 
-## 3. Kiến Trúc Bạch Ngọc Kính Lỏng (Liquid Glass Design System Tokens)
+## 3. Kiến Trúc Bạch Ngọc Kính Lỏng & Icon Tokens (Design System)
 
 Định nghĩa toàn bộ Design Tokens tập trung tại `admin-layout.html`:
 
@@ -339,11 +346,120 @@
 
 ---
 
-### Nhiệm Vụ 3: Dọn Dẹp CSS Cục Bộ & Đồng Bộ 12 Màn Hình Quản Trị
+### Nhiệm Vụ 3: Chuẩn Hóa Hệ Thống Icon Đồng Bộ (Squircle Liquid Glass & Soft 3D Accent)
+- **Tập tin:**
+  - `src/main/resources/templates/admin/layout/admin-layout.html`
+  - `src/main/resources/templates/admin/reports/dashboard.html`
+  - `src/main/resources/templates/admin/categories/list.html`
+  - `src/main/resources/templates/admin/books/list.html`
+  - `src/main/resources/templates/admin/orders/list.html`
+- **Mã nguồn CSS cho Hệ thống Icon:**
+  ```css
+  /* 1. Icon Khung Squircle Kính Lỏng (Dùng cho Sidebar, KPI, Bảng) */
+  .squircle-glass-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--squircle-md);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 12px rgba(45, 24, 15, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 1);
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+  }
+  
+  /* Icon kích thước nhỏ cho Table Actions (32x32px) */
+  .icon-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--squircle-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--rebook-border);
+      color: var(--rebook-ink-secondary);
+      transition: all 0.18s ease;
+      text-decoration: none;
+      font-size: 13px;
+  }
+  .icon-action-btn:hover {
+      transform: translateY(-1.5px);
+  }
+  .icon-action-btn.btn-view:hover {
+      background: var(--rebook-leather-soft);
+      border-color: var(--rebook-leather);
+      color: var(--rebook-leather);
+  }
+  .icon-action-btn.btn-edit:hover {
+      background: #FEF3C7;
+      border-color: #F59E0B;
+      color: #B45309;
+  }
+  .icon-action-btn.btn-delete:hover {
+      background: var(--rebook-rose-soft);
+      border-color: #FCA5A5;
+      color: var(--rebook-rose);
+  }
+
+  /* 2. Icon Lớn cho KPI Dashboard (48x48px) - Phối màu Claymorphism Soft Accent */
+  .kpi-icon-squircle {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 6px 18px rgba(45, 24, 15, 0.06), inset 0 1.5px 2px rgba(255, 255, 255, 0.95);
+      position: relative;
+  }
+  .kpi-icon-revenue {
+      background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+      color: #B45309;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+  .kpi-icon-orders {
+      background: linear-gradient(135deg, #F5ECE4 0%, #EBD5C5 100%);
+      color: var(--rebook-leather);
+      border: 1px solid rgba(140, 74, 39, 0.25);
+  }
+  .kpi-icon-books {
+      background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+      color: var(--rebook-emerald);
+      border: 1px solid rgba(5, 150, 105, 0.25);
+  }
+  .kpi-icon-users {
+      background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+      color: #2563EB;
+      border: 1px solid rgba(37, 99, 235, 0.25);
+  }
+
+  /* 3. Icon Thể Loại Danh Mục trong Admin (`categories/list.html`) */
+  .category-icon-squircle {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(140, 74, 39, 0.08);
+      border: 1px solid rgba(140, 74, 39, 0.18);
+      color: var(--rebook-leather);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      margin-right: 8px;
+  }
+  ```
+
+---
+
+### Nhiệm Vụ 4: Dọn Dẹp CSS Cục Bộ & Đồng Bộ 12 Màn Hình Quản Trị
 - **Các màn hình thực hiện:**
-  1. `admin/reports/dashboard.html`: Nâng cấp 4 KPI sang thẻ Kính Lỏng Bạch Ngọc, icon tròn màu ấm, số doanh thu sắc nét.
-  2. `admin/books/list.html` & `books/form.html`: Xóa bỏ 150 dòng CSS cục bộ cũ, chuyển sang thẻ kính lỏng chuẩn, thumbnail bìa sách hiển thị nổi khối.
-  3. `admin/categories/list.html` & `categories/form.html`: Bỏ sạch nút xanh dương và bảng Bootstrap xám, dùng bảng kính lỏng và nút nâu da bò.
+  1. `admin/reports/dashboard.html`: Nâng cấp 4 thẻ KPI sang kính lỏng bạch ngọc, icon `.kpi-icon-squircle` màu ấm sắc nét.
+  2. `admin/books/list.html` & `books/form.html`: Xóa bỏ 150 dòng CSS cục bộ cũ, chuyển sang thẻ kính lỏng chuẩn, thumbnail bìa sách hiển thị nổi khối, nút thao tác `.icon-action-btn`.
+  3. `admin/categories/list.html` & `categories/form.html`: Bỏ sạch nút xanh dương và bảng Bootstrap xám, dùng `.category-icon-squircle` và nút nâu da bò.
   4. `admin/orders/list.html` & `orders/detail.html`: Chuẩn hóa thanh tab lọc trạng thái phẳng kính mờ, thẻ kiện hàng và mẫu in phiếu giao hàng A4/A5 sạch sẽ.
   5. `admin/inventory/list.html`, `transfer.html`, `transfers.html`: 4 thẻ lọc tồn kho kính lỏng 1 chạm, bảng điều chuyển đồng bộ.
   6. `admin/consignments/list.html` & `consignments/detail.html`: Bảng phiếu ký gửi và modal thẩm định kính lỏng.
@@ -364,7 +480,8 @@
 2. **Visual Inspection (Playwright & Vision):**
    - Storefront (`/` và `/search`): Thẻ sách tiệp màu nền trắng 100% không viền hộp; hover kích hoạt hiệu ứng kính lỏng nổi bật.
    - Admin Layout (`/admin/reports`): Nền không còn đốm radial-gradient, sidebar và topbar kính lỏng bạch ngọc trong suốt tinh tế.
+   - Hệ thống icon: Đồng bộ chuẩn squircle kính lỏng bo mềm, màu sắc ấm áp đồng điệu Claymorphism.
    - Toàn bộ 12 màn hình admin: Triệt tiêu các nút xanh dương Bootstrap và các gradient 3 màu lòe loẹt.
 
 ---
-*Tài liệu kế hoạch cập nhật theo yêu cầu Kính Lỏng Bạch Ngọc vào ngày 12/10/2026.*
+*Tài liệu kế hoạch cập nhật theo yêu cầu Kính Lỏng Bạch Ngọc & Hệ Thống Icon Đồng Bộ vào ngày 12/10/2026.*

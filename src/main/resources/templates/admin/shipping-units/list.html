@@ -10,7 +10,7 @@
     <!-- PAGE HEADER -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-truck text-warning me-2"></i>Đơn Vị Vận Chuyển Đối Tác</h4>
+            <h4 class="fw-bold mb-1" style="color: var(--rebook-ink-main);"><i class="fa-solid fa-truck me-2" style="color: var(--rebook-leather);"></i>Đơn Vị Vận Chuyển Đối Tác</h4>
             <p class="text-muted small mb-0">Quản lý các hãng giao hàng (Giao Hàng Nhanh, Viettel Post, Shopee Express...), cước phí sàn và thời gian ước tính.</p>
         </div>
         <a th:href="@{/admin/shipping-units/create}" class="btn btn-theme">
@@ -46,15 +46,15 @@
                             <td class="small" th:text="${u.estimatedDays}">2-3 ngày</td>
                             <td class="text-center">
                                 <form th:action="@{/admin/shipping-units/toggle-active/{id}(id=${u.id})}" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-sm" th:classappend="${u.isActive ? 'btn-success' : 'btn-outline-secondary'}" style="font-size: 11px; padding: 2px 8px;">
+                                    <button type="submit" class="btn btn-sm" th:classappend="${u.isActive ? 'badge bg-success-subtle text-success border border-success-subtle' : 'badge bg-secondary-subtle text-secondary border'}" style="font-size: 11.5px; padding: 4px 10px; border-radius: 9999px;">
                                         <span th:text="${u.isActive ? 'Đang hợp tác' : 'Tạm ngưng'}">Hoạt động</span>
                                     </button>
                                 </form>
                             </td>
                             <td class="text-end pe-4">
                                 <div class="d-inline-flex gap-1">
-                                    <a th:href="@{/admin/shipping-units/edit/{id}(id=${u.id})}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i></a>
-                                    <a th:href="@{/admin/shipping-units/delete/{id}(id=${u.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn muốn xóa đơn vị này?');"><i class="fa-solid fa-trash-can"></i></a>
+                                    <a th:href="@{/admin/shipping-units/edit/{id}(id=${u.id})}" class="icon-action-btn btn-edit" title="Chỉnh sửa"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a th:href="@{/admin/shipping-units/delete/{id}(id=${u.id})}" class="icon-action-btn btn-delete" onclick="return confirm('Bạn muốn xóa đơn vị này?');" title="Xóa"><i class="fa-solid fa-trash-can"></i></a>
                                 </div>
                             </td>
                         </tr>

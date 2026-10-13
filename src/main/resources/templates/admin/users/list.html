@@ -10,7 +10,7 @@
     <!-- PAGE HEADER -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-users-gear text-warning me-2"></i>Quản Lý Người Dùng &amp; Phân Quyền</h4>
+            <h4 class="fw-bold mb-1" style="color: var(--rebook-ink-main);"><i class="fa-solid fa-users-gear me-2" style="color: var(--rebook-leather);"></i>Quản Lý Người Dùng &amp; Phân Quyền</h4>
             <p class="text-muted small mb-0">Quản trị danh sách tài khoản, cấp tài khoản nhân viên (Manager, Shipper), phân quyền vai trò và đặt lại mật khẩu.</p>
         </div>
         <div>
@@ -31,10 +31,10 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-dark w-100">Tìm Kiếm</button>
+                    <button type="submit" class="btn btn-theme w-100">Tìm Kiếm</button>
                 </div>
                 <div class="col-md-2" th:if="${keyword != null and !keyword.isEmpty()}">
-                    <a th:href="@{/admin/users}" class="btn btn-outline-secondary w-100">Xóa tìm kiếm</a>
+                    <a th:href="@{/admin/users}" class="btn btn-outline-theme w-100">Xóa tìm kiếm</a>
                 </div>
             </form>
         </div>
@@ -97,7 +97,7 @@
                                         <select name="roleId" class="form-select form-select-sm" style="width: 140px; font-size: 12px;">
                                             <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}" th:selected="${u.role.id == r.id}"></option>
                                         </select>
-                                        <button type="submit" class="btn btn-sm btn-outline-primary" title="Lưu vai trò mới">
+                                        <button type="submit" class="icon-action-btn btn-view" title="Lưu vai trò mới">
                                             <i class="fa-solid fa-floppy-disk"></i>
                                         </button>
                                     </form>
@@ -106,7 +106,7 @@
                                     <form th:action="@{/admin/users/{id}/reset-password(id=${u.id})}" method="post" class="d-inline"
                                           th:data-uname="${u.username}"
                                           onsubmit="return confirm('Đặt lại mật khẩu cho tài khoản @' + this.getAttribute('data-uname') + ' về mặc định 123456?');">
-                                        <button type="submit" class="btn btn-sm btn-outline-warning" title="Đặt lại mật khẩu về mặc định (123456)">
+                                        <button type="submit" class="icon-action-btn btn-edit" title="Đặt lại mật khẩu về mặc định (123456)">
                                             <i class="fa-solid fa-key"></i>
                                         </button>
                                     </form>

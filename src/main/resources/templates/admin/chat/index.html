@@ -12,7 +12,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h4 class="fw-bold mb-1 text-dark">
-                    <i class="fa-solid fa-comments me-2 text-warning"></i>Kênh Tin Nhắn Chi Nhánh
+                    <i class="fa-solid fa-comments me-2" style="color: var(--rebook-leather);"></i>Kênh Tin Nhắn Chi Nhánh
                 </h4>
                 <p class="text-muted mb-0 small">
                     Trực quầy &amp; giải đáp thắc mắc về tồn kho, tình trạng sách cũ theo từng chi nhánh thực tế
@@ -35,7 +35,7 @@
                 <div class="glass-detail-card h-100 shadow-sm d-flex flex-column" style="border-radius: 20px; overflow: hidden; background: rgba(255, 255, 255, 0.82); backdrop-filter: var(--glass-blur); border: 1.5px solid rgba(255, 255, 255, 0.9);">
                     <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background: rgba(255, 255, 255, 0.5); border-color: rgba(232, 222, 200, 0.7) !important;">
                         <h6 class="mb-0 text-dark fw-bold">
-                            <i class="fa-solid fa-users me-2 text-warning"></i>Khách hàng (<span th:text="${customers.size()}">0</span>)
+                            <i class="fa-solid fa-users me-2" style="color: var(--rebook-leather);"></i>Khách hàng (<span th:text="${customers.size()}">0</span>)
                         </h6>
                         <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill fw-bold" style="font-size: 11px;" th:text="${currentStore != null ? currentStore.storeName : ''}">Thủ Đức</span>
                     </div>

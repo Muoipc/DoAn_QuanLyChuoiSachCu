@@ -251,7 +251,7 @@
                     <div class="kpi-title">Doanh Thu Tổng</div>
                     <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalRevenue != null ? #numbers.formatDecimal(summary.totalRevenue, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</h4>
                 </div>
-                <div class="kpi-icon-orb shopee-red">
+                <div class="kpi-icon-squircle kpi-icon-revenue">
                     <i class="fa-solid fa-coins"></i>
                 </div>
             </div>
@@ -264,7 +264,7 @@
                     <div class="kpi-title">Đơn Hàng Mới</div>
                     <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalOrders != null ? summary.totalOrders : 0}">0</h4>
                 </div>
-                <div class="kpi-icon-orb leather-brown">
+                <div class="kpi-icon-squircle kpi-icon-orders">
                     <i class="fa-solid fa-bag-shopping"></i>
                 </div>
             </div>
@@ -277,7 +277,7 @@
                     <div class="kpi-title">Sách Đã Bán</div>
                     <h4 class="kpi-value mb-0 mt-1" th:text="${summary['totalBooks'] != null ? summary['totalBooks'] : 0}">0</h4>
                 </div>
-                <div class="kpi-icon-orb amber-gold">
+                <div class="kpi-icon-squircle kpi-icon-books">
                     <i class="fa-solid fa-book-bookmark"></i>
                 </div>
             </div>
@@ -290,7 +290,7 @@
                     <div class="kpi-title">Sách Ký Gửi Mới</div>
                     <h4 class="kpi-value mb-0 mt-1" th:text="${summary['pendingConsignments'] != null ? summary['pendingConsignments'] : (summary['totalUsers'] != null ? summary['totalUsers'] : 0)}">0</h4>
                 </div>
-                <div class="kpi-icon-orb herbal-green">
+                <div class="kpi-icon-squircle kpi-icon-users">
                     <i class="fa-solid fa-handshake"></i>
                 </div>
             </div>

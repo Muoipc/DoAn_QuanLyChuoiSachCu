@@ -10,12 +10,8 @@
     <style>
         /* Ambient Canvas Lighting for Apple Liquid Glass */
         body {
-            background: 
-                radial-gradient(circle at 8% 12%, rgba(232, 222, 200, 0.5) 0%, transparent 45%), 
-                radial-gradient(circle at 92% 18%, rgba(238, 77, 45, 0.08) 0%, transparent 45%), 
-                radial-gradient(circle at 50% 80%, rgba(140, 74, 39, 0.06) 0%, transparent 50%),
-                #f8fafc !important;
-            background-attachment: fixed !important;
+            background-color: var(--rebook-canvas) !important;
+            background-image: none !important;
         }
 
         :root {
@@ -89,10 +85,10 @@
         }
 
         .ios-status-tab.active {
-            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%);
+            background: var(--rebook-leather);
             color: #ffffff !important;
             font-weight: 700;
-            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 14px var(--rebook-leather-glow), inset 0 1px 1px rgba(255, 255, 255, 0.4);
             transform: scale(1.02);
         }
 
@@ -144,19 +140,20 @@
 
         /* Action & Filter Buttons */
         .btn-filter-pill {
-            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%) !important;
+            background: var(--rebook-leather) !important;
             color: #ffffff !important;
             border-radius: 9999px !important;
             padding: 9px 24px !important;
             font-size: 13.5px !important;
             font-weight: 700 !important;
             border: none !important;
-            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3) !important;
+            box-shadow: 0 4px 14px var(--rebook-leather-glow) !important;
             transition: all 0.25s var(--spring-bounce) !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 6px !important;
+        }
+        .btn-filter-pill:hover {
+            background: var(--rebook-leather-hover) !important;
+            box-shadow: 0 6px 18px var(--rebook-leather-glow) !important;
+            transform: translateY(-1px);
         }
         .btn-filter-pill:hover {
             opacity: 0.95;
