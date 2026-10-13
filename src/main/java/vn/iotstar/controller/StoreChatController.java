@@ -325,6 +325,7 @@ public class StoreChatController {
         userMsg.setSenderName(currentUser.getFullName() != null ? currentUser.getFullName() : currentUser.getUsername());
         userMsg.setNeedsAttention(true);
         chatMessageRepository.save(userMsg);
+        res.put("userMsgId", userMsg.getId());
 
         boolean isAiEnabled = Boolean.TRUE.equals(store.getAiReplyEnabled());
         String lower = userMsg.getContent().toLowerCase();
@@ -346,6 +347,7 @@ public class StoreChatController {
             res.put("success", true);
             res.put("needsStaff", true);
             res.put("reply", handoffMsg.getContent());
+            res.put("replyMsgId", handoffMsg.getId());
             res.put("senderName", handoffMsg.getSenderName());
             res.put("storeId", storeId);
             res.put("createdAt", handoffMsg.getCreatedAt().format(TIME_FMT));
@@ -372,6 +374,7 @@ public class StoreChatController {
             res.put("success", true);
             res.put("needsStaff", needsStaff);
             res.put("reply", aiMsg.getContent());
+            res.put("replyMsgId", aiMsg.getId());
             res.put("senderName", aiMsg.getSenderName());
             res.put("storeId", storeId);
             res.put("createdAt", aiMsg.getCreatedAt() != null ? aiMsg.getCreatedAt().format(TIME_FMT) : "");
@@ -402,6 +405,7 @@ public class StoreChatController {
             res.put("success", true);
             res.put("needsStaff", true);
             res.put("reply", greeting.getContent());
+            res.put("replyMsgId", greeting.getId());
             res.put("senderName", greeting.getSenderName());
             res.put("storeId", storeId);
             res.put("createdAt", greeting.getCreatedAt().format(TIME_FMT));

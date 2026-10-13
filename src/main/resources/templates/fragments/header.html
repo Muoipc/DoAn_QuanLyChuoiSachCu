@@ -2878,7 +2878,17 @@
         }
 
         var miniChatPollingTimer = null;
-        var lastClientRenderedCount = 0;
+        var renderedMsgIds = new Set();
+        var isSendingMiniChat = false;
+
+        function formatMiniChatTime(date) {
+            var d = date || new Date();
+            var h = String(d.getHours()).padStart(2, '0');
+            var m = String(d.getMinutes()).padStart(2, '0');
+            var day = String(d.getDate()).padStart(2, '0');
+            var month = String(d.getMonth() + 1).padStart(2, '0');
+            return h + ':' + m + ' ' + day + '/' + month;
+        }
 
         function startMiniChatPolling() {
             stopMiniChatPolling();
@@ -2900,12 +2910,14 @@
                                     statusEl.innerHTML = '<span style="color:#059669; font-weight:700;">🟢 ' + escapeMiniHtml(data.managerName || 'Quản lý quầy') + ' đang trực</span>';
                                 }
                             }
-                            if (data.messages.length > lastClientRenderedCount) {
-                                for (var i = lastClientRenderedCount; i < data.messages.length; i++) {
-                                    var m = data.messages[i];
-                                    appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.mediaUrl, m.mediaType, m.createdAt, m.senderName);
+                            var hasNew = false;
+                            data.messages.forEach(function(m) {
+                                if (m.id && !renderedMsgIds.has(String(m.id))) {
+                                    appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.mediaUrl, m.mediaType, m.createdAt, m.senderName, m.id);
+                                    hasNew = true;
                                 }
-                                lastClientRenderedCount = data.messages.length;
+                            });
+                            if (hasNew) {
                                 scrollMiniChatBottom();
                             }
                         }
@@ -2930,8 +2942,9 @@
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     if (data && data.success) {
-                        appendChatMessageDOM('CUSTOMER', '[Khách hàng yêu cầu gặp nhân viên quầy trực tiếp]', null, null, null, null, null, null, null, data.createdAt);
-                        appendChatMessageDOM('STORE_STAFF', data.reply, null, null, null, null, null, null, null, data.createdAt, data.senderName);
+                        var tempReqId = 'req-' + Date.now();
+                        appendChatMessageDOM('CUSTOMER', '[Khách hàng yêu cầu gặp nhân viên quầy trực tiếp]', null, null, null, null, null, null, null, data.createdAt, null, tempReqId);
+                        appendChatMessageDOM('STORE_STAFF', data.reply, null, null, null, null, null, null, null, data.createdAt, data.senderName, 'notice-' + Date.now());
                         scrollMiniChatBottom();
                         var statusEl = document.getElementById('activeStoreStaffStatus');
                         if (statusEl) {
@@ -2949,6 +2962,7 @@
             var body = document.getElementById('miniChatBody');
             if (!body) return;
             body.innerHTML = '<div style="text-align:center; padding:20px; color:#A8A29E; font-size:11.5px;">Đang tải tin nhắn...</div>';
+            renderedMsgIds.clear();
 
             fetch('/api/chat/store/' + storeId + '/messages')
                 .then(function(res) { return res.json(); })
@@ -2986,10 +3000,9 @@
 
                     // Render các tin nhắn đã có
                     messages.forEach(function(m) {
-                        appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.mediaUrl, m.mediaType, m.createdAt, m.senderName);
+                        appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.mediaUrl, m.mediaType, m.createdAt, m.senderName, m.id);
                     });
 
-                    lastClientRenderedCount = messages.length;
                     scrollMiniChatBottom();
                     startMiniChatPolling();
 
@@ -3008,16 +3021,18 @@
 
         function sendMiniChatMessage() {
             var inp = document.getElementById('miniChatInput');
-            if (!inp) return;
+            if (!inp || isSendingMiniChat) return;
             var text = inp.value.trim();
             var fileToSend = pendingChatFile;
 
             if (!text && !fileToSend) return;
 
+            isSendingMiniChat = true;
             inp.value = '';
             cancelChatMediaUpload();
 
-            var currentNow = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            var currentNow = formatMiniChatTime();
+            var tempMsgId = 'temp-' + Date.now();
 
             if (fileToSend) {
                 var formDataUpload = new FormData();
@@ -3027,7 +3042,7 @@
                 var isVideo = fileToSend.type.startsWith('video/') || fileToSend.name.match(/\.(mp4|webm|mov|m4v)$/i);
                 var tempMediaType = isVideo ? 'VIDEO' : 'IMAGE';
 
-                appendChatMessageDOM('CUSTOMER', text || (isVideo ? '[Video thực tế]' : '[Ảnh thực tế]'), null, null, null, null, null, tempPreviewUrl, tempMediaType, currentNow);
+                appendChatMessageDOM('CUSTOMER', text || (isVideo ? '[Video thực tế]' : '[Ảnh thực tế]'), null, null, null, null, null, tempPreviewUrl, tempMediaType, currentNow, null, tempMsgId);
                 scrollMiniChatBottom();
                 showMiniChatTyping();
 
@@ -3038,25 +3053,27 @@
                 .then(function(res) { return res.json(); })
                 .then(function(uploadRes) {
                     if (uploadRes.success) {
-                        postChatMessageToServer(text, uploadRes.mediaUrl, uploadRes.mediaType);
+                        postChatMessageToServer(text, uploadRes.mediaUrl, uploadRes.mediaType, tempMsgId);
                     } else {
                         hideMiniChatTyping();
+                        isSendingMiniChat = false;
                         alert(uploadRes.message || 'Lỗi tải ảnh/video');
                     }
                 })
                 .catch(function(err) {
                     hideMiniChatTyping();
+                    isSendingMiniChat = false;
                     console.error('Lỗi upload media:', err);
                 });
             } else {
-                appendChatMessageDOM('CUSTOMER', text, null, null, null, null, null, null, null, currentNow);
+                appendChatMessageDOM('CUSTOMER', text, null, null, null, null, null, null, null, currentNow, null, tempMsgId);
                 scrollMiniChatBottom();
                 showMiniChatTyping();
-                postChatMessageToServer(text, null, null);
+                postChatMessageToServer(text, null, null, tempMsgId);
             }
         }
 
-        function postChatMessageToServer(text, mediaUrl, mediaType) {
+        function postChatMessageToServer(text, mediaUrl, mediaType, tempMsgId) {
             var formData = new URLSearchParams();
             if (text) formData.append('content', text);
             if (mediaUrl) formData.append('mediaUrl', mediaUrl);
@@ -3071,25 +3088,46 @@
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 hideMiniChatTyping();
+                isSendingMiniChat = false;
+
+                // Reconcile: thay thế tempId thành userMsgId thực tế từ DB
+                if (data && data.userMsgId && tempMsgId) {
+                    var tempRow = document.querySelector('[data-msg-id="' + tempMsgId + '"]');
+                    if (tempRow) {
+                        tempRow.setAttribute('data-msg-id', String(data.userMsgId));
+                    }
+                    renderedMsgIds.delete(tempMsgId);
+                    renderedMsgIds.add(String(data.userMsgId));
+                }
+
                 var reply = data.reply || null;
                 var b = data.suggestedBook || null;
-                var replyTime = data.createdAt || (new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }));
+                var replyTime = data.createdAt || formatMiniChatTime();
 
                 if (reply) {
-                    appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime, data.senderName);
+                    appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime, data.senderName, data.replyMsgId);
                 }
                 scrollMiniChatBottom();
             })
             .catch(function() {
                 hideMiniChatTyping();
+                isSendingMiniChat = false;
             });
         }
 
-        function appendChatMessageDOM(senderType, content, bookTitle, bookPrice, bookImage, conditionPercent, bookId, mediaUrl, mediaType, createdAt, senderName) {
+        function appendChatMessageDOM(senderType, content, bookTitle, bookPrice, bookImage, conditionPercent, bookId, mediaUrl, mediaType, createdAt, senderName, msgId) {
             var body = document.getElementById('miniChatBody');
             if (!body) return;
 
-            var timeText = createdAt || (new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }));
+            // KHỬ TRÙNG LẶP: Nếu ID tin nhắn này đã tồn tại trên màn hình -> bỏ qua ngay
+            if (msgId && renderedMsgIds.has(String(msgId))) {
+                return;
+            }
+            if (msgId) {
+                renderedMsgIds.add(String(msgId));
+            }
+
+            var timeText = createdAt || formatMiniChatTime();
 
             // 1. Kiểm tra tin nhắn chuyển giao hệ thống
             if (content && (content.indexOf('[Khách hàng yêu cầu gặp nhân viên') !== -1 || content.indexOf('Hệ thống chuyển giao') !== -1)) {
