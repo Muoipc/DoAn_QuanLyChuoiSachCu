@@ -26,7 +26,7 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background-color: var(--color-bg-body);
+            background-color: #ffffff !important;
             color: var(--color-text-main);
             line-height: 1.5;
         }
@@ -1235,9 +1235,9 @@
             margin-top: 24px;
             background: #ffffff;
             border-radius: 16px;
-            border: 1px solid #ECE7DE;
-            padding: 22px 24px;
-            box-shadow: 0 1px 4px rgba(45, 24, 15, 0.03);
+            border: none;
+            padding: 24px 0;
+            box-shadow: none;
         }
 
         .shelf-header {
@@ -1283,7 +1283,7 @@
 
         .shelf-book-card {
             background: #ffffff;
-            border: 1px solid #ECE7DE;
+            border: 1px solid transparent;
             border-radius: 14px;
             overflow: hidden;
             text-decoration: none;
@@ -1296,16 +1296,16 @@
             height: 100%;
         }
         .shelf-book-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(140, 74, 39, 0.35);
-            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.08);
+            transform: translateY(-4px);
+            border-color: rgba(0, 0, 0, 0.04);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
         }
 
         .shelf-thumb-wrap {
             position: relative;
             width: 100%;
             height: 200px;
-            background: #FAF8F5;
+            background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1393,8 +1393,8 @@
             align-items: baseline;
             justify-content: space-between;
             margin-top: auto;
-            padding-top: 8px;
-            border-top: 1px solid #F5F2EB;
+            padding-top: 4px;
+            border-top: none;
         }
 
         .shelf-price-val {

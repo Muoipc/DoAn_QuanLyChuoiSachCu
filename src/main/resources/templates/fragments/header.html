@@ -475,34 +475,29 @@
         }
         .shopee-user-popover {
             position: absolute;
-            top: calc(100% + 4px);
+            top: calc(100% + 8px);
             right: 0;
-            width: 185px;
-            background: rgba(255, 255, 255, 0.92) !important;
-            backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(103%) !important;
-            border-radius: 18px !important;
-            box-shadow: 
-                0 20px 48px -6px rgba(45, 24, 15, 0.16),
-                0 4px 14px -2px rgba(45, 24, 15, 0.04),
-                inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98) !important;
-            border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+            width: 210px;
+            background: #ffffff !important;
+            border-radius: 14px !important;
+            box-shadow: 0 10px 32px rgba(45, 24, 15, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+            border: 1px solid rgba(0, 0, 0, 0.06) !important;
             display: none;
             flex-direction: column;
             z-index: 100010 !important;
-            padding: 8px !important;
-            gap: 4px !important;
+            padding: 6px !important;
+            gap: 2px !important;
             box-sizing: border-box;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         /* Cầu nối ngược từ popover lên phía trên */
         .shopee-user-popover::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: -20px;
-            right: -20px;
-            height: 20px;
+            top: -12px;
+            left: -10px;
+            right: -10px;
+            height: 14px;
             background: transparent;
             pointer-events: auto;
         }
@@ -511,39 +506,76 @@
         }
         .shopee-user-wrapper:hover .shopee-user-popover {
             display: flex;
-            animation: applePopoverFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: applePopoverFade 0.18s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .shopee-popover-item {
-            padding: 10px 14px;
-            color: #1C1917;
-            font-size: 13px;
-            font-weight: 700;
-            text-decoration: none;
-            display: block;
-            border-radius: 12px !important;
-            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-            text-align: left;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            padding: 9px 12px !important;
+            color: #1C1917 !important;
+            font-size: 13.5px !important;
+            font-weight: 500 !important;
+            text-decoration: none !important;
+            border-radius: 10px !important;
+            transition: all 0.15s ease !important;
+            text-align: left !important;
+            line-height: 1.3 !important;
+        }
+        .shopee-popover-item i {
+            width: 18px !important;
+            min-width: 18px !important;
+            font-size: 14px !important;
+            text-align: center !important;
+            color: #78716C !important;
+            flex-shrink: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: color 0.15s ease !important;
+        }
+        .shopee-popover-item span {
+            flex-grow: 1;
+            white-space: nowrap;
         }
         .shopee-popover-item:hover {
-            background-color: rgba(140, 74, 39, 0.08) !important;
+            background-color: #FAF6F0 !important;
             color: #8C4A27 !important;
-            transform: translateX(3px) !important;
+        }
+        .shopee-popover-item:hover i {
+            color: #8C4A27 !important;
+        }
+        .shopee-popover-item.popover-item-admin {
+            color: #DC2626 !important;
+            font-weight: 600 !important;
+        }
+        .shopee-popover-item.popover-item-admin i {
+            color: #DC2626 !important;
+        }
+        .shopee-popover-item.popover-item-admin:hover {
+            background-color: #FEF2F2 !important;
+            color: #B91C1C !important;
+        }
+        .shopee-popover-item.popover-item-admin:hover i {
+            color: #B91C1C !important;
+        }
+        .shopee-popover-item.logout-item {
+            color: #DC2626 !important;
+        }
+        .shopee-popover-item.logout-item i {
+            color: #DC2626 !important;
         }
         .shopee-popover-item.logout-item:hover {
-            background-color: #fff1f2 !important;
-            color: #e11d48 !important;
+            background-color: #FEF2F2 !important;
+            color: #B91C1C !important;
         }
-        .shopee-popover-item:active {
-            transform: scale(0.96) !important;
+        .shopee-popover-item.logout-item:hover i {
+            color: #B91C1C !important;
         }
-            text-decoration: none;
-            display: block;
-            transition: background-color 0.15s, color 0.15s;
-            text-align: left;
-        }
-        .shopee-popover-item:hover {
-            background-color: #fafafa;
-            color: #8C4A27;
+        .popover-divider {
+            height: 1px;
+            background: #ECE7DE;
+            margin: 4px 6px;
         }
 
         /* 2. MAIN HEADER - BẠCH NGỌC KÍNH LỎNG NẰM ĐẦU TRANG (CUỘN XUỐNG TỰ TRÔI MẤT THEO TRANG) */
@@ -1456,11 +1488,27 @@
                         <span class="shopee-user-name" sec:authentication="name">nguyensonghoangph...</span>
                     </div>
                     <div class="shopee-user-popover">
-                        <div class="shopee-popover-arrow"></div>
-                        <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="shopee-popover-item text-danger fw-bold"><i class="fa-solid fa-gauge-high me-1 text-danger"></i>Kênh Quản Trị</a>
-                        <a th:href="@{/user/account/profile}" class="shopee-popover-item">Tài Khoản Của Tôi</a>
-                        <a th:href="@{/orders}" class="shopee-popover-item">Đơn Mua</a>
-                        <a th:href="@{/logout}" class="shopee-popover-item logout-item" style="color:#c62828;">Đăng Xuất</a>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="shopee-popover-item popover-item-admin">
+                            <i class="fa-solid fa-gauge-high"></i>
+                            <span>Kênh Quản Trị</span>
+                        </a>
+                        <a th:href="@{/user/account/profile}" class="shopee-popover-item">
+                            <i class="fa-regular fa-user"></i>
+                            <span>Tài Khoản Của Tôi</span>
+                        </a>
+                        <a th:href="@{/orders}" class="shopee-popover-item">
+                            <i class="fa-regular fa-file-lines"></i>
+                            <span>Đơn Mua</span>
+                        </a>
+                        <a th:href="@{/user/wishlist}" class="shopee-popover-item">
+                            <i class="fa-regular fa-heart"></i>
+                            <span>Sách Yêu Thích</span>
+                        </a>
+                        <div class="popover-divider"></div>
+                        <a th:href="@{/logout}" class="shopee-popover-item logout-item">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <span>Đăng Xuất</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1666,12 +1714,27 @@
                         <i class="fa-solid fa-chevron-down" style="font-size:10px; color:#78716C;"></i>
                     </div>
                     <div class="shopee-user-popover">
-                        <div class="shopee-popover-arrow"></div>
-                        <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="shopee-popover-item text-danger fw-bold"><i class="fa-solid fa-gauge-high me-1 text-danger"></i>Kênh Quản Trị</a>
-                        <a th:href="@{/user/account/profile}" class="shopee-popover-item"><i class="fa-regular fa-user me-2 text-muted"></i>Tài Khoản Của Tôi</a>
-                        <a th:href="@{/orders}" class="shopee-popover-item"><i class="fa-regular fa-file-lines me-2 text-muted"></i>Đơn Mua</a>
-                        <a th:href="@{/user/wishlist}" class="shopee-popover-item"><i class="fa-regular fa-heart me-2 text-muted"></i>Sách Yêu Thích</a>
-                        <a th:href="@{/logout}" class="shopee-popover-item logout-item" style="color:#c62828;"><i class="fa-solid fa-arrow-right-from-bracket me-2 text-danger"></i>Đăng Xuất</a>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="shopee-popover-item popover-item-admin">
+                            <i class="fa-solid fa-gauge-high"></i>
+                            <span>Kênh Quản Trị</span>
+                        </a>
+                        <a th:href="@{/user/account/profile}" class="shopee-popover-item">
+                            <i class="fa-regular fa-user"></i>
+                            <span>Tài Khoản Của Tôi</span>
+                        </a>
+                        <a th:href="@{/orders}" class="shopee-popover-item">
+                            <i class="fa-regular fa-file-lines"></i>
+                            <span>Đơn Mua</span>
+                        </a>
+                        <a th:href="@{/user/wishlist}" class="shopee-popover-item">
+                            <i class="fa-regular fa-heart"></i>
+                            <span>Sách Yêu Thích</span>
+                        </a>
+                        <div class="popover-divider"></div>
+                        <a th:href="@{/logout}" class="shopee-popover-item logout-item">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <span>Đăng Xuất</span>
+                        </a>
                     </div>
                 </div>
             </div>
