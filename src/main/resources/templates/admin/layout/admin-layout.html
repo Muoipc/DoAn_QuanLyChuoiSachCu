@@ -151,23 +151,21 @@
         }
 
         .sidebar-brand-icon {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: var(--squircle-md);
-            background: rgba(140, 74, 39, 0.08);
-            border: 1px solid rgba(140, 74, 39, 0.2);
-            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--rebook-border);
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--rebook-leather);
-            font-size: 18px;
             flex-shrink: 0;
-            transition: transform 0.25s ease;
+            transition: transform 0.25s ease, border-color 0.25s ease;
         }
         .sidebar-brand:hover .sidebar-brand-icon {
-            transform: scale(1.05);
-            color: var(--rebook-leather-hover);
+            transform: scale(1.06);
+            border-color: var(--rebook-leather);
         }
 
         .sidebar-brand-text h5 {
@@ -700,7 +698,7 @@
     <aside id="adminSidebar">
         <a th:href="@{/admin/books}" class="sidebar-brand">
             <div class="sidebar-brand-icon">
-                <i class="fa-solid fa-book-bookmark"></i>
+                <img th:src="@{/images/brand-book-icon.png}" alt="ReBook" style="width: 26px; height: 26px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));">
             </div>
             <div class="sidebar-brand-text">
                 <h5>ReBook</h5>
