@@ -15,6 +15,12 @@
             --color-fire: #8C4A27;
             --color-fire-hover: #733615;
             --color-fire-light: #F5ECE4;
+            --rebook-leather: #8C4A27;
+            --rebook-leather-hover: #733615;
+            --rebook-leather-glow: rgba(140, 74, 39, 0.25);
+            --rebook-canvas: #FAF9F6;
+            --rebook-ink-main: #1C1917;
+            --rebook-border: #ECE7DE;
             --color-bg-body: #F8F5EE;
             --color-text-main: #1C1917;
             --color-text-secondary: #44403C;
@@ -43,7 +49,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 16px 0 12px;
+            padding: 8px 0 6px;
             font-size: 13px;
             color: var(--color-text-secondary);
         }
@@ -51,40 +57,40 @@
         .breadcrumb-sep { font-size: 10px; color: #b7b0a5; }
         .breadcrumb-active { color: #1C1917; font-weight: 700; }
 
-        /* ================= 3. KHUNG CHI TIẾT SẢN PHẨM CHUẨN SHOPEE ================= */
+        /* ================= 3. KHUNG CHI TIẾT SẢN PHẨM ================= */
         .product-main-container,
         .detail-main-card,
         .store-stock-card,
         .review-card,
         .related-books-section,
         .product-specs-section {
-            background: rgba(255, 255, 255, 0.45) !important;
+            background: rgba(255, 255, 255, 0.55) !important;
             backdrop-filter: blur(36px) saturate(210%) brightness(102%) !important;
             -webkit-backdrop-filter: blur(36px) saturate(210%) brightness(102%) !important;
             border-radius: 20px;
-            border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
             box-shadow: 0 16px 40px -10px rgba(45, 24, 15, 0.05), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95);
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .product-main-container {
             display: grid;
-            grid-template-columns: 450px 1fr;
-            gap: 35px;
-            padding: 28px;
-            margin-bottom: 24px;
+            grid-template-columns: 380px 1fr;
+            gap: 28px;
+            padding: 18px 22px;
+            margin-bottom: 20px;
         }
 
         /* CỘT TRÁI: GALLERY ẢNH & TƯƠNG TÁC */
         .product-gallery-col {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
         .main-cover-box {
             position: relative;
             width: 100%;
-            height: 380px;
+            height: 330px;
             border-radius: 16px;
             background: linear-gradient(180deg, rgba(248, 245, 238, 0.65) 0%, rgba(232, 222, 200, 0.35) 100%);
             backdrop-filter: blur(14px);
@@ -117,10 +123,10 @@
             padding: 2px 0;
         }
         .gallery-thumb-item {
-            width: 68px;
-            height: 68px;
+            width: 58px;
+            height: 58px;
             border: 2px solid transparent;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.9);
@@ -165,13 +171,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 12px;
+            background: rgba(140, 74, 39, 0.08) !important;
+            color: var(--rebook-leather) !important;
+            border: 1px solid rgba(140, 74, 39, 0.18) !important;
+            font-size: 11.5px;
             cursor: pointer;
-            transition: opacity 0.2s ease, transform 0.15s ease;
+            transition: all 0.2s ease;
         }
         .share-icon-circle:hover {
-            opacity: 0.85;
+            background: var(--rebook-leather) !important;
+            color: #ffffff !important;
             transform: scale(1.08);
         }
         .share-icon-circle:active {
@@ -185,14 +194,14 @@
         }
         .like-icon-heart {
             font-size: 18px;
-            color: var(--color-fire);
+            color: var(--rebook-leather);
         }
 
         /* CỘT PHẢI: THÔNG TIN CHI TIẾT & TÙY CHỌN MUA HÀNG */
         .product-info-col {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 10px;
         }
 
         /* TIÊU ĐỀ SẢN PHẨM */
@@ -202,14 +211,14 @@
             gap: 10px;
         }
         .tag-shopee-mall {
-            background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%) !important;
+            background: linear-gradient(135deg, #A05A32 0%, #8C4A27 100%) !important;
             color: #ffffff !important;
-            font-size: 11px !important;
-            font-weight: 850 !important;
-            padding: 3px 8px !important;
+            font-size: 10.5px !important;
+            font-weight: 800 !important;
+            padding: 2.5px 8px !important;
             border-radius: 6px !important;
             border: 1px solid rgba(255, 255, 255, 0.45) !important;
-            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.25) !important;
             text-transform: uppercase !important;
             letter-spacing: 0.5px !important;
             flex-shrink: 0;
@@ -218,10 +227,10 @@
             user-select: none;
         }
         .product-title-text {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
             color: var(--color-text-main);
-            line-height: 1.4;
+            line-height: 1.35;
         }
 
         /* HÀNG THÔNG SỐ UY TÍN (RATING - ĐÁNH GIÁ - ĐÃ BÁN - TỐ CÁO) */
@@ -229,9 +238,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 1px solid #f0eae1;
-            font-size: 13.5px;
+            font-size: 13px;
         }
         .stats-left-group {
             display: flex;
@@ -239,13 +248,14 @@
             gap: 14px;
         }
         .stat-rating-val {
-            color: #ee4d2d !important;
+            color: var(--rebook-leather) !important;
             font-weight: 800;
-            text-decoration: underline;
+            text-decoration: none;
             margin-right: 4px;
+            border-bottom: 1.5px solid var(--rebook-leather);
         }
         .stat-stars {
-            color: #ee4d2d !important;
+            color: #F59E0B !important;
             font-size: 12px;
             display: inline-flex;
             gap: 2px;
@@ -275,21 +285,21 @@
             background: linear-gradient(135deg, rgba(250, 248, 245, 0.9) 0%, rgba(245, 236, 228, 0.6) 100%);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-radius: 14px;
+            border-radius: 12px;
             border: 1px solid rgba(140, 74, 39, 0.18);
-            padding: 14px 18px;
+            padding: 9px 15px;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             box-shadow: 0 2px 10px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
         }
         .price-original-strike {
-            font-size: 14.5px;
+            font-size: 13.5px;
             color: #78716C;
             text-decoration: line-through;
         }
         .price-current-fire {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--rebook-leather) !important;
             letter-spacing: -0.5px;
@@ -402,9 +412,9 @@
         .variant-btn-item {
             background: white;
             border: 1px solid #dcd7ce;
-            border-radius: 4px;
-            padding: 8px 14px;
-            font-size: 13px;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 12px;
             font-weight: 600;
             color: #1C1917;
             cursor: pointer;
@@ -449,19 +459,17 @@
             color: #ffffff;
         }
         .condition-note-box {
-            margin-top: 10px;
-            background: rgba(255, 255, 255, 0.85);
+            margin-top: 6px;
+            background: rgba(250, 248, 245, 0.85);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            border-left: 3px solid var(--color-fire);
-            border-radius: 0 10px 10px 0;
-            padding: 8px 14px;
-            font-size: 12.5px;
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 12px;
             color: #57534E;
-            line-height: 1.5;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            border-left: 3px solid var(--color-fire);
+            line-height: 1.45;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.03);
+            border: 1px solid var(--rebook-border);
             transition: all 0.25s ease;
         }
         @keyframes pricePop {
@@ -563,9 +571,9 @@
         .action-buttons-group {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-top: 18px;
-            padding-top: 18px;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 1px solid rgba(231, 223, 213, 0.45);
             width: 100%;
         }
