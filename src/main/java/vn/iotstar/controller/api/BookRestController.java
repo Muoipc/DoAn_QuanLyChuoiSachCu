@@ -7,6 +7,8 @@ import vn.iotstar.entity.Book;
 import vn.iotstar.entity.Inventory;
 import vn.iotstar.repository.BookRepository;
 import vn.iotstar.repository.InventoryRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.*;
 
@@ -88,5 +90,34 @@ public class BookRestController {
         map.put("inventories", stocks);
 
         return ResponseEntity.ok(map);
+    }
+
+    /**
+     * API Tải thêm sách cũ trang chủ (AJAX Infinite Load)
+     */
+    @GetMapping("/load-more")
+    public ResponseEntity<Map<String, Object>> loadMoreBooks(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "12") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Book> books = bookRepository.findTopBooksWithImages(pageable);
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Book b : books) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", b.getId());
+            map.put("title", b.getTitle());
+            map.put("author", b.getAuthor() != null && !b.getAuthor().isBlank() ? b.getAuthor() : "Nhiều tác giả");
+            map.put("conditionPercent", b.getConditionPercent());
+            map.put("maxDiscountPercent", b.getMaxDiscountPercent());
+            map.put("price", b.getPrice());
+            map.put("minPrice", b.getMinPrice() != null ? b.getMinPrice() : b.getPrice());
+            map.put("primaryImageUrl", b.getPrimaryImageUrl() != null ? b.getPrimaryImageUrl() : "/images/books/book_1.jpg");
+            map.put("totalSold", b.getTotalSold() != null ? b.getTotalSold() : 0);
+            result.add(map);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("books", result);
+        response.put("hasMore", books.size() == size);
+        return ResponseEntity.ok(response);
     }
 }

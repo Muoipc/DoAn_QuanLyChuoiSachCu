@@ -2056,11 +2056,12 @@
                 </a>
             </div>
 
-            <!-- Nút Xem Thêm Kiểu Shopee Căn Giữa Trang Web -->
+            <!-- Nút Xem Thêm Kiểu Shopee Căn Giữa Trang Web (AJAX Infinite Load) -->
             <div style="text-align: center; margin-top: 36px; margin-bottom: 24px;">
-                <a th:href="@{/search}" class="btn-load-more-shopee">
-                    Xem thêm
-                </a>
+                <button type="button" id="btnLoadMoreHomeBooks" onclick="loadMoreHomeBooks()" class="btn-load-more-shopee" style="cursor: pointer; border: none;">
+                    <i class="fa-solid fa-spinner fa-spin me-2" id="loadMoreHomeSpinner" style="display: none;"></i>
+                    <span id="loadMoreHomeText">Xem thêm</span>
+                </button>
             </div>
         </section>
 
@@ -2270,6 +2271,90 @@
                 }
             }
         });
+    </script>
+
+    <!-- AJAX LOAD MORE CHO KHỐI KHÁM PHÁ SÁCH CŨ -->
+    <script>
+        var currentHomeBookPage = 1; // Trang 0 (20 cuốn ban đầu) đã nạp
+        var isHomeBooksLoading = false;
+
+        function loadMoreHomeBooks() {
+            if (isHomeBooksLoading) return;
+            isHomeBooksLoading = true;
+
+            var btn = document.getElementById('btnLoadMoreHomeBooks');
+            var spinner = document.getElementById('loadMoreHomeSpinner');
+            var text = document.getElementById('loadMoreHomeText');
+
+            if (spinner) spinner.style.display = 'inline-block';
+            if (text) text.textContent = 'Đang tải thêm...';
+
+            fetch('/api/books/load-more?page=' + currentHomeBookPage + '&size=12')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    var grid = document.querySelector('.daily-grid-6cols');
+                    if (data && data.books && data.books.length > 0 && grid) {
+                        data.books.forEach(function(book) {
+                            var card = document.createElement('a');
+                            card.href = '/books/' + book.id;
+                            card.className = 'shopee-product-card';
+
+                            var priceFormatted = new Intl.NumberFormat('vi-VN').format(book.minPrice || book.price);
+                            var discountHtml = (book.maxDiscountPercent > 0)
+                                ? '<span class="card-discount-pill">-' + book.maxDiscountPercent + '%</span>'
+                                : '';
+
+                            card.innerHTML = 
+                                '<div class="product-thumb-wrap">' +
+                                    '<img src="' + (book.primaryImageUrl || '/images/books/book_1.jpg') + '" alt="' + (book.title || '') + '" class="product-thumb-img" loading="lazy" onerror="this.src=\'/images/books/book_1.jpg\';">' +
+                                    '<span class="card-condition-pill">' + (book.conditionPercent || 90) + '% mới</span>' +
+                                    discountHtml +
+                                '</div>' +
+                                '<div class="product-info-wrap">' +
+                                    '<h4 class="product-title">' + (book.title || '') + '</h4>' +
+                                    '<div class="product-author-meta">' +
+                                        '<i class="fa-solid fa-pen-nib text-muted" style="font-size: 10px;"></i> ' +
+                                        '<span>' + (book.author || 'Nhiều tác giả') + '</span>' +
+                                    '</div>' +
+                                    '<div class="product-price-row">' +
+                                        '<span class="price-current">₫' + priceFormatted + '</span>' +
+                                        '<span class="price-sold-count">Đã bán ' + (book.totalSold || 0) + '</span>' +
+                                    '</div>' +
+                                '</div>';
+
+                            grid.appendChild(card);
+                        });
+
+                        currentHomeBookPage++;
+
+                        if (!data.hasMore) {
+                            if (btn) {
+                                btn.disabled = true;
+                                btn.style.opacity = '0.6';
+                                btn.style.cursor = 'default';
+                                if (text) text.textContent = 'Đã hiển thị tất cả sách cũ';
+                            }
+                        }
+                    } else {
+                        if (btn) {
+                            btn.disabled = true;
+                            btn.style.opacity = '0.6';
+                            btn.style.cursor = 'default';
+                            if (text) text.textContent = 'Đã hiển thị tất cả sách cũ';
+                        }
+                    }
+                })
+                .catch(function(err) {
+                    console.error('Lỗi khi tải thêm sách:', err);
+                })
+                .finally(function() {
+                    isHomeBooksLoading = false;
+                    if (spinner) spinner.style.display = 'none';
+                    if (text && text.textContent !== 'Đã hiển thị tất cả sách cũ') {
+                        text.textContent = 'Xem thêm';
+                    }
+                });
+        }
     </script>
 
     <script src="/js/i18n.js"></script>

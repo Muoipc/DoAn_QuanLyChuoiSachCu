@@ -84,8 +84,8 @@
         .main-cover-box {
             position: relative;
             width: 100%;
-            height: 450px;
-            border-radius: 18px;
+            height: 380px;
+            border-radius: 16px;
             background: linear-gradient(180deg, rgba(248, 245, 238, 0.65) 0%, rgba(232, 222, 200, 0.35) 100%);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
@@ -117,10 +117,10 @@
             padding: 2px 0;
         }
         .gallery-thumb-item {
-            width: 78px;
-            height: 78px;
+            width: 68px;
+            height: 68px;
             border: 2px solid transparent;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.9);
@@ -135,13 +135,13 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 8px;
         }
         .gallery-thumb-item.active,
         .gallery-thumb-item:hover {
-            border-color: #ee4d2d;
+            border-color: var(--rebook-leather);
             transform: none;
-            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.15);
+            box-shadow: 0 2px 8px rgba(140, 74, 39, 0.2);
         }
 
         /* HÀNG TƯƠNG TÁC: CHIA SẺ & ĐÃ THÍCH (GIỐNG 100% ẢNH MẪU SHOPEE) */
@@ -270,39 +270,39 @@
         }
         .btn-report-link:hover { color: var(--color-fire); }
 
-        /* KHỐI HIỂN THỊ GIÁ (PRICE BANNER CHUẨN SHOPEE) */
+        /* KHỐI HIỂN THỊ GIÁ */
         .price-banner-box {
-            background: linear-gradient(135deg, rgba(255, 248, 245, 0.85) 0%, rgba(254, 239, 235, 0.6) 100%);
+            background: linear-gradient(135deg, rgba(250, 248, 245, 0.9) 0%, rgba(245, 236, 228, 0.6) 100%);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-radius: 14px;
-            border: 1px solid rgba(238, 77, 45, 0.15);
-            padding: 16px 20px;
+            border: 1px solid rgba(140, 74, 39, 0.18);
+            padding: 14px 18px;
             display: flex;
             align-items: center;
             gap: 14px;
-            box-shadow: 0 2px 10px rgba(238, 77, 45, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
         }
         .price-original-strike {
-            font-size: 15px;
+            font-size: 14.5px;
             color: #78716C;
             text-decoration: line-through;
         }
         .price-current-fire {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
-            color: #ee4d2d !important;
+            color: var(--rebook-leather) !important;
             letter-spacing: -0.5px;
         }
         .price-discount-tag {
-            background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%);
+            background: linear-gradient(135deg, #A05A32 0%, #8C4A27 100%);
             color: white;
             font-size: 11px;
             font-weight: 800;
             padding: 3px 7px;
             border-radius: 8px;
             text-transform: uppercase;
-            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.25);
+            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.25);
         }
         .price-voucher-badge {
             display: inline-flex;
@@ -321,11 +321,11 @@
         /* HÀNG THUỘC TÍNH: MÃ GIẢM GIÁ / VẬN CHUYỂN / BẢO HIỂM */
         .attribute-row {
             display: grid;
-            grid-template-columns: 140px 1fr;
+            grid-template-columns: 110px 1fr;
             align-items: flex-start;
-            gap: 14px;
+            gap: 12px;
             font-size: 13.5px;
-            padding: 6px 0;
+            padding: 4px 0;
         }
         .attr-label {
             color: #78716C;
@@ -572,16 +572,16 @@
 
         /* 1. Nút Tiện Ích Trợ Lý AI */
         .btn-action-ai, .btn-ai-consult-mini {
-            width: 48px !important;
-            height: 48px !important;
-            min-width: 48px !important;
+            width: 46px !important;
+            height: 46px !important;
+            min-width: 46px !important;
             border-radius: 12px !important;
-            background: rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(24px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-            border: 1.5px solid rgba(238, 77, 45, 0.35) !important;
-            color: #ee4d2d !important;
-            font-size: 19px !important;
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1.5px solid rgba(140, 74, 39, 0.25) !important;
+            color: var(--rebook-leather) !important;
+            font-size: 18px !important;
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -589,12 +589,12 @@
             cursor: pointer !important;
             text-decoration: none !important;
             box-shadow: 0 4px 14px rgba(45, 24, 15, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.75) !important;
-            transition: background-color 0.2s ease, border-color 0.2s ease !important;
+            transition: all 0.2s ease !important;
         }
         .btn-action-ai:hover, .btn-ai-consult-mini:hover {
-            background: rgba(238, 77, 45, 0.1) !important;
-            border-color: #ee4d2d !important;
-            transform: none !important;
+            background: rgba(140, 74, 39, 0.08) !important;
+            border-color: var(--rebook-leather) !important;
+            transform: translateY(-2px) !important;
         }
         .btn-action-ai:active, .btn-ai-consult-mini:active {
             transform: scale(0.96) !important;
@@ -602,16 +602,16 @@
 
         /* 2. Nút Thêm Vào Giỏ Hàng (Secondary CTA) */
         .btn-action-cart, .btn-add-cart-shopee, .btn-add-cart {
-            height: 48px !important;
+            height: 46px !important;
             flex: 1 !important;
-            min-width: 160px;
-            background: rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(24px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-            border: 1.5px solid rgba(238, 77, 45, 0.38) !important;
+            min-width: 150px;
+            background: rgba(140, 74, 39, 0.06) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1.5px solid rgba(140, 74, 39, 0.35) !important;
             border-radius: 12px !important;
-            color: #ee4d2d !important;
-            font-size: 14.5px !important;
+            color: var(--rebook-leather) !important;
+            font-size: 14px !important;
             font-weight: 700 !important;
             cursor: pointer !important;
             display: inline-flex !important;
@@ -620,12 +620,12 @@
             gap: 8px !important;
             white-space: nowrap !important;
             box-shadow: 0 4px 14px rgba(45, 24, 15, 0.03), inset 0 1px 1.5px rgba(255, 255, 255, 0.75) !important;
-            transition: background-color 0.2s ease, border-color 0.2s ease !important;
+            transition: all 0.2s ease !important;
         }
         .btn-action-cart:hover, .btn-add-cart-shopee:hover, .btn-add-cart:hover {
-            background: rgba(238, 77, 45, 0.1) !important;
-            border-color: #ee4d2d !important;
-            transform: none !important;
+            background: rgba(140, 74, 39, 0.12) !important;
+            border-color: var(--rebook-leather) !important;
+            transform: translateY(-2px) !important;
         }
         .btn-action-cart:active, .btn-add-cart-shopee:active, .btn-add-cart:active {
             transform: scale(0.96) !important;
@@ -633,31 +633,31 @@
 
         /* 3. Nút Mua Ngay (Primary CTA) */
         .btn-action-buy, .btn-buy-now-shopee, .btn-buy-now {
-            height: 48px !important;
-            flex: 1.25 !important;
-            min-width: 160px;
-            background: linear-gradient(135deg, rgba(255, 87, 34, 0.82) 0%, rgba(238, 77, 45, 0.82) 100%) !important;
-            backdrop-filter: blur(24px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+            height: 46px !important;
+            flex: 1.2 !important;
+            min-width: 150px;
+            background: linear-gradient(135deg, #A05A32 0%, #8C4A27 100%) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
             border: 1.5px solid rgba(255, 255, 255, 0.35) !important;
             border-radius: 12px !important;
             color: #ffffff !important;
-            font-size: 14.5px !important;
+            font-size: 14px !important;
             font-weight: 800 !important;
             cursor: pointer !important;
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
             white-space: nowrap !important;
-            box-shadow: 0 6px 20px rgba(238, 77, 45, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
-            transition: background 0.2s ease, box-shadow 0.2s ease !important;
+            box-shadow: 0 6px 20px rgba(140, 74, 39, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
+            transition: all 0.2s ease !important;
             letter-spacing: 0.3px;
         }
         .btn-action-buy:hover, .btn-buy-now-shopee:hover, .btn-buy-now:hover {
-            background: linear-gradient(135deg, rgba(244, 81, 30, 0.95) 0%, rgba(215, 50, 17, 0.95) 100%) !important;
-            border-color: #d73211 !important;
-            transform: none !important;
-            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.42) !important;
+            background: linear-gradient(135deg, #8C4A27 0%, #6d381c 100%) !important;
+            border-color: #6d381c !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 24px rgba(140, 74, 39, 0.38) !important;
         }
         .btn-action-buy:active, .btn-buy-now-shopee:active, .btn-buy-now:active {
             transform: scale(0.96) !important;
@@ -1506,12 +1506,12 @@
                             </span>
                         </div>
                         <div th:if="${reviewCount == 0}">
-                            <span class="stat-rating-val" style="border-bottom:none; color:#78716C; font-size:14px; font-weight:600;">Chưa có đánh giá</span>
+                            <span class="stat-rating-val" style="border-bottom:none; color:#78716C; font-size:13.5px; font-weight:600;">Chưa có đánh giá</span>
                         </div>
 
-                        <span class="stat-sep-pipe"></span>
+                        <span class="stat-sep-pipe" th:if="${reviewCount > 0}"></span>
 
-                        <div>
+                        <div th:if="${reviewCount > 0}">
                             <span class="stat-count-link" th:text="${reviewCount}">0</span>
                             <span style="color:#78716C;">Đánh Giá</span>
                         </div>
@@ -1526,14 +1526,14 @@
                     </div>
                 </div>
 
-                <!-- KHỐI HIỂN THỊ GIÁ (SHOPEE PRICE BANNER) -->
+                <!-- KHỐI HIỂN THỊ GIÁ -->
                 <div class="price-banner-box">
                     <span class="price-original-strike" id="originalPriceDisplay" th:if="${book.originalPrice != null}" 
-                          th:text="'₫' + ${#numbers.formatDecimal(book.originalPrice, 0, 'POINT', 0, 'COMMA')}">
-                        ₫120.000
+                          th:text="${#numbers.formatDecimal(book.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'">
+                        120.000 đ
                     </span>
-                    <span class="price-current-fire" id="currentPriceDisplay" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">
-                        ₫38.250
+                    <span class="price-current-fire" id="currentPriceDisplay" th:text="${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">
+                        38.250 đ
                     </span>
                     <span class="price-discount-tag" id="discountPercentTag" th:if="${book.maxDiscountPercent > 0}" th:text="'-' + ${book.maxDiscountPercent} + '%'">
                         -52%
@@ -1545,11 +1545,11 @@
 
                 <!-- THUỘC TÍNH: CHÍNH SÁCH SHOPEE AN TÂM -->
                 <div class="attribute-row">
-                    <div class="attr-label">Chính Sách Chuỗi</div>
+                    <div class="attr-label">Chính Sách</div>
                     <div class="security-badge-row" style="width:100%;">
                         <div class="sec-left-part">
-                            <i class="fa-solid fa-shield-halved" style="color:var(--color-fire); font-size:15px; opacity:0.8;"></i>
-                            <span style="color:rgba(0, 0, 0, 0.62); font-size:12.5px; font-weight:400;"><strong style="font-weight:600; color:rgba(0, 0, 0, 0.75);">An Tâm Mua Sắm:</strong> Trả hàng miễn phí 15 ngày · Đồng kiểm khi nhận COD 100%</span>
+                            <i class="fa-solid fa-shield-halved" style="color:var(--rebook-leather); font-size:15px; opacity:0.85;"></i>
+                            <span style="color:rgba(0, 0, 0, 0.65); font-size:12.5px; font-weight:400;"><strong style="font-weight:600; color:var(--rebook-ink-main);">An Tâm Mua Sắm:</strong> Trả hàng miễn phí 15 ngày · Đồng kiểm khi nhận COD 100%</span>
                         </div>
                         <i class="fa-solid fa-chevron-right text-muted" style="font-size:11px; opacity:0.5;"></i>
                     </div>
@@ -1564,7 +1564,7 @@
                             <span>Vận chuyển tới: <strong style="font-weight:600; color:rgba(0,0,0,0.85);">TP. Hồ Chí Minh</strong></span>
                         </div>
                         <div style="font-size:12.5px; color:rgba(0, 0, 0, 0.65); margin-top:2px;">
-                            Phí vận chuyển: <span style="font-weight:500; color:rgba(0,0,0,0.85);">₫0 - ₫25.000</span> <span style="color:rgba(0, 0, 0, 0.42); font-size:12px;">(Freeship cho đơn từ 150.000₫)</span>
+                            Phí vận chuyển: <span style="font-weight:600; color:rgba(0,0,0,0.85);">0 đ - 25.000 đ</span> <span style="color:rgba(0, 0, 0, 0.5); font-size:12px;">(Freeship đơn từ 150.000 đ)</span>
                         </div>
                         <div class="shipping-sub-note" style="color:rgba(0, 0, 0, 0.45); font-size:12px; font-weight:400; line-height:1.5;">
                             Dự kiến nhận sách: 2 - 3 ngày hoặc nhận ngay tại quầy 5 chi nhánh TP.HCM
@@ -1572,9 +1572,9 @@
                     </div>
                 </div>
 
-                <!-- THUỘC TÍNH: PHÂN LOẠI TÌNH TRẠNG SÁCH (GIỐNG MÀU SẮC/SIZE TRÊN ẢNH SHOPEE) -->
+                <!-- THUỘC TÍNH: PHÂN LOẠI TÌNH TRẠNG SÁCH -->
                 <div class="attribute-row">
-                    <div class="attr-label">Tình Trạng Sách</div>
+                    <div class="attr-label">Tình Trạng</div>
                     <div style="flex: 1;">
                         <div class="variant-buttons-list">
                             <!-- 1. BẢN SÁCH CŨ TIẾT KIỆM (NGOÀI CÙNG BÊN TRÁI - GIÁ THẤP NHẤT) -->
@@ -1586,9 +1586,9 @@
                                  data-label="Bản Sách Cũ Tiết Kiệm (85% Mới)"
                                  data-note="Độ mới 80% - 85%, giấy ngả màu thời gian tự nhiên, có nếp đọc nhẹ nhưng bảo đảm không mất chữ, tiết kiệm 15% chi phí cho bạn đọc."
                                  onclick="selectVariant(this)">
-                                <i class="fa-solid fa-piggy-bank text-warning"></i>
-                                <span>Bản Sách Cũ Tiết Kiệm (85% Mới)</span>
-                                <span class="variant-price-tag" th:text="'₫' + ${book.price != null ? #numbers.formatDecimal(book.price * 0.85, 0, 'POINT', 0, 'COMMA') : ''}">₫38.250</span>
+                                <i class="fa-solid fa-book-open text-secondary"></i>
+                                <span>Bản Tiết Kiệm (85% Mới)</span>
+                                <span class="variant-price-tag" th:text="${book.price != null ? #numbers.formatDecimal(book.price * 0.85, 0, 'POINT', 0, 'COMMA') : ''} + ' đ'">38.250 đ</span>
                             </div>
 
                             <!-- 2. BẢN TIÊU CHUẨN (ĐỘ MỚI NGUYÊN BẢN CỦA SÁCH) -->
@@ -1600,9 +1600,9 @@
                                  th:data-label="'Bản Tiêu Chuẩn (' + ${book.conditionPercent} + '% Mới)'"
                                  th:data-note="'Độ mới ' + ${book.conditionPercent} + '%, sách nguyên bản, gáy chắc chắn, các trang sạch đẹp và đầy đủ 100%, đúng theo biên bản kiểm định của chuỗi.'"
                                  onclick="selectVariant(this)">
-                                <i class="fa-solid fa-book-bookmark text-success"></i>
-                                <span th:text="'Bản Độ Mới ' + ${book.conditionPercent} + '% (Đã Thẩm Định)'">Bản Độ Mới 95% (Đã Thẩm Định)</span>
-                                <span class="variant-price-tag" th:text="'₫' + ${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')}">₫45.000</span>
+                                <i class="fa-solid fa-book text-success"></i>
+                                <span th:text="'Bản Chuẩn ' + ${book.conditionPercent} + '% (Đã Duyệt)'">Bản Chuẩn 95% (Đã Duyệt)</span>
+                                <span class="variant-price-tag" th:text="${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">45.000 đ</span>
                             </div>
 
                             <!-- 3. BẢN SƯU TẦM (ĐỘ MỚI 99% + BOOKMARK) -->
@@ -1614,9 +1614,9 @@
                                  data-label="Bản Sưu Tầm (99% Mới + Bookmark)"
                                  data-note="Độ mới 98% - 99%, tình trạng sưu tầm xuất sắc như vừa bóc seal, tặng kèm Bookmark kim loại/gỗ khắc laser của Chuỗi Sách Cũ TP.HCM."
                                  onclick="selectVariant(this)">
-                                <i class="fa-solid fa-award text-primary"></i>
-                                <span>Bản Sưu Tầm (99% Mới + Bookmark)</span>
-                                <span class="variant-price-tag" th:text="'₫' + ${book.price != null ? #numbers.formatDecimal(book.price * 1.15, 0, 'POINT', 0, 'COMMA') : ''}">₫51.750</span>
+                                <i class="fa-solid fa-gem" style="color: var(--rebook-leather);"></i>
+                                <span>Bản Sưu Tầm (99% Mới)</span>
+                                <span class="variant-price-tag" th:text="${book.price != null ? #numbers.formatDecimal(book.price * 1.15, 0, 'POINT', 0, 'COMMA') : ''} + ' đ'">51.750 đ</span>
                             </div>
                         </div>
 
@@ -2279,7 +2279,7 @@
 
         function formatVndCurrency(amount) {
             const num = parsePriceValue(amount);
-            return '₫' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' đ';
         }
 
         function selectVariant(el) {
