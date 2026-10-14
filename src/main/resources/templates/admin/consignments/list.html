@@ -574,21 +574,20 @@
             <table class="table-liquid align-middle w-100">
                 <thead>
                     <tr>
-                        <th class="ps-3" style="width: 90px; white-space: nowrap;">Mã / Ngày</th>
+                        <th class="ps-3" style="width: 100px;">Mã / Ngày</th>
                         <th>Sách Ký Gửi &amp; Tác Giả</th>
-                        <th style="width: 130px;">Khách Hàng</th>
-                        <th class="text-center" style="width: 75px;">Độ Mới</th>
-                        <th class="text-end" style="width: 95px; white-space: nowrap;">Giá Đề Xuất</th>
-                        <th class="text-end" style="width: 95px; white-space: nowrap;">Giá Duyệt</th>
-                        <th style="width: 110px;">Chi Nhánh</th>
-                        <th class="text-center" style="width: 95px; white-space: nowrap;">Trạng Thái</th>
-                        <th class="text-end pe-3" style="width: 80px; white-space: nowrap;">Thao Tác</th>
+                        <th style="width: 140px;">Khách Hàng</th>
+                        <th class="text-center" style="width: 80px;">Độ Mới</th>
+                        <th class="text-end" style="width: 120px;">Giá Định Mức</th>
+                        <th style="width: 130px;">Chi Nhánh</th>
+                        <th class="text-center" style="width: 110px;">Trạng Thái</th>
+                        <th class="text-end pe-3" style="width: 90px;">Thao Tác</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Trống -->
                     <tr th:if="${consignmentPage.empty}">
-                        <td colspan="9" class="text-center py-5 text-muted">
+                        <td colspan="8" class="text-center py-5 text-muted">
                             <div class="py-4">
                                 <i class="fa-solid fa-inbox fa-3x text-secondary opacity-50 mb-3"></i>
                                 <h6 class="fw-bold text-dark">Không có yêu cầu ký gửi nào phù hợp</h6>
@@ -599,7 +598,7 @@
 
                     <!-- Từng dòng ký gửi -->
                     <tr th:each="c : ${consignmentPage.content}">
-                        <td class="ps-4">
+                        <td class="ps-3">
                             <strong class="text-dark d-block" th:text="'#KG-' + ${c.id}">#KG-1</strong>
                             <div class="text-muted" style="font-size: 11px;">
                                 <i class="fa-regular fa-clock me-1"></i>
@@ -608,89 +607,77 @@
                         </td>
 
                         <td>
-                            <strong class="text-dark d-block" style="font-size: 14px;" th:text="${c.bookTitle}">Tên sách</strong>
-                            <div class="text-muted small">
+                            <strong class="text-dark d-block" style="font-size: 13.5px;" th:text="${c.bookTitle}">Tên sách</strong>
+                            <div class="text-muted small" style="font-size: 11.5px;">
                                 <i class="fa-solid fa-feather-pointed me-1" style="font-size: 10px;"></i>
-                                <span th:text="'Tác giả: ' + ${c.author}">Tác giả</span>
+                                <span th:text="${c.author}">Tác giả</span>
                             </div>
                         </td>
 
                         <td>
-                            <div class="fw-semibold text-dark" th:text="${c.user != null ? c.user.fullName : '-'}">Khách hàng</div>
-                            <div class="text-muted small" style="font-size: 11px;">
+                            <div class="fw-semibold text-dark small" th:text="${c.user != null ? c.user.fullName : '-'}">Khách hàng</div>
+                            <div class="text-muted" style="font-size: 11px;">
                                 <i class="fa-solid fa-phone me-1" style="font-size: 10px;"></i>
                                 <span th:text="${c.user != null ? c.user.phone : ''}">090...</span>
                             </div>
                         </td>
 
-                        <!-- Độ mới: Tag bo góc 4px thanh lịch -->
+                        <!-- Độ mới -->
                         <td class="text-center">
-                            <span th:if="${c.conditionPercent >= 95}" class="tag-condition-high">
-                                <i class="fa-solid fa-circle-check" style="font-size: 10px;"></i>
-                                <span th:text="${c.conditionPercent} + '%'">95%</span>
-                            </span>
-                            <span th:if="${c.conditionPercent < 95}" class="tag-condition-med">
-                                <i class="fa-solid fa-shield-halved" style="font-size: 10px;"></i>
-                                <span th:text="${c.conditionPercent} + '%'">90%</span>
-                            </span>
+                            <span class="badge rounded-pill px-2.5 py-1"
+                                  th:classappend="${c.conditionPercent >= 90} ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'"
+                                  th:text="${c.conditionPercent} + '%'">95%</span>
                         </td>
 
-                        <!-- Giá đề xuất -->
-                        <td class="text-end text-secondary fw-semibold">
-                            <span th:text="${#numbers.formatDecimal(c.proposedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">50,000 đ</span>
-                        </td>
-
-                        <!-- Giá shop duyệt -->
+                        <!-- Giá: Gộp Duyệt & Đề xuất -->
                         <td class="text-end">
-                            <div th:if="${c.agreedPrice != null}" class="fw-bold" style="color: #C2410C;" 
+                            <div th:if="${c.agreedPrice != null}" class="fw-bold" style="color: var(--rebook-leather); font-size: 13.5px;" 
                                  th:text="${#numbers.formatDecimal(c.agreedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">45,000 đ</div>
-                            <span th:if="${c.agreedPrice == null}" class="text-muted fst-italic small">Chưa định giá</span>
+                            <div th:if="${c.agreedPrice == null}" class="small text-muted fst-italic">Chờ định giá</div>
+                            <div class="text-muted" style="font-size: 11px;" th:text="'Đ/x: ' + ${#numbers.formatDecimal(c.proposedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">Đ/x: 50,000 đ</div>
                         </td>
 
                         <!-- Chi nhánh tiếp nhận -->
-                        <td class="small">
-                            <span class="badge bg-light text-secondary border px-2 py-1" th:text="${c.store != null ? c.store.storeName : '-'}">
+                        <td>
+                            <span class="badge rounded-pill bg-light text-secondary border px-2.5 py-1 text-truncate d-inline-block" style="max-width: 125px; font-size: 11px;" 
+                                  th:text="${c.store != null ? #strings.replace(#strings.replace(c.store.storeName, 'Tổng Kho Sách Cũ ', 'Tổng Kho '), 'Chi Nhánh Sách Cũ ', 'CN ') : '-'}">
                                 Thủ Đức
                             </span>
                         </td>
 
-                        <!-- Trạng thái: Badge màu sắc trang nhã -->
+                        <!-- Trạng thái -->
                         <td class="text-center">
-                            <span th:if="${c.status.name() == 'PENDING'}" class="badge-status-pending">
-                                <i class="fa-solid fa-hourglass-half"></i> Chờ duyệt
+                            <span th:if="${c.status.name() == 'PENDING'}" class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2.5 py-1" style="font-size: 11px;">
+                                <i class="fa-solid fa-hourglass-half me-1"></i>Chờ duyệt
                             </span>
-                            <span th:if="${c.status.name() == 'APPROVED'}" class="badge-status-approved">
-                                <i class="fa-solid fa-circle-check"></i> Đã định giá
+                            <span th:if="${c.status.name() == 'APPROVED'}" class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1" style="font-size: 11px;">
+                                <i class="fa-solid fa-circle-check me-1"></i>Đã duyệt
                             </span>
-                            <span th:if="${c.status.name() == 'STORED'}" class="badge-status-stored">
-                                <i class="fa-solid fa-boxes-packing"></i> Đã nhập kho
+                            <span th:if="${c.status.name() == 'STORED'}" class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2.5 py-1" style="font-size: 11px;">
+                                <i class="fa-solid fa-boxes-packing me-1"></i>Vào kho
                             </span>
-                            <span th:if="${c.status.name() == 'REJECTED'}" class="badge-status-rejected">
-                                <i class="fa-solid fa-ban"></i> Từ chối
+                            <span th:if="${c.status.name() == 'REJECTED'}" class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1" style="font-size: 11px;">
+                                <i class="fa-solid fa-ban me-1"></i>Từ chối
                             </span>
                         </td>
 
-                        <!-- Thao tác: Xem ảnh popup & Thẩm định -->
-                        <td class="text-end pe-4">
-                            <div class="d-inline-flex gap-2 align-items-center">
-                                <!-- Nút mở modal xem ảnh tình trạng thực tế do khách gửi -->
-                                <button type="button" class="btn-view-photos" 
+                        <!-- Thao tác: Icon buttons Squircle OpenDesign -->
+                        <td class="text-end pe-3">
+                            <div class="d-inline-flex gap-1 align-items-center">
+                                <button type="button" class="icon-action-btn btn-view" 
                                         th:data-id="${c.id}"
                                         th:data-title="${c.bookTitle}"
                                         th:data-author="${c.author}"
                                         th:data-condition="${c.conditionPercent}"
                                         th:data-desc="${c.conditionDescription}"
                                         th:data-photos="${c.photosJson}"
-                                        title="Xem ảnh chụp góc cạnh do khách gửi"
+                                        title="Xem ảnh chụp thực tế"
                                         onclick="openPhotoModal(this)">
-                                    <i class="fa-solid fa-camera text-primary"></i>
-                                    <span>Xem ảnh</span>
+                                    <i class="fa-solid fa-camera"></i>
                                 </button>
 
-                                <!-- Nút thẩm định chi tiết -->
-                                <a th:href="@{/admin/consignments/{id}(id=${c.id})}" class="btn-appraise" title="Trang thẩm định">
+                                <a th:href="@{/admin/consignments/{id}(id=${c.id})}" class="icon-action-btn btn-edit" title="Thẩm định chi tiết">
                                     <i class="fa-solid fa-stamp"></i>
-                                    <span>Thẩm định</span>
                                 </a>
                             </div>
                         </td>
