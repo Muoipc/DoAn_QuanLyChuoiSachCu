@@ -84,6 +84,7 @@ public class SecurityConfig {
                     "/admin/vouchers", "/admin/vouchers/**",
                     "/admin/shipping-units", "/admin/shipping-units/**",
                     "/admin/stores/create", "/admin/stores/delete/**",
+                    "/admin/store-registrations", "/admin/store-registrations/**",
                     "/admin/categories/create", "/admin/categories/edit/**",
                     "/admin/categories/save", "/admin/categories/delete/**"
                 ).hasRole("ADMIN")
@@ -107,6 +108,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/checkout/place-order", "/checkout/process",
                     "/orders", "/orders/**",
+                    "/seller/**",
                     "/user/**", "/profile/**"
                 ).authenticated()
                 .anyRequest().authenticated()

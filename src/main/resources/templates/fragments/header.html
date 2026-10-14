@@ -1510,6 +1510,10 @@
                             <i class="fa-solid fa-gauge-high"></i>
                             <span>Kênh Quản Trị</span>
                         </a>
+                        <a sec:authorize="!hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/seller/register}" class="shopee-popover-item" style="color:#8C4A27; font-weight:700;">
+                            <i class="fa-solid fa-store" style="color:#8C4A27;"></i>
+                            <span class="i18n-text" data-i18n="Kênh Người Bán">Kênh Người Bán</span>
+                        </a>
                         <a th:href="@{/user/account/profile}" class="shopee-popover-item">
                             <i class="fa-regular fa-user"></i>
                             <span>Tài Khoản Của Tôi</span>
@@ -1735,6 +1739,10 @@
                         <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="shopee-popover-item popover-item-admin">
                             <i class="fa-solid fa-gauge-high"></i>
                             <span>Kênh Quản Trị</span>
+                        </a>
+                        <a sec:authorize="!hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/seller/register}" class="shopee-popover-item" style="color:#8C4A27; font-weight:700;">
+                            <i class="fa-solid fa-store" style="color:#8C4A27;"></i>
+                            <span class="i18n-text" data-i18n="Kênh Người Bán">Kênh Người Bán</span>
                         </a>
                         <a th:href="@{/user/account/profile}" class="shopee-popover-item">
                             <i class="fa-regular fa-user"></i>

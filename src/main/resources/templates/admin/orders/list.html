@@ -268,11 +268,11 @@
             transition: all 0.25s var(--spring-bounce);
         }
         .btn-view-order:hover {
-            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%);
-            border-color: transparent;
+            background: var(--rebook-leather);
+            border-color: var(--rebook-leather);
             color: #ffffff;
             transform: translateY(-2px);
-            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3);
+            box-shadow: 0 4px 14px var(--rebook-leather-glow);
         }
         .btn-view-order:active {
             transform: scale(0.95);
@@ -307,8 +307,8 @@
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
             <div class="d-flex align-items-center gap-2 mb-1">
-                <div style="width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3);">
-                    <i class="fa-solid fa-clipboard-list"></i>
+                <div class="category-icon-squircle" style="width: 40px; height: 40px; margin-right: 0; background: #FFFFFF; border-color: var(--rebook-border);">
+                    <i class="fa-solid fa-clipboard-list fs-5" style="color: var(--rebook-leather);"></i>
                 </div>
                 <h4 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.3px;">Quản Lý Đơn Hàng Chuỗi</h4>
             </div>

@@ -40,7 +40,12 @@ const I18N_DICTIONARY = {
         'Đánh Giá': 'Đánh Giá',
         'Trực tiếp': 'Trực tiếp',
         'Vắng mặt': 'Vắng mặt',
-        'Gặp nhân viên quầy': 'Gặp nhân viên quầy'
+        'Gặp nhân viên quầy': 'Gặp nhân viên quầy',
+        'Kênh Người Bán': 'Kênh Người Bán',
+        'Mở Gian Hàng': 'Mở Gian Hàng',
+        'Đăng Ký Mở Cửa Hàng': 'Đăng Ký Mở Cửa Hàng',
+        'Hồ Sơ Đang Chờ Duyệt': 'Hồ Sơ Đang Chờ Duyệt',
+        'Gian Hàng Đã Được Duyệt': 'Gian Hàng Đã Được Duyệt'
     },
     en: {
         'Ký Gửi Sách Cũ': 'Book Consignments',
@@ -73,7 +78,15 @@ const I18N_DICTIONARY = {
         'Tổng thanh toán': 'Total Payment',
         'Tiết kiệm được': 'Total Savings',
         'Đã Bán': 'Sold',
-        'Đánh Giá': 'Reviews'
+        'Đánh Giá': 'Reviews',
+        'Trực tiếp': 'Online',
+        'Vắng mặt': 'Offline',
+        'Gặp nhân viên quầy': 'Talk to Staff',
+        'Kênh Người Bán': 'Seller Centre',
+        'Mở Gian Hàng': 'Open a Store',
+        'Đăng Ký Mở Cửa Hàng': 'Store Registration',
+        'Hồ Sơ Đang Chờ Duyệt': 'Application Pending',
+        'Gian Hàng Đã Được Duyệt': 'Store Approved'
     }
 };
 

@@ -591,6 +591,93 @@
             flex-shrink: 0;
         }
 
+        /* Inventory & Metric Card (Full Framed White Liquid Glass - Anti-AI-Slop) */
+        .inv-metric-card {
+            background: rgba(255, 255, 255, 0.88) !important;
+            backdrop-filter: blur(24px) saturate(190%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+            border-radius: 18px !important;
+            padding: 18px 20px !important;
+            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.04), inset 0 1.5px 1.5px rgba(255, 255, 255, 1) !important;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            position: relative;
+            overflow: hidden;
+            display: block;
+            text-decoration: none !important;
+        }
+        .inv-metric-card:hover {
+            transform: translateY(-3px) !important;
+            background: #ffffff !important;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 2px 2px rgba(255, 255, 255, 1) !important;
+            border-color: rgba(236, 231, 222, 0.95) !important;
+        }
+        .inv-metric-card.active-danger {
+            border-color: #EF4444 !important;
+            background: rgba(254, 242, 242, 0.9) !important;
+            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.15), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .inv-metric-card.active-warning {
+            border-color: #F59E0B !important;
+            background: rgba(254, 243, 199, 0.9) !important;
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.15), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .inv-metric-card.active-success {
+            border-color: #10B981 !important;
+            background: rgba(236, 253, 245, 0.9) !important;
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.15), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .inv-metric-card.active-primary {
+            border-color: var(--rebook-leather) !important;
+            background: rgba(245, 236, 228, 0.9) !important;
+            box-shadow: 0 12px 30px var(--rebook-leather-glow), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .inv-metric-label {
+            font-size: 11.5px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            color: #78716C !important;
+        }
+        .inv-metric-number {
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.5px !important;
+            line-height: 1 !important;
+            margin: 0 !important;
+        }
+        .inv-metric-squircle {
+            width: 42px !important;
+            height: 42px !important;
+            border-radius: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 18px !important;
+            flex-shrink: 0 !important;
+            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 1) !important;
+        }
+        .squircle-danger {
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: #DC2626 !important;
+            border: 1px solid rgba(239, 68, 68, 0.2) !important;
+        }
+        .squircle-warning {
+            background: rgba(245, 158, 11, 0.1) !important;
+            color: #B45309 !important;
+            border: 1px solid rgba(245, 158, 11, 0.2) !important;
+        }
+        .squircle-success {
+            background: rgba(16, 185, 129, 0.1) !important;
+            color: #059669 !important;
+            border: 1px solid rgba(16, 185, 129, 0.2) !important;
+        }
+        .squircle-primary {
+            background: rgba(140, 74, 39, 0.1) !important;
+            color: var(--rebook-leather) !important;
+            border: 1px solid rgba(140, 74, 39, 0.2) !important;
+        }
+
         /* Segmented Status Dock / Tabs */
         .ios-status-dock {
             background: rgba(255, 255, 255, 0.85);
@@ -782,6 +869,13 @@
                     <a th:href="@{/admin/stores}">
                         <i class="fa-solid fa-store"></i>
                         <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Chuỗi Chi Nhánh' : 'Chi Nhánh Của Bạn'}">Chuỗi Chi Nhánh</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item" sec:authorize="hasRole('ADMIN')" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/store-registrations')} ? 'active' : ''">
+                    <a th:href="@{/admin/store-registrations}">
+                        <i class="fa-solid fa-shop-lock text-warning"></i>
+                        <span>Duyệt Mở Gian Hàng</span>
                     </a>
                 </li>
 

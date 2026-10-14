@@ -126,18 +126,20 @@
         }
 
         .glass-btn-dark {
-            background: #1E293B;
+            background: var(--rebook-leather);
             color: #ffffff;
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid var(--rebook-leather);
             border-radius: 12px;
             padding: 9px 18px;
             font-weight: 600;
             font-size: 13.5px;
+            box-shadow: 0 4px 14px var(--rebook-leather-glow);
             transition: all 0.2s ease;
         }
 
         .glass-btn-dark:hover {
-            background: #0F172A;
+            background: var(--rebook-leather-hover);
+            border-color: var(--rebook-leather-hover);
             color: #ffffff;
             transform: translateY(-1px);
         }
@@ -453,7 +455,7 @@
         <div class="card-liquid-glass overflow-hidden mb-4">
             <div class="card-liquid-header">
                 <div class="d-flex align-items-center gap-2">
-                    <i class="fa-solid fa-table-list text-warning"></i>
+                    <i class="fa-solid fa-table-list" style="color: var(--rebook-leather);"></i>
                     <span class="fw-bold text-dark">Danh Sách Sách Cũ Đang Quản Trị</span>
                 </div>
                 <span class="badge rounded-pill bg-white text-muted border px-3 py-1 shadow-sm" style="font-size: 12px;">
@@ -581,11 +583,11 @@
                             <!-- Thao tác -->
                             <td class="text-end pe-4">
                                 <div class="d-inline-flex gap-1">
-                                    <a th:href="@{/admin/books/edit/{id}(id=${book.id})}" class="btn-glass-action" title="Chỉnh sửa chi tiết">
+                                    <a th:href="@{/admin/books/edit/{id}(id=${book.id})}" class="icon-action-btn btn-edit" title="Chỉnh sửa chi tiết">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                     <a th:href="@{/admin/books/delete/{id}(id=${book.id})}" 
-                                       class="btn-glass-action-danger" 
+                                       class="icon-action-btn btn-delete" 
                                        title="Xóa cuốn sách này" 
                                        onclick="return confirm('Bạn có chắc chắn muốn xóa cuốn sách này khỏi cơ sở dữ liệu? Toàn bộ ảnh và dữ liệu tồn kho liên quan cũng sẽ bị gỡ bỏ.');">
                                         <i class="fa-solid fa-trash-can"></i>

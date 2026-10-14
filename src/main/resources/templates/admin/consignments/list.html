@@ -445,69 +445,69 @@
         </div>
     </div>
 
-    <!-- 2. THỐNG KÊ TRẠNG THÁI LIQUID GLASS -->
+    <!-- 2. THỐNG KÊ TRẠNG THÁI CHUẨN OPENDESIGN -->
     <div class="row g-3 mb-4">
         <!-- Chờ Duyệt -->
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-glass-card" style="border-left: 4px solid #F59E0B;">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Chờ Duyệt (PENDING)</div>
-                        <h3 class="fw-bold text-warning mb-0 mt-1" th:text="${countPending}">0</h3>
-                    </div>
-                    <div class="stat-icon-circle bg-warning-subtle text-warning">
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Chờ Duyệt Thẩm Định</span>
+                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill">PENDING</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number text-warning-emphasis" th:text="${countPending}">0</h3>
+                    <div class="inv-metric-squircle squircle-warning">
                         <i class="fa-solid fa-hourglass-half"></i>
                     </div>
                 </div>
-                <div class="small text-muted mt-2" style="font-size: 11.5px;">Khách mới gửi yêu cầu thẩm định</div>
             </div>
         </div>
 
         <!-- Đã Duyệt Giá -->
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-glass-card" style="border-left: 4px solid #0284C7;">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Đã Duyệt Giá (APPROVED)</div>
-                        <h3 class="fw-bold text-primary mb-0 mt-1" th:text="${countApproved}">0</h3>
-                    </div>
-                    <div class="stat-icon-circle bg-primary-subtle text-primary">
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Đã Duyệt Giá</span>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">APPROVED</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number" style="color: #0284C7;" th:text="${countApproved}">0</h3>
+                    <div class="inv-metric-squircle" style="background: rgba(2, 132, 199, 0.1); color: #0284C7; border: 1px solid rgba(2, 132, 199, 0.2);">
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
                 </div>
-                <div class="small text-muted mt-2" style="font-size: 11.5px;">Đang đợi khách mang sách đến kho</div>
             </div>
         </div>
 
         <!-- Đã Nhập Kho -->
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-glass-card" style="border-left: 4px solid #10B981;">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Đã Nhập Kho (STORED)</div>
-                        <h3 class="fw-bold text-success mb-0 mt-1" th:text="${countStored}">0</h3>
-                    </div>
-                    <div class="stat-icon-circle bg-success-subtle text-success">
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Đã Nhập Kho Bày Bán</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">STORED</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number text-success" th:text="${countStored}">0</h3>
+                    <div class="inv-metric-squircle squircle-success">
                         <i class="fa-solid fa-boxes-stacked"></i>
                     </div>
                 </div>
-                <div class="small text-muted mt-2" style="font-size: 11.5px;">Sách đã sẵn sàng bày bán trong chuỗi</div>
             </div>
         </div>
 
         <!-- Từ Chối -->
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-glass-card" style="border-left: 4px solid #EF4444;">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Từ Chối (REJECTED)</div>
-                        <h3 class="fw-bold text-danger mb-0 mt-1" th:text="${countRejected}">0</h3>
-                    </div>
-                    <div class="stat-icon-circle bg-danger-subtle text-danger">
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Từ Chối Nhận</span>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">REJECTED</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number text-danger" th:text="${countRejected}">0</h3>
+                    <div class="inv-metric-squircle squircle-danger">
                         <i class="fa-solid fa-circle-xmark"></i>
                     </div>
                 </div>
-                <div class="small text-muted mt-2" style="font-size: 11.5px;">Sách không đạt chuẩn kiểm định chuỗi</div>
             </div>
         </div>
     </div>
@@ -571,18 +571,18 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table-liquid align-middle">
+            <table class="table-liquid align-middle w-100">
                 <thead>
                     <tr>
-                        <th class="ps-4">Mã / Ngày gửi</th>
-                        <th>Sách ký gửi &amp; Tác giả</th>
-                        <th>Khách hàng</th>
-                        <th class="text-center">Độ mới</th>
-                        <th class="text-end">Giá khách mong muốn</th>
-                        <th class="text-end">Giá shop duyệt</th>
-                        <th>Chi nhánh tiếp nhận</th>
-                        <th class="text-center">Trạng thái</th>
-                        <th class="text-end pe-4">Thao tác</th>
+                        <th class="ps-3" style="width: 90px; white-space: nowrap;">Mã / Ngày</th>
+                        <th>Sách Ký Gửi &amp; Tác Giả</th>
+                        <th style="width: 130px;">Khách Hàng</th>
+                        <th class="text-center" style="width: 75px;">Độ Mới</th>
+                        <th class="text-end" style="width: 95px; white-space: nowrap;">Giá Đề Xuất</th>
+                        <th class="text-end" style="width: 95px; white-space: nowrap;">Giá Duyệt</th>
+                        <th style="width: 110px;">Chi Nhánh</th>
+                        <th class="text-center" style="width: 95px; white-space: nowrap;">Trạng Thái</th>
+                        <th class="text-end pe-3" style="width: 80px; white-space: nowrap;">Thao Tác</th>
                     </tr>
                 </thead>
                 <tbody>
