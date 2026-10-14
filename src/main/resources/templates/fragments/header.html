@@ -2978,10 +2978,7 @@
                         appendChatMessageDOM('CUSTOMER', '[Khách hàng yêu cầu gặp nhân viên quầy trực tiếp]', null, null, null, null, null, null, null, data.createdAt, null, tempReqId);
                         appendChatMessageDOM('STORE_STAFF', data.reply, null, null, null, null, null, null, null, data.createdAt, data.senderName, 'notice-' + Date.now());
                         scrollMiniChatBottom();
-                        var statusEl = document.getElementById('activeStoreStaffStatus');
-                        if (statusEl) {
-                            statusEl.innerHTML = '<span style="color:#059669; font-weight:700;">🟢 Quản lý quầy tiếp quản</span>';
-                        }
+                        updateStorePresenceUI(true);
                     }
                 })
                 .catch(function(err) { console.error('Lỗi yêu cầu nhân viên:', err); })

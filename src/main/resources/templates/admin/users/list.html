@@ -78,15 +78,19 @@
                             <td class="small" th:text="${u.email}">email@domain.com</td>
                             <td class="small" th:text="${u.phone != null ? u.phone : '-'}">0901234567</td>
                             <td>
-                                <span th:if="${u.role.name == 'ROLE_ADMIN'}" class="badge bg-danger">ADMIN</span>
-                                <span th:if="${u.role.name == 'ROLE_MANAGER'}" class="badge bg-primary">MANAGER</span>
-                                <span th:if="${u.role.name == 'ROLE_SHIPPER'}" class="badge bg-warning text-dark">SHIPPER</span>
-                                <span th:if="${u.role.name == 'ROLE_USER'}" class="badge bg-secondary">CUSTOMER</span>
+                                <span th:if="${u.role.name == 'ROLE_ADMIN'}" class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1" style="font-size: 11.5px;">ADMIN</span>
+                                <span th:if="${u.role.name == 'ROLE_MANAGER'}" class="badge rounded-pill px-2.5 py-1" style="background: rgba(140, 74, 39, 0.1); color: var(--rebook-leather); border: 1px solid rgba(140, 74, 39, 0.25); font-size: 11.5px;">MANAGER</span>
+                                <span th:if="${u.role.name == 'ROLE_SHIPPER'}" class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2.5 py-1" style="font-size: 11.5px;">SHIPPER</span>
+                                <span th:if="${u.role.name == 'ROLE_USER'}" class="badge rounded-pill bg-light text-secondary border px-2.5 py-1" style="font-size: 11.5px;">CUSTOMER</span>
                             </td>
                             <td class="text-center">
                                 <form th:action="@{/admin/users/{id}/toggle-enabled(id=${u.id})}" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-sm" th:classappend="${u.enabled ? 'btn-success' : 'btn-outline-danger'}" style="font-size: 11px; padding: 2px 8px;" onclick="return confirm('Bạn có chắc muốn đổi trạng thái kích hoạt tài khoản này?');">
-                                        <span th:text="${u.enabled ? 'Đang hoạt động' : 'Bị khóa'}">Hoạt động</span>
+                                    <button type="submit" class="badge rounded-pill border px-2.5 py-1" 
+                                            th:classappend="${u.enabled ? 'bg-success-subtle text-success border-success-subtle' : 'bg-danger-subtle text-danger border-danger-subtle'}" 
+                                            style="font-size: 11px; cursor: pointer;" 
+                                            onclick="return confirm('Bạn có chắc muốn đổi trạng thái kích hoạt tài khoản này?');">
+                                        <i class="fa-solid me-1" th:classappend="${u.enabled ? 'fa-check' : 'fa-lock'}"></i>
+                                        <span th:text="${u.enabled ? 'Hoạt động' : 'Bị khóa'}">Hoạt động</span>
                                     </button>
                                 </form>
                             </td>
@@ -142,7 +146,7 @@
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
                 <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
                     <div class="d-flex align-items-center gap-2">
-                        <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(245, 158, 11, 0.15); color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                        <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(140, 74, 39, 0.1); color: var(--rebook-leather); display: flex; align-items: center; justify-content: center; font-size: 18px;">
                             <i class="fa-solid fa-user-plus"></i>
                         </div>
                         <h5 class="modal-title fw-bold text-dark" id="modalCreateStaffLabel">Cấp Tài Khoản Nhân Viên</h5>
