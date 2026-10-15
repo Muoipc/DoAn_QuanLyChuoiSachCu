@@ -1662,14 +1662,11 @@
 
             <!-- NẾU LÀ HOME / SEARCH / CONSIGNMENT (CÓ HERO BANNER PHÍA DƯỚI) -> NAV TABS Ở CHÍNH GIỮA HEADER -->
             <nav th:if="${isHome == true}" class="chotot-nav-tabs" style="margin: 0 auto;">
-                <a th:href="@{/}" class="chotot-nav-tab" th:classappend="${activeTab != 'consignment' and activeTab != 'seller' and isHome == true and (selectedCat == null and (selectedQuery == null or selectedQuery == ''))} ? 'active' : ''">
+                <a th:href="@{/}" class="chotot-nav-tab" th:classappend="${activeTab != 'consignment' and isHome == true and (selectedCat == null and (selectedQuery == null or selectedQuery == ''))} ? 'active' : ''">
                     <span class="i18n-text" data-i18n="Sách Cũ">Sách Cũ</span>
                 </a>
                 <a th:href="@{/consignments/create}" class="chotot-nav-tab" th:classappend="${activeTab == 'consignment'} ? 'active' : ''">
                     <span class="i18n-text" data-i18n="Ký Gửi Sách">Ký Gửi Sách</span>
-                </a>
-                <a th:href="@{/seller/register}" class="chotot-nav-tab" th:classappend="${activeTab == 'seller'} ? 'active' : ''">
-                    <span class="i18n-text" data-i18n="Mở Gian Hàng">Mở Gian Hàng</span>
                 </a>
             </nav>
 

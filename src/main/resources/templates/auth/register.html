@@ -262,6 +262,11 @@
             </div>
 
             <div class="header-right-actions">
+                <a th:href="@{/seller/register}" class="auth-help-link" style="color: var(--color-fire); font-weight: 600;">
+                    <i class="fa-solid fa-store me-1"></i>
+                    <span>Mở gian hàng</span>
+                </a>
+                <span style="color: rgba(0,0,0,0.15);">|</span>
                 <a th:href="@{/login}" class="auth-help-link">
                     <span>Đã có tài khoản? Đăng nhập ngay</span>
                     <i class="fa-solid fa-arrow-right ms-1"></i>
@@ -299,6 +304,7 @@
                         <div><i class="fa-solid fa-circle-check text-success me-2"></i> Miễn phí 100% khi nhận sách tại 5 chi nhánh TP.HCM</div>
                         <div><i class="fa-solid fa-circle-check text-success me-2"></i> Định giá & thẩm định sách cũ hoàn toàn minh bạch</div>
                         <div><i class="fa-solid fa-circle-check text-success me-2"></i> Bảo mật tài khoản với cơ chế OTP xác thực email</div>
+                        <div><i class="fa-solid fa-shop text-warning me-2"></i> Hỗ trợ mở gian hàng đối tác kinh doanh sách cũ tại TP.HCM</div>
                     </div>
                 </div>
 
@@ -365,6 +371,22 @@
 
                     <div style="text-align:center; font-size:12.5px; color:#78716C; margin-top:16px;">
                         Đã có tài khoản? <a th:href="@{/login}" style="color:var(--color-fire); font-weight:700;">Đăng nhập</a>
+                    </div>
+
+                    <!-- KHỐI MỞ GIAN HÀNG DÀNH CHO ĐỐI TÁC / NGƯỜI BÁN -->
+                    <div style="margin-top:20px; padding:14px 16px; background:#FAF6F0; border:1px solid #ECE7DE; border-radius:12px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width:34px; height:34px; border-radius:8px; background:#8C4A27; color:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+                            <div style="line-height:1.35;">
+                                <div style="font-size:13px; font-weight:700; color:#1C1917;">Bạn muốn mở gian hàng?</div>
+                                <div style="font-size:11.5px; color:#78716C;">Đăng ký đối tác kinh doanh chuỗi sách cũ</div>
+                            </div>
+                        </div>
+                        <a th:href="@{/seller/register}" style="text-decoration:none; padding:7px 14px; background:#FFFFFF; border:1.5px solid #8C4A27; color:#8C4A27; font-size:12px; font-weight:700; border-radius:8px; white-space:nowrap; transition:all 0.15s ease;">
+                            Mở Gian Hàng &gt;
+                        </a>
                     </div>
                 </div>
 
