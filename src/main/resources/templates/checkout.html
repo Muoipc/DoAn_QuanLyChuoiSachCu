@@ -938,18 +938,18 @@
                                 <span id="summaryShippingFee">0 đ</span>
                             </div>
 
-                            <div class="summary-single-row" style="color:#16a34a;">
+                            <div class="summary-single-row" id="shippingDiscountRow" style="display:none; color:#16a34a;">
                                 <span>Giảm giá phí vận chuyển</span>
-                                <span>-0 đ</span>
+                                <span id="summaryShippingDiscount">-0 đ</span>
                             </div>
 
-                            <div class="summary-single-row" style="color:var(--rebook-leather);">
-                                <span>Tổng cộng Voucher giảm giá</span>
-                                <span id="summaryVoucherDiscount">-20.000 đ</span>
+                            <div class="summary-single-row" id="voucherDiscountRow" style="display:none; color:var(--rebook-leather);">
+                                <span>Voucher giảm giá</span>
+                                <span id="summaryVoucherDiscount">-0 đ</span>
                             </div>
 
-                            <div class="summary-single-row" style="color:var(--rebook-leather);">
-                                <span>Dùng Xu</span>
+                            <div class="summary-single-row" id="coinsDiscountRow" style="display:flex; color:var(--rebook-leather);">
+                                <span>Điểm tích lũy</span>
                                 <span id="summaryCoinsDiscount">-2.000 đ</span>
                             </div>
 
@@ -1080,6 +1080,26 @@
         function calculateFinalTotal() {
             const finalTotal = Math.max(0, rawSubtotal + currentShippingFee - currentVoucherDiscount - currentCoinsDiscount);
             document.getElementById('finalTotalPayDisplay').innerText = formatVND(finalTotal);
+
+            const vRow = document.getElementById('voucherDiscountRow');
+            if (vRow) {
+                if (currentVoucherDiscount > 0) {
+                    vRow.style.display = 'flex';
+                    document.getElementById('summaryVoucherDiscount').innerText = '-' + formatVND(currentVoucherDiscount);
+                } else {
+                    vRow.style.display = 'none';
+                }
+            }
+
+            const cRow = document.getElementById('coinsDiscountRow');
+            if (cRow) {
+                if (currentCoinsDiscount > 0) {
+                    cRow.style.display = 'flex';
+                    document.getElementById('summaryCoinsDiscount').innerText = '-' + formatVND(currentCoinsDiscount);
+                } else {
+                    cRow.style.display = 'none';
+                }
+            }
         }
 
         function selectShippingUnit(radio) {
