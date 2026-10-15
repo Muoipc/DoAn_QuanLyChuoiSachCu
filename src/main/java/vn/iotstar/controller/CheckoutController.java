@@ -54,6 +54,9 @@ public class CheckoutController {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private Long resolveUserId(CustomUserDetails userDetails) {
         if (userDetails != null && userDetails.getId() != null) {
             return userDetails.getId();
@@ -195,11 +198,15 @@ public class CheckoutController {
                 .findFirst()
                 .orElse(addresses.isEmpty() ? null : addresses.get(0));
 
+        User currentUser = userRepository.findById(userId).orElse(null);
+        String receiverName = defaultAddress != null ? defaultAddress.getReceiverName() 
+                : (currentUser != null && currentUser.getFullName() != null && !currentUser.getFullName().isBlank() 
+                    ? currentUser.getFullName() : (currentUser != null ? currentUser.getUsername() : ""));
+        String receiverPhone = defaultAddress != null ? defaultAddress.getPhone() 
+                : (currentUser != null && currentUser.getPhone() != null ? currentUser.getPhone() : "");
         String formattedAddress = defaultAddress != null 
                 ? (defaultAddress.getStreetAddress() + ", " + defaultAddress.getWard() + ", " + defaultAddress.getDistrict() + ", " + defaultAddress.getProvince())
-                : "Số 48 Võ Văn Ngân, Phường Linh Chiểu, TP. Thủ Đức, TP. Hồ Chí Minh";
-        String receiverName = defaultAddress != null ? defaultAddress.getReceiverName() : "Nguyễn Song Hoàng Phúc";
-        String receiverPhone = defaultAddress != null ? defaultAddress.getPhone() : "0912345678";
+                : "";
 
         model.addAttribute("formattedAddress", formattedAddress);
         model.addAttribute("receiverName", receiverName);

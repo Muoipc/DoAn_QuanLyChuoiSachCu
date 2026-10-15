@@ -152,4 +152,121 @@ public class NotificationServiceImpl implements INotificationService {
             notificationRepository.markAllReadForManager(userId, storeId);
         }
     }
+
+    @Override
+    @Transactional
+    public void notifyOrderCreated(vn.iotstar.entity.Order order) {
+        if (order == null) return;
+        // 1. Thông báo cho khách hàng
+        if (order.getUser() != null) {
+            Notification userNotif = new Notification(
+                "Đặt hàng thành công",
+                "Đơn hàng #" + order.getOrderCode() + " đã được ghi nhận vào hệ thống ReBook. Chi nhánh đang chuẩn bị sách cho bạn.",
+                Notification.NotificationType.ORDER,
+                "/orders/" + order.getOrderCode(),
+                order.getStore(),
+                order.getUser(),
+                "ROLE_USER"
+            );
+            notificationRepository.save(userNotif);
+        }
+        // 2. Thông báo cho Quản lý chi nhánh
+        if (order.getStore() != null) {
+            int itemCount = (order.getItems() != null) ? order.getItems().size() : 1;
+            Notification managerNotif = new Notification(
+                "Đơn hàng mới tại chi nhánh",
+                "Có đơn hàng mới #" + order.getOrderCode() + " (" + itemCount + " cuốn sách). Vui lòng xác nhận và đóng gói.",
+                Notification.NotificationType.ORDER,
+                "/admin/orders/" + order.getId(),
+                order.getStore(),
+                order.getStore().getManager(),
+                "ROLE_MANAGER"
+            );
+            notificationRepository.save(managerNotif);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void notifyOrderStatusChanged(vn.iotstar.entity.Order order, vn.iotstar.entity.Order.OrderStatus oldStatus, vn.iotstar.entity.Order.OrderStatus newStatus) {
+        if (order == null || order.getUser() == null || newStatus == null) return;
+        String statusDesc = switch (newStatus) {
+            case CONFIRMED -> "đã được chi nhánh xác nhận và đang đóng gói.";
+            case SHIPPING -> "đang trên đường giao tới bạn.";
+            case DELIVERED -> "đã được giao thành công. Chúc bạn có những phút giây đọc sách thú vị!";
+            case CANCELLED -> "đã được hủy.";
+            case RETURNED -> "đã được hoàn trả về kho chi nhánh.";
+            default -> "vừa được cập nhật trạng thái.";
+        };
+        Notification notif = new Notification(
+            "Cập nhật đơn hàng #" + order.getOrderCode(),
+            "Đơn hàng #" + order.getOrderCode() + " " + statusDesc,
+            Notification.NotificationType.ORDER,
+            "/orders/" + order.getOrderCode(),
+            order.getStore(),
+            order.getUser(),
+            "ROLE_USER"
+        );
+        notificationRepository.save(notif);
+    }
+
+    @Override
+    @Transactional
+    public void notifySupportTicketResolved(vn.iotstar.entity.SupportTicket ticket, vn.iotstar.entity.User recipient) {
+        if (ticket == null || recipient == null) return;
+        Notification notif = new Notification(
+            "Phản hồi yêu cầu hỗ trợ #" + ticket.getId(),
+            "Ban quản trị ReBook đã phản hồi yêu cầu về [" + (ticket.getCategory() != null ? ticket.getCategory() : "Hỗ trợ") + "]: " + 
+                (ticket.getAdminReply() != null ? ticket.getAdminReply() : "Đã xử lý hoàn tất."),
+            Notification.NotificationType.SUPPORT_TICKET,
+            "/user/account/profile?tab=support",
+            null,
+            recipient,
+            "ROLE_USER"
+        );
+        notificationRepository.save(notif);
+    }
+
+    @Override
+    @Transactional
+    public void notifyStoreRegistrationResult(vn.iotstar.entity.StoreRegistration registration) {
+        if (registration == null || registration.getUser() == null) return;
+        boolean approved = registration.getStatus() == vn.iotstar.entity.StoreRegistration.Status.APPROVED;
+        String title = approved ? "Chúc mừng! Gian hàng đã được duyệt" : "Thông báo kết quả mở gian hàng";
+        String msg = approved 
+            ? "Hồ sơ mở gian hàng '" + registration.getStoreName() + "' đã được phê duyệt. Bạn đã là Quản lý chi nhánh!"
+            : "Hồ sơ mở gian hàng '" + registration.getStoreName() + "' chưa đạt: " + registration.getRejectReason();
+        String url = approved ? "/admin/inventory" : "/seller/register";
+
+        Notification notif = new Notification(
+            title,
+            msg,
+            Notification.NotificationType.STORE_REGISTRATION,
+            url,
+            null,
+            registration.getUser(),
+            "ROLE_USER"
+        );
+        notificationRepository.save(notif);
+    }
+
+    @Override
+    public List<Notification> getNotificationsForUser(Long userId) {
+        if (userId == null) return Collections.emptyList();
+        return notificationRepository.findForUser(userId, PageRequest.of(0, 10));
+    }
+
+    @Override
+    public long countUnreadForUser(Long userId) {
+        if (userId == null) return 0;
+        return notificationRepository.countUnreadForUser(userId);
+    }
+
+    @Override
+    @Transactional
+    public void markAllReadForUser(Long userId) {
+        if (userId != null) {
+            notificationRepository.markAllReadForUser(userId);
+        }
+    }
 }

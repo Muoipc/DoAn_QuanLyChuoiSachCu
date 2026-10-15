@@ -20,6 +20,12 @@ public class AdminSupportTicketController {
     @Autowired
     private SupportTicketRepository supportTicketRepository;
 
+    @Autowired
+    private vn.iotstar.repository.UserRepository userRepository;
+
+    @Autowired
+    private vn.iotstar.service.INotificationService notificationService;
+
     /**
      * Danh sách phiếu hỗ trợ & khiếu nại khách hàng
      */
@@ -66,7 +72,15 @@ public class AdminSupportTicketController {
         ticket.setAdminReply(reply != null && !reply.isBlank() ? reply.trim() : "Đã xử lý và liên hệ khách hàng qua điện thoại/email.");
         ticket.setStatus(SupportTicket.TicketStatus.RESOLVED);
         ticket.setResolvedAt(LocalDateTime.now());
-        supportTicketRepository.save(ticket);
+        SupportTicket savedTicket = supportTicketRepository.save(ticket);
+
+        if (savedTicket.getEmail() != null && notificationService != null) {
+            userRepository.findByEmail(savedTicket.getEmail()).ifPresent(u -> {
+                try {
+                    notificationService.notifySupportTicketResolved(savedTicket, u);
+                } catch (Exception ignored) {}
+            });
+        }
 
         redirect.addFlashAttribute("successMessage", "Đã phản hồi và hoàn tất giải quyết phiếu #" + id);
         return "redirect:/admin/support-tickets";

@@ -32,6 +32,9 @@ public class StoreRegistrationServiceImpl implements IStoreRegistrationService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private vn.iotstar.service.INotificationService notificationService;
+
     @Override
     @Transactional
     public StoreRegistration submitRegistration(StoreRegistration registration, User user) {
@@ -115,6 +118,12 @@ public class StoreRegistrationServiceImpl implements IStoreRegistrationService {
         reg.setUpdatedAt(LocalDateTime.now());
         registrationRepository.save(reg);
 
+        if (notificationService != null) {
+            try {
+                notificationService.notifyStoreRegistrationResult(reg);
+            } catch (Exception ignored) {}
+        }
+
         return savedStore;
     }
 
@@ -127,7 +136,14 @@ public class StoreRegistrationServiceImpl implements IStoreRegistrationService {
         reg.setStatus(StoreRegistration.Status.REJECTED);
         reg.setRejectReason(reason != null && !reason.isBlank() ? reason.trim() : "Hồ sơ chưa đạt tiêu chuẩn quy định của sàn ReBook.");
         reg.setUpdatedAt(LocalDateTime.now());
-        return registrationRepository.save(reg);
+        StoreRegistration saved = registrationRepository.save(reg);
+
+        if (notificationService != null) {
+            try {
+                notificationService.notifyStoreRegistrationResult(saved);
+            } catch (Exception ignored) {}
+        }
+        return saved;
     }
 
     @Override

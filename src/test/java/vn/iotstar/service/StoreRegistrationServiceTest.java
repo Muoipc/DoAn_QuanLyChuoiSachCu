@@ -33,6 +33,8 @@ class StoreRegistrationServiceTest {
     private UserRepository userRepository;
     @Mock
     private RoleRepository roleRepository;
+    @Mock
+    private INotificationService notificationService;
 
     @InjectMocks
     private StoreRegistrationServiceImpl registrationService;

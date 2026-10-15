@@ -1200,9 +1200,19 @@
                         if (data.followed) {
                             btn.classList.add('followed');
                             btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Đã Theo Dõi';
+                            var countEl = document.getElementById('storeFollowersCount');
+                            if (countEl) {
+                                var cur = parseInt(countEl.innerText.replace(/,/g, '').replace(/\./g, '')) || 0;
+                                countEl.innerText = new Intl.NumberFormat('vi-VN').format(cur + 1);
+                            }
                         } else {
                             btn.classList.remove('followed');
                             btn.innerHTML = '<i class="fa-solid fa-plus me-1"></i> Theo Dõi';
+                            var countEl = document.getElementById('storeFollowersCount');
+                            if (countEl) {
+                                var cur = parseInt(countEl.innerText.replace(/,/g, '').replace(/\./g, '')) || 1;
+                                countEl.innerText = new Intl.NumberFormat('vi-VN').format(Math.max(0, cur - 1));
+                            }
                         }
                     } else if (data.requireLogin) {
                         window.location.href = '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search);

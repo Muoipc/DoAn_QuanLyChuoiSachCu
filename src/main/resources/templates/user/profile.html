@@ -484,8 +484,8 @@
         <aside class="account-sidebar-card profile-sidebar">
             <!-- Header User Card -->
             <div class="user-quick-profile">
-                <img th:src="${user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
-                     alt="Avatar" class="sidebar-avatar-img">
+                <img th:src="${user.avatar != null && !#strings.isEmpty(user.avatar) ? user.avatar : '/images/avatars/avatar-default.png'}" 
+                     alt="Avatar" class="sidebar-avatar-img" onerror="this.src='/images/avatars/avatar-default.png';">
                 <div style="overflow:hidden;">
                     <div class="sidebar-user-name" th:text="${user.fullName}">Nguyễn Song Hoàng Phúc</div>
                     <a th:href="@{/user/account/profile?tab=profile}" class="sidebar-edit-link">
@@ -537,6 +537,12 @@
                 <a th:href="@{/user/vouchers}" class="single-nav-item">
                     <i class="fa-solid fa-wallet" style="color:#ee4d2d;"></i>
                     <span>Ví Voucher Của Tôi</span>
+                </a>
+
+                <!-- Group 6: Hỗ Trợ & Khiếu Nại -->
+                <a th:href="@{/user/account/profile?tab=support}" class="single-nav-item" th:classappend="${activeTab == 'support' ? 'active' : ''}">
+                    <i class="fa-solid fa-headset" style="color:#8C4A27;"></i>
+                    <span>Phiếu Hỗ Trợ (<span th:text="${userTickets != null ? userTickets.size() : 0}">0</span>)</span>
                 </a>
             </nav>
         </aside>
@@ -628,8 +634,8 @@
                     <!-- Avatar Box 35% bên phải -->
                     <div class="profile-avatar-right">
                         <div class="large-avatar-wrap">
-                            <img th:src="${user.avatar != null ? user.avatar : 'https://res.cloudinary.com/demo/image/upload/v1/samples/people/jazz-singer.jpg'}" 
-                                 alt="Avatar Lớn" class="large-avatar-img" id="avatarPreview">
+                            <img th:src="${user.avatar != null && !#strings.isEmpty(user.avatar) ? user.avatar : '/images/avatars/avatar-default.png'}" 
+                                 alt="Avatar Lớn" class="large-avatar-img" id="avatarPreview" onerror="this.src='/images/avatars/avatar-default.png';">
                         </div>
                         <input type="file" id="realAvatarInput" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="uploadRealAvatar(this)">
                         <button type="button" class="btn-choose-avatar" onclick="document.getElementById('realAvatarInput').click()">
@@ -781,6 +787,60 @@
                         </div>
                     </div>
                 </form>
+            </div>
+
+            <!-- ================= TAB 4: PHIẾU HỖ TRỢ & KHIẾU NẠI ================= -->
+            <div th:if="${activeTab == 'support'}">
+                <div class="main-card-header d-flex justify-content-between align-items-center" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h1 class="main-card-title">Phiếu Hỗ Trợ &amp; Khiếu Nại</h1>
+                        <p class="main-card-sub">Theo dõi tiến độ xử lý và câu trả lời từ Ban quản trị ReBook cho các yêu cầu của bạn</p>
+                    </div>
+                    <a th:href="@{/help#contact-form}" target="_blank" style="padding:8px 18px; border-radius:10px; background:#8C4A27; color:#fff; text-decoration:none; font-size:13px; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="fa-solid fa-plus"></i> Gửi Yêu Cầu Mới
+                    </a>
+                </div>
+
+                <div th:if="${userTickets == null or userTickets.isEmpty()}" style="padding:48px 20px; text-align:center; color:#78716C;">
+                    <i class="fa-solid fa-headset fa-3x mb-3 d-block opacity-40" style="color:#A8A29E;"></i>
+                    <h3 style="font-size:16px; font-weight:700; color:#1C1917; margin-bottom:6px;">Bạn chưa gửi phiếu hỗ trợ nào</h3>
+                    <p style="font-size:13px; max-width:480px; margin:0 auto 18px;">Nếu cần trợ giúp về đơn hàng, đổi trả sách cũ, thẩm định ký gửi hoặc tư vấn, hãy gửi phiếu trực tuyến tại Trung tâm hỗ trợ.</p>
+                    <a th:href="@{/help#contact-form}" style="color:#8C4A27; font-weight:700; text-decoration:none;">Đến Trang Trợ Giúp &gt;</a>
+                </div>
+
+                <div th:if="${userTickets != null and !userTickets.isEmpty()}" style="display:flex; flex-direction:column; gap:16px; margin-top:16px;">
+                    <div th:each="t : ${userTickets}" style="background:#FAF8F5; border:1px solid #ECE7DE; border-radius:14px; padding:18px 20px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <strong style="font-size:14px; color:#1C1917;" th:text="'Phiếu #' + ${t.id} + ' — ' + ${t.category}">Phiếu #1</strong>
+                                <span th:if="${t.orderCode != null and !t.orderCode.isEmpty()}" style="font-size:12px; background:#FFFFFF; border:1px solid #E5DFD5; padding:2px 8px; border-radius:6px; font-family:monospace; color:#8C4A27;" th:text="'Đơn: ' + ${t.orderCode}">ORD123</span>
+                            </div>
+                            <div>
+                                <span th:if="${t.status.name() == 'OPEN'}" style="background:#FEF3C7; color:#92400E; padding:4px 10px; border-radius:9999px; font-size:11.5px; font-weight:700;">
+                                    <i class="fa-solid fa-hourglass-half me-1"></i>Đang Xử Lý
+                                </span>
+                                <span th:if="${t.status.name() == 'RESOLVED'}" style="background:#D1FAE5; color:#065F46; padding:4px 10px; border-radius:9999px; font-size:11.5px; font-weight:700;">
+                                    <i class="fa-solid fa-circle-check me-1"></i>Đã Giải Quyết
+                                </span>
+                            </div>
+                        </div>
+
+                        <div style="font-size:13px; color:#44403C; line-height:1.5; margin-bottom:10px; background:#FFFFFF; padding:12px 14px; border-radius:10px; border:1px solid #F0ECE4;">
+                            <strong style="color:#78716C; font-size:12px; display:block; margin-bottom:4px;">Nội dung bạn gửi:</strong>
+                            <span th:text="${t.message}">Nội dung...</span>
+                        </div>
+
+                        <div th:if="${t.adminReply != null and !t.adminReply.isEmpty()}" style="font-size:13px; line-height:1.5; background:#ECFDF5; border:1px solid #A7F3D0; padding:12px 14px; border-radius:10px; color:#065F46;">
+                            <strong style="display:block; margin-bottom:4px;"><i class="fa-solid fa-reply me-1"></i>Phản hồi từ Ban Quản Trị ReBook:</strong>
+                            <span th:text="${t.adminReply}">Nội dung phản hồi...</span>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11.5px; color:#A8A29E;">
+                            <span th:text="'Gửi lúc: ' + ${#temporals.format(t.createdAt, 'HH:mm dd/MM/yyyy')}">10:00 15/10/2026</span>
+                            <span th:if="${t.resolvedAt != null}" th:text="'Giải quyết lúc: ' + ${#temporals.format(t.resolvedAt, 'HH:mm dd/MM/yyyy')}">11:00 15/10/2026</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </section>

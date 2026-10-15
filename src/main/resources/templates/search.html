@@ -1397,7 +1397,7 @@
                         </div>
 
                         <div class="price-row">
-                            <span class="price-text" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                            <span class="price-text" th:text="${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">68.000 đ</span>
                             <span class="sold-text" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
                         </div>
                     </div>

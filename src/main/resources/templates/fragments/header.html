@@ -1673,46 +1673,21 @@
             <!-- Nhóm nút hành động Header bên phải -->
             <div style="display:flex; align-items:center; gap:14px; flex-shrink:0;">
                 <!-- 1. Nút Thông Báo hình tròn ngoài Header kèm Popover -->
-                <div class="shopee-noti-wrapper">
+                <div class="shopee-noti-wrapper" id="headerNotiWrapper" onmouseenter="loadHeaderUserNotifications()">
                     <a th:href="@{/orders}" class="chotot-circle-btn" aria-label="Thông báo" title="Thông báo">
                         <i class="fa-regular fa-bell"></i>
-                        <span sec:authorize="isAuthenticated()" class="notification-badge" style="position:absolute; top:-2px; right:-2px; background:#EE4D2D; width:8px; height:8px; border-radius:9999px; border:1.5px solid #ffffff;"></span>
+                        <span id="headerNotiBadge" class="notification-badge" style="display:none; position:absolute; top:-2px; right:-2px; background:#EE4D2D; width:8px; height:8px; border-radius:9999px; border:1.5px solid #ffffff;"></span>
                     </a>
                     <div class="shopee-noti-popover">
-                        <div class="noti-popover-header">Thông Báo Mới Nhận</div>
-                        <div class="noti-popover-list">
-                            <!-- Thông báo 1: Ưu đãi sách cũ -->
-                            <a th:href="@{/search}" class="noti-item unread">
-                                <img th:src="@{/images/books/book_1.jpg}" alt="Ưu đãi" class="noti-thumb">
-                                <div class="noti-body">
-                                    <h4 class="noti-title">NGÀNH HÀNG SÁCH CŨ TUNG MÃ GIẢM ĐẾN 50.000₫</h4>
-                                    <p class="noti-desc">🎉 Thêm mã trợ giá sinh viên đơn từ 120.000₫ 💯 Vô vàn giáo trình HCMUTE chỉ từ 20K đang chờ bạn!</p>
-                                </div>
-                            </a>
-
-                            <!-- Thông báo 2: Cập nhật đơn hàng -->
-                            <a th:href="@{/orders}" class="noti-item unread">
-                                <img th:src="@{/images/books/book_2.jpg}" alt="Đơn hàng" class="noti-thumb">
-                                <div class="noti-body">
-                                    <h4 class="noti-title">Theo dõi tiến trình đơn hàng &amp; giao nhận</h4>
-                                    <p class="noti-desc">📦 Toàn bộ đơn hàng được đóng gói và giao nhanh trong 1-2 ngày. Bấm để xem chi tiết lịch sử đơn.</p>
-                                </div>
-                            </a>
-
-                            <!-- Thông báo 3: Hàng mới về kèm preview ảnh -->
-                            <a th:href="@{/search?cat=2}" class="noti-item">
-                                <img th:src="@{/images/books/book_15.jpg}" alt="Sách mới" class="noti-thumb">
-                                <div class="noti-body">
-                                    <h4 class="noti-title">"Giáo Trình Cấu Trúc Dữ Liệu & Giải Thuật" đã có lại hàng...</h4>
-                                    <p class="noti-desc">🎉 5 cuốn độ mới 90-95% vừa về kệ tại 5 chi nhánh TP.HCM 🛒 Nhấn để chọn cuốn đẹp nhất!</p>
-                                    <div class="noti-preview-grid">
-                                        <img th:src="@{/images/books/book_15.jpg}" alt="P1">
-                                        <img th:src="@{/images/books/book_16.jpg}" alt="P2">
-                                        <img th:src="@{/images/books/book_17.jpg}" alt="P3">
-                                        <img th:src="@{/images/books/book_18.jpg}" alt="P4">
-                                    </div>
-                                </div>
-                            </a>
+                        <div class="noti-popover-header d-flex justify-content-between align-items-center" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>Thông Báo Mới Nhận</span>
+                            <button type="button" onclick="markAllNotificationsRead(event)" style="background:none; border:none; font-size:11px; color:#8C4A27; cursor:pointer; font-weight:600; padding:0;">Đọc tất cả</button>
+                        </div>
+                        <div class="noti-popover-list" id="headerNotiList">
+                            <div style="padding:28px 16px; text-align:center; color:#78716C; font-size:12.5px;">
+                                <i class="fa-solid fa-spinner fa-spin fa-2x mb-2 d-block opacity-50"></i>
+                                Đang tải thông báo...
+                            </div>
                         </div>
                         <a th:href="@{/orders}" class="noti-popover-footer">Xem Lịch Sử Đơn Hàng</a>
                     </div>
@@ -2043,6 +2018,89 @@
 
     <!-- SCRIPT ĐIỀU KHIỂN CHUNG CHO HEADER & TOAST/MODAL TOÀN CỤC -->
     <script>
+        // ================= DYNAMIC NOTIFICATION SYSTEM (CLIENT) =================
+        function loadHeaderUserNotifications() {
+            var listEl = document.getElementById('headerNotiList');
+            var badgeEl = document.getElementById('headerNotiBadge');
+            if (!listEl) return;
+
+            fetch('/api/notifications')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (badgeEl) {
+                        if (data.unreadCount > 0) {
+                            badgeEl.style.display = 'block';
+                            badgeEl.innerText = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                        } else {
+                            badgeEl.style.display = 'none';
+                        }
+                    }
+
+                    if (!data.authenticated) {
+                        listEl.innerHTML = '<div style="padding:24px 16px; text-align:center; color:#78716C; font-size:12.5px;">' +
+                            '<i class="fa-solid fa-lock fa-2x mb-2 d-block opacity-50" style="color:#A8A29E;"></i>' +
+                            'Đăng nhập để xem cập nhật đơn hàng &amp; ưu đãi.' +
+                            '<div style="margin-top:10px;"><a href="/login" class="btn-chotot-login" style="padding:5px 16px; font-size:12px; display:inline-block;">Đăng Nhập</a></div></div>';
+                        return;
+                    }
+
+                    if (!data.notifications || data.notifications.length === 0) {
+                        listEl.innerHTML = '<div style="padding:28px 16px; text-align:center; color:#78716C; font-size:12.5px;">' +
+                            '<i class="fa-regular fa-bell-slash fa-2x mb-2 d-block opacity-50" style="color:#A8A29E;"></i>' +
+                            'Chưa có thông báo mới nào.<br>Cập nhật đơn hàng &amp; ưu đãi sẽ xuất hiện tại đây!</div>';
+                        return;
+                    }
+
+                    var html = '';
+                    data.notifications.forEach(function(n) {
+                        var unreadClass = !n.isRead ? 'unread' : '';
+                        var iconClass = 'fa-solid fa-box text-danger';
+                        if (n.type === 'SUPPORT_TICKET') iconClass = 'fa-solid fa-headset text-primary';
+                        else if (n.type === 'STORE_REGISTRATION') iconClass = 'fa-solid fa-store text-warning';
+                        else if (n.type === 'CONSIGNMENT') iconClass = 'fa-solid fa-hand-holding-dollar text-success';
+
+                        html += '<a href="' + n.targetUrl + '" class="noti-item ' + unreadClass + '" onclick="markHeaderNotiRead(' + n.id + ')">' +
+                            '<div style="width:38px; height:38px; border-radius:10px; background:#FAF6F0; border:1px solid #ECE7DE; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;">' +
+                                '<i class="' + iconClass + '"></i>' +
+                            '</div>' +
+                            '<div class="noti-body" style="flex:1; min-width:0;">' +
+                                '<h4 class="noti-title" style="font-size:12.5px; font-weight:700; color:#1C1917; margin:0 0 3px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + escapeMiniHtml(n.title) + '</h4>' +
+                                '<p class="noti-desc" style="font-size:11.5px; color:#57534E; margin:0 0 4px 0; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">' + escapeMiniHtml(n.message) + '</p>' +
+                                '<span class="noti-time" style="font-size:10.5px; color:#A8A29E;">' + escapeMiniHtml(n.time) + '</span>' +
+                            '</div>' +
+                        '</a>';
+                    });
+                    listEl.innerHTML = html;
+                })
+                .catch(function(err) {
+                    console.error('Lỗi tải thông báo header:', err);
+                });
+        }
+
+        function markHeaderNotiRead(id) {
+            fetch('/api/notifications/' + id + '/read', { method: 'POST' }).catch(function(){});
+        }
+
+        function markAllNotificationsRead(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            fetch('/api/notifications/read-all', { method: 'POST' })
+                .then(function() {
+                    loadHeaderUserNotifications();
+                });
+        }
+
+        // Tự động kiểm tra số lượng thông báo chưa đọc khi tải trang
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/notifications')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var badgeEl = document.getElementById('headerNotiBadge');
+                    if (badgeEl && data.unreadCount > 0) {
+                        badgeEl.style.display = 'block';
+                        badgeEl.innerText = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                    }
+                }).catch(function(){});
+        });
         // ================= HÀM ĐIỀU KHIỂN BỘ LỌC CHỢ TỐT POPOVER (KHỚP 100% ẢNH IMAGE_6B7338.PNG) =================
         function toggleChototFilterPopover(event) {
             if (event) {

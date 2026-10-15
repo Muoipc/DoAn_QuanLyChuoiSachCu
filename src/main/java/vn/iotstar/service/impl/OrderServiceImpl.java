@@ -57,6 +57,9 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private vn.iotstar.repository.UserVoucherRepository userVoucherRepository;
 
+    @Autowired
+    private vn.iotstar.service.INotificationService notificationService;
+
     @Override
     public Order createOrderFromCart(
             Long userId,
@@ -219,6 +222,12 @@ public class OrderServiceImpl implements IOrderService {
                         "Đơn hàng mới #" + savedOrder.getOrderCode() + " - " + savedOrder.getReceiverName()
                 );
                 messagingTemplate.convertAndSend("/topic/admin-orders", notif);
+            } catch (Exception ignored) {}
+        }
+
+        if (notificationService != null) {
+            try {
+                notificationService.notifyOrderCreated(savedOrder);
             } catch (Exception ignored) {}
         }
 
@@ -391,6 +400,12 @@ public class OrderServiceImpl implements IOrderService {
 
         // Ghi chú cho Cường: Tuyệt đối KHÔNG xóa hay can thiệp giỏ hàng (không gọi cartService.clearCart)
 
+        if (notificationService != null) {
+            try {
+                notificationService.notifyOrderCreated(savedOrder);
+            } catch (Exception ignored) {}
+        }
+
         return savedOrder;
     }
 
@@ -411,9 +426,16 @@ public class OrderServiceImpl implements IOrderService {
         Optional<Order> orderOpt = orderRepository.findByOrderCode(orderCode);
         if (orderOpt.isPresent()) {
             Order order = orderOpt.get();
+            Order.OrderStatus oldStatus = order.getOrderStatus();
             order.setPaymentStatus(Order.PaymentStatus.PAID);
             order.setOrderStatus(Order.OrderStatus.CONFIRMED);
             orderRepository.save(order);
+
+            if (notificationService != null) {
+                try {
+                    notificationService.notifyOrderStatusChanged(order, oldStatus, Order.OrderStatus.CONFIRMED);
+                } catch (Exception ignored) {}
+            }
         }
     }
 
@@ -519,6 +541,12 @@ public class OrderServiceImpl implements IOrderService {
                         "Đơn hàng #" + updated.getOrderCode() + " đã chuyển sang: " + newStatus.name()
                 );
                 messagingTemplate.convertAndSend("/topic/admin-orders", notif);
+            } catch (Exception ignored) {}
+        }
+
+        if (notificationService != null) {
+            try {
+                notificationService.notifyOrderStatusChanged(updated, oldStatus, newStatus);
             } catch (Exception ignored) {}
         }
     }
