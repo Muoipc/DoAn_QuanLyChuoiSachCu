@@ -940,6 +940,13 @@
                         <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Thống Kê Báo Cáo' : 'Báo Cáo Chi Nhánh'}">Thống Kê Báo Cáo</span>
                     </a>
                 </li>
+
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/support-tickets')} ? 'active' : ''">
+                    <a th:href="@{/admin/support-tickets}">
+                        <i class="fa-solid fa-headset text-warning"></i>
+                        <span>Phiếu Hỗ Trợ &amp; Khiếu Nại</span>
+                    </a>
+                </li>
             </th:block>
 
             <li class="sidebar-heading">

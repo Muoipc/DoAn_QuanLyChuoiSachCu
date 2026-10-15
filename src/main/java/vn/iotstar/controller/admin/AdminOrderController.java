@@ -171,6 +171,41 @@ public class AdminOrderController {
     }
 
     /**
+     * Cập nhật trạng thái thanh toán đơn hàng (ví dụ: Xác nhận chuyển khoản VietQR)
+     */
+    @PostMapping("/{id}/update-payment")
+    public String updatePaymentStatus(
+            @PathVariable("id") Long id,
+            @RequestParam("paymentStatus") Order.PaymentStatus paymentStatus,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect
+    ) {
+        boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
+        Store managedStore = (userDetails != null) ? storeService.findByManagerId(userDetails.getId()) : null;
+
+        Order order = orderService.findById(id);
+        if (order == null) {
+            redirect.addFlashAttribute("errorMessage", "Không tìm thấy đơn hàng!");
+            return "redirect:/admin/orders";
+        }
+
+        if (!isAdmin) {
+            if (managedStore == null || order.getStore() == null || !managedStore.getId().equals(order.getStore().getId())) {
+                redirect.addFlashAttribute("errorMessage", "Bạn không có quyền cập nhật đơn hàng của chi nhánh khác!");
+                return "redirect:/admin/orders";
+            }
+        }
+
+        try {
+            orderService.updatePaymentStatus(id, paymentStatus);
+            redirect.addFlashAttribute("successMessage", "Đã cập nhật trạng thái thanh toán thành: " + paymentStatus.name());
+        } catch (Exception e) {
+            redirect.addFlashAttribute("errorMessage", "Lỗi: " + e.getMessage());
+        }
+        return "redirect:/admin/orders/" + id;
+    }
+
+    /**
      * Phân công nhân viên giao hàng (Shipper) cho đơn hàng
      */
     @PostMapping("/{id}/assign-shipper")

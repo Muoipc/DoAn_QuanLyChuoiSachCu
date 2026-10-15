@@ -51,6 +51,7 @@ public class SellerRegistrationController {
 
         model.addAttribute("user", currentUser);
         model.addAttribute("latestReg", latestReg);
+        model.addAttribute("activeTab", "seller");
 
         if (latestReg == null || latestReg.getStatus() == StoreRegistration.Status.REJECTED) {
             StoreRegistration newReg = new StoreRegistration();

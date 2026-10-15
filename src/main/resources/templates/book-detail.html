@@ -1736,17 +1736,17 @@
                 <div class="shop-stat-col">
                     <div class="shop-stat-item">
                         <span class="stat-label">Đánh Giá:</span>
-                        <span class="stat-val highlight">4.9k</span>
+                        <span class="stat-val highlight" th:text="${avgRating != null and avgRating != '0.0' ? avgRating : '4.9'}">4.9</span>
                     </div>
                     <div class="shop-stat-item">
                         <span class="stat-label">Sản Phẩm:</span>
-                        <span class="stat-val highlight" th:text="${totalStock != null ? totalStock + '+' : '185+'}">185+</span>
+                        <span class="stat-val highlight" th:text="${storeBookCount != null ? storeBookCount : (totalStock != null ? totalStock : '60+')}">60+</span>
                     </div>
                 </div>
                 <div class="shop-stat-col">
                     <div class="shop-stat-item">
                         <span class="stat-label">Tỉ Lệ Phản Hồi:</span>
-                        <span class="stat-val highlight">99%</span>
+                        <span class="stat-val highlight">100%</span>
                     </div>
                     <div class="shop-stat-item">
                         <span class="stat-label">Thời Gian Phản Hồi:</span>
@@ -1756,11 +1756,11 @@
                 <div class="shop-stat-col">
                     <div class="shop-stat-item">
                         <span class="stat-label">Tham Gia:</span>
-                        <span class="stat-val">3 Năm Trước</span>
+                        <span class="stat-val" th:text="${storeJoinYear != null ? storeJoinYear : '2024'}">2024</span>
                     </div>
                     <div class="shop-stat-item">
                         <span class="stat-label">Người Theo Dõi:</span>
-                        <span class="stat-val">12.8k</span>
+                        <span class="stat-val" th:text="${storeFollowers != null ? storeFollowers : '850'}">850</span>
                     </div>
                 </div>
             </div>

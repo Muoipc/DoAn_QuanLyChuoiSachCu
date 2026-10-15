@@ -10,4 +10,5 @@ import java.util.List;
 public interface SupportTicketRepository extends JpaRepository<SupportTicket, Long> {
     List<SupportTicket> findByStatusOrderByCreatedAtDesc(SupportTicket.TicketStatus status);
     List<SupportTicket> findAllByOrderByCreatedAtDesc();
+    long countByStatus(SupportTicket.TicketStatus status);
 }

@@ -99,6 +99,7 @@ public class SecurityConfig {
                     "/admin/orders", "/admin/orders/**",
                     "/admin/consignments", "/admin/consignments/**",
                     "/admin/reports", "/admin/reports/**",
+                    "/admin/support-tickets", "/admin/support-tickets/**",
                     "/store-manager/**"
                 ).hasAnyRole("ADMIN", "MANAGER")
                 // 3. Mọi route admin còn lại mặc định thuộc ADMIN

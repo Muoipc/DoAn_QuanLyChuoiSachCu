@@ -43,6 +43,8 @@ const I18N_DICTIONARY = {
         'Gặp nhân viên quầy': 'Gặp nhân viên quầy',
         'Kênh Người Bán': 'Kênh Người Bán',
         'Mở Gian Hàng': 'Mở Gian Hàng',
+        'Sách Cũ': 'Sách Cũ',
+        'Ký Gửi Sách': 'Ký Gửi Sách',
         'Đăng Ký Mở Cửa Hàng': 'Đăng Ký Mở Cửa Hàng',
         'Hồ Sơ Đang Chờ Duyệt': 'Hồ Sơ Đang Chờ Duyệt',
         'Gian Hàng Đã Được Duyệt': 'Gian Hàng Đã Được Duyệt'
@@ -84,6 +86,8 @@ const I18N_DICTIONARY = {
         'Gặp nhân viên quầy': 'Talk to Staff',
         'Kênh Người Bán': 'Seller Centre',
         'Mở Gian Hàng': 'Open a Store',
+        'Sách Cũ': 'Used Books',
+        'Ký Gửi Sách': 'Consign Books',
         'Đăng Ký Mở Cửa Hàng': 'Store Registration',
         'Hồ Sơ Đang Chờ Duyệt': 'Application Pending',
         'Gian Hàng Đã Được Duyệt': 'Store Approved'

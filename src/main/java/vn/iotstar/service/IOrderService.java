@@ -82,6 +82,11 @@ public interface IOrderService {
      */
     void updatePaymentSuccess(String orderCode, String transactionId);
 
+    /**
+     * Cập nhật trạng thái thanh toán (UNPAID, PAID, REFUNDED).
+     */
+    void updatePaymentStatus(Long orderId, Order.PaymentStatus status);
+
     org.springframework.data.domain.Page<Order> searchAdminOrders(
         String keyword, Order.OrderStatus status, Long storeId, Order.DeliveryMethod deliveryMethod, org.springframework.data.domain.Pageable pageable
     );

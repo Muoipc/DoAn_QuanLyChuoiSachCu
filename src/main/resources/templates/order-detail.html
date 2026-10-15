@@ -750,9 +750,27 @@
             <div class="breakdown-row" style="margin-top:6px; font-size:13px;">
                 <span>Phương thức thanh toán:</span>
                 <span class="breakdown-val" style="color:var(--color-book-primary); font-weight:800;"
-                      th:text="${order.paymentMethod != null ? order.paymentMethod.name() : 'COD'}">
+                      th:text="${order.paymentMethod != null ? (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'Chuyển khoản VietQR 24/7' : (order.paymentMethod.name() == 'VNPAY' ? 'Cổng trực tuyến VNPay' : 'COD (Thanh toán khi nhận hàng)')) : 'COD'}">
                     COD (Thanh toán khi nhận hàng)
                 </span>
+            </div>
+
+            <!-- Khối Quét Mã VietQR cho đơn chưa thanh toán -->
+            <div th:if="${order.paymentStatus.name() != 'PAID' and order.orderStatus.name() != 'CANCELLED'}"
+                 style="background:#FAF8F5; border:1px solid #ECE7DE; border-radius:12px; padding:16px; margin-top:16px;">
+                <div style="font-weight:700; color:#1C1917; font-size:13px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-qrcode text-primary"></i> Quét mã VietQR chuyển khoản (MBBank):
+                </div>
+                <div style="display:flex; flex-wrap:wrap; align-items:center; gap:16px;">
+                    <img th:src="'https://img.vietqr.io/image/MB-0382345678-compact2.png?amount=' + ${order.finalAmount.longValue()} + '&addInfo=' + ${order.orderCode} + '&accountName=REBOOK%20CHUOI%20SACH%20CU'" 
+                         alt="QR VietQR" style="width:140px; height:140px; border-radius:8px; border:1px solid #ECE7DE; background:#fff; padding:6px;">
+                    <div style="font-size:12px; color:#57534E; line-height:1.6;">
+                        <div>• Ngân hàng: <strong>MBBank (Ngân Hàng Quân Đội)</strong></div>
+                        <div>• Số tài khoản: <strong>0382345678</strong> (REBOOK CHUOI SACH CU)</div>
+                        <div>• Số tiền: <strong style="color:#DC2626;" th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫73.000</strong></div>
+                        <div>• Nội dung CK: <strong style="color:#991B1B;" th:text="${order.orderCode}">ORD123456</strong></div>
+                    </div>
+                </div>
             </div>
         </div>
 

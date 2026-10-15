@@ -925,17 +925,17 @@
                     <div class="shop-stat-box">
                         <i class="fa-solid fa-users stat-icon"></i>
                         <span class="stat-name">Người Theo Dõi:</span>
-                        <span class="stat-value">12,8k</span>
+                        <span class="stat-value" id="storeFollowersCount" th:text="${followersCount != null ? #numbers.formatDecimal(followersCount, 0, 'POINT', 0, 'COMMA') : '850'}">850</span>
                     </div>
                     <div class="shop-stat-box">
                         <i class="fa-solid fa-star stat-icon"></i>
                         <span class="stat-name">Đánh Giá:</span>
-                        <span class="stat-value">4.9 (4,9k Đánh Giá)</span>
+                        <span class="stat-value">4.9 (98% Hài Lòng)</span>
                     </div>
                     <div class="shop-stat-box">
                         <i class="fa-solid fa-user-check stat-icon"></i>
                         <span class="stat-name">Tham Gia:</span>
-                        <span class="stat-value">3 Năm Trước</span>
+                        <span class="stat-value" th:text="${joinYear != null ? joinYear : '2024'}">2024</span>
                     </div>
                     <div class="shop-stat-box">
                         <i class="fa-solid fa-circle-exclamation stat-icon" style="color:#ee4d2d;"></i>

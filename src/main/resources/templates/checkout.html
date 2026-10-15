@@ -911,9 +911,14 @@
                             <span>Thanh toán khi nhận hàng</span>
                         </div>
 
+                        <div class="payment-option-pill" id="payOptQr" onclick="selectPaymentMethod('BANK_TRANSFER')">
+                            <i class="fa-solid fa-qrcode" style="color:#0284C7;"></i>
+                            <span>Chuyển khoản VietQR (24/7)</span>
+                        </div>
+
                         <div class="payment-option-pill" id="payOptVnpay" onclick="selectPaymentMethod('VNPAY')">
-                            <i class="fa-solid fa-qrcode text-primary"></i>
-                            <span>VNPay (QR / Thẻ ATM / Visa)</span>
+                            <i class="fa-solid fa-credit-card text-primary"></i>
+                            <span>VNPay (ATM / Visa)</span>
                         </div>
                     </div>
 
@@ -1148,21 +1153,28 @@
             document.getElementById('inputStoreId').value = radio.value;
         }
 
-        // 2. Chuyển đổi phương thức thanh toán (COD vs VNPay)
+        // 2. Chuyển đổi phương thức thanh toán (COD vs VietQR vs VNPay)
         function selectPaymentMethod(method) {
             const optCod = document.getElementById('payOptCod');
+            const optQr = document.getElementById('payOptQr');
             const optVnpay = document.getElementById('payOptVnpay');
             const descBox = document.getElementById('paymentDescBox');
             const inputPayment = document.getElementById('inputPaymentMethod');
 
+            if (optCod) optCod.classList.remove('active');
+            if (optQr) optQr.classList.remove('active');
+            if (optVnpay) optVnpay.classList.remove('active');
+
             if (method === 'VNPAY') {
-                optVnpay.classList.add('active');
-                optCod.classList.remove('active');
+                if (optVnpay) optVnpay.classList.add('active');
                 inputPayment.value = 'VNPAY';
-                descBox.innerHTML = '<i class="fa-solid fa-qrcode text-primary me-1"></i> <strong>VNPay:</strong> Quét mã VNPAY-QR hoặc thẻ ATM / Internet Banking / Visa.';
+                descBox.innerHTML = '<i class="fa-solid fa-credit-card text-primary me-1"></i> <strong>VNPay:</strong> Thanh toán qua cổng VNPay Sandbox bằng thẻ ATM nội địa / Visa / Mastercard.';
+            } else if (method === 'BANK_TRANSFER' || method === 'VIETQR') {
+                if (optQr) optQr.classList.add('active');
+                inputPayment.value = 'BANK_TRANSFER';
+                descBox.innerHTML = '<i class="fa-solid fa-qrcode text-info me-1"></i> <strong>Chuyển khoản VietQR:</strong> Quét mã QR chuyển khoản tức thì 24/7 từ mọi App ngân hàng (Vietcombank, MB, Techcombank, MoMo...). Nhận sách nhanh hơn.';
             } else {
-                optCod.classList.add('active');
-                optVnpay.classList.remove('active');
+                if (optCod) optCod.classList.add('active');
                 inputPayment.value = 'COD';
                 descBox.innerHTML = '<i class="fa-solid fa-circle-check text-success me-1"></i> <strong>Thanh toán khi nhận hàng:</strong> Thanh toán tiền mặt khi nhận hàng. Được đồng kiểm tra sách trước khi thanh toán.';
             }

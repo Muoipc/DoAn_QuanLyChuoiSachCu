@@ -91,7 +91,7 @@ public class Order {
     private LocalDateTime updatedAt;
 
     public enum DeliveryMethod { HOME_DELIVERY, STORE_PICKUP }
-    public enum PaymentMethod { COD, VNPAY }
+    public enum PaymentMethod { COD, VNPAY, BANK_TRANSFER }
     public enum PaymentStatus { UNPAID, PAID, REFUNDED }
     public enum OrderStatus { NEW, CONFIRMED, SHIPPING, DELIVERED, CANCELLED, RETURNED }
 

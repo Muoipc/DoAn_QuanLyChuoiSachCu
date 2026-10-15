@@ -418,6 +418,18 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
+    @Transactional
+    public void updatePaymentStatus(Long orderId, Order.PaymentStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng mã #" + orderId));
+        order.setPaymentStatus(status);
+        if (status == Order.PaymentStatus.PAID && order.getOrderStatus() == Order.OrderStatus.NEW) {
+            order.setOrderStatus(Order.OrderStatus.CONFIRMED);
+        }
+        orderRepository.save(order);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public org.springframework.data.domain.Page<Order> searchAdminOrders(
             String keyword, Order.OrderStatus status, Long storeId, Order.DeliveryMethod deliveryMethod, org.springframework.data.domain.Pageable pageable) {

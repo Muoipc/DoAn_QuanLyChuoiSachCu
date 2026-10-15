@@ -14,6 +14,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     Optional<Inventory> findByStoreIdAndBookId(Long storeId, Long bookId);
     List<Inventory> findByBookId(Long bookId);
     List<Inventory> findByStoreId(Long storeId);
+    long countByStoreId(Long storeId);
 
     /**
      * Ghi chú cho Cường: Lấy toàn bộ danh sách tồn kho của cuốn sách tại 5 chi nhánh TP.HCM,

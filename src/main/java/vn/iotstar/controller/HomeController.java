@@ -58,6 +58,8 @@ public class HomeController {
         model.addAttribute("dailyBooks", dailyBooks);
         model.addAttribute("categories", categories);
         model.addAttribute("stores", stores);
+        model.addAttribute("isHome", true);
+        model.addAttribute("activeTab", "home");
 
         return "home";
     }

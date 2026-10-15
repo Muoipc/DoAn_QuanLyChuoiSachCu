@@ -258,7 +258,10 @@ public class CheckoutController {
                 ? Order.DeliveryMethod.STORE_PICKUP : Order.DeliveryMethod.HOME_DELIVERY;
 
         Order.PaymentMethod paymentMethod = "VNPAY".equalsIgnoreCase(paymentMethodStr)
-                ? Order.PaymentMethod.VNPAY : Order.PaymentMethod.COD;
+                ? Order.PaymentMethod.VNPAY
+                : ("BANK_TRANSFER".equalsIgnoreCase(paymentMethodStr) || "VIETQR".equalsIgnoreCase(paymentMethodStr)
+                    ? Order.PaymentMethod.BANK_TRANSFER
+                    : Order.PaymentMethod.COD);
 
         // Nếu nhận tại chi nhánh, lấy địa chỉ của chính chi nhánh đó
         if (deliveryMethod == Order.DeliveryMethod.STORE_PICKUP) {
