@@ -42,3 +42,5 @@ uploads/
 graphify-out/
 *-local.properties
 .env
+
+~$*
