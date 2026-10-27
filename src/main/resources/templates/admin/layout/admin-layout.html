@@ -113,7 +113,8 @@
            ===================================================================== */
         #adminSidebar {
             width: 260px;
-            min-height: 100vh;
+            height: 100vh;
+            max-height: 100vh;
             background: var(--liquid-glass-bg);
             backdrop-filter: var(--liquid-glass-blur);
             -webkit-backdrop-filter: var(--liquid-glass-blur);
@@ -121,20 +122,31 @@
             box-shadow: 2px 0 20px rgba(45, 24, 15, 0.03), inset -1.5px 0 1.5px rgba(255, 255, 255, 0.95);
             position: fixed;
             top: 0;
+            bottom: 0;
             left: 0;
             z-index: 1040;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             overflow-y: auto;
+            overflow-x: hidden;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(140, 74, 39, 0.25) transparent;
             display: flex;
             flex-direction: column;
         }
 
         #adminSidebar::-webkit-scrollbar {
-            width: 4px;
+            width: 5px;
+        }
+        #adminSidebar::-webkit-scrollbar-track {
+            background: transparent;
         }
         #adminSidebar::-webkit-scrollbar-thumb {
-            background: rgba(140, 74, 39, 0.15);
+            background: rgba(140, 74, 39, 0.25);
             border-radius: 10px;
+        }
+        #adminSidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(140, 74, 39, 0.5);
         }
 
         #adminSidebar.collapsed {
@@ -149,7 +161,13 @@
             border-bottom: 1px solid var(--rebook-border);
             text-decoration: none;
             color: var(--rebook-ink-main);
-            background: transparent;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            flex-shrink: 0;
         }
 
         .sidebar-brand-icon {
