@@ -44,3 +44,5 @@ graphify-out/
 .env
 
 ~$*
+*.bat
+*.docx
