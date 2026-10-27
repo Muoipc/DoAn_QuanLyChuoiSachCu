@@ -123,9 +123,90 @@ public class ReportServiceImpl implements IReportService {
     }
 
     @Override
+    public Map<String, Object> getDashboardSummaryByStore(Long storeId) {
+        Map<String, Object> summary = new HashMap<>();
+        if (storeId == null) {
+            summary.put("totalRevenue", BigDecimal.ZERO);
+            summary.put("totalOrders", 0L);
+            summary.put("completedOrders", 0L);
+            summary.put("cancelledOrders", 0L);
+            summary.put("pendingConsignments", 0L);
+            return summary;
+        }
+
+        List<Order> storeOrders = orderRepository.findByStoreId(storeId);
+        BigDecimal totalRevenue = storeOrders.stream()
+                .filter(o -> o.getOrderStatus() == Order.OrderStatus.DELIVERED || o.getPaymentStatus() == Order.PaymentStatus.PAID)
+                .map(Order::getFinalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        long totalOrders = storeOrders.size();
+        long completedOrders = storeOrders.stream().filter(o -> o.getOrderStatus() == Order.OrderStatus.DELIVERED).count();
+        long cancelledOrders = storeOrders.stream().filter(o -> o.getOrderStatus() == Order.OrderStatus.CANCELLED).count();
+        long pendingConsignments = consignmentRepository.countByStoreIdAndStatus(storeId, BookConsignment.ConsignmentStatus.PENDING);
+
+        summary.put("totalRevenue", totalRevenue);
+        summary.put("totalOrders", totalOrders);
+        summary.put("totalBooks", completedOrders);
+        summary.put("totalUsers", 0L);
+        summary.put("completedOrders", completedOrders);
+        summary.put("cancelledOrders", cancelledOrders);
+        summary.put("pendingConsignments", pendingConsignments);
+
+        return summary;
+    }
+
+    @Override
+    public Map<Integer, BigDecimal> getMonthlyRevenueByStore(int year, Long storeId) {
+        Map<Integer, BigDecimal> monthly = new TreeMap<>();
+        for (int m = 1; m <= 12; m++) {
+            monthly.put(m, BigDecimal.ZERO);
+        }
+
+        if (storeId == null) return monthly;
+
+        List<Order> orders = orderRepository.findByStoreId(storeId);
+        for (Order o : orders) {
+            if (o.getOrderStatus() == Order.OrderStatus.DELIVERED || o.getPaymentStatus() == Order.PaymentStatus.PAID) {
+                if (o.getCreatedAt() != null && o.getCreatedAt().getYear() == year) {
+                    int month = o.getCreatedAt().getMonthValue();
+                    BigDecimal current = monthly.get(month);
+                    monthly.put(month, current.add(o.getFinalAmount()));
+                }
+            }
+        }
+        return monthly;
+    }
+
+    @Override
+    public Map<String, Long> getOrderStatusDistributionByStore(Long storeId) {
+        Map<String, Long> dist = new LinkedHashMap<>();
+        for (Order.OrderStatus st : Order.OrderStatus.values()) {
+            dist.put(st.name(), storeId != null ? orderRepository.countByStoreIdAndOrderStatus(storeId, st) : 0L);
+        }
+        return dist;
+    }
+
+    @Override
+    public List<Book> getTopSellingBooksByStore(Long storeId, int limit) {
+        return bookRepository.findTopSoldWithImages(1);
+    }
+
+    @Override
     public void exportOrdersToExcel(HttpServletResponse response) throws IOException {
         List<Order> orders = orderRepository.findAll();
+        String filename = "BaoCao_DonHang_ChuoiSachCu_" + System.currentTimeMillis() + ".xlsx";
+        exportOrdersListToExcel(response, orders, filename);
+    }
 
+    @Override
+    public void exportStoreOrdersToExcel(HttpServletResponse response, Long storeId) throws IOException {
+        List<Order> orders = (storeId != null) ? orderRepository.findByStoreIdOrderByCreatedAtDesc(storeId) : Collections.emptyList();
+        String filename = "BaoCao_DonHang_ChiNhanh_" + storeId + "_" + System.currentTimeMillis() + ".xlsx";
+        exportOrdersListToExcel(response, orders, filename);
+    }
+
+    private void exportOrdersListToExcel(HttpServletResponse response, List<Order> orders, String filename) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Báo Cáo Đơn Hàng");
 
@@ -195,7 +276,6 @@ public class ReportServiceImpl implements IReportService {
             }
 
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            String filename = "BaoCao_DonHang_ChuoiSachCu_" + System.currentTimeMillis() + ".xlsx";
             response.setHeader("Content-Disposition", "attachment; filename=" + filename);
 
             workbook.write(response.getOutputStream());

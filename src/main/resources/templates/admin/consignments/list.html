@@ -433,7 +433,7 @@
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
             <div class="d-flex align-items-center gap-2 mb-1">
-                <div class="p-2 rounded-3 text-white" style="background: linear-gradient(135deg, #8C4A27, #EE4D2D); box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);">
+                <div class="category-icon-squircle" style="width: 40px; height: 40px; margin-right: 0;">
                     <i class="fa-solid fa-hand-holding-dollar fs-5"></i>
                 </div>
                 <h4 class="fw-bold mb-0 text-dark">Thẩm Định &amp; Duyệt Ký Gửi Sách Cũ</h4>
@@ -445,69 +445,69 @@
         </div>
     </div>
 
-    <!-- 2. THỐNG KÊ TRẠNG THÁI LIQUID GLASS -->
+    <!-- 2. THỐNG KÊ TRẠNG THÁI CHUẨN OPENDESIGN -->
     <div class="row g-3 mb-4">
         <!-- Chờ Duyệt -->
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-glass-card" style="border-left: 4px solid #F59E0B;">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Chờ Duyệt (PENDING)</div>
-                        <h3 class="fw-bold text-warning mb-0 mt-1" th:text="${countPending}">0</h3>
-                    </div>
-                    <div class="stat-icon-circle bg-warning-subtle text-warning">
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Chờ Duyệt Thẩm Định</span>
+                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill">PENDING</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number text-warning-emphasis" th:text="${countPending}">0</h3>
+                    <div class="inv-metric-squircle squircle-warning">
                         <i class="fa-solid fa-hourglass-half"></i>
                     </div>
                 </div>
-                <div class="small text-muted mt-2" style="font-size: 11.5px;">Khách mới gửi yêu cầu thẩm định</div>
             </div>
         </div>
 
         <!-- Đã Duyệt Giá -->
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-glass-card" style="border-left: 4px solid #0284C7;">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Đã Duyệt Giá (APPROVED)</div>
-                        <h3 class="fw-bold text-primary mb-0 mt-1" th:text="${countApproved}">0</h3>
-                    </div>
-                    <div class="stat-icon-circle bg-primary-subtle text-primary">
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Đã Duyệt Giá</span>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">APPROVED</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number" style="color: #0284C7;" th:text="${countApproved}">0</h3>
+                    <div class="inv-metric-squircle" style="background: rgba(2, 132, 199, 0.1); color: #0284C7; border: 1px solid rgba(2, 132, 199, 0.2);">
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
                 </div>
-                <div class="small text-muted mt-2" style="font-size: 11.5px;">Đang đợi khách mang sách đến kho</div>
             </div>
         </div>
 
         <!-- Đã Nhập Kho -->
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-glass-card" style="border-left: 4px solid #10B981;">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Đã Nhập Kho (STORED)</div>
-                        <h3 class="fw-bold text-success mb-0 mt-1" th:text="${countStored}">0</h3>
-                    </div>
-                    <div class="stat-icon-circle bg-success-subtle text-success">
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Đã Nhập Kho Bày Bán</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">STORED</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number text-success" th:text="${countStored}">0</h3>
+                    <div class="inv-metric-squircle squircle-success">
                         <i class="fa-solid fa-boxes-stacked"></i>
                     </div>
                 </div>
-                <div class="small text-muted mt-2" style="font-size: 11.5px;">Sách đã sẵn sàng bày bán trong chuỗi</div>
             </div>
         </div>
 
         <!-- Từ Chối -->
-        <div class="col-lg-3 col-md-6">
-            <div class="stat-glass-card" style="border-left: 4px solid #EF4444;">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.5px;">Từ Chối (REJECTED)</div>
-                        <h3 class="fw-bold text-danger mb-0 mt-1" th:text="${countRejected}">0</h3>
-                    </div>
-                    <div class="stat-icon-circle bg-danger-subtle text-danger">
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Từ Chối Nhận</span>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">REJECTED</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number text-danger" th:text="${countRejected}">0</h3>
+                    <div class="inv-metric-squircle squircle-danger">
                         <i class="fa-solid fa-circle-xmark"></i>
                     </div>
                 </div>
-                <div class="small text-muted mt-2" style="font-size: 11.5px;">Sách không đạt chuẩn kiểm định chuỗi</div>
             </div>
         </div>
     </div>
@@ -571,24 +571,23 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table-liquid align-middle">
+            <table class="table-liquid align-middle w-100">
                 <thead>
                     <tr>
-                        <th class="ps-4">Mã / Ngày gửi</th>
-                        <th>Sách ký gửi &amp; Tác giả</th>
-                        <th>Khách hàng</th>
-                        <th class="text-center">Độ mới</th>
-                        <th class="text-end">Giá khách mong muốn</th>
-                        <th class="text-end">Giá shop duyệt</th>
-                        <th>Chi nhánh tiếp nhận</th>
-                        <th class="text-center">Trạng thái</th>
-                        <th class="text-end pe-4">Thao tác</th>
+                        <th class="ps-3" style="width: 100px;">Mã / Ngày</th>
+                        <th>Sách Ký Gửi &amp; Tác Giả</th>
+                        <th style="width: 140px;">Khách Hàng</th>
+                        <th class="text-center" style="width: 80px;">Độ Mới</th>
+                        <th class="text-end" style="width: 120px;">Giá Định Mức</th>
+                        <th style="width: 130px;">Chi Nhánh</th>
+                        <th class="text-center" style="width: 110px;">Trạng Thái</th>
+                        <th class="text-end pe-3" style="width: 90px;">Thao Tác</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Trống -->
                     <tr th:if="${consignmentPage.empty}">
-                        <td colspan="9" class="text-center py-5 text-muted">
+                        <td colspan="8" class="text-center py-5 text-muted">
                             <div class="py-4">
                                 <i class="fa-solid fa-inbox fa-3x text-secondary opacity-50 mb-3"></i>
                                 <h6 class="fw-bold text-dark">Không có yêu cầu ký gửi nào phù hợp</h6>
@@ -599,7 +598,7 @@
 
                     <!-- Từng dòng ký gửi -->
                     <tr th:each="c : ${consignmentPage.content}">
-                        <td class="ps-4">
+                        <td class="ps-3">
                             <strong class="text-dark d-block" th:text="'#KG-' + ${c.id}">#KG-1</strong>
                             <div class="text-muted" style="font-size: 11px;">
                                 <i class="fa-regular fa-clock me-1"></i>
@@ -608,89 +607,77 @@
                         </td>
 
                         <td>
-                            <strong class="text-dark d-block" style="font-size: 14px;" th:text="${c.bookTitle}">Tên sách</strong>
-                            <div class="text-muted small">
+                            <strong class="text-dark d-block" style="font-size: 13.5px;" th:text="${c.bookTitle}">Tên sách</strong>
+                            <div class="text-muted small" style="font-size: 11.5px;">
                                 <i class="fa-solid fa-feather-pointed me-1" style="font-size: 10px;"></i>
-                                <span th:text="'Tác giả: ' + ${c.author}">Tác giả</span>
+                                <span th:text="${c.author}">Tác giả</span>
                             </div>
                         </td>
 
                         <td>
-                            <div class="fw-semibold text-dark" th:text="${c.user != null ? c.user.fullName : '-'}">Khách hàng</div>
-                            <div class="text-muted small" style="font-size: 11px;">
+                            <div class="fw-semibold text-dark small" th:text="${c.user != null ? c.user.fullName : '-'}">Khách hàng</div>
+                            <div class="text-muted" style="font-size: 11px;">
                                 <i class="fa-solid fa-phone me-1" style="font-size: 10px;"></i>
                                 <span th:text="${c.user != null ? c.user.phone : ''}">090...</span>
                             </div>
                         </td>
 
-                        <!-- Độ mới: Tag bo góc 4px thanh lịch -->
+                        <!-- Độ mới -->
                         <td class="text-center">
-                            <span th:if="${c.conditionPercent >= 95}" class="tag-condition-high">
-                                <i class="fa-solid fa-circle-check" style="font-size: 10px;"></i>
-                                <span th:text="${c.conditionPercent} + '%'">95%</span>
-                            </span>
-                            <span th:if="${c.conditionPercent < 95}" class="tag-condition-med">
-                                <i class="fa-solid fa-shield-halved" style="font-size: 10px;"></i>
-                                <span th:text="${c.conditionPercent} + '%'">90%</span>
-                            </span>
+                            <span class="badge rounded-pill px-2.5 py-1"
+                                  th:classappend="${c.conditionPercent >= 90} ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'"
+                                  th:text="${c.conditionPercent} + '%'">95%</span>
                         </td>
 
-                        <!-- Giá đề xuất -->
-                        <td class="text-end text-secondary fw-semibold">
-                            <span th:text="${#numbers.formatDecimal(c.proposedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">50,000 đ</span>
-                        </td>
-
-                        <!-- Giá shop duyệt -->
+                        <!-- Giá: Gộp Duyệt & Đề xuất -->
                         <td class="text-end">
-                            <div th:if="${c.agreedPrice != null}" class="fw-bold" style="color: #C2410C;" 
+                            <div th:if="${c.agreedPrice != null}" class="fw-bold" style="color: var(--rebook-leather); font-size: 13.5px;" 
                                  th:text="${#numbers.formatDecimal(c.agreedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">45,000 đ</div>
-                            <span th:if="${c.agreedPrice == null}" class="text-muted fst-italic small">Chưa định giá</span>
+                            <div th:if="${c.agreedPrice == null}" class="small text-muted fst-italic">Chờ định giá</div>
+                            <div class="text-muted" style="font-size: 11px;" th:text="'Đ/x: ' + ${#numbers.formatDecimal(c.proposedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">Đ/x: 50,000 đ</div>
                         </td>
 
                         <!-- Chi nhánh tiếp nhận -->
-                        <td class="small">
-                            <span class="badge bg-light text-secondary border px-2 py-1" th:text="${c.store != null ? c.store.storeName : '-'}">
+                        <td>
+                            <span class="badge rounded-pill bg-light text-secondary border px-2.5 py-1 text-truncate d-inline-block" style="max-width: 125px; font-size: 11px;" 
+                                  th:text="${c.store != null ? #strings.replace(#strings.replace(c.store.storeName, 'Tổng Kho Sách Cũ ', 'Tổng Kho '), 'Chi Nhánh Sách Cũ ', 'CN ') : '-'}">
                                 Thủ Đức
                             </span>
                         </td>
 
-                        <!-- Trạng thái: Badge màu sắc trang nhã -->
+                        <!-- Trạng thái -->
                         <td class="text-center">
-                            <span th:if="${c.status.name() == 'PENDING'}" class="badge-status-pending">
-                                <i class="fa-solid fa-hourglass-half"></i> Chờ duyệt
+                            <span th:if="${c.status.name() == 'PENDING'}" class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2.5 py-1" style="font-size: 11px;">
+                                <i class="fa-solid fa-hourglass-half me-1"></i>Chờ duyệt
                             </span>
-                            <span th:if="${c.status.name() == 'APPROVED'}" class="badge-status-approved">
-                                <i class="fa-solid fa-circle-check"></i> Đã định giá
+                            <span th:if="${c.status.name() == 'APPROVED'}" class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1" style="font-size: 11px;">
+                                <i class="fa-solid fa-circle-check me-1"></i>Đã duyệt
                             </span>
-                            <span th:if="${c.status.name() == 'STORED'}" class="badge-status-stored">
-                                <i class="fa-solid fa-boxes-packing"></i> Đã nhập kho
+                            <span th:if="${c.status.name() == 'STORED'}" class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2.5 py-1" style="font-size: 11px;">
+                                <i class="fa-solid fa-boxes-packing me-1"></i>Vào kho
                             </span>
-                            <span th:if="${c.status.name() == 'REJECTED'}" class="badge-status-rejected">
-                                <i class="fa-solid fa-ban"></i> Từ chối
+                            <span th:if="${c.status.name() == 'REJECTED'}" class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1" style="font-size: 11px;">
+                                <i class="fa-solid fa-ban me-1"></i>Từ chối
                             </span>
                         </td>
 
-                        <!-- Thao tác: Xem ảnh popup & Thẩm định -->
-                        <td class="text-end pe-4">
-                            <div class="d-inline-flex gap-2 align-items-center">
-                                <!-- Nút mở modal xem ảnh tình trạng thực tế do khách gửi -->
-                                <button type="button" class="btn-view-photos" 
+                        <!-- Thao tác: Icon buttons Squircle OpenDesign -->
+                        <td class="text-end pe-3">
+                            <div class="d-inline-flex gap-1 align-items-center">
+                                <button type="button" class="icon-action-btn btn-view" 
                                         th:data-id="${c.id}"
                                         th:data-title="${c.bookTitle}"
                                         th:data-author="${c.author}"
                                         th:data-condition="${c.conditionPercent}"
                                         th:data-desc="${c.conditionDescription}"
                                         th:data-photos="${c.photosJson}"
-                                        title="Xem ảnh chụp góc cạnh do khách gửi"
+                                        title="Xem ảnh chụp thực tế"
                                         onclick="openPhotoModal(this)">
-                                    <i class="fa-solid fa-camera text-primary"></i>
-                                    <span>Xem ảnh</span>
+                                    <i class="fa-solid fa-camera"></i>
                                 </button>
 
-                                <!-- Nút thẩm định chi tiết -->
-                                <a th:href="@{/admin/consignments/{id}(id=${c.id})}" class="btn-appraise" title="Trang thẩm định">
+                                <a th:href="@{/admin/consignments/{id}(id=${c.id})}" class="icon-action-btn btn-edit" title="Thẩm định chi tiết">
                                     <i class="fa-solid fa-stamp"></i>
-                                    <span>Thẩm định</span>
                                 </a>
                             </div>
                         </td>
@@ -765,7 +752,7 @@
                 <button type="button" class="btn btn-light rounded-pill px-4 py-2 small fw-semibold" onclick="closePhotoModalDirect()">
                     Đóng lại
                 </button>
-                <a id="modalDetailLink" href="#" class="btn btn-dark rounded-pill px-4 py-2 small fw-semibold" style="background: linear-gradient(135deg, #8C4A27, #EE4D2D); border: none;">
+                <a id="modalDetailLink" href="#" class="btn btn-theme rounded-pill px-4 py-2 small fw-semibold">
                     <i class="fa-solid fa-stamp me-1"></i>Đi đến trang thẩm định
                 </a>
             </div>

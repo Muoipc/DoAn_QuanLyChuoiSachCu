@@ -15,6 +15,12 @@
             --color-fire: #8C4A27;
             --color-fire-hover: #733615;
             --color-fire-light: #F5ECE4;
+            --rebook-leather: #8C4A27;
+            --rebook-leather-hover: #733615;
+            --rebook-leather-glow: rgba(140, 74, 39, 0.25);
+            --rebook-canvas: #FAF9F6;
+            --rebook-ink-main: #1C1917;
+            --rebook-border: #ECE7DE;
             --color-bg-body: #F8F5EE;
             --color-text-main: #1C1917;
             --color-text-secondary: #44403C;
@@ -26,7 +32,7 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background-color: var(--color-bg-body);
+            background-color: #ffffff !important;
             color: var(--color-text-main);
             line-height: 1.5;
         }
@@ -43,7 +49,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 16px 0 12px;
+            padding: 8px 0 6px;
             font-size: 13px;
             color: var(--color-text-secondary);
         }
@@ -51,41 +57,41 @@
         .breadcrumb-sep { font-size: 10px; color: #b7b0a5; }
         .breadcrumb-active { color: #1C1917; font-weight: 700; }
 
-        /* ================= 3. KHUNG CHI TIẾT SẢN PHẨM CHUẨN SHOPEE ================= */
+        /* ================= 3. KHUNG CHI TIẾT SẢN PHẨM ================= */
         .product-main-container,
         .detail-main-card,
         .store-stock-card,
         .review-card,
         .related-books-section,
         .product-specs-section {
-            background: rgba(255, 255, 255, 0.45) !important;
+            background: rgba(255, 255, 255, 0.55) !important;
             backdrop-filter: blur(36px) saturate(210%) brightness(102%) !important;
             -webkit-backdrop-filter: blur(36px) saturate(210%) brightness(102%) !important;
             border-radius: 20px;
-            border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
             box-shadow: 0 16px 40px -10px rgba(45, 24, 15, 0.05), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95);
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .product-main-container {
             display: grid;
-            grid-template-columns: 450px 1fr;
-            gap: 35px;
-            padding: 28px;
-            margin-bottom: 24px;
+            grid-template-columns: 380px 1fr;
+            gap: 28px;
+            padding: 18px 22px;
+            margin-bottom: 20px;
         }
 
         /* CỘT TRÁI: GALLERY ẢNH & TƯƠNG TÁC */
         .product-gallery-col {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
         .main-cover-box {
             position: relative;
             width: 100%;
-            height: 450px;
-            border-radius: 18px;
+            height: 330px;
+            border-radius: 16px;
             background: linear-gradient(180deg, rgba(248, 245, 238, 0.65) 0%, rgba(232, 222, 200, 0.35) 100%);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
@@ -117,10 +123,10 @@
             padding: 2px 0;
         }
         .gallery-thumb-item {
-            width: 78px;
-            height: 78px;
+            width: 58px;
+            height: 58px;
             border: 2px solid transparent;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.9);
@@ -135,13 +141,13 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 8px;
         }
         .gallery-thumb-item.active,
         .gallery-thumb-item:hover {
-            border-color: #ee4d2d;
+            border-color: var(--rebook-leather);
             transform: none;
-            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.15);
+            box-shadow: 0 2px 8px rgba(140, 74, 39, 0.2);
         }
 
         /* HÀNG TƯƠNG TÁC: CHIA SẺ & ĐÃ THÍCH (GIỐNG 100% ẢNH MẪU SHOPEE) */
@@ -165,13 +171,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 12px;
+            background: rgba(140, 74, 39, 0.08) !important;
+            color: var(--rebook-leather) !important;
+            border: 1px solid rgba(140, 74, 39, 0.18) !important;
+            font-size: 11.5px;
             cursor: pointer;
-            transition: opacity 0.2s ease, transform 0.15s ease;
+            transition: all 0.2s ease;
         }
         .share-icon-circle:hover {
-            opacity: 0.85;
+            background: var(--rebook-leather) !important;
+            color: #ffffff !important;
             transform: scale(1.08);
         }
         .share-icon-circle:active {
@@ -185,14 +194,14 @@
         }
         .like-icon-heart {
             font-size: 18px;
-            color: var(--color-fire);
+            color: var(--rebook-leather);
         }
 
         /* CỘT PHẢI: THÔNG TIN CHI TIẾT & TÙY CHỌN MUA HÀNG */
         .product-info-col {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 10px;
         }
 
         /* TIÊU ĐỀ SẢN PHẨM */
@@ -202,14 +211,14 @@
             gap: 10px;
         }
         .tag-shopee-mall {
-            background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%) !important;
+            background: linear-gradient(135deg, #A05A32 0%, #8C4A27 100%) !important;
             color: #ffffff !important;
-            font-size: 11px !important;
-            font-weight: 850 !important;
-            padding: 3px 8px !important;
+            font-size: 10.5px !important;
+            font-weight: 800 !important;
+            padding: 2.5px 8px !important;
             border-radius: 6px !important;
             border: 1px solid rgba(255, 255, 255, 0.45) !important;
-            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.25) !important;
             text-transform: uppercase !important;
             letter-spacing: 0.5px !important;
             flex-shrink: 0;
@@ -218,10 +227,10 @@
             user-select: none;
         }
         .product-title-text {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
             color: var(--color-text-main);
-            line-height: 1.4;
+            line-height: 1.35;
         }
 
         /* HÀNG THÔNG SỐ UY TÍN (RATING - ĐÁNH GIÁ - ĐÃ BÁN - TỐ CÁO) */
@@ -229,9 +238,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 1px solid #f0eae1;
-            font-size: 13.5px;
+            font-size: 13px;
         }
         .stats-left-group {
             display: flex;
@@ -239,13 +248,14 @@
             gap: 14px;
         }
         .stat-rating-val {
-            color: #ee4d2d !important;
+            color: var(--rebook-leather) !important;
             font-weight: 800;
-            text-decoration: underline;
+            text-decoration: none;
             margin-right: 4px;
+            border-bottom: 1.5px solid var(--rebook-leather);
         }
         .stat-stars {
-            color: #ee4d2d !important;
+            color: #F59E0B !important;
             font-size: 12px;
             display: inline-flex;
             gap: 2px;
@@ -270,39 +280,39 @@
         }
         .btn-report-link:hover { color: var(--color-fire); }
 
-        /* KHỐI HIỂN THỊ GIÁ (PRICE BANNER CHUẨN SHOPEE) */
+        /* KHỐI HIỂN THỊ GIÁ */
         .price-banner-box {
-            background: linear-gradient(135deg, rgba(255, 248, 245, 0.85) 0%, rgba(254, 239, 235, 0.6) 100%);
+            background: linear-gradient(135deg, rgba(250, 248, 245, 0.9) 0%, rgba(245, 236, 228, 0.6) 100%);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-radius: 14px;
-            border: 1px solid rgba(238, 77, 45, 0.15);
-            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(140, 74, 39, 0.18);
+            padding: 9px 15px;
             display: flex;
             align-items: center;
-            gap: 14px;
-            box-shadow: 0 2px 10px rgba(238, 77, 45, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            gap: 12px;
+            box-shadow: 0 2px 10px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
         }
         .price-original-strike {
-            font-size: 15px;
+            font-size: 13.5px;
             color: #78716C;
             text-decoration: line-through;
         }
         .price-current-fire {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 800;
-            color: #ee4d2d !important;
+            color: var(--rebook-leather) !important;
             letter-spacing: -0.5px;
         }
         .price-discount-tag {
-            background: linear-gradient(135deg, #ee4d2d 0%, #d73211 100%);
+            background: linear-gradient(135deg, #A05A32 0%, #8C4A27 100%);
             color: white;
             font-size: 11px;
             font-weight: 800;
             padding: 3px 7px;
             border-radius: 8px;
             text-transform: uppercase;
-            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.25);
+            box-shadow: 0 2px 6px rgba(140, 74, 39, 0.25);
         }
         .price-voucher-badge {
             display: inline-flex;
@@ -321,11 +331,11 @@
         /* HÀNG THUỘC TÍNH: MÃ GIẢM GIÁ / VẬN CHUYỂN / BẢO HIỂM */
         .attribute-row {
             display: grid;
-            grid-template-columns: 140px 1fr;
+            grid-template-columns: 110px 1fr;
             align-items: flex-start;
-            gap: 14px;
+            gap: 12px;
             font-size: 13.5px;
-            padding: 6px 0;
+            padding: 4px 0;
         }
         .attr-label {
             color: #78716C;
@@ -402,9 +412,9 @@
         .variant-btn-item {
             background: white;
             border: 1px solid #dcd7ce;
-            border-radius: 4px;
-            padding: 8px 14px;
-            font-size: 13px;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 12px;
             font-weight: 600;
             color: #1C1917;
             cursor: pointer;
@@ -449,19 +459,17 @@
             color: #ffffff;
         }
         .condition-note-box {
-            margin-top: 10px;
-            background: rgba(255, 255, 255, 0.85);
+            margin-top: 6px;
+            background: rgba(250, 248, 245, 0.85);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            border-left: 3px solid var(--color-fire);
-            border-radius: 0 10px 10px 0;
-            padding: 8px 14px;
-            font-size: 12.5px;
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 12px;
             color: #57534E;
-            line-height: 1.5;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            border-left: 3px solid var(--color-fire);
+            line-height: 1.45;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.03);
+            border: 1px solid var(--rebook-border);
             transition: all 0.25s ease;
         }
         @keyframes pricePop {
@@ -563,25 +571,25 @@
         .action-buttons-group {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-top: 18px;
-            padding-top: 18px;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 1px solid rgba(231, 223, 213, 0.45);
             width: 100%;
         }
 
         /* 1. Nút Tiện Ích Trợ Lý AI */
         .btn-action-ai, .btn-ai-consult-mini {
-            width: 48px !important;
-            height: 48px !important;
-            min-width: 48px !important;
+            width: 46px !important;
+            height: 46px !important;
+            min-width: 46px !important;
             border-radius: 12px !important;
-            background: rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(24px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-            border: 1.5px solid rgba(238, 77, 45, 0.35) !important;
-            color: #ee4d2d !important;
-            font-size: 19px !important;
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1.5px solid rgba(140, 74, 39, 0.25) !important;
+            color: var(--rebook-leather) !important;
+            font-size: 18px !important;
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -589,12 +597,12 @@
             cursor: pointer !important;
             text-decoration: none !important;
             box-shadow: 0 4px 14px rgba(45, 24, 15, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.75) !important;
-            transition: background-color 0.2s ease, border-color 0.2s ease !important;
+            transition: all 0.2s ease !important;
         }
         .btn-action-ai:hover, .btn-ai-consult-mini:hover {
-            background: rgba(238, 77, 45, 0.1) !important;
-            border-color: #ee4d2d !important;
-            transform: none !important;
+            background: rgba(140, 74, 39, 0.08) !important;
+            border-color: var(--rebook-leather) !important;
+            transform: translateY(-2px) !important;
         }
         .btn-action-ai:active, .btn-ai-consult-mini:active {
             transform: scale(0.96) !important;
@@ -602,16 +610,16 @@
 
         /* 2. Nút Thêm Vào Giỏ Hàng (Secondary CTA) */
         .btn-action-cart, .btn-add-cart-shopee, .btn-add-cart {
-            height: 48px !important;
+            height: 46px !important;
             flex: 1 !important;
-            min-width: 160px;
-            background: rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(24px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-            border: 1.5px solid rgba(238, 77, 45, 0.38) !important;
+            min-width: 150px;
+            background: rgba(140, 74, 39, 0.06) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1.5px solid rgba(140, 74, 39, 0.35) !important;
             border-radius: 12px !important;
-            color: #ee4d2d !important;
-            font-size: 14.5px !important;
+            color: var(--rebook-leather) !important;
+            font-size: 14px !important;
             font-weight: 700 !important;
             cursor: pointer !important;
             display: inline-flex !important;
@@ -620,12 +628,12 @@
             gap: 8px !important;
             white-space: nowrap !important;
             box-shadow: 0 4px 14px rgba(45, 24, 15, 0.03), inset 0 1px 1.5px rgba(255, 255, 255, 0.75) !important;
-            transition: background-color 0.2s ease, border-color 0.2s ease !important;
+            transition: all 0.2s ease !important;
         }
         .btn-action-cart:hover, .btn-add-cart-shopee:hover, .btn-add-cart:hover {
-            background: rgba(238, 77, 45, 0.1) !important;
-            border-color: #ee4d2d !important;
-            transform: none !important;
+            background: rgba(140, 74, 39, 0.12) !important;
+            border-color: var(--rebook-leather) !important;
+            transform: translateY(-2px) !important;
         }
         .btn-action-cart:active, .btn-add-cart-shopee:active, .btn-add-cart:active {
             transform: scale(0.96) !important;
@@ -633,31 +641,31 @@
 
         /* 3. Nút Mua Ngay (Primary CTA) */
         .btn-action-buy, .btn-buy-now-shopee, .btn-buy-now {
-            height: 48px !important;
-            flex: 1.25 !important;
-            min-width: 160px;
-            background: linear-gradient(135deg, rgba(255, 87, 34, 0.82) 0%, rgba(238, 77, 45, 0.82) 100%) !important;
-            backdrop-filter: blur(24px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+            height: 46px !important;
+            flex: 1.2 !important;
+            min-width: 150px;
+            background: linear-gradient(135deg, #A05A32 0%, #8C4A27 100%) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
             border: 1.5px solid rgba(255, 255, 255, 0.35) !important;
             border-radius: 12px !important;
             color: #ffffff !important;
-            font-size: 14.5px !important;
+            font-size: 14px !important;
             font-weight: 800 !important;
             cursor: pointer !important;
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
             white-space: nowrap !important;
-            box-shadow: 0 6px 20px rgba(238, 77, 45, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
-            transition: background 0.2s ease, box-shadow 0.2s ease !important;
+            box-shadow: 0 6px 20px rgba(140, 74, 39, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
+            transition: all 0.2s ease !important;
             letter-spacing: 0.3px;
         }
         .btn-action-buy:hover, .btn-buy-now-shopee:hover, .btn-buy-now:hover {
-            background: linear-gradient(135deg, rgba(244, 81, 30, 0.95) 0%, rgba(215, 50, 17, 0.95) 100%) !important;
-            border-color: #d73211 !important;
-            transform: none !important;
-            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.42) !important;
+            background: linear-gradient(135deg, #8C4A27 0%, #6d381c 100%) !important;
+            border-color: #6d381c !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 24px rgba(140, 74, 39, 0.38) !important;
         }
         .btn-action-buy:active, .btn-buy-now-shopee:active, .btn-buy-now:active {
             transform: scale(0.96) !important;
@@ -1230,6 +1238,190 @@
             color: #8C4A27;
         }
 
+        /* ================= SHELF RECOMMENDED BOOKS (MINIMALIST ANTIQUE) ================= */
+        .product-shelf-section {
+            margin-top: 24px;
+            background: #ffffff;
+            border-radius: 16px;
+            border: none;
+            padding: 24px 0;
+            box-shadow: none;
+        }
+
+        .shelf-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #F5F2EB;
+        }
+
+        .shelf-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #1C1917;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .shelf-view-all {
+            font-size: 13px;
+            font-weight: 700;
+            color: #8C4A27;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.15s ease;
+        }
+        .shelf-view-all:hover {
+            color: #ee4d2d;
+        }
+
+        .shelf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .shelf-book-card {
+            background: #ffffff;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            box-shadow: none;
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            height: 100%;
+        }
+        .shelf-book-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-color: rgba(236, 231, 222, 0.9);
+            box-shadow: 0 14px 34px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            transform: translateY(-4px);
+            z-index: 2;
+        }
+
+        .shelf-thumb-wrap {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            overflow: hidden;
+        }
+        .shelf-thumb-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: none;
+            transition: transform 0.25s ease;
+        }
+        .shelf-book-card:hover .shelf-thumb-img {
+            transform: scale(1.03);
+        }
+
+        .shelf-condition-pill {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(232, 222, 200, 0.95);
+            color: #57534E;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2.5px 7px;
+            border-radius: 9999px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            letter-spacing: 0.2px;
+        }
+
+        .shelf-discount-pill {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(254, 242, 242, 0.95);
+            color: #DC2626;
+            border: 1px solid rgba(254, 202, 202, 0.85);
+            font-size: 10.5px;
+            font-weight: 800;
+            padding: 2.5px 6px;
+            border-radius: 9999px;
+            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.08);
+        }
+
+        .shelf-info-wrap {
+            padding: 14px 12px 12px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
+        }
+
+        .shelf-book-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1C1917;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 4px;
+            height: 36px;
+        }
+
+        .shelf-author-meta {
+            font-size: 11px;
+            color: #78716C;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .shelf-price-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 4px;
+            border-top: none;
+        }
+
+        .shelf-price-val {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: #8C4A27 !important;
+            letter-spacing: -0.2px;
+        }
+
+        .shelf-sold-val {
+            font-size: 11px;
+            color: #A8A29E;
+            font-weight: 500;
+        }
+
     </style>
     <!-- APPLE LIQUID GLASS DESIGN SYSTEM (iOS 26 / macOS) -->
     <link rel="stylesheet" href="/css/liquid-glass.css">
@@ -1322,12 +1514,12 @@
                             </span>
                         </div>
                         <div th:if="${reviewCount == 0}">
-                            <span class="stat-rating-val" style="border-bottom:none; color:#78716C; font-size:14px; font-weight:600;">Chưa có đánh giá</span>
+                            <span class="stat-rating-val" style="border-bottom:none; color:#78716C; font-size:13.5px; font-weight:600;">Chưa có đánh giá</span>
                         </div>
 
-                        <span class="stat-sep-pipe"></span>
+                        <span class="stat-sep-pipe" th:if="${reviewCount > 0}"></span>
 
-                        <div>
+                        <div th:if="${reviewCount > 0}">
                             <span class="stat-count-link" th:text="${reviewCount}">0</span>
                             <span style="color:#78716C;">Đánh Giá</span>
                         </div>
@@ -1340,18 +1532,16 @@
                             <i class="fa-regular fa-circle-question text-muted ms-1" title="Số lượng đã bán thực tế trên hệ thống 5 chi nhánh"></i>
                         </div>
                     </div>
-
-                    <span class="btn-report-link">Tố cáo</span>
                 </div>
 
-                <!-- KHỐI HIỂN THỊ GIÁ (SHOPEE PRICE BANNER) -->
+                <!-- KHỐI HIỂN THỊ GIÁ -->
                 <div class="price-banner-box">
                     <span class="price-original-strike" id="originalPriceDisplay" th:if="${book.originalPrice != null}" 
-                          th:text="'₫' + ${#numbers.formatDecimal(book.originalPrice, 0, 'POINT', 0, 'COMMA')}">
-                        ₫120.000
+                          th:text="${#numbers.formatDecimal(book.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'">
+                        120.000 đ
                     </span>
-                    <span class="price-current-fire" id="currentPriceDisplay" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">
-                        ₫38.250
+                    <span class="price-current-fire" id="currentPriceDisplay" th:text="${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">
+                        38.250 đ
                     </span>
                     <span class="price-discount-tag" id="discountPercentTag" th:if="${book.maxDiscountPercent > 0}" th:text="'-' + ${book.maxDiscountPercent} + '%'">
                         -52%
@@ -1363,11 +1553,11 @@
 
                 <!-- THUỘC TÍNH: CHÍNH SÁCH SHOPEE AN TÂM -->
                 <div class="attribute-row">
-                    <div class="attr-label">Chính Sách Chuỗi</div>
+                    <div class="attr-label">Chính Sách</div>
                     <div class="security-badge-row" style="width:100%;">
                         <div class="sec-left-part">
-                            <i class="fa-solid fa-shield-halved" style="color:var(--color-fire); font-size:15px; opacity:0.8;"></i>
-                            <span style="color:rgba(0, 0, 0, 0.62); font-size:12.5px; font-weight:400;"><strong style="font-weight:600; color:rgba(0, 0, 0, 0.75);">An Tâm Mua Sắm:</strong> Trả hàng miễn phí 15 ngày · Đồng kiểm khi nhận COD 100%</span>
+                            <i class="fa-solid fa-shield-halved" style="color:var(--rebook-leather); font-size:15px; opacity:0.85;"></i>
+                            <span style="color:rgba(0, 0, 0, 0.65); font-size:12.5px; font-weight:400;"><strong style="font-weight:600; color:var(--rebook-ink-main);">An Tâm Mua Sắm:</strong> Trả hàng miễn phí 15 ngày · Đồng kiểm khi nhận COD 100%</span>
                         </div>
                         <i class="fa-solid fa-chevron-right text-muted" style="font-size:11px; opacity:0.5;"></i>
                     </div>
@@ -1382,7 +1572,7 @@
                             <span>Vận chuyển tới: <strong style="font-weight:600; color:rgba(0,0,0,0.85);">TP. Hồ Chí Minh</strong></span>
                         </div>
                         <div style="font-size:12.5px; color:rgba(0, 0, 0, 0.65); margin-top:2px;">
-                            Phí vận chuyển: <span style="font-weight:500; color:rgba(0,0,0,0.85);">₫0 - ₫25.000</span> <span style="color:rgba(0, 0, 0, 0.42); font-size:12px;">(Freeship cho đơn từ 150.000₫)</span>
+                            Phí vận chuyển: <span style="font-weight:600; color:rgba(0,0,0,0.85);">0 đ - 25.000 đ</span> <span style="color:rgba(0, 0, 0, 0.5); font-size:12px;">(Freeship đơn từ 150.000 đ)</span>
                         </div>
                         <div class="shipping-sub-note" style="color:rgba(0, 0, 0, 0.45); font-size:12px; font-weight:400; line-height:1.5;">
                             Dự kiến nhận sách: 2 - 3 ngày hoặc nhận ngay tại quầy 5 chi nhánh TP.HCM
@@ -1390,9 +1580,9 @@
                     </div>
                 </div>
 
-                <!-- THUỘC TÍNH: PHÂN LOẠI TÌNH TRẠNG SÁCH (GIỐNG MÀU SẮC/SIZE TRÊN ẢNH SHOPEE) -->
+                <!-- THUỘC TÍNH: PHÂN LOẠI TÌNH TRẠNG SÁCH -->
                 <div class="attribute-row">
-                    <div class="attr-label">Tình Trạng Sách</div>
+                    <div class="attr-label">Tình Trạng</div>
                     <div style="flex: 1;">
                         <div class="variant-buttons-list">
                             <!-- 1. BẢN SÁCH CŨ TIẾT KIỆM (NGOÀI CÙNG BÊN TRÁI - GIÁ THẤP NHẤT) -->
@@ -1404,9 +1594,9 @@
                                  data-label="Bản Sách Cũ Tiết Kiệm (85% Mới)"
                                  data-note="Độ mới 80% - 85%, giấy ngả màu thời gian tự nhiên, có nếp đọc nhẹ nhưng bảo đảm không mất chữ, tiết kiệm 15% chi phí cho bạn đọc."
                                  onclick="selectVariant(this)">
-                                <i class="fa-solid fa-piggy-bank text-warning"></i>
-                                <span>Bản Sách Cũ Tiết Kiệm (85% Mới)</span>
-                                <span class="variant-price-tag" th:text="'₫' + ${book.price != null ? #numbers.formatDecimal(book.price * 0.85, 0, 'POINT', 0, 'COMMA') : ''}">₫38.250</span>
+                                <i class="fa-solid fa-book-open text-secondary"></i>
+                                <span>Bản Tiết Kiệm (85% Mới)</span>
+                                <span class="variant-price-tag" th:text="${book.price != null ? #numbers.formatDecimal(book.price * 0.85, 0, 'POINT', 0, 'COMMA') : ''} + ' đ'">38.250 đ</span>
                             </div>
 
                             <!-- 2. BẢN TIÊU CHUẨN (ĐỘ MỚI NGUYÊN BẢN CỦA SÁCH) -->
@@ -1418,9 +1608,9 @@
                                  th:data-label="'Bản Tiêu Chuẩn (' + ${book.conditionPercent} + '% Mới)'"
                                  th:data-note="'Độ mới ' + ${book.conditionPercent} + '%, sách nguyên bản, gáy chắc chắn, các trang sạch đẹp và đầy đủ 100%, đúng theo biên bản kiểm định của chuỗi.'"
                                  onclick="selectVariant(this)">
-                                <i class="fa-solid fa-book-bookmark text-success"></i>
-                                <span th:text="'Bản Độ Mới ' + ${book.conditionPercent} + '% (Đã Thẩm Định)'">Bản Độ Mới 95% (Đã Thẩm Định)</span>
-                                <span class="variant-price-tag" th:text="'₫' + ${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')}">₫45.000</span>
+                                <i class="fa-solid fa-book text-success"></i>
+                                <span th:text="'Bản Chuẩn ' + ${book.conditionPercent} + '% (Đã Duyệt)'">Bản Chuẩn 95% (Đã Duyệt)</span>
+                                <span class="variant-price-tag" th:text="${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">45.000 đ</span>
                             </div>
 
                             <!-- 3. BẢN SƯU TẦM (ĐỘ MỚI 99% + BOOKMARK) -->
@@ -1432,9 +1622,9 @@
                                  data-label="Bản Sưu Tầm (99% Mới + Bookmark)"
                                  data-note="Độ mới 98% - 99%, tình trạng sưu tầm xuất sắc như vừa bóc seal, tặng kèm Bookmark kim loại/gỗ khắc laser của Chuỗi Sách Cũ TP.HCM."
                                  onclick="selectVariant(this)">
-                                <i class="fa-solid fa-award text-primary"></i>
-                                <span>Bản Sưu Tầm (99% Mới + Bookmark)</span>
-                                <span class="variant-price-tag" th:text="'₫' + ${book.price != null ? #numbers.formatDecimal(book.price * 1.15, 0, 'POINT', 0, 'COMMA') : ''}">₫51.750</span>
+                                <i class="fa-solid fa-gem" style="color: var(--rebook-leather);"></i>
+                                <span>Bản Sưu Tầm (99% Mới)</span>
+                                <span class="variant-price-tag" th:text="${book.price != null ? #numbers.formatDecimal(book.price * 1.15, 0, 'POINT', 0, 'COMMA') : ''} + ' đ'">51.750 đ</span>
                             </div>
                         </div>
 
@@ -1546,17 +1736,17 @@
                 <div class="shop-stat-col">
                     <div class="shop-stat-item">
                         <span class="stat-label">Đánh Giá:</span>
-                        <span class="stat-val highlight">4.9k</span>
+                        <span class="stat-val highlight" th:text="${avgRating != null and avgRating != '0.0' ? avgRating : '4.9'}">4.9</span>
                     </div>
                     <div class="shop-stat-item">
                         <span class="stat-label">Sản Phẩm:</span>
-                        <span class="stat-val highlight" th:text="${totalStock != null ? totalStock + '+' : '185+'}">185+</span>
+                        <span class="stat-val highlight" th:text="${storeBookCount != null ? storeBookCount : (totalStock != null ? totalStock : '60+')}">60+</span>
                     </div>
                 </div>
                 <div class="shop-stat-col">
                     <div class="shop-stat-item">
                         <span class="stat-label">Tỉ Lệ Phản Hồi:</span>
-                        <span class="stat-val highlight">99%</span>
+                        <span class="stat-val highlight">100%</span>
                     </div>
                     <div class="shop-stat-item">
                         <span class="stat-label">Thời Gian Phản Hồi:</span>
@@ -1566,11 +1756,11 @@
                 <div class="shop-stat-col">
                     <div class="shop-stat-item">
                         <span class="stat-label">Tham Gia:</span>
-                        <span class="stat-val">3 Năm Trước</span>
+                        <span class="stat-val" th:text="${storeJoinYear != null ? storeJoinYear : '2024'}">2024</span>
                     </div>
                     <div class="shop-stat-item">
                         <span class="stat-label">Người Theo Dõi:</span>
-                        <span class="stat-val">12.8k</span>
+                        <span class="stat-val" th:text="${storeFollowers != null ? storeFollowers : '850'}">850</span>
                     </div>
                 </div>
             </div>
@@ -1811,76 +2001,76 @@
             </div>
         </section>
 
-        <!-- 6. KHỐI CÁC SẢN PHẨM GỢI Ý CÙNG THỂ LOẠI -->
-        <section class="product-shelf-section" th:if="${otherStoreBooks != null && !otherStoreBooks.isEmpty()}" 
-                 style="margin-top:20px; background:#fff; border-radius:4px; border:1px solid rgba(0,0,0,0.08); padding:20px 24px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-                <h2 style="font-size:16px; font-weight:700; color:#1C1917; text-transform:uppercase; margin:0; letter-spacing:0.5px;">CÁC TỰA SÁCH GỢI Ý CÙNG THỂ LOẠI</h2>
-                <a th:href="@{/search(category=${book.category != null ? book.category.id : ''})}" 
-                   style="font-size:13px; font-weight:600; color:#ee4d2d; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+        <!-- 6. KHỐI CÁC SẢN PHẨM GỢI Ý CÙNG THỂ LOẠI (TỐI GIẢN HOÀI CỔ) -->
+        <section class="product-shelf-section" th:if="${otherStoreBooks != null && !otherStoreBooks.isEmpty()}">
+            <div class="shelf-header">
+                <h2 class="shelf-title">
+                    <i class="fa-solid fa-bookmark text-warning opacity-75"></i>
+                    <span>CÁC TỰA SÁCH GỢI Ý CÙNG THỂ LOẠI</span>
+                </h2>
+                <a th:href="@{/search(category=${book.category != null ? book.category.id : ''})}" class="shelf-view-all">
                     Xem Tất Cả <i class="fa-solid fa-chevron-right fa-xs"></i>
                 </a>
             </div>
-            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:14px;">
-                <a th:each="ob, iterStat : ${otherStoreBooks}" th:href="@{/books/{id}(id=${ob.id})}" 
-                   style="background:#ffffff; border-radius:4px; border:1px solid rgba(0,0,0,0.08); overflow:hidden; text-decoration:none; color:inherit; display:flex; flex-direction:column; transition:transform 0.2s, box-shadow 0.2s;" 
-                   onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 20px rgba(45,24,15,0.08)';" 
-                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                    <div style="width:100%; height:180px; background:#FDFBF7; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;">
-                        <img th:src="${ob.primaryImageUrl != null ? ob.primaryImageUrl : '/images/books/book_1.jpg'}" th:alt="${ob.title}" style="max-width:90%; max-height:90%; object-fit:contain;">
-                        <span style="position:absolute; top:6px; left:6px; background:rgba(22,163,74,0.9); color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:2px;" th:text="${ob.conditionPercent} + '% Mới'">90% Mới</span>
-                        <span style="position:absolute; top:6px; right:6px; background:rgba(254,238,234,0.95); color:#ee4d2d; font-size:10px; font-weight:800; padding:2px 5px; border-radius:2px;" 
-                              th:if="${ob.discountPercent != null && ob.discountPercent > 0}" th:text="'-' + ${ob.discountPercent} + '%'">-20%</span>
+            <div class="shelf-grid">
+                <a th:each="ob : ${otherStoreBooks}" th:href="@{/books/{id}(id=${ob.id})}" class="shelf-book-card">
+                    <div class="shelf-thumb-wrap">
+                        <img th:src="${ob.primaryImageUrl != null ? ob.primaryImageUrl : '/images/books/book_1.jpg'}" 
+                             th:alt="${ob.title}" class="shelf-thumb-img" loading="lazy"
+                             onerror="this.src='/images/books/book_1.jpg';">
+                        <span class="shelf-condition-pill" th:text="${ob.conditionPercent} + '% mới'">90% mới</span>
+                        <span class="shelf-discount-pill" th:if="${ob.discountPercent != null && ob.discountPercent > 0}" 
+                              th:text="'-' + ${ob.discountPercent} + '%'">-20%</span>
                     </div>
-                    <div style="padding:10px 12px 12px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
+                    <div class="shelf-info-wrap">
                         <div>
-                            <div style="font-size:12.5px; font-weight:600; color:#1C1917; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:4px;" th:text="${ob.title}">Tên sách</div>
-                            <div style="font-size:11px; color:#78716C; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:6px;" th:text="${ob.author != null ? ob.author : 'Tác giả'}">Tác giả</div>
-                        </div>
-                        <div>
-                            <div style="font-size:14px; font-weight:800; color:#ee4d2d;" th:text="'Từ ₫' + ${#numbers.formatDecimal(ob.minPrice, 0, 'POINT', 0, 'COMMA')}">₫50.000</div>
-                            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px; font-size:11px; color:#78716C;">
-                                <span style="color:#d97706;"><i class="fa-solid fa-star fa-xs"></i> 4.9</span>
-                                <span th:text="${ob.totalSold != null ? ob.totalSold : 120} + ' đã bán'">120 đã bán</span>
+                            <div class="shelf-book-title" th:text="${ob.title}">Tên sách</div>
+                            <div class="shelf-author-meta">
+                                <i class="fa-solid fa-pen-nib text-muted" style="font-size: 10px;"></i>
+                                <span th:text="${ob.author != null ? ob.author : 'Nhiều tác giả'}">Tác giả</span>
                             </div>
+                        </div>
+                        <div class="shelf-price-row">
+                            <span class="shelf-price-val" th:text="'₫' + ${#numbers.formatDecimal(ob.minPrice, 0, 'POINT', 0, 'COMMA')}">₫50.000</span>
+                            <span class="shelf-sold-val" th:text="'Đã bán ' + ${ob.totalSold != null ? ob.totalSold : 12}">Đã bán 12</span>
                         </div>
                     </div>
                 </a>
             </div>
         </section>
 
-        <!-- 7. KHỐI CÓ THỂ BẠN CŨNG THÍCH (KHỚP 100% ẢNH SHOPEE IMAGE_B955DC.PNG) -->
-        <section class="product-shelf-section" th:if="${relatedBooks != null && !relatedBooks.isEmpty()}" 
-                 style="margin-top:20px; margin-bottom:50px; background:#fff; border-radius:4px; border:1px solid rgba(0,0,0,0.08); padding:20px 24px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-                <h2 style="font-size:16px; font-weight:700; color:#1C1917; text-transform:uppercase; margin:0; letter-spacing:0.5px;">CÓ THỂ BẠN CŨNG THÍCH</h2>
-                <a th:href="@{/search(categoryId=${book.category != null ? book.category.id : 1})}" 
-                   style="font-size:13px; font-weight:600; color:#ee4d2d; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+        <!-- 7. KHỐI CÓ THỂ BẠN CŨNG THÍCH (TỐI GIẢN HOÀI CỔ) -->
+        <section class="product-shelf-section" th:if="${relatedBooks != null && !relatedBooks.isEmpty()}" style="margin-bottom: 50px;">
+            <div class="shelf-header">
+                <h2 class="shelf-title">
+                    <i class="fa-solid fa-heart text-danger opacity-75"></i>
+                    <span>CÓ THỂ BẠN CŨNG THÍCH</span>
+                </h2>
+                <a th:href="@{/search(categoryId=${book.category != null ? book.category.id : 1})}" class="shelf-view-all">
                     Xem Tất Cả <i class="fa-solid fa-chevron-right fa-xs"></i>
                 </a>
             </div>
-            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:14px;">
-                <a th:each="rb : ${relatedBooks}" th:href="@{/books/{id}(id=${rb.id})}" 
-                   style="background:#ffffff; border-radius:4px; border:1px solid rgba(0,0,0,0.08); overflow:hidden; text-decoration:none; color:inherit; display:flex; flex-direction:column; transition:transform 0.2s, box-shadow 0.2s;" 
-                   onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 20px rgba(45,24,15,0.08)';" 
-                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                    <div style="width:100%; height:180px; background:#FDFBF7; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;">
-                        <img th:src="${rb.primaryImageUrl != null ? rb.primaryImageUrl : '/images/books/book_1.jpg'}" th:alt="${rb.title}" style="max-width:90%; max-height:90%; object-fit:contain;">
-                        <span style="position:absolute; top:6px; left:6px; background:rgba(22,163,74,0.9); color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:2px;" th:text="${rb.conditionPercent} + '% Mới'">90% Mới</span>
-                        <span style="position:absolute; top:6px; right:6px; background:rgba(254,238,234,0.95); color:#ee4d2d; font-size:10px; font-weight:800; padding:2px 5px; border-radius:2px;" 
-                              th:if="${rb.discountPercent != null && rb.discountPercent > 0}" th:text="'-' + ${rb.discountPercent} + '%'">-20%</span>
+            <div class="shelf-grid">
+                <a th:each="rb : ${relatedBooks}" th:href="@{/books/{id}(id=${rb.id})}" class="shelf-book-card">
+                    <div class="shelf-thumb-wrap">
+                        <img th:src="${rb.primaryImageUrl != null ? rb.primaryImageUrl : '/images/books/book_1.jpg'}" 
+                             th:alt="${rb.title}" class="shelf-thumb-img" loading="lazy"
+                             onerror="this.src='/images/books/book_1.jpg';">
+                        <span class="shelf-condition-pill" th:text="${rb.conditionPercent} + '% mới'">90% mới</span>
+                        <span class="shelf-discount-pill" th:if="${rb.discountPercent != null && rb.discountPercent > 0}" 
+                              th:text="'-' + ${rb.discountPercent} + '%'">-20%</span>
                     </div>
-                    <div style="padding:10px 12px 12px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
+                    <div class="shelf-info-wrap">
                         <div>
-                            <div style="font-size:12.5px; font-weight:600; color:#1C1917; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:4px;" th:text="${rb.title}">Tên sách</div>
-                            <div style="font-size:11px; color:#78716C; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:6px;" th:text="${rb.author != null ? rb.author : 'Tác giả'}">Tác giả</div>
-                        </div>
-                        <div>
-                            <div style="font-size:14px; font-weight:800; color:#ee4d2d;" th:text="'Từ ₫' + ${#numbers.formatDecimal(rb.minPrice, 0, 'POINT', 0, 'COMMA')}">₫50.000</div>
-                            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px; font-size:11px; color:#78716C;">
-                                <span style="color:#d97706;"><i class="fa-solid fa-star fa-xs"></i> 4.9</span>
-                                <span th:text="${rb.totalSold != null ? rb.totalSold : 0} + ' đã bán'">120 đã bán</span>
+                            <div class="shelf-book-title" th:text="${rb.title}">Tên sách</div>
+                            <div class="shelf-author-meta">
+                                <i class="fa-solid fa-pen-nib text-muted" style="font-size: 10px;"></i>
+                                <span th:text="${rb.author != null ? rb.author : 'Nhiều tác giả'}">Tác giả</span>
                             </div>
+                        </div>
+                        <div class="shelf-price-row">
+                            <span class="shelf-price-val" th:text="'₫' + ${#numbers.formatDecimal(rb.minPrice, 0, 'POINT', 0, 'COMMA')}">₫50.000</span>
+                            <span class="shelf-sold-val" th:text="'Đã bán ' + ${rb.totalSold != null ? rb.totalSold : 12}">Đã bán 12</span>
                         </div>
                     </div>
                 </a>
@@ -2022,8 +2212,10 @@
             } else if (network === 'messenger') {
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(url).then(function() {
-                        if (typeof showLiquidToast === 'function') {
-                            showLiquidToast('Đã sao chép liên kết sách để gửi qua Messenger!', 'success');
+                        if (typeof showShopeeToast === 'function') {
+                            showShopeeToast('Đã sao chép liên kết sách để gửi qua Messenger!');
+                        } else {
+                            alert('Đã sao chép liên kết sách để gửi qua Messenger!');
                         }
                     });
                 }
@@ -2095,7 +2287,7 @@
 
         function formatVndCurrency(amount) {
             const num = parsePriceValue(amount);
-            return '₫' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' đ';
         }
 
         function selectVariant(el) {

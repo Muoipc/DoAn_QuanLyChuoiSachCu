@@ -40,6 +40,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
 
+    List<Order> findByStoreId(Long storeId);
+
+    List<Order> findByStoreIdOrderByCreatedAtDesc(Long storeId);
+
     Page<Order> findByStoreIdOrderByCreatedAtDesc(Long storeId, Pageable pageable);
 
     Page<Order> findByShipperIdOrderByCreatedAtDesc(Long shipperId, Pageable pageable);
@@ -66,4 +70,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     );
 
     Page<Order> findByShipperIdAndOrderStatusOrderByCreatedAtDesc(Long shipperId, Order.OrderStatus status, Pageable pageable);
+
+    long countByShipperId(Long shipperId);
+
+    long countByShipperIdAndOrderStatus(Long shipperId, Order.OrderStatus status);
+
+    @Query("SELECT COALESCE(SUM(o.finalAmount), 0) FROM Order o WHERE o.shipper.id = :shipperId AND o.orderStatus = 'DELIVERED' AND o.paymentMethod = 'COD'")
+    java.math.BigDecimal sumCodCollectedByShipper(@Param("shipperId") Long shipperId);
 }

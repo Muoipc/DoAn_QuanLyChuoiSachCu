@@ -47,6 +47,9 @@ public class OrderHistoryController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private vn.iotstar.service.ICartService cartService;
+
     private Long resolveUserId(CustomUserDetails userDetails) {
         if (userDetails != null && userDetails.getId() != null) {
             return userDetails.getId();
@@ -210,6 +213,95 @@ public class OrderHistoryController {
             }
         }
 
+        return "redirect:/orders";
+    }
+
+    /**
+     * Khách hàng bấm Mua Lại đơn hàng cũ: Thêm toàn bộ sách từ đơn cũ vào giỏ hàng và chuyển hướng tới /cart.
+     * URL: POST /orders/reorder/{orderCode}
+     */
+    @PostMapping("/orders/reorder/{orderCode}")
+    @Transactional
+    public String reorderOldOrder(
+            @PathVariable("orderCode") String orderCode,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/orders";
+        }
+
+        Optional<Order> orderOpt = orderRepository.findByOrderCodeWithDetails(orderCode);
+        if (orderOpt.isPresent()) {
+            Order order = orderOpt.get();
+            if (order.getUser() == null || !order.getUser().getId().equals(userDetails.getId())) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy thông tin đơn hàng!");
+                return "redirect:/orders";
+            }
+
+            int count = 0;
+            Long storeId = order.getStore() != null ? order.getStore().getId() : 1L;
+            if (order.getItems() != null) {
+                for (OrderItem item : order.getItems()) {
+                    if (item.getBook() != null) {
+                        int qty = item.getQuantity() != null ? item.getQuantity() : 1;
+                        cartService.addToCart(userDetails.getId(), item.getBook().getId(), storeId, qty);
+                        count++;
+                    }
+                }
+            }
+            redirectAttributes.addFlashAttribute("successMessage", 
+                    "Đã thêm " + count + " cuốn sách từ đơn hàng #" + orderCode + " vào giỏ hàng thành công!");
+            return "redirect:/cart";
+        }
+
+        redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy đơn hàng cần mua lại!");
+        return "redirect:/orders";
+    }
+
+    /**
+     * Khách hàng gửi yêu cầu Đổi trả / Hoàn tiền đối với đơn đã giao (DELIVERED).
+     * URL: POST /orders/request-return/{orderCode}
+     */
+    @PostMapping("/orders/request-return/{orderCode}")
+    @Transactional
+    public String requestOrderReturn(
+            @PathVariable("orderCode") String orderCode,
+            @RequestParam("returnReason") String returnReason,
+            @RequestParam(value = "returnNote", required = false) String returnNote,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null || userDetails.getId() == null) {
+            return "redirect:/login?redirectURL=/orders";
+        }
+
+        Optional<Order> orderOpt = orderRepository.findByOrderCodeWithDetails(orderCode);
+        if (orderOpt.isPresent()) {
+            Order order = orderOpt.get();
+            if (order.getUser() == null || !order.getUser().getId().equals(userDetails.getId())) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy thông tin đơn hàng!");
+                return "redirect:/orders";
+            }
+
+            if (order.getOrderStatus() != Order.OrderStatus.DELIVERED) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Chỉ có thể yêu cầu đổi trả đối với đơn hàng đã giao thành công!");
+                return "redirect:/orders/" + orderCode;
+            }
+
+            String notePrefix = (order.getCustomerNotes() != null && !order.getCustomerNotes().isBlank()) 
+                    ? order.getCustomerNotes() + " | " : "";
+            String fullReason = "[Yêu cầu đổi trả]: " + returnReason + 
+                    (returnNote != null && !returnNote.isBlank() ? " - Chi tiết: " + returnNote.trim() : "");
+            order.setCustomerNotes(notePrefix + fullReason);
+            orderRepository.save(order);
+
+            redirectAttributes.addFlashAttribute("successMessage", 
+                    "Yêu cầu đổi trả đơn hàng #" + orderCode + " đã được gửi tới Quản lý chi nhánh. Chúng tôi sẽ liên hệ trong 24h để hỗ trợ!");
+            return "redirect:/orders/" + orderCode;
+        }
+
+        redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy đơn hàng!");
         return "redirect:/orders";
     }
 }

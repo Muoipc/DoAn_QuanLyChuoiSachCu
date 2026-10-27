@@ -48,6 +48,8 @@ public class Notification {
         CONSIGNMENT,
         ORDER,
         STOCK_TRANSFER,
+        SUPPORT_TICKET,
+        STORE_REGISTRATION,
         SYSTEM
     }
 

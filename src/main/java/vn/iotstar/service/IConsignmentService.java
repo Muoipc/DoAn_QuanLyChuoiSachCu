@@ -14,4 +14,5 @@ public interface IConsignmentService {
     void rejectConsignment(Long id, String adminNotes);
     Book convertToBookAndStock(Long id, Integer categoryId, BigDecimal sellingPrice, String adminNotes);
     long countByStatus(BookConsignment.ConsignmentStatus status);
+    long countByStoreIdAndStatus(Long storeId, BookConsignment.ConsignmentStatus status);
 }

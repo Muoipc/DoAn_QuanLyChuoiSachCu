@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
 <head>
@@ -130,25 +130,26 @@
 
         /* Glass Card Container Cho Chart & Tables */
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(232, 222, 200, 0.8);
-            border-radius: 14px;
-            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.05);
+            background: rgba(255, 255, 255, 0.82) !important;
+            backdrop-filter: blur(28px) saturate(190%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+            border-radius: 18px !important;
+            box-shadow: 0 14px 34px -4px rgba(45, 24, 15, 0.05), inset 0 1.5px 1.5px rgba(255, 255, 255, 1), inset 0 -1px 1px rgba(0, 0, 0, 0.02) !important;
             overflow: hidden;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .glass-card:hover {
-            box-shadow: 0 12px 28px rgba(45, 24, 15, 0.07);
+            box-shadow: 0 20px 48px -4px rgba(45, 24, 15, 0.09), inset 0 2px 2px rgba(255, 255, 255, 1) !important;
+            border-color: rgba(236, 231, 222, 0.95) !important;
         }
         .glass-card-header {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(232, 222, 200, 0.6);
-            padding: 16px 22px;
-            font-weight: 600;
+            background: rgba(255, 255, 255, 0.5) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-bottom: 1px solid rgba(232, 222, 200, 0.7) !important;
+            padding: 16px 24px;
+            font-weight: 700;
             font-size: 14.5px;
         }
         .glass-select {
@@ -229,14 +230,15 @@
                 <span class="header-icon-box">
                     <i class="fa-solid fa-chart-pie" style="color: #EE4D2D;"></i>
                 </span>
-                <span>Thống Kê Doanh Thu &amp; Báo Cáo Hệ Thống</span>
+                <span th:text="${isAdmin ? 'Thống Kê Doanh Thu & Báo Cáo Hệ Thống' : 'Báo Cáo Doanh Thu & Hiệu Quả Chi Nhánh'}">Thống Kê Doanh Thu &amp; Báo Cáo Hệ Thống</span>
             </h4>
-            <p class="text-muted small mb-0">Theo dõi doanh số chuỗi 5 chi nhánh, phân tích thị phần và xuất báo cáo kiểm toán.</p>
+            <p class="text-muted small mb-0" th:if="${isAdmin}">Theo dõi doanh số chuỗi 5 chi nhánh, phân tích thị phần và xuất báo cáo kiểm toán.</p>
+            <p class="text-muted small mb-0" th:unless="${isAdmin}" th:text="'Báo cáo doanh số, cơ cấu đơn hàng và hiệu quả kinh doanh tại ' + (${managedStore != null} ? ${managedStore.storeName} : 'chi nhánh của bạn') + '.'">Báo cáo doanh số chi nhánh.</p>
         </div>
         <div class="d-flex gap-2">
             <a th:href="@{/admin/reports/export-excel}" class="btn-glass-excel">
                 <i class="fa-solid fa-file-excel fs-6" style="color: #10B981;"></i>
-                <span>Xuất Báo Cáo Excel (.xlsx)</span>
+                <span th:text="${isAdmin ? 'Xuất Báo Cáo Excel (.xlsx)' : 'Xuất Đơn Chi Nhánh (.xlsx)'}">Xuất Báo Cáo Excel (.xlsx)</span>
             </a>
         </div>
     </div>
@@ -250,7 +252,7 @@
                     <div class="kpi-title">Doanh Thu Tổng</div>
                     <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalRevenue != null ? #numbers.formatDecimal(summary.totalRevenue, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</h4>
                 </div>
-                <div class="kpi-icon-orb shopee-red">
+                <div class="kpi-icon-squircle kpi-icon-revenue">
                     <i class="fa-solid fa-coins"></i>
                 </div>
             </div>
@@ -263,7 +265,7 @@
                     <div class="kpi-title">Đơn Hàng Mới</div>
                     <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalOrders != null ? summary.totalOrders : 0}">0</h4>
                 </div>
-                <div class="kpi-icon-orb leather-brown">
+                <div class="kpi-icon-squircle kpi-icon-orders">
                     <i class="fa-solid fa-bag-shopping"></i>
                 </div>
             </div>
@@ -274,9 +276,9 @@
             <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
                 <div>
                     <div class="kpi-title">Sách Đã Bán</div>
-                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalBooks != null ? summary.totalBooks : 0}">0</h4>
+                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary['totalBooks'] != null ? summary['totalBooks'] : 0}">0</h4>
                 </div>
-                <div class="kpi-icon-orb amber-gold">
+                <div class="kpi-icon-squircle kpi-icon-books">
                     <i class="fa-solid fa-book-bookmark"></i>
                 </div>
             </div>
@@ -286,10 +288,10 @@
         <div class="col-sm-6 col-xl-3">
             <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
                 <div>
-                    <div class="kpi-title">Tin Ký Gửi Chờ Duyệt</div>
-                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary.pendingConsignments != null ? summary.pendingConsignments : 0}">0</h4>
+<div class="kpi-title">Tin Ký Gửi Chờ Duyệt</div>
+                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary['pendingConsignments'] != null ? summary['pendingConsignments'] : 0}">0</h4>
                 </div>
-                <div class="kpi-icon-orb herbal-green">
+                <div class="kpi-icon-squircle kpi-icon-users">
                     <i class="fa-solid fa-handshake"></i>
                 </div>
             </div>
@@ -365,10 +367,17 @@
                         <i class="fa-solid fa-chart-pie me-2" style="color: #D97706;"></i>Tỷ Lệ Trạng Thái Đơn
                     </span>
                 </div>
-                <div class="card-body p-4 d-flex align-items-center justify-content-center">
-                    <div style="width: 100%; max-height: 290px;">
+                <div class="card-body p-3 d-flex align-items-center justify-content-center" id="orderStatusChartBox">
+                    <div style="position: relative; height: 260px; width: 100%;">
                         <canvas id="orderStatusChart"></canvas>
                     </div>
+                </div>
+                <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center text-center" id="orderStatusEmptyState" style="display: none !important; min-height: 280px; padding: 36px 20px;">
+                    <div class="category-icon-squircle mb-3" style="width: 52px; height: 52px; margin-right: 0;">
+                        <i class="fa-solid fa-clipboard-list fs-4 text-muted"></i>
+                    </div>
+                    <div class="fw-semibold text-dark small">Chưa Có Dữ Liệu Đơn Hàng</div>
+                    <div class="text-muted" style="font-size: 11.5px; max-width: 220px; margin-top: 4px;">Chi nhánh hiện chưa phát sinh đơn hàng nào trong kỳ thống kê.</div>
                 </div>
             </div>
         </div>
@@ -384,10 +393,17 @@
                         <i class="fa-solid fa-store me-2" style="color: #8C4A27;"></i>Thị Phần Doanh Thu 5 Chi Nhánh
                     </span>
                 </div>
-                <div class="card-body p-4 d-flex align-items-center justify-content-center">
-                    <div style="width: 100%; max-height: 300px;">
+                <div class="card-body p-3 d-flex align-items-center justify-content-center" id="storeRevenueChartBox">
+                    <div style="position: relative; height: 260px; width: 100%;">
                         <canvas id="storeRevenueChart"></canvas>
                     </div>
+                </div>
+                <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center text-center" id="storeRevenueEmptyState" style="display: none !important; min-height: 280px; padding: 36px 20px;">
+                    <div class="category-icon-squircle mb-3" style="width: 52px; height: 52px; margin-right: 0;">
+                        <i class="fa-solid fa-store fs-4 text-muted"></i>
+                    </div>
+                    <div class="fw-semibold text-dark small">Chưa Có Dữ Liệu Doanh Thu</div>
+                    <div class="text-muted" style="font-size: 11.5px; max-width: 240px; margin-top: 4px;">Doanh thu các chi nhánh sẽ tự động hiển thị khi có đơn giao thành công.</div>
                 </div>
             </div>
         </div>
@@ -416,7 +432,7 @@
                                 <tr th:if="${topBooks == null or topBooks.empty}">
                                     <td colspan="4" class="text-center py-4 text-muted small">Chưa có dữ liệu sách bán chạy.</td>
                                 </tr>
-                                <tr th:each="b : ${topBooks}">
+                                <tr th:each="b, iter : ${topBooks}" th:if="${iter.index < 5}">
                                     <td class="ps-4">
                                         <div class="d-flex align-items-center gap-2">
                                             <img th:src="${b.getPrimaryImageUrl()}" class="book-cover-thumb" alt="Bìa sách">
@@ -426,9 +442,11 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="small fw-bold" style="color: #EE4D2D;" th:text="${#numbers.formatDecimal(b.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">68.000 ₫</td>
+                                    <td class="small fw-bold" style="color: var(--rebook-leather);" th:text="${#numbers.formatDecimal(b.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">68.000 ₫</td>
                                     <td class="text-center">
-                                        <span class="badge badge-cond-high badge-sq-4px" th:text="${b.conditionPercent} + '%'">95%</span>
+                                        <span class="badge rounded-pill px-2.5 py-1"
+                                              th:classappend="${b.conditionPercent != null and b.conditionPercent >= 90} ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-warning-subtle text-warning border border-warning-subtle'"
+                                              th:text="${b.conditionPercent != null ? b.conditionPercent + '% mới' : '95% mới'}">95% mới</span>
                                     </td>
                                     <td class="text-end pe-4 fw-bold text-dark" th:text="${b.totalSold}">48</td>
                                 </tr>
@@ -489,187 +507,215 @@
         </div>
     </div>
 
-</div>
-
-<!-- CHART.JS CDN -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script th:inline="javascript">
+    <!-- SCRIPT RENDER BIỂU ĐỒ NẰM TRONG FRAGMENT CONTENT -->
+    <script th:inline="javascript">
     /*<![CDATA[*/
-    // 1. Dữ liệu nạp từ Spring Model (Bảo toàn 100% logic nạp dữ liệu Thymeleaf)
+    // 1. Dữ liệu nạp từ Spring Model
     const monthlyRevenue = /*[[${monthlyRevenueJson}]]*/ '[]';
     const storeLabels = /*[[${storeLabelsJson}]]*/ '[]';
     const storeData = /*[[${storeDataJson}]]*/ '[]';
     const statusLabels = /*[[${statusLabelsJson}]]*/ '[]';
     const statusData = /*[[${statusDataJson}]]*/ '[]';
 
-    const parsedMonthly = JSON.parse(monthlyRevenue);
-    const parsedStoreLabels = JSON.parse(storeLabels);
-    const parsedStoreData = JSON.parse(storeData);
-    const parsedStatusLabels = JSON.parse(statusLabels);
-    const parsedStatusData = JSON.parse(statusData);
+    const parsedMonthly = JSON.parse(monthlyRevenue || '[]');
+    const parsedStoreLabels = JSON.parse(storeLabels || '[]');
+    const parsedStoreData = JSON.parse(storeData || '[]');
+    const parsedStatusLabels = JSON.parse(statusLabels || '[]');
+    const parsedStatusData = JSON.parse(statusData || '[]');
 
-    // 2. Render Biểu đồ đường doanh thu 12 tháng: Cam đỏ Shopee (#EE4D2D) & Gradient mờ về transparent
-    const ctxMonthly = document.getElementById('monthlyRevenueChart').getContext('2d');
-    const gradientMonthly = ctxMonthly.createLinearGradient(0, 0, 0, 300);
-    gradientMonthly.addColorStop(0, 'rgba(238, 77, 45, 0.15)');
-    gradientMonthly.addColorStop(1, 'rgba(238, 77, 45, 0.00)');
+    // 2. Render Biểu đồ đường doanh thu 12 tháng: ReBook Leather Brown (#8C4A27)
+    const canvasMonthly = document.getElementById('monthlyRevenueChart');
+    if (canvasMonthly) {
+        const ctxMonthly = canvasMonthly.getContext('2d');
+        const gradientMonthly = ctxMonthly.createLinearGradient(0, 0, 0, 280);
+        gradientMonthly.addColorStop(0, 'rgba(140, 74, 39, 0.20)');
+        gradientMonthly.addColorStop(1, 'rgba(140, 74, 39, 0.00)');
 
-    new Chart(ctxMonthly, {
-        type: 'line',
-        data: {
-            labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
-            datasets: [{
-                label: 'Doanh thu (VNĐ)',
-                data: parsedMonthly,
-                borderColor: '#EE4D2D',
-                borderWidth: 2.5,
-                backgroundColor: gradientMonthly,
-                tension: 0.38,
-                fill: true,
-                pointBackgroundColor: '#EE4D2D',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2,
-                pointRadius: 4.5,
-                pointHoverRadius: 6.5
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    backgroundColor: 'rgba(45, 24, 15, 0.88)',
-                    titleFont: { family: 'Inter', size: 12, weight: '600' },
-                    bodyFont: { family: 'Inter', size: 12 },
-                    padding: 10,
-                    cornerRadius: 8,
-                    callbacks: {
-                        label: function(context) {
-                            return ' Doanh thu: ' + new Intl.NumberFormat('vi-VN').format(context.raw) + ' ₫';
-                        }
-                    }
-                }
+        new Chart(ctxMonthly, {
+            type: 'line',
+            data: {
+                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: parsedMonthly,
+                    borderColor: '#8C4A27',
+                    borderWidth: 2.5,
+                    backgroundColor: gradientMonthly,
+                    tension: 0.38,
+                    fill: true,
+                    pointBackgroundColor: '#8C4A27',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4.5,
+                    pointHoverRadius: 6.5
+                }]
             },
-            scales: {
-                x: {
-                    grid: {
-                        color: 'rgba(232, 222, 200, 0.35)',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        font: { family: 'Inter', size: 11.5 },
-                        color: '#78716C'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(232, 222, 200, 0.35)',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        font: { family: 'Inter', size: 11 },
-                        color: '#78716C',
-                        callback: function(value) {
-                            return new Intl.NumberFormat('vi-VN', { notation: "compact" }).format(value) + ' ₫';
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // 3. Render Biểu đồ tròn cơ cấu trạng thái đơn hàng (Tone màu ấm Shopee & Sách Cũ)
-    const ctxStatus = document.getElementById('orderStatusChart').getContext('2d');
-    new Chart(ctxStatus, {
-        type: 'doughnut',
-        data: {
-            labels: parsedStatusLabels,
-            datasets: [{
-                data: parsedStatusData,
-                backgroundColor: ['#EE4D2D', '#D97706', '#8C4A27', '#15803D', '#DC2626', '#78716C'],
-                borderWidth: 2,
-                borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { 
-                        boxWidth: 12, 
-                        font: { family: 'Inter', size: 11.5 },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(28, 25, 23, 0.92)',
+                        titleFont: { family: 'Be Vietnam Pro', size: 12, weight: '600' },
+                        bodyFont: { family: 'Be Vietnam Pro', size: 12 },
                         padding: 10,
-                        color: '#57534E'
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                return ' Doanh thu: ' + new Intl.NumberFormat('vi-VN').format(context.raw) + ' ₫';
+                            }
+                        }
                     }
                 },
-                tooltip: {
-                    backgroundColor: 'rgba(45, 24, 15, 0.88)',
-                    padding: 10,
-                    cornerRadius: 8,
-                    callbacks: {
-                        label: function(context) {
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const val = context.raw || 0;
-                            const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
-                            return ` ${context.label}: ${val} đơn (${pct}%)`;
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(236, 231, 222, 0.6)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: { family: 'Be Vietnam Pro', size: 11.5 },
+                            color: '#78716C'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 100000,
+                        grid: {
+                            color: 'rgba(236, 231, 222, 0.6)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            precision: 0,
+                            font: { family: 'Be Vietnam Pro', size: 11 },
+                            color: '#78716C',
+                            callback: function(value) {
+                                if (value % 1 !== 0) return '';
+                                return new Intl.NumberFormat('vi-VN').format(value) + ' ₫';
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
+    }
 
-    // 4. Render Biểu đồ tròn thị phần chi nhánh: #EE4D2D, #8C4A27, #D97706, #15803D, #B45309
-    const ctxStore = document.getElementById('storeRevenueChart').getContext('2d');
-    const storeColors = ['#EE4D2D', '#8C4A27', '#D97706', '#15803D', '#B45309'];
-
-    new Chart(ctxStore, {
-        type: 'doughnut',
-        data: {
-            labels: parsedStoreLabels.map(name => name.length > 22 ? name.substring(0, 20) + '...' : name),
-            datasets: [{
-                label: 'Doanh thu (VNĐ)',
-                data: parsedStoreData,
-                backgroundColor: storeColors,
-                borderWidth: 2,
-                borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '62%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 12,
-                        font: { family: 'Inter', size: 11.5 },
-                        padding: 12,
-                        color: '#57534E'
-                    }
+    // 3. Render Biểu đồ tròn cơ cấu trạng thái đơn hàng
+    const canvasStatus = document.getElementById('orderStatusChart');
+    if (canvasStatus) {
+        const statusSum = parsedStatusData.reduce((a, b) => a + (b || 0), 0);
+        if (statusSum === 0) {
+            const chartBox = document.getElementById('orderStatusChartBox');
+            const emptyBox = document.getElementById('orderStatusEmptyState');
+            if (chartBox) chartBox.style.setProperty('display', 'none', 'important');
+            if (emptyBox) emptyBox.style.setProperty('display', 'flex', 'important');
+        } else {
+            const ctxStatus = canvasStatus.getContext('2d');
+            new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: parsedStatusLabels,
+                    datasets: [{
+                        data: parsedStatusData,
+                        backgroundColor: ['#8C4A27', '#B45309', '#059669', '#2563EB', '#DC2626', '#78716C'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
                 },
-                tooltip: {
-                    backgroundColor: 'rgba(45, 24, 15, 0.88)',
-                    padding: 10,
-                    cornerRadius: 8,
-                    callbacks: {
-                        label: function(context) {
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const val = context.raw || 0;
-                            const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
-                            return ` ${context.label}: ${new Intl.NumberFormat('vi-VN').format(val)} ₫ (${pct}%)`;
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { 
+                                boxWidth: 12, 
+                                font: { family: 'Be Vietnam Pro', size: 11.5 },
+                                padding: 10,
+                                color: '#57534E'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(28, 25, 23, 0.92)',
+                            padding: 10,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const val = context.raw || 0;
+                                    const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                                    return ` ${context.label}: ${val} đơn (${pct}%)`;
+                                }
+                            }
                         }
                     }
                 }
-            }
+            });
         }
-    });
+    }
+
+    // 4. Render Biểu đồ tròn thị phần chi nhánh
+    const canvasStore = document.getElementById('storeRevenueChart');
+    if (canvasStore) {
+        const storeSum = parsedStoreData.reduce((a, b) => a + (b || 0), 0);
+        if (storeSum === 0) {
+            const chartBox = document.getElementById('storeRevenueChartBox');
+            const emptyBox = document.getElementById('storeRevenueEmptyState');
+            if (chartBox) chartBox.style.setProperty('display', 'none', 'important');
+            if (emptyBox) emptyBox.style.setProperty('display', 'flex', 'important');
+        } else {
+            const ctxStore = canvasStore.getContext('2d');
+            const cleanStoreLabels = parsedStoreLabels.map(name => name.replace('Tổng Kho Sách Cũ ', 'Tổng Kho ').replace('Chi Nhánh Sách Cũ ', 'CN ').replace('Chi Nhánh ', 'CN '));
+            const storeColors = ['#8C4A27', '#A0522D', '#B45309', '#059669', '#2563EB'];
+
+            new Chart(ctxStore, {
+                type: 'doughnut',
+                data: {
+                    labels: cleanStoreLabels,
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: parsedStoreData,
+                        backgroundColor: storeColors,
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '68%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: { family: 'Be Vietnam Pro', size: 11.5 },
+                                padding: 10,
+                                color: '#57534E'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(28, 25, 23, 0.92)',
+                            padding: 10,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const val = context.raw || 0;
+                                    const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                                    return ` ${context.label}: ${new Intl.NumberFormat('vi-VN').format(val)} ₫ (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
     /*]]>*/
-</script>
+    </script>
+</div>
 </body>
 </html>

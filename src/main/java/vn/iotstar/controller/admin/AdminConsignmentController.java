@@ -84,11 +84,19 @@ public class AdminConsignmentController {
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("managedStore", managedStore);
 
-        // Đếm theo trạng thái
-        model.addAttribute("countPending", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.PENDING));
-        model.addAttribute("countApproved", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.APPROVED));
-        model.addAttribute("countStored", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.STORED));
-        model.addAttribute("countRejected", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.REJECTED));
+        // Đếm theo trạng thái (Đồng bộ theo phạm vi chi nhánh)
+        if (isAdmin) {
+            model.addAttribute("countPending", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.PENDING));
+            model.addAttribute("countApproved", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.APPROVED));
+            model.addAttribute("countStored", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.STORED));
+            model.addAttribute("countRejected", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.REJECTED));
+        } else {
+            Long sId = (managedStore != null) ? managedStore.getId() : -1L;
+            model.addAttribute("countPending", consignmentService.countByStoreIdAndStatus(sId, BookConsignment.ConsignmentStatus.PENDING));
+            model.addAttribute("countApproved", consignmentService.countByStoreIdAndStatus(sId, BookConsignment.ConsignmentStatus.APPROVED));
+            model.addAttribute("countStored", consignmentService.countByStoreIdAndStatus(sId, BookConsignment.ConsignmentStatus.STORED));
+            model.addAttribute("countRejected", consignmentService.countByStoreIdAndStatus(sId, BookConsignment.ConsignmentStatus.REJECTED));
+        }
 
         return "admin/consignments/list";
     }

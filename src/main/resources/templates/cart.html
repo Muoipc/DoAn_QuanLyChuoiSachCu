@@ -18,7 +18,13 @@
             --color-fire: #8C4A27;
             --color-fire-hover: #733615;
             --color-fire-light: #F5ECE4;
-            --color-shopee-red: #ee4d2d;
+            --rebook-leather: #8C4A27;
+            --rebook-leather-hover: #733615;
+            --rebook-leather-glow: rgba(140, 74, 39, 0.25);
+            --rebook-canvas: #FAF9F6;
+            --rebook-ink-main: #1C1917;
+            --rebook-border: #ECE7DE;
+            --color-shopee-red: #8C4A27;
             --color-bg-body: #F8F5EE;
             --color-text-main: #1C1917;
             --color-text-secondary: #44403C;
@@ -30,13 +36,7 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Plus Jakarta Sans', 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: 
-                radial-gradient(ellipse 90% 60% at 12% 10%, rgba(217, 119, 6, 0.09) 0%, transparent 60%),
-                radial-gradient(ellipse 80% 50% at 88% 20%, rgba(140, 74, 39, 0.08) 0%, transparent 55%),
-                radial-gradient(ellipse 90% 70% at 15% 80%, rgba(245, 158, 11, 0.07) 0%, transparent 60%),
-                radial-gradient(ellipse 85% 60% at 85% 90%, rgba(140, 74, 39, 0.08) 0%, transparent 55%),
-                #F8F5EE;
-            background-attachment: fixed;
+            background: #FAF9F6;
             color: var(--color-text-main);
             min-height: 100vh;
             display: flex;
@@ -52,48 +52,48 @@
 
         /* ================= 1. FREESHIP BANNER (APPLE LIQUID GLASS) ================= */
         .freeship-alert-banner {
-            background: rgba(255, 249, 235, 0.88);
+            background: rgba(250, 246, 240, 0.92);
             backdrop-filter: blur(28px) saturate(190%) brightness(102%);
             -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
-            border: 1.5px solid var(--color-border-glass);
-            border-radius: 16px;
-            box-shadow: 0 12px 30px -4px rgba(45, 24, 15, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
-            padding: 14px 24px;
-            margin: 20px auto 16px;
+            border: 1.5px solid var(--rebook-border);
+            border-radius: 14px;
+            box-shadow: 0 8px 24px -4px rgba(45, 24, 15, 0.04), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: 12px 20px;
+            margin: 16px auto 14px;
             display: flex;
             align-items: center;
-            gap: 14px;
-            font-size: 13.5px;
-            color: #92400e;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--rebook-leather);
             transition: all 0.3s var(--spring-ease);
         }
-        .freeship-alert-banner strong { color: var(--color-fire); }
+        .freeship-alert-banner strong { color: var(--rebook-leather); font-weight: 700; }
 
         /* ================= 2. BẢNG GIỎ HÀNG CHUẨN GOLDEN STANDARD ================= */
         /* Table Header hàng cột */
         .cart-table-header {
             display: grid;
-            grid-template-columns: 46px 1fr 140px 140px 140px 90px;
+            grid-template-columns: 40px 1fr 130px 130px 130px 80px;
             align-items: center;
-            padding: 16px 24px;
-            background: rgba(255, 255, 255, 0.88);
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(28px) saturate(190%) brightness(102%);
             -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
-            border: 1.5px solid var(--color-border-glass);
-            border-radius: 16px;
-            font-size: 14px;
+            border: 1.5px solid var(--rebook-border);
+            border-radius: 14px;
+            font-size: 13.5px;
             color: var(--color-text-secondary);
             font-weight: 700;
-            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.05), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
-            margin-bottom: 14px;
+            box-shadow: 0 8px 24px -4px rgba(45, 24, 15, 0.04), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
+            margin-bottom: 12px;
         }
 
         .checkbox-custom {
-            accent-color: #ee4d2d;
-            width: 19px;
-            height: 19px;
+            accent-color: var(--rebook-leather);
+            width: 18px;
+            height: 18px;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 4px;
             transition: transform 0.2s var(--spring-ease);
         }
         .checkbox-custom:active {
@@ -102,14 +102,14 @@
 
         /* Thẻ bao ngoài bảng giỏ hàng (Liquid Glass Card) */
         .cart-table-card {
-            background: rgba(255, 255, 255, 0.88);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(28px) saturate(190%) brightness(102%);
             -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
-            border: 1.5px solid var(--color-border-glass);
-            border-radius: 20px;
-            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
+            border: 1.5px solid var(--rebook-border);
+            border-radius: 18px;
+            box-shadow: 0 12px 30px -4px rgba(45, 24, 15, 0.05), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
             margin-bottom: 20px;
-            padding: 8px 8px 12px;
+            padding: 10px 12px 14px;
             transition: all 0.35s var(--spring-ease);
         }
 
@@ -118,23 +118,24 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 14px 18px;
-            border-radius: 14px;
-            background: rgba(248, 245, 238, 0.65);
-            font-size: 14px;
-            font-weight: 800;
+            padding: 10px 8px;
+            border-radius: 12px;
+            background: rgba(250, 248, 245, 0.85);
+            font-size: 13.5px;
+            font-weight: 700;
             color: #1C1917;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            border: 1px solid var(--rebook-border);
         }
         .badge-mall-tag {
-            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%);
-            color: white;
+            background: rgba(140, 74, 39, 0.1);
+            color: var(--rebook-leather);
+            border: 1px solid rgba(140, 74, 39, 0.22);
             font-size: 11px;
             font-weight: 800;
-            padding: 3px 8px;
-            border-radius: 8px;
+            padding: 2.5px 8px;
+            border-radius: 6px;
             letter-spacing: 0.3px;
-            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.25);
         }
         .btn-chat-now {
             color: var(--color-fire);
@@ -155,37 +156,37 @@
             transform: none;
         }
 
-        /* Hàng sản phẩm: Thẻ lồng thẻ bo cong 14px */
+        /* Hàng sản phẩm */
         .cart-item-row {
             display: grid;
-            grid-template-columns: 46px 1fr 140px 140px 140px 90px;
+            grid-template-columns: 40px 1fr 130px 130px 130px 80px;
             align-items: center;
-            padding: 16px 18px;
-            margin: 8px 4px;
+            padding: 14px 8px;
+            margin: 6px 0;
             background: rgba(255, 255, 255, 0.72);
             border: 1px solid rgba(232, 222, 200, 0.65);
             border-radius: 14px;
-            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.95);
-            transition: all 0.3s var(--spring-ease);
+            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+            transition: all 0.25s var(--spring-ease);
         }
         .cart-item-row:hover {
             background: rgba(255, 255, 255, 0.98);
             transform: none;
-            box-shadow: 0 6px 18px rgba(140, 74, 39, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
-            border-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 6px 18px rgba(140, 74, 39, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            border-color: rgba(236, 231, 222, 0.95);
         }
 
         .product-meta-flex {
             display: flex;
             align-items: flex-start;
-            gap: 16px;
+            gap: 14px;
         }
         .book-cart-thumb {
-            width: 82px;
-            height: 94px;
+            width: 74px;
+            height: 86px;
             object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(45, 24, 15, 0.08);
             border: 1px solid rgba(0, 0, 0, 0.05);
             flex-shrink: 0;
             transition: transform 0.3s var(--spring-ease);
@@ -196,16 +197,16 @@
         .book-cart-info {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
         }
         .book-title-link {
-            font-size: 14.5px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--color-text-main);
-            line-height: 1.4;
+            line-height: 1.35;
             transition: color 0.15s;
         }
-        .book-title-link:hover { color: #ee4d2d; }
+        .book-title-link:hover { color: var(--rebook-leather); }
 
         /* Phân loại hàng (Capsule Pill) */
         .cart-variant-box {
@@ -214,9 +215,9 @@
             gap: 6px;
             background: rgba(250, 248, 245, 0.9);
             border: 1px solid #e8e2d8;
-            border-radius: 8px;
-            padding: 4px 10px;
-            font-size: 12px;
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 11.5px;
             color: #78716C;
             cursor: pointer;
             width: fit-content;
@@ -225,31 +226,33 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            font-size: 11.5px;
+            font-size: 11px;
             color: #78716C;
             background: rgba(245, 240, 230, 0.85);
-            padding: 3px 10px;
-            border-radius: 8px;
+            padding: 2.5px 8px;
+            border-radius: 6px;
             width: fit-content;
         }
 
         /* Đơn giá */
         .price-col-cell {
-            text-align: center;
+            text-align: right;
+            padding-right: 18px;
         }
         .price-cart-origin {
-            font-size: 12.5px;
+            font-size: 12px;
             color: #78716C;
             text-decoration: line-through;
             margin-right: 6px;
+            display: block;
         }
         .price-cart-active {
-            font-size: 15px;
+            font-size: 14.5px;
             font-weight: 800 !important;
-            color: #ee4d2d !important;
+            color: var(--rebook-leather) !important;
         }
 
-        /* Bộ nút số lượng Stepper bo cong 8px */
+        /* Bộ nút số lượng Stepper */
         .qty-stepper-cell {
             display: flex;
             justify-content: center;
@@ -264,11 +267,11 @@
             box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
         }
         .btn-qty-step {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border: none;
             background: transparent;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             cursor: pointer;
             color: #44403C;
@@ -277,13 +280,13 @@
         .btn-qty-step:hover { background: #f0eae1; color: #1C1917; }
         .btn-qty-step:active { transform: scale(0.92); }
         .input-qty-step {
-            width: 44px;
-            height: 32px;
+            width: 40px;
+            height: 30px;
             border: none;
             border-left: 1px solid rgba(220, 215, 206, 0.85);
             border-right: 1px solid rgba(220, 215, 206, 0.85);
             text-align: center;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 800;
             outline: none;
             color: #1C1917;
@@ -292,10 +295,11 @@
 
         /* Số tiền */
         .item-subtotal-cell {
-            text-align: center;
-            font-size: 16.5px;
+            text-align: right;
+            padding-right: 18px;
+            font-size: 15.5px;
             font-weight: 800 !important;
-            color: #ee4d2d !important;
+            color: var(--rebook-leather) !important;
         }
 
         /* Thao tác */
@@ -303,16 +307,16 @@
             text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
             align-items: center;
         }
         .btn-remove-item {
-            color: #574E45;
-            font-size: 13px;
+            color: #78716C;
+            font-size: 12.5px;
             font-weight: 600;
             cursor: pointer;
-            padding: 4px 10px;
-            border-radius: 9999px;
+            padding: 3px 8px;
+            border-radius: 6px;
             transition: all 0.15s;
         }
         .btn-remove-item:hover {
@@ -320,8 +324,8 @@
             background: #fef2f2;
         }
         .link-similar-books {
-            color: var(--color-fire);
-            font-size: 11.5px;
+            color: var(--rebook-leather);
+            font-size: 11px;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
@@ -329,14 +333,14 @@
         }
         .link-similar-books:hover { text-decoration: underline; }
 
-        /* ================= 3. KHUNG VOUCHER & XU (APPLE LIQUID GLASS) ================= */
+        /* ================= 3. KHUNG VOUCHER (APPLE LIQUID GLASS) ================= */
         .voucher-and-coins-card, .cart-voucher-box {
-            background: rgba(255, 255, 255, 0.88);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(28px) saturate(190%) brightness(102%);
             -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
-            border: 1.5px solid var(--color-border-glass);
-            border-radius: 20px;
-            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
+            border: 1.5px solid var(--rebook-border);
+            border-radius: 16px;
+            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.05), inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98);
             margin-bottom: 20px;
             overflow: hidden;
             transition: all 0.35s var(--spring-ease);
@@ -345,69 +349,72 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 24px;
-            border-bottom: 1px solid rgba(242, 237, 230, 0.8);
-            font-size: 14px;
+            padding: 14px 20px;
+            font-size: 13.5px;
         }
         .voucher-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             font-weight: 700;
         }
         .voucher-right {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
         .btn-select-voucher {
-            color: #0288d1;
+            color: var(--rebook-leather) !important;
             font-weight: 700;
             cursor: pointer;
-            font-size: 13.5px;
-            padding: 4px 10px;
-            border-radius: 9999px;
-            transition: background 0.15s;
+            font-size: 13px;
+            padding: 5px 14px;
+            border-radius: 8px;
+            background: rgba(140, 74, 39, 0.08) !important;
+            border: 1px solid rgba(140, 74, 39, 0.2) !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s var(--spring-ease);
         }
         .btn-select-voucher:hover {
-            background: rgba(2, 136, 209, 0.08);
-            text-decoration: underline;
+            background: rgba(140, 74, 39, 0.15) !important;
         }
 
         /* ================= 4. THANH THANH TOÁN DÍNH ĐÁY (STICKY BOTTOM BAR) ================= */
         .cart-sticky-bottom-bar, .cart-summary-card {
             position: sticky;
             bottom: 12px;
-            background: rgba(255, 255, 255, 0.88);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(28px) saturate(190%) brightness(102%);
             -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
-            border: 1.5px solid var(--color-border-glass);
-            border-radius: 20px;
-            box-shadow: 0 16px 40px -4px rgba(45, 24, 15, 0.14), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
-            padding: 18px 30px;
+            border: 1.5px solid var(--rebook-border);
+            border-radius: 16px;
+            box-shadow: 0 16px 40px -4px rgba(45, 24, 15, 0.12), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: 14px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 100;
-            margin-top: auto;
-            margin-bottom: 20px;
+            margin-top: 20px;
+            margin-bottom: 24px;
             transition: all 0.35s var(--spring-ease);
         }
         .sticky-left-actions {
             display: flex;
             align-items: center;
-            gap: 22px;
-            font-size: 14px;
+            gap: 18px;
+            font-size: 13.5px;
         }
         .btn-del-all {
-            color: #1C1917;
+            color: #78716C;
             cursor: pointer;
             background: none;
             border: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 9999px;
+            padding: 4px 8px;
+            border-radius: 6px;
             transition: all 0.15s;
         }
         .btn-del-all:hover { color: #dc2626; background: #fef2f2; }
@@ -415,7 +422,7 @@
         .sticky-right-checkout {
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
         }
         .checkout-pricing-box {
             display: flex;
@@ -426,31 +433,31 @@
             display: flex;
             align-items: baseline;
             gap: 8px;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--color-text-main);
         }
         .total-amount-fire {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 800 !important;
-            color: #ee4d2d !important;
+            color: var(--rebook-leather) !important;
         }
         .savings-note-gold {
-            font-size: 12px;
-            color: #b7791f;
+            font-size: 11.5px;
+            color: #8C4A27;
             font-weight: 600;
         }
 
-        /* Nút Mua Hàng Capsule 9999px với Spring Press scale(0.96) */
+        /* Nút Mua Hàng Bo Góc 12px ReBook Leather */
         .btn-shopee-checkout, .btn-checkout-primary {
-            background: linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%) !important;
+            background: linear-gradient(135deg, #A05A32 0%, #8C4A27 100%) !important;
             color: white !important;
-            font-size: 15px;
+            font-size: 14.5px;
             font-weight: 800;
-            border: none;
-            border-radius: 9999px !important;
-            padding: 14px 44px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 12px !important;
+            padding: 12px 36px;
             cursor: pointer;
-            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.35);
+            box-shadow: 0 6px 20px rgba(140, 74, 39, 0.28);
             transition: all 0.25s var(--spring-ease);
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -460,8 +467,8 @@
             gap: 8px;
         }
         .btn-shopee-checkout:hover, .btn-checkout-primary:hover {
-            transform: none;
-            box-shadow: 0 8px 24px rgba(238, 77, 45, 0.4);
+            background: linear-gradient(135deg, #8C4A27 0%, #6d381c 100%) !important;
+            box-shadow: 0 8px 24px rgba(140, 74, 39, 0.38);
         }
         .btn-shopee-checkout:active, .btn-checkout-primary:active {
             transform: scale(0.96) !important;
@@ -470,34 +477,34 @@
         /* Giỏ trống (Apple Liquid Glass) */
         .empty-cart-card {
             text-align: center;
-            padding: 80px 20px;
-            background: rgba(255, 255, 255, 0.88);
+            padding: 70px 20px;
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(28px) saturate(190%) brightness(102%);
             -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
-            border: 1.5px solid var(--color-border-glass);
+            border: 1.5px solid var(--rebook-border);
             border-radius: 20px;
-            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08);
-            margin: 30px auto;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.05);
+            margin: 24px auto;
         }
 
         /* ================= 5. GỢI Ý MUA KÈM DƯỚI ĐÁY GIỎ HÀNG ================= */
         .cart-recommend-section, .recommend-section {
-            margin: 36px auto 20px;
-            background: rgba(255, 255, 255, 0.88);
+            margin: 28px auto 40px;
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(28px) saturate(190%) brightness(102%);
             -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(102%);
-            border: 1.5px solid var(--color-border-glass);
-            border-radius: 20px;
-            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
-            padding: 24px;
+            border: 1.5px solid var(--rebook-border);
+            border-radius: 18px;
+            box-shadow: 0 12px 30px -4px rgba(45, 24, 15, 0.05), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.98);
+            padding: 20px 24px 24px;
         }
         .recommend-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             color: #1C1917;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 18px;
+            text-transform: none;
+            letter-spacing: 0.2px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -508,15 +515,42 @@
             gap: 14px;
         }
         .recommend-card {
-            background: rgba(255, 255, 255, 0.82);
-            border: 1.5px solid rgba(255, 255, 255, 0.92);
-            border-radius: 14px;
-            padding: 12px;
-            box-shadow: 0 6px 18px rgba(45, 24, 15, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid var(--rebook-border);
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.03);
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            transition: all 0.3s var(--spring-ease);
+            gap: 6px;
+            transition: all 0.25s var(--spring-ease);
+        }
+        .recommend-card:hover {
+            border-color: var(--rebook-leather);
+            box-shadow: 0 8px 20px rgba(140, 74, 39, 0.12);
+            transform: translateY(-2px);
+        }
+        .recommend-thumb {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .recommend-name {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #1C1917;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 34px;
+        }
+        .recommend-price {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: var(--rebook-leather);
         }
         .recommend-card:hover {
             background: #ffffff;
@@ -663,29 +697,31 @@
 
         <!-- 2. FREESHIP BANNER -->
         <div class="freeship-alert-banner" onclick="window.location.href='/vouchers';" style="cursor:pointer;" title="Nhấn để nhận mã tại Kho Voucher">
-            <i class="fa-solid fa-truck-fast text-success" style="font-size: 20px;"></i>
-            <span>Nhấn vào đây để nhận mã <strong>Miễn Phí Vận Chuyển</strong>. Freeship cho đơn sách cũ từ <strong>150.000₫</strong> hoặc nhận trực tiếp tại <strong>5 chi nhánh TP.HCM</strong> &gt;</span>
+            <i class="fa-solid fa-truck-fast text-success" style="font-size: 18px;"></i>
+            <span>Nhấn vào đây để nhận mã <strong>Miễn Phí Vận Chuyển</strong>. Freeship cho đơn sách cũ từ <strong>150.000 đ</strong> hoặc nhận trực tiếp tại <strong>5 chi nhánh TP.HCM</strong> &gt;</span>
         </div>
 
         <!-- 3. KHI CÓ SẢN PHẨM TRONG GIỎ -->
         <div th:unless="${#lists.isEmpty(cartItems)}">
 
-            <!-- HÀNG TIÊU ĐỀ BẢNG (CHUẨN SHOPEE) -->
+            <!-- HÀNG TIÊU ĐỀ BẢNG (CHUẨN OPEN-DESIGN) -->
             <div class="cart-table-header">
-                <div>
+                <div style="display: flex; align-items: center; justify-content: center;">
                     <input type="checkbox" class="checkbox-custom" checked id="checkAllHead">
                 </div>
                 <div>Sản Phẩm</div>
-                <div style="text-align: center;">Đơn Giá</div>
+                <div style="text-align: right; padding-right: 12px;">Đơn Giá</div>
                 <div style="text-align: center;">Số Lượng</div>
-                <div style="text-align: center;">Số Tiền</div>
+                <div style="text-align: right; padding-right: 12px;">Số Tiền</div>
                 <div style="text-align: center;">Thao Tác</div>
             </div>
 
             <!-- THẺ SHOP / CHI NHÁNH NHÓM SẢN PHẨM (LIQUID GLASS TABLE CARD) -->
             <div class="cart-table-card">
                 <div class="shop-group-header">
-                    <input type="checkbox" class="checkbox-custom" checked id="checkShopGroup">
+                    <div style="width: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <input type="checkbox" class="checkbox-custom" checked id="checkShopGroup">
+                    </div>
                     <span class="badge-mall-tag">Sách Chọn Lọc</span>
                     <span>Nhà Sách Cũ TP.HCM</span>
                 </div>
@@ -693,7 +729,7 @@
                 <!-- DANH SÁCH CÁC CUỐN SÁCH CŨ TRONG GIỎ (CARD-IN-CARD 14PX) -->
                 <div th:each="item : ${cartItems}" class="cart-item-row">
                     <!-- Checkbox -->
-                    <div>
+                    <div style="display: flex; align-items: center; justify-content: center;">
                         <input type="checkbox" class="checkbox-custom item-check" checked>
                     </div>
 
@@ -706,28 +742,28 @@
                                 Tên cuốn sách cũ
                             </a>
                             
-                            <!-- Dropdown Phân loại hàng chuẩn Shopee -->
+                            <!-- Dropdown Phân loại hàng -->
                             <div class="cart-variant-box">
-                                <span>Phân loại hàng: <strong th:text="${item.book != null && item.book.conditionPercent != null ? item.book.conditionPercent : 90} + '% Mới'">95% Mới</strong></span>
+                                <span>Phân loại: <strong th:text="${item.book != null && item.book.conditionPercent != null ? item.book.conditionPercent : 90} + '% Mới'">95% Mới</strong></span>
                                 <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
                             </div>
 
                             <!-- Tag chi nhánh sẵn kho tinh tế -->
                             <span class="cart-store-tag">
                                 <i class="fa-solid fa-location-dot text-danger"></i>
-                                <span th:text="${item.store != null ? item.store.storeName : 'Kho Thủ Đức (Gần HCMUTE)'}">Kho Thủ Đức</span>
+                                <span th:text="${item.store != null ? #strings.replace(#strings.replace(item.store.storeName, 'Tổng Kho Sách Cũ ', 'Tổng Kho '), 'Chi Nhánh Sách Cũ ', 'CN ') : 'Kho Thủ Đức'}">Kho Thủ Đức</span>
                             </span>
                         </div>
                     </div>
 
                     <!-- Cột Đơn giá -->
-                    <div class="price-col-cell">
-                        <span class="price-cart-origin" th:if="${item.book != null and item.book.originalPrice != null}" th:text="'₫' + ${#numbers.formatDecimal(item.book.originalPrice, 0, 'POINT', 0, 'COMMA')}">₫120.000</span>
-                        <span class="price-cart-active" th:text="'₫' + ${#numbers.formatDecimal(item.book != null and item.book.price != null ? item.book.price : 0, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                    <div class="price-col-cell" style="text-align: right; padding-right: 12px;">
+                        <span class="price-cart-origin" th:if="${item.book != null and item.book.originalPrice != null}" th:text="${#numbers.formatDecimal(item.book.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'">120.000 đ</span>
+                        <span class="price-cart-active" th:text="${#numbers.formatDecimal(item.book != null and item.book.price != null ? item.book.price : 0, 0, 'POINT', 0, 'COMMA')} + ' đ'">68.000 đ</span>
                     </div>
 
                     <!-- Cột Số lượng (Shopee Stepper bo cong 8px) -->
-                    <div class="qty-stepper-cell">
+                    <div class="qty-stepper-cell" style="text-align: center;">
                         <form th:action="@{/cart/update}" action="/cart/update" method="post" style="display:inline-flex;">
                             <input type="hidden" name="itemId" th:value="${item.id}">
                             <div class="qty-stepper-wrap">
@@ -738,14 +774,14 @@
                         </form>
                     </div>
 
-                    <!-- Cột Số tiền (Đỏ Shopee 800) -->
-                    <div class="item-subtotal-cell">
-                        <span th:text="'₫' + ${#numbers.formatDecimal(item.itemTotal, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                    <!-- Cột Số tiền -->
+                    <div class="item-subtotal-cell" style="text-align: right; padding-right: 12px;">
+                        <span th:text="${#numbers.formatDecimal(item.itemTotal, 0, 'POINT', 0, 'COMMA')} + ' đ'">68.000 đ</span>
                     </div>
 
                     <!-- Cột Thao tác -->
                     <div class="action-cell">
-                        <button type="button" class="btn-remove-item" style="background:none; border:none; padding:0; cursor:pointer; font-family:inherit;" 
+                        <button type="button" class="btn-remove-item" style="background:none; border:none; padding:4px 8px; cursor:pointer; font-family:inherit;" 
                                 th:data-href="@{'/cart/remove/' + ${item.id}}" 
                                 th:data-title="${item.book != null ? item.book.title : 'cuốn sách này'}"
                                 onclick="confirmRemoveCartItem(this.getAttribute('data-href'), this.getAttribute('data-title'))">
@@ -758,20 +794,20 @@
                 </div>
             </div>
 
-            <!-- 4. KHUNG SHOPEE VOUCHER & XU (LIQUID GLASS VOUCHER BOX) -->
+            <!-- 4. KHUNG SHOPEE VOUCHER (LIQUID GLASS VOUCHER BOX) -->
             <div class="voucher-and-coins-card cart-voucher-box">
                 <div class="voucher-row">
                     <div class="voucher-left">
-                        <i class="fa-solid fa-ticket text-danger" style="font-size:20px;"></i>
-                        <span>Chuỗi Sách Cũ Voucher</span>
-                        <span id="cartVoucherBadge" style="display:none; font-size:12px; font-weight:800; color:#ee4d2d; background:rgba(238,77,45,0.1); border:1px solid rgba(238,77,45,0.3); border-radius:9999px; padding:2px 10px; align-items:center; gap:4px;">
+                        <i class="fa-solid fa-ticket" style="font-size:18px; color:var(--rebook-leather);"></i>
+                        <span>ReBook Voucher Khuyến Mãi</span>
+                        <span id="cartVoucherBadge" style="display:none; font-size:12px; font-weight:800; color:var(--rebook-leather); background:rgba(140,74,39,0.1); border:1px solid rgba(140,74,39,0.25); border-radius:9999px; padding:2px 10px; align-items:center; gap:4px;">
                             <i class="fa-solid fa-check"></i> <span id="cartVoucherCodeDisplay"></span>
                         </span>
                     </div>
                     <div class="voucher-right">
                         <span id="cartVoucherStatusDesc" style="font-size:13.5px; color:var(--color-text-secondary);">Chưa chọn voucher</span>
-                        <span id="cartVoucherDiscountBadge" style="display:none; font-size:14px; font-weight:800; color:#ee4d2d;">-₫0</span>
-                        <button type="button" class="btn-select-voucher" onclick="openCartVoucherModal()" style="color:#0288d1; font-weight:700; cursor:pointer; font-size:13.5px; padding:6px 14px; border-radius:9999px; background:rgba(2,136,209,0.08); border:none; display:inline-flex; align-items:center; gap:6px;">
+                        <span id="cartVoucherDiscountBadge" style="display:none; font-size:14px; font-weight:800; color:var(--rebook-leather);">-0 đ</span>
+                        <button type="button" class="btn-select-voucher" onclick="openCartVoucherModal()">
                             <i class="fa-solid fa-ticket"></i> <span id="cartVoucherBtnText">Chọn Hoặc Nhập Mã &gt;</span>
                         </button>
                         <button type="button" id="btnRemoveCartVoucher" onclick="removeCartVoucher()" style="display:none; color:#dc2626; font-weight:700; cursor:pointer; font-size:12px; padding:5px 10px; border-radius:9999px; background:rgba(220,38,38,0.08); border:none;" title="Hủy áp dụng mã">
@@ -779,51 +815,37 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="voucher-row" style="border-bottom:none;">
-                    <div class="voucher-left">
-                        <i class="fa-solid fa-coins text-warning" style="font-size:20px;"></i>
-                        <span>Điểm Tích Lũy Sách Cũ</span>
-                        <span style="font-size:12px; color:#78716C; font-weight:400;">(Dùng 2.000 Điểm tiết kiệm ₫2.000)</span>
-                    </div>
-                    <div class="voucher-right">
-                        <span id="cartCoinsDiscountDisplay" style="font-size:13.5px; color:#ee4d2d; font-weight:800;">-₫2.000</span>
-                        <input type="checkbox" class="checkbox-custom" id="cartCoinsCheckbox" checked onchange="toggleCartCoins(this)">
-                    </div>
-                </div>
             </div>
 
-            <!-- 5. THANH THANH TOÁN DÍNH ĐÁY (SHOPEE STICKY BOTTOM CHECKOUT BAR) -->
+            <!-- 5. THANH THANH TOÁN DÍNH ĐÁY -->
             <div class="cart-sticky-bottom-bar cart-summary-card">
                 <div class="sticky-left-actions">
                     <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
                         <input type="checkbox" class="checkbox-custom" checked id="checkAllBottom">
                         <span style="font-weight:700;">Chọn Tất Cả (<span th:text="${totalQuantity}">1</span>)</span>
                     </label>
-                    <button type="button" class="btn-del-all" onclick="confirmClearCart()" style="background:none; border:none; padding:0; cursor:pointer; font-size:inherit; font-family:inherit; color:inherit;">
+                    <button type="button" class="btn-del-all" onclick="confirmClearCart()" style="background:none; border:none; padding:4px 8px; cursor:pointer; font-size:inherit; font-family:inherit;">
                         <i class="fa-regular fa-trash-can me-1"></i> Xóa Tất Cả
                     </button>
-                    <span style="color:#78716C; cursor:pointer; font-size:13px;">Bỏ sản phẩm không hoạt động</span>
-                    <span style="color:var(--color-fire); cursor:pointer; font-size:13px; font-weight:600;"><i class="fa-regular fa-heart me-1"></i> Lưu vào mục Đã thích</span>
                 </div>
 
                 <div class="sticky-right-checkout">
                     <div class="checkout-pricing-box">
-                        <div id="cartVoucherDiscountLine" style="display:none; font-size:13px; color:#ee4d2d; font-weight:700; margin-bottom:2px;">
-                            <i class="fa-solid fa-ticket me-1"></i> Giảm giá Voucher: <span id="cartSummaryVoucherVal">-₫0</span>
+                        <div id="cartVoucherDiscountLine" style="display:none; font-size:13px; color:var(--rebook-leather); font-weight:700; margin-bottom:2px;">
+                            <i class="fa-solid fa-ticket me-1"></i> Giảm giá Voucher: <span id="cartSummaryVoucherVal">-0 đ</span>
                         </div>
                         <div class="total-payment-line">
                             <span>Tổng thanh toán (<strong th:text="${totalQuantity} + ' Sản phẩm'">1 Sản phẩm</strong>):</span>
-                            <span class="total-amount-fire" id="cartFinalTotalDisplay" th:text="'₫' + ${#numbers.formatDecimal(totalPrice, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                            <span class="total-amount-fire" id="cartFinalTotalDisplay" th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'">68.000 đ</span>
                         </div>
                         <div class="savings-note-gold" th:if="${totalSavings != null and totalSavings.doubleValue() > 0}" 
-                             th:text="'Tiết kiệm được ₫' + ${#numbers.formatDecimal(totalSavings, 0, 'POINT', 0, 'COMMA')} + ' so với sách mới'">
-                            Tiết kiệm được ₫52.000
+                             th:text="'Tiết kiệm được ' + ${#numbers.formatDecimal(totalSavings, 0, 'POINT', 0, 'COMMA')} + ' đ so với sách mới'">
+                            Tiết kiệm được 52.000 đ
                         </div>
                     </div>
 
                     <button type="button" class="btn-shopee-checkout btn-checkout-primary" id="btnCartCheckout" onclick="proceedToCheckout();">
-                        <i class="fa-solid fa-credit-card me-1"></i> MUA HÀNG
+                        <i class="fa-solid fa-credit-card me-1"></i> Mua Hàng
                     </button>
                 </div>
             </div>
@@ -831,38 +853,14 @@
             <!-- 6. GỢI Ý MUA KÈM DƯỚI ĐÁY GIỎ HÀNG -->
             <section class="cart-recommend-section recommend-section">
                 <div class="recommend-title">
-                    <i class="fa-solid fa-heart text-danger"></i> CÓ THỂ BẠN CŨNG THÍCH
+                    <i class="fa-solid fa-book-bookmark me-1" style="color:var(--rebook-leather);"></i> Gợi Ý Sách Hay Cho Bạn
                 </div>
                 <div class="recommend-grid">
-                    <a th:href="@{/books/2}" class="recommend-card">
-                        <img src="/images/books/book_2.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Yêu Những Điều Không Hoàn Hảo</div>
-                        <div class="recommend-price">₫45.000</div>
-                    </a>
-                    <a th:href="@{/books/3}" class="recommend-card">
-                        <img src="/images/books/book_3.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Học Cách Mặc Kệ Điểm Yếu</div>
-                        <div class="recommend-price">₫52.000</div>
-                    </a>
-                    <a th:href="@{/books/4}" class="recommend-card">
-                        <img src="/images/books/book_4.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Đắc Nhân Tâm (Bản Cũ Đẹp)</div>
-                        <div class="recommend-price">₫45.000</div>
-                    </a>
-                    <a th:href="@{/books/5}" class="recommend-card">
-                        <img src="/images/books/book_5.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Nhà Giả Kim (Paulo Coelho)</div>
-                        <div class="recommend-price">₫38.000</div>
-                    </a>
-                    <a th:href="@{/books/6}" class="recommend-card">
-                        <img src="/images/books/book_6.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Kính Vạn Hoa (Nguyễn Nhật Ánh)</div>
-                        <div class="recommend-price">₫35.000</div>
-                    </a>
-                    <a th:href="@{/books/7}" class="recommend-card">
-                        <img src="/images/books/book_7.jpg" alt="Sách gợi ý" class="recommend-thumb">
-                        <div class="recommend-name">Cho Tôi Xin Một Vé Đi Tuổi Thơ</div>
-                        <div class="recommend-price">₫42.000</div>
+                    <a th:each="rb : ${recommendedBooks}" th:href="@{'/books/' + ${rb.id}}" class="recommend-card">
+                        <img th:src="${rb.primaryImageUrl != null ? rb.primaryImageUrl : '/images/books/book_1.jpg'}" 
+                             th:alt="${rb.title}" class="recommend-thumb" onerror="this.src='/images/books/book_1.jpg';">
+                        <div class="recommend-name" th:text="${rb.title}">Tên sách</div>
+                        <div class="recommend-price" th:text="${#numbers.formatDecimal(rb.minPrice != null ? rb.minPrice : rb.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">45.000 đ</div>
                     </a>
                 </div>
             </section>
@@ -886,37 +884,37 @@
         <div class="modal-body-shopee" style="max-width: 580px; width: 92vw; border-radius: 24px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(32px) saturate(200%); border: 1.5px solid rgba(255, 255, 255, 0.95); box-shadow: 0 24px 60px rgba(45, 24, 15, 0.22);">
             
             <!-- Modal Header -->
-            <div style="padding:18px 24px; border-bottom:1.5px solid rgba(232, 222, 200, 0.8); display:flex; justify-content:space-between; align-items:center;">
+            <div style="padding:16px 22px; border-bottom:1.5px solid rgba(232, 222, 200, 0.8); display:flex; justify-content:space-between; align-items:center;">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <div style="width:36px; height:36px; border-radius:10px; background:rgba(238,77,45,0.1); color:#ee4d2d; display:flex; align-items:center; justify-content:center; font-size:16px;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:rgba(140,74,39,0.1); color:var(--rebook-leather); display:flex; align-items:center; justify-content:center; font-size:16px;">
                         <i class="fa-solid fa-ticket"></i>
                     </div>
                     <div>
-                        <h3 style="font-size:17px; font-weight:800; color:#1C1917; margin:0;">Chọn Chuỗi Sách Cũ Voucher</h3>
+                        <h3 style="font-size:16px; font-weight:800; color:#1C1917; margin:0;">Chọn Mã Ưu Đãi ReBook</h3>
                         <p style="font-size:12px; color:#78716C; margin:2px 0 0 0;">Áp dụng voucher để nhận mức giảm giá tạm tính ngay trong giỏ hàng</p>
                     </div>
                 </div>
-                <button type="button" onclick="closeCartVoucherModal()" style="border:none; background:none; font-size:26px; cursor:pointer; color:#78716C; padding:0 4px; line-height:1;">&times;</button>
+                <button type="button" onclick="closeCartVoucherModal()" style="border:none; background:none; font-size:24px; cursor:pointer; color:#78716C; padding:0 4px; line-height:1;">&times;</button>
             </div>
             
             <!-- Banner dẫn đến Kho Voucher -->
-            <div style="padding: 12px 24px; background: rgba(238, 77, 45, 0.05); border-bottom: 1px dashed rgba(238, 77, 45, 0.2); display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:13px; color:#78716C;"><i class="fa-solid fa-gift text-danger me-1"></i> Bạn muốn săn thêm mã Freeship &amp; ưu đãi?</span>
-                <a th:href="@{/vouchers}" target="_blank" style="font-size:13px; font-weight:700; color:#ee4d2d; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+            <div style="padding: 10px 22px; background: rgba(140, 74, 39, 0.05); border-bottom: 1px dashed rgba(140, 74, 39, 0.2); display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:12.5px; color:#78716C;"><i class="fa-solid fa-gift me-1" style="color:var(--rebook-leather);"></i> Bạn muốn săn thêm mã Freeship &amp; ưu đãi?</span>
+                <a th:href="@{/vouchers}" target="_blank" style="font-size:12.5px; font-weight:700; color:var(--rebook-leather); text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
                     Vào Kho Voucher <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
                 </a>
             </div>
 
             <!-- Ô nhập mã Voucher thủ công -->
-            <div style="padding: 16px 24px; border-bottom: 1px solid rgba(232, 222, 200, 0.7); background: rgba(255, 255, 255, 0.7);">
+            <div style="padding: 14px 22px; border-bottom: 1px solid rgba(232, 222, 200, 0.7); background: rgba(255, 255, 255, 0.7);">
                 <div style="display:flex; gap:10px; align-items:center;">
                     <div style="position:relative; flex:1;">
                         <i class="fa-solid fa-ticket" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#78716C; font-size:14px;"></i>
                         <input type="text" id="modalVoucherCodeInput" placeholder="Nhập mã voucher (VD: VOUCHER20K, FREESHIP15K, VIP10)..."
-                               style="width:100%; box-sizing:border-box; padding:10px 14px 10px 38px; font-size:13.5px; font-weight:600; text-transform:uppercase; border:1.5px solid rgba(232, 222, 200, 0.9); border-radius:9999px; outline:none; background:#fff; transition:border-color 0.2s;">
+                               style="width:100%; box-sizing:border-box; padding:9px 14px 9px 38px; font-size:13px; font-weight:600; text-transform:uppercase; border:1.5px solid rgba(232, 222, 200, 0.9); border-radius:10px; outline:none; background:#fff; transition:border-color 0.2s;">
                     </div>
                     <button type="button" onclick="applyVoucherFromInput()" 
-                            style="padding:10px 22px; background:linear-gradient(135deg, #8C4A27 0%, #ee4d2d 100%); color:#fff; border:none; border-radius:9999px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; box-shadow:0 4px 12px rgba(238,77,45,0.25);">
+                            style="padding:9px 20px; background:linear-gradient(135deg, #A05A32 0%, #8C4A27 100%); color:#fff; border:none; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; box-shadow:0 4px 12px rgba(140,74,39,0.25);">
                         Áp Dụng
                     </button>
                 </div>
@@ -924,9 +922,9 @@
             </div>
 
             <!-- Danh sách Voucher khả dụng -->
-            <div style="padding:16px 24px; max-height:360px; overflow-y:auto; display:flex; flex-direction:column; gap:12px;">
+            <div style="padding:16px 22px; max-height:360px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
                 <div style="font-size:13px; font-weight:700; color:#574E45; margin-bottom:-4px;">
-                    <i class="fa-solid fa-ticket text-danger me-1"></i> Mã Giảm Giá &amp; Vận Chuyển Khả Dụng
+                    <i class="fa-solid fa-ticket me-1" style="color:var(--rebook-leather);"></i> Mã Giảm Giá &amp; Vận Chuyển Khả Dụng
                 </div>
 
                 <!-- Lặp qua danh sách voucher từ database nếu có -->
@@ -934,26 +932,26 @@
                     <div th:each="v : ${vouchers}" 
                          class="voucher-picker-item"
                          th:data-code="${v.code}"
-                         style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-radius:14px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(232,222,200,0.9); gap:12px; transition:all 0.2s;">
+                         style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:12px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(232,222,200,0.9); gap:12px; transition:all 0.2s;">
                         <div style="display:flex; align-items:center; gap:12px;">
-                            <div style="width:42px; height:42px; border-radius:10px; background:rgba(238,77,45,0.1); color:#ee4d2d; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                            <div style="width:38px; height:38px; border-radius:10px; background:rgba(140,74,39,0.1); color:var(--rebook-leather); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
                                 <i class="fa-solid fa-ticket"></i>
                             </div>
                             <div>
                                 <div style="display:flex; align-items:center; gap:8px;">
-                                    <strong style="font-size:14px; color:#1C1917;" th:text="${v.code}">VOUCHER20K</strong>
-                                    <span style="font-size:11.5px; font-weight:800; color:#ee4d2d;" 
-                                          th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? ('Giảm ' + v.discountValue.intValue() + '%') : (v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).FREE_SHIPPING ? 'Freeship Vận Chuyển' : ('Giảm ' + #numbers.formatDecimal(v.discountValue, 0, 'POINT', 0, 'COMMA') + '₫'))}">Giảm 20.000₫</span>
+                                    <strong style="font-size:13.5px; color:#1C1917;" th:text="${v.code}">VOUCHER20K</strong>
+                                    <span style="font-size:11.5px; font-weight:800; color:var(--rebook-leather);" 
+                                          th:text="${v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).PERCENT ? ('Giảm ' + v.discountValue.intValue() + '%') : (v.discountType == T(vn.iotstar.entity.Voucher.DiscountType).FREE_SHIPPING ? 'Freeship Vận Chuyển' : ('Giảm ' + #numbers.formatDecimal(v.discountValue, 0, 'POINT', 0, 'COMMA') + ' đ'))}">Giảm 20.000 đ</span>
                                 </div>
                                 <div style="font-size:12px; color:#57534E; margin-top:2px;" th:text="${v.description}">Mô tả voucher</div>
                                 <div style="font-size:11px; color:#78716C; margin-top:2px;" 
-                                     th:text="'Đơn tối thiểu: ₫' + ${#numbers.formatDecimal(v.minOrderAmount != null ? v.minOrderAmount : 0, 0, 'POINT', 0, 'COMMA')}">Đơn tối thiểu ₫100.000</div>
+                                     th:text="'Đơn tối thiểu: ' + ${#numbers.formatDecimal(v.minOrderAmount != null ? v.minOrderAmount : 0, 0, 'POINT', 0, 'COMMA')} + ' đ'">Đơn tối thiểu 100.000 đ</div>
                             </div>
                         </div>
                         <button type="button" 
                                 th:data-code="${v.code}"
                                 onclick="applyVoucherCode(this.getAttribute('data-code'))"
-                                style="padding:6px 16px; border-radius:9999px; background:#ee4d2d; color:#fff; border:none; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap; transition:all 0.2s;">
+                                style="padding:6px 14px; border-radius:8px; background:var(--rebook-leather); color:#fff; border:none; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; transition:all 0.2s;">
                             Áp Dụng
                         </button>
                     </div>
@@ -1056,11 +1054,11 @@
         const coinsDiscount = 2000;
 
         function formatVND(num) {
-            return '₫' + Math.max(0, Math.round(num)).toLocaleString('vi-VN');
+            return Math.max(0, Math.round(num)).toLocaleString('vi-VN') + ' đ';
         }
 
         function calculateCartFinalTotal() {
-            const coinsVal = document.getElementById('cartCoinsCheckbox')?.checked ? coinsDiscount : 0;
+            const coinsVal = 0;
             const finalTotal = Math.max(0, rawSubtotal - appliedVoucherDiscount - coinsVal);
             
             const displayEl = document.getElementById('cartFinalTotalDisplay');

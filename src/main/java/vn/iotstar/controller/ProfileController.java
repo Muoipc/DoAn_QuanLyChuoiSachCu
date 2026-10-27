@@ -70,6 +70,9 @@ public class ProfileController {
     @Autowired
     private vn.iotstar.service.IOtpService otpService;
 
+    @Autowired
+    private vn.iotstar.repository.SupportTicketRepository supportTicketRepository;
+
     /**
      * Xác định userId của phiên hiện tại:
      * Ưu tiên tài khoản đăng nhập Spring Security, fallback ID 4 (Nguyễn Song Hoàng Phúc).
@@ -113,10 +116,16 @@ public class ProfileController {
         int totalOrders = orderRepository.findByUserIdWithItems(userId).size();
         int totalConsignments = consignmentRepository.findByUserIdOrderByCreatedAtDesc(userId).size();
 
+        // Danh sách phiếu hỗ trợ khiếu nại của khách hàng
+        List<vn.iotstar.entity.SupportTicket> userTickets = (user.getEmail() != null && !user.getEmail().isBlank())
+                ? supportTicketRepository.findByEmailOrderByCreatedAtDesc(user.getEmail())
+                : java.util.Collections.emptyList();
+
         model.addAttribute("user", user);
         model.addAttribute("addresses", addresses);
         model.addAttribute("totalOrders", totalOrders);
         model.addAttribute("totalConsignments", totalConsignments);
+        model.addAttribute("userTickets", userTickets);
         model.addAttribute("activeTab", tab);
         model.addAttribute("pageTitle", "Hồ Sơ Của Tôi — Chuỗi Cửa Hàng Sách Cũ TP.HCM");
 

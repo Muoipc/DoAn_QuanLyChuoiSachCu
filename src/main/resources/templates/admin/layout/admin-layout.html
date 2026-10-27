@@ -16,55 +16,80 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js 4.4 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         /* =====================================================================
-           HỆ MÀU SÁCH CŨ ẤM ÁP & APPLE LIQUID GLASS TOKENS
+           REBOOK WHITE APPLE LIQUID GLASS & SQUIRCLE ICONS DESIGN SYSTEM
            ===================================================================== */
         :root {
-            /* Tông Sách Cũ Sepia & Giấy Mộc */
-            --admin-paper-bg: #FAF6F0;
-            --admin-body-bg: #FAF6F0;
-            --admin-text-main: #2D180F;
-            --admin-text-secondary: #6B5E55;
-            --admin-text-muted: #8F8175;
+            /* Nền Canvas Sạch Sẽ (Loại bỏ triệt để đốm radial-gradient) */
+            --rebook-canvas: #FAFAF9;
+            --rebook-white: #FFFFFF;
 
-            /* Nâu Da Thuộc & Đậm Đà Gỗ Cổ */
-            --admin-primary: #8C4A27;
-            --admin-primary-dark: #683418;
-            --admin-primary-hover: #A2562E;
-            --admin-primary-light: #F5ECE4;
-            --admin-primary-subtle: rgba(140, 74, 39, 0.08);
+            /* Mực & Typography */
+            --rebook-ink-main: #1C1917;
+            --rebook-ink-secondary: #44403C;
+            --rebook-ink-muted: #78716C;
+            --rebook-border: #ECE7DE;
+            --rebook-border-subtle: rgba(236, 231, 222, 0.65);
 
-            /* Điểm Nhấn Shopee Cam Đỏ & Vàng Vintage */
-            --admin-accent-shopee: #EE4D2D;
-            --admin-accent-shopee-dark: #D73211;
-            --admin-accent-shopee-glow: rgba(238, 77, 45, 0.35);
-            --admin-accent-gold: #D4AF37;
-            --admin-accent-gold-soft: #F9E7B3;
+            /* Màu Nhấn Thương Hiệu ReBook */
+            --rebook-leather: #8C4A27;
+            --rebook-leather-hover: #733615;
+            --rebook-leather-soft: #F5ECE4;
+            --rebook-leather-glow: rgba(140, 74, 39, 0.15);
 
-            /* Gradient Gỗ Gụ Cổ Điển Dành Cho Sidebar */
-            --admin-wood-dark: #2D180F;
-            --admin-wood-black: #1A0D07;
-            --admin-sidebar-text: #DCD0C0;
-            --admin-sidebar-heading: #C5A880;
+            /* Trạng thái Soft Pastel (Đồng bộ Claymorphism) */
+            --rebook-emerald: #059669;
+            --rebook-emerald-soft: #ECFDF5;
+            --rebook-amber: #B45309;
+            --rebook-amber-soft: #FFFBEB;
+            --rebook-rose: #DC2626;
+            --rebook-rose-soft: #FEF2F2;
 
-            /* Apple Liquid Glass Tokens */
-            --glass-bg: rgba(250, 246, 240, 0.82);
-            --glass-bg-card: rgba(255, 255, 255, 0.88);
-            --glass-bg-subtle: rgba(250, 246, 240, 0.65);
-            --glass-border: 1px solid rgba(232, 222, 200, 0.7);
-            --glass-border-strong: 1px solid rgba(215, 200, 175, 0.85);
-            --glass-blur: blur(24px) saturate(180%);
-            --glass-shadow: 0 10px 30px rgba(45, 24, 15, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.9);
-            --glass-shadow-hover: 0 16px 36px rgba(45, 24, 15, 0.09), inset 0 1px 1px rgba(255, 255, 255, 0.95);
-            --glass-shadow-dropdown: 0 18px 45px rgba(45, 24, 15, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            /* Apple Liquid Glass Bạch Ngọc Tokens */
+            --liquid-glass-bg: rgba(255, 255, 255, 0.80);
+            --liquid-glass-card: rgba(255, 255, 255, 0.84);
+            --liquid-glass-blur: blur(28px) saturate(190%) brightness(102%);
+            --liquid-glass-border: 1.5px solid rgba(255, 255, 255, 0.95);
+            --liquid-glass-rim: inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.98), inset 0 -1px 1px 0 rgba(45, 24, 15, 0.02);
+            --liquid-glass-shadow: 0 14px 34px -4px rgba(45, 24, 15, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.02);
+            --liquid-glass-hover-shadow: 0 20px 45px -4px rgba(45, 24, 15, 0.09), inset 0 2px 2px rgba(255, 255, 255, 1);
+            --liquid-glass-dropdown: 0 20px 48px -6px rgba(45, 24, 15, 0.1), inset 0 1.5px 2px rgba(255, 255, 255, 0.95);
 
-            /* Bo góc Squircle */
+            /* Bo góc Squircle Apple */
             --squircle-sm: 8px;
-            --squircle-md: 10px;
-            --squircle-lg: 14px;
+            --squircle-md: 12px;
+            --squircle-lg: 16px;
             --squircle-pill: 9999px;
+
+            /* Tương Thích Ngược Các Biến Cũ */
+            --admin-paper-bg: var(--rebook-canvas);
+            --admin-body-bg: var(--rebook-canvas);
+            --admin-text-main: var(--rebook-ink-main);
+            --admin-text-secondary: var(--rebook-ink-secondary);
+            --admin-text-muted: var(--rebook-ink-muted);
+            --admin-primary: var(--rebook-leather);
+            --admin-primary-dark: var(--rebook-leather-hover);
+            --admin-primary-hover: var(--rebook-leather-hover);
+            --admin-primary-light: var(--rebook-leather-soft);
+            --admin-accent-shopee: var(--rebook-leather);
+            --admin-accent-gold: var(--rebook-amber);
+            --glass-bg: var(--liquid-glass-bg);
+            --glass-bg-card: var(--liquid-glass-card);
+            --glass-bg-subtle: rgba(250, 246, 240, 0.65);
+            --glass-border: 1px solid var(--rebook-border);
+            --glass-border-strong: var(--liquid-glass-border);
+            --glass-blur: var(--liquid-glass-blur);
+            --glass-shadow: var(--liquid-glass-shadow);
+            --glass-shadow-hover: var(--liquid-glass-hover-shadow);
+            --glass-shadow-dropdown: var(--liquid-glass-dropdown);
+            --wood-primary: var(--rebook-leather);
+            --wood-dark: var(--rebook-leather-hover);
+            --ink-dark: var(--rebook-ink-main);
+            --ink-muted: var(--rebook-ink-muted);
         }
 
         * {
@@ -72,14 +97,10 @@
         }
 
         body {
-            font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--admin-body-bg);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(238, 77, 45, 0.025) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(140, 74, 39, 0.035) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(212, 175, 55, 0.015) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: var(--admin-text-main);
+            font-family: 'Be Vietnam Pro', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--rebook-canvas) !important;
+            background-image: none !important; /* XÓA BỎ HOÀN TOÀN RADIAL GRADIENT LEM NHEM */
+            color: var(--rebook-ink-main);
             margin: 0;
             padding: 0;
             overflow-x: hidden;
@@ -88,113 +109,86 @@
         }
 
         /* =====================================================================
-           1. SIDEBAR (GỖ GỤ CỔ ĐIỂN & VỆT SÁNG SHOPEE CAM ĐỎ)
+           1. SIDEBAR BẠCH NGỌC KÍNH LỎNG (WHITE APPLE LIQUID GLASS)
            ===================================================================== */
         #adminSidebar {
-            width: 270px;
+            width: 260px;
             min-height: 100vh;
-            background: linear-gradient(180deg, var(--admin-wood-dark) 0%, #1E100A 40%, var(--admin-wood-black) 100%);
-            border-right: 1px solid rgba(232, 222, 200, 0.12);
-            box-shadow: 4px 0 25px rgba(26, 13, 7, 0.25);
+            background: var(--liquid-glass-bg);
+            backdrop-filter: var(--liquid-glass-blur);
+            -webkit-backdrop-filter: var(--liquid-glass-blur);
+            border-right: 1px solid var(--rebook-border);
+            box-shadow: 2px 0 20px rgba(45, 24, 15, 0.03), inset -1.5px 0 1.5px rgba(255, 255, 255, 0.95);
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1040;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
         }
 
         #adminSidebar::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
-
-        #adminSidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
         #adminSidebar::-webkit-scrollbar-thumb {
-            background: rgba(212, 175, 55, 0.2);
+            background: rgba(140, 74, 39, 0.15);
             border-radius: 10px;
         }
 
-        #adminSidebar::-webkit-scrollbar-thumb:hover {
-            background: rgba(212, 175, 55, 0.4);
-        }
-
         #adminSidebar.collapsed {
-            margin-left: -270px;
+            margin-left: -260px;
         }
 
         .sidebar-brand {
-            padding: 22px 20px;
+            padding: 18px 20px;
             display: flex;
             align-items: center;
-            gap: 13px;
-            border-bottom: 1px solid rgba(232, 222, 200, 0.12);
+            gap: 12px;
+            border-bottom: 1px solid var(--rebook-border);
             text-decoration: none;
-            color: #ffffff;
-            position: relative;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .sidebar-brand::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 20px;
-            right: 20px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.35), transparent);
+            color: var(--rebook-ink-main);
+            background: transparent;
         }
 
         .sidebar-brand-icon {
-            width: 44px;
-            height: 44px;
+            width: 38px;
+            height: 38px;
             border-radius: var(--squircle-md);
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(140, 74, 39, 0.35) 100%);
-            border: 1px solid rgba(212, 175, 55, 0.45);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--rebook-border);
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--admin-accent-gold);
-            font-size: 20px;
             flex-shrink: 0;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            transition: transform 0.25s ease, border-color 0.25s ease;
         }
-
         .sidebar-brand:hover .sidebar-brand-icon {
-            transform: scale(1.06) rotate(-3deg);
-            border-color: rgba(212, 175, 55, 0.75);
-            color: #FFE58F;
+            transform: scale(1.06);
+            border-color: var(--rebook-leather);
         }
 
         .sidebar-brand-text h5 {
             margin: 0;
-            font-size: 15.5px;
+            font-size: 17px;
             font-weight: 800;
-            letter-spacing: 0.8px;
-            background: linear-gradient(135deg, #FFF9EB 0%, #F5D38A 50%, #D4AF37 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            color: var(--rebook-ink-main);
+            letter-spacing: -0.3px;
         }
-
         .sidebar-brand-text small {
             font-size: 11px;
             font-weight: 600;
-            color: var(--admin-sidebar-heading);
-            letter-spacing: 0.6px;
+            color: var(--rebook-ink-muted);
             text-transform: uppercase;
+            letter-spacing: 0.3px;
             display: block;
-            margin-top: 2px;
-            opacity: 0.85;
+            margin-top: 1px;
         }
 
         .sidebar-menu {
-            padding: 14px 0 24px;
+            padding: 12px 0 24px;
             list-style: none;
             margin: 0;
             flex: 1;
@@ -203,88 +197,84 @@
         .sidebar-heading {
             font-size: 10.5px;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: var(--admin-sidebar-heading);
-            padding: 14px 22px 6px;
+            letter-spacing: 0.8px;
+            color: #A8A29E;
+            padding: 14px 20px 6px;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 6px;
-            opacity: 0.85;
         }
 
         .sidebar-item {
-            margin: 2px 10px;
+            margin: 3px 10px;
         }
 
         .sidebar-item a {
             display: flex;
             align-items: center;
-            gap: 13px;
-            padding: 10px 16px;
-            color: var(--admin-sidebar-text);
+            gap: 12px;
+            padding: 9px 15px;
+            color: var(--rebook-ink-secondary);
             text-decoration: none;
             font-size: 13.5px;
             font-weight: 500;
-            border-radius: var(--squircle-md);
-            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left: 3.5px solid transparent;
+            border-radius: var(--squircle-pill);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
 
         .sidebar-item a i {
-            width: 20px;
+            width: 18px;
             text-align: center;
-            font-size: 15px;
-            color: #AFA193;
+            font-size: 14px;
+            color: var(--rebook-ink-muted);
             transition: color 0.2s, transform 0.2s;
             flex-shrink: 0;
         }
 
         .sidebar-item a:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--rebook-leather);
             transform: translateX(3px);
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.03);
         }
-
         .sidebar-item a:hover i {
-            color: var(--admin-accent-shopee);
-            transform: scale(1.12);
+            color: var(--rebook-leather);
+            transform: scale(1.1);
         }
 
         .sidebar-item.active a {
-            background: linear-gradient(90deg, rgba(238, 77, 45, 0.25) 0%, rgba(238, 77, 45, 0.06) 100%);
-            color: #FFFFFF;
-            border-left-color: var(--admin-accent-shopee);
+            background: var(--rebook-leather) !important;
+            color: #FFFFFF !important;
             font-weight: 600;
-            box-shadow: inset 0 0 16px rgba(238, 77, 45, 0.15);
+            box-shadow: 0 4px 14px var(--rebook-leather-glow), inset 0 1px 1px rgba(255, 255, 255, 0.4);
         }
-
         .sidebar-item.active a i {
-            color: var(--admin-accent-shopee);
-            filter: drop-shadow(0 0 6px var(--admin-accent-shopee-glow));
+            color: #FFFFFF !important;
         }
 
         .sidebar-footer-info {
-            padding: 14px 18px;
-            margin: 12px;
+            padding: 12px 16px;
+            margin: 12px 14px;
             border-radius: var(--squircle-md);
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(232, 222, 200, 0.08);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--rebook-border);
             font-size: 11px;
-            color: #AFA193;
+            color: var(--rebook-ink-muted);
             text-align: center;
         }
 
         /* =====================================================================
-           2. MAIN WRAPPER & TOP NAVBAR (APPLE LIQUID GLASS)
+           2. MAIN WRAPPER & TOP NAVBAR (WHITE LIQUID GLASS)
            ===================================================================== */
         #adminMain {
-            margin-left: 270px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-left: 260px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            background: transparent;
         }
 
         #adminMain.expanded {
@@ -292,12 +282,13 @@
         }
 
         .admin-navbar {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border-bottom: var(--glass-border);
-            box-shadow: 0 4px 20px rgba(45, 24, 15, 0.035), inset 0 1px 1px rgba(255, 255, 255, 0.85);
-            padding: 12px 28px;
+            background: var(--liquid-glass-bg);
+            backdrop-filter: var(--liquid-glass-blur);
+            -webkit-backdrop-filter: var(--liquid-glass-blur);
+            border-bottom: 1px solid var(--rebook-border);
+            box-shadow: 0 2px 12px rgba(45, 24, 15, 0.025), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
+            height: 62px;
+            padding: 0 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -307,382 +298,472 @@
         }
 
         .navbar-toggle-btn {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(232, 222, 200, 0.85);
-            color: var(--admin-text-main);
-            font-size: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--rebook-border);
+            color: var(--rebook-ink-main);
+            font-size: 14px;
             border-radius: var(--squircle-md);
             padding: 7px 12px;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04);
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.03);
             display: inline-flex;
             align-items: center;
             justify-content: center;
         }
-
         .navbar-toggle-btn:hover {
             background: #FFFFFF;
-            color: var(--admin-accent-shopee);
-            border-color: rgba(238, 77, 45, 0.4);
-            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.15);
+            color: var(--rebook-leather);
+            border-color: var(--rebook-leather);
         }
 
         .branch-badge {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(232, 222, 200, 0.8);
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid var(--rebook-border);
             border-radius: var(--squircle-pill);
             padding: 6px 14px;
             font-size: 13px;
-            color: var(--admin-text-main);
+            font-weight: 500;
+            color: var(--rebook-ink-main);
             display: inline-flex;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.03);
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.02);
         }
 
         .glass-btn {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(232, 222, 200, 0.8);
-            color: var(--admin-text-main);
-            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--rebook-border);
+            color: var(--rebook-ink-main);
+            border-radius: var(--squircle-md);
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.95);
             transition: all 0.2s ease;
         }
-
         .glass-btn:hover, .glass-btn:focus {
             background: #FFFFFF;
-            border-color: rgba(140, 74, 39, 0.35);
-            box-shadow: 0 4px 14px rgba(45, 24, 15, 0.08), inset 0 1px 1px rgba(255, 255, 255, 1);
-            color: var(--admin-primary);
+            border-color: var(--rebook-leather);
+            color: var(--rebook-leather);
         }
 
-        .notif-pulse {
-            animation: pulse-dot 1.8s infinite;
-        }
-
-        @keyframes pulse-dot {
-            0% { transform: translate(-50%, -50%) scale(0.95); box-shadow: 0 0 0 0 rgba(238, 77, 45, 0.7); }
-            70% { transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 0 6px rgba(238, 77, 45, 0); }
-            100% { transform: translate(-50%, -50%) scale(0.95); box-shadow: 0 0 0 0 rgba(238, 77, 45, 0); }
-        }
-
-        /* Menu Dropdown Kính Mờ */
         .glass-dropdown-menu {
-            background: rgba(255, 255, 255, 0.94);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid rgba(232, 222, 200, 0.85);
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: var(--liquid-glass-blur);
+            -webkit-backdrop-filter: var(--liquid-glass-blur);
+            border: 1px solid var(--rebook-border);
             border-radius: var(--squircle-lg);
-            box-shadow: var(--glass-shadow-dropdown);
+            box-shadow: var(--liquid-glass-dropdown);
             padding: 8px;
         }
-
         .glass-dropdown-menu .dropdown-item {
             border-radius: var(--squircle-sm);
             padding: 8px 12px;
             font-size: 13px;
-            color: var(--admin-text-main);
+            color: var(--rebook-ink-main);
             transition: all 0.15s ease;
         }
-
         .glass-dropdown-menu .dropdown-item:hover {
-            background: rgba(140, 74, 39, 0.08);
-            color: var(--admin-primary);
-        }
-
-        .glass-dropdown-menu .dropdown-item.text-danger:hover {
-            background: rgba(238, 77, 45, 0.08);
-            color: var(--admin-accent-shopee) !important;
+            background: var(--rebook-leather-soft);
+            color: var(--rebook-leather);
         }
 
         /* =====================================================================
-           3. COMPONENTS (CARD, NÚT BẤM, BẢNG BIỂU, INPUT, BADGE, MODAL)
+           3. WHITE LIQUID GLASS CARDS & UI COMPONENTS
            ===================================================================== */
         .admin-content-body {
-            padding: 28px;
+            padding: 24px 28px;
             flex: 1;
         }
 
-        /* Card Custom - Apple Liquid Glass */
-        .card-custom {
-            border: var(--glass-border);
-            border-radius: var(--squircle-lg);
-            background: var(--glass-bg-card);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            box-shadow: var(--glass-shadow);
-            margin-bottom: 24px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        /* Thẻ Chứa Kính Lỏng (Liquid Glass Card) */
+        .card-custom, .card-liquid-glass, .glass-card, .admin-card {
+            background: var(--liquid-glass-card) !important;
+            backdrop-filter: var(--liquid-glass-blur) !important;
+            -webkit-backdrop-filter: var(--liquid-glass-blur) !important;
+            border: 1px solid var(--rebook-border) !important;
+            border-radius: var(--squircle-lg) !important;
+            box-shadow: var(--liquid-glass-shadow), var(--liquid-glass-rim) !important;
+            margin-bottom: 22px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+        .card-custom:hover, .card-liquid-glass:hover, .glass-card:hover, .admin-card:hover {
+            box-shadow: var(--liquid-glass-hover-shadow) !important;
+            border-color: rgba(215, 195, 168, 0.9) !important;
         }
 
-        .card-custom:hover {
-            box-shadow: var(--glass-shadow-hover);
-            border-color: rgba(215, 195, 168, 0.9);
-        }
-
-        .card-custom .card-header {
-            background: var(--glass-bg-subtle);
-            border-bottom: 1px solid rgba(232, 222, 200, 0.65);
-            padding: 16px 22px;
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--admin-text-main);
-            border-radius: var(--squircle-lg) var(--squircle-lg) 0 0;
+        .card-header, .card-liquid-header, .glass-card-header {
+            background: rgba(255, 255, 255, 0.6) !important;
+            border-bottom: 1px solid var(--rebook-border) !important;
+            padding: 14px 22px !important;
+            font-size: 14.5px !important;
+            font-weight: 700 !important;
+            color: var(--rebook-ink-main) !important;
+            border-radius: var(--squircle-lg) var(--squircle-lg) 0 0 !important;
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
 
-        /* Nút Bấm Chủ Đề Sách Cũ & Shopee */
-        .btn-theme {
-            background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
-            color: #ffffff !important;
-            border: 1px solid rgba(104, 52, 24, 0.6);
-            font-weight: 600;
-            border-radius: var(--squircle-md);
-            padding: 8px 18px;
-            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Nút Bấm Kính Lỏng & ReBook Leather */
+        .btn-theme, .btn-liquid-primary, .btn-rebook-primary, .btn-primary, .btn-shopee, .btn-liquid-transfer {
+            background: var(--rebook-leather) !important;
+            color: #FFFFFF !important;
+            border: 1px solid var(--rebook-leather) !important;
+            border-radius: var(--squircle-md) !important;
+            padding: 8px 18px !important;
+            font-size: 13.5px !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 12px var(--rebook-leather-glow), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-theme:hover, .btn-liquid-primary:hover, .btn-rebook-primary:hover, .btn-primary:hover, .btn-shopee:hover, .btn-liquid-transfer:hover {
+            background: var(--rebook-leather-hover) !important;
+            border-color: var(--rebook-leather-hover) !important;
+            color: #FFFFFF !important;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px var(--rebook-leather-glow) !important;
         }
 
-        .btn-theme:hover, .btn-theme:focus {
-            background: linear-gradient(135deg, var(--admin-primary-hover) 0%, var(--admin-primary) 100%);
-            box-shadow: 0 6px 16px rgba(140, 74, 39, 0.35);
+        .btn-outline-theme, .btn-liquid-secondary, .btn-rebook-secondary, .btn-outline-secondary, .btn-outline-primary {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(12px) !important;
+            color: var(--rebook-ink-main) !important;
+            border: 1px solid var(--rebook-border) !important;
+            border-radius: var(--squircle-md) !important;
+            padding: 8px 18px !important;
+            font-size: 13.5px !important;
+            font-weight: 500 !important;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.95) !important;
+            transition: all 0.2s ease !important;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-outline-theme:hover, .btn-liquid-secondary:hover, .btn-rebook-secondary:hover, .btn-outline-secondary:hover, .btn-outline-primary:hover {
+            background: #FFFFFF !important;
+            border-color: var(--rebook-leather) !important;
+            color: var(--rebook-leather) !important;
             transform: translateY(-1px);
         }
 
-        .btn-shopee {
-            background: linear-gradient(135deg, var(--admin-accent-shopee) 0%, var(--admin-accent-shopee-dark) 100%);
-            color: #ffffff !important;
-            border: 1px solid var(--admin-accent-shopee-dark);
-            font-weight: 600;
-            border-radius: var(--squircle-md);
-            padding: 8px 18px;
-            box-shadow: 0 4px 14px rgba(238, 77, 45, 0.3);
-            transition: all 0.2s ease;
+        /* Bảng Dữ Liệu Kính Mờ */
+        .table {
+            color: var(--rebook-ink-main) !important;
+            margin-bottom: 0 !important;
+            border-collapse: collapse;
         }
-
-        .btn-shopee:hover, .btn-shopee:focus {
-            background: linear-gradient(135deg, #FF6447 0%, var(--admin-accent-shopee) 100%);
-            box-shadow: 0 6px 18px rgba(238, 77, 45, 0.4);
-            transform: translateY(-1px);
+        .table thead th, .table-light th {
+            background: rgba(250, 248, 245, 0.85) !important;
+            color: var(--rebook-ink-muted) !important;
+            font-size: 11.5px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            border-bottom: 1.5px solid var(--rebook-border) !important;
+            padding: 12px 18px !important;
         }
-
-        .btn-outline-theme {
-            border: 1.5px solid var(--admin-primary);
-            color: var(--admin-primary) !important;
-            background: transparent;
-            font-weight: 600;
-            border-radius: var(--squircle-md);
-            transition: all 0.2s ease;
+        .table tbody td {
+            padding: 13px 18px !important;
+            border-bottom: 1px solid var(--rebook-border-subtle) !important;
+            font-size: 13.5px !important;
+            background: transparent !important;
+            vertical-align: middle;
         }
-
-        .btn-outline-theme:hover {
-            background: var(--admin-primary);
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);
-        }
-
-        .btn {
-            border-radius: var(--squircle-md);
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .btn-outline-secondary {
-            border-color: rgba(215, 200, 180, 0.9);
-            color: var(--admin-text-secondary);
-            background: rgba(255, 255, 255, 0.6);
-        }
-
-        .btn-outline-secondary:hover {
-            background: #FFFFFF;
-            border-color: var(--admin-primary);
-            color: var(--admin-primary);
-        }
-
-        .btn-dark {
-            background: linear-gradient(135deg, #2D180F 0%, #1A0D07 100%);
-            border-color: #1A0D07;
-            box-shadow: 0 3px 10px rgba(45, 24, 15, 0.2);
-        }
-
-        .btn-dark:hover {
-            background: linear-gradient(135deg, #3D2216 0%, #2D180F 100%);
-            border-color: #2D180F;
+        .table-hover tbody tr:hover td {
+            background: rgba(140, 74, 39, 0.025) !important;
         }
 
         /* Form Controls */
-        .form-control, .form-select {
-            border: 1px solid rgba(215, 200, 180, 0.85);
-            background-color: rgba(255, 255, 255, 0.92);
-            border-radius: var(--squircle-md);
-            color: var(--admin-text-main);
-            font-size: 13.5px;
-            padding: 8px 14px;
+        .form-control, .form-select, .glass-input, .glass-select, .glass-textarea {
+            background: rgba(255, 255, 255, 0.92) !important;
+            backdrop-filter: blur(12px) !important;
+            border: 1px solid var(--rebook-border) !important;
+            border-radius: var(--squircle-md) !important;
+            padding: 9px 14px !important;
+            font-size: 13.5px !important;
+            color: var(--rebook-ink-main) !important;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.02) !important;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--admin-primary);
-            box-shadow: 0 0 0 3.5px rgba(140, 74, 39, 0.16);
-            background-color: #FFFFFF;
-            color: var(--admin-text-main);
+        .form-control:focus, .form-select:focus, .glass-input:focus, .glass-select:focus, .glass-textarea:focus {
+            background: #FFFFFF !important;
+            border-color: var(--rebook-leather) !important;
+            box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.12), inset 0 1px 1px rgba(255, 255, 255, 1) !important;
+            color: var(--rebook-ink-main) !important;
         }
 
         .input-group-text {
-            border: 1px solid rgba(215, 200, 180, 0.85);
+            border: 1px solid var(--rebook-border);
             background-color: rgba(250, 246, 240, 0.85);
-            color: var(--admin-text-secondary);
+            color: var(--rebook-ink-secondary);
             border-radius: var(--squircle-md);
         }
 
-        /* Bảng Biểu (.table, .table-custom) */
-        .table {
-            color: var(--admin-text-main);
-            border-color: rgba(232, 222, 200, 0.6);
+        /* =====================================================================
+           4. HỆ THỐNG SQUIRCLE ICONS & ACTION BUTTONS CHUẨN CLAYMORPHISM
+           ===================================================================== */
+        /* Icon Squircle Kính Lỏng Nhỏ Trong Bảng (32x32px) */
+        .icon-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--squircle-sm);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--rebook-border);
+            color: var(--rebook-ink-secondary);
+            transition: all 0.18s ease;
+            text-decoration: none;
+            font-size: 13px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        }
+        .icon-action-btn:hover {
+            transform: translateY(-1.5px);
+        }
+        .icon-action-btn.btn-view:hover {
+            background: var(--rebook-leather-soft);
+            border-color: var(--rebook-leather);
+            color: var(--rebook-leather);
+        }
+        .icon-action-btn.btn-edit:hover {
+            background: #FEF3C7;
+            border-color: #F59E0B;
+            color: #B45309;
+        }
+        .icon-action-btn.btn-delete:hover {
+            background: var(--rebook-rose-soft);
+            border-color: #FCA5A5;
+            color: var(--rebook-rose);
         }
 
-        .table thead th {
-            background-color: rgba(246, 239, 230, 0.85);
-            color: var(--admin-text-main);
-            font-weight: 700;
-            font-size: 12.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            border-bottom: 1.5px solid rgba(232, 222, 200, 0.85);
-            padding: 12px 16px;
+        /* Icon Squircle Lớn cho KPI Dashboard (48x48px) */
+        .kpi-icon-squircle {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 6px 18px rgba(45, 24, 15, 0.06), inset 0 1.5px 2px rgba(255, 255, 255, 0.95);
+            position: relative;
+            flex-shrink: 0;
+        }
+        .kpi-icon-revenue {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            color: #B45309;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .kpi-icon-orders {
+            background: linear-gradient(135deg, #F5ECE4 0%, #EBD5C5 100%);
+            color: var(--rebook-leather);
+            border: 1px solid rgba(140, 74, 39, 0.25);
+        }
+        .kpi-icon-books {
+            background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+            color: var(--rebook-emerald);
+            border: 1px solid rgba(5, 150, 105, 0.25);
+        }
+        .kpi-icon-users {
+            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+            color: #2563EB;
+            border: 1px solid rgba(37, 99, 235, 0.25);
         }
 
-        .table tbody td {
-            padding: 12px 16px;
-            vertical-align: middle;
-            border-bottom: 1px solid rgba(232, 222, 200, 0.5);
-            font-size: 13.5px;
+        /* Icon Thể Loại Squircle trong Danh Mục (36x36px) */
+        .category-icon-squircle {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(140, 74, 39, 0.08);
+            border: 1px solid rgba(140, 74, 39, 0.18);
+            color: var(--rebook-leather);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            margin-right: 8px;
+            flex-shrink: 0;
         }
 
-        .table-hover tbody tr {
-            transition: background-color 0.15s ease;
+        /* Inventory & Metric Card (Full Framed White Liquid Glass - Anti-AI-Slop) */
+        .inv-metric-card {
+            background: rgba(255, 255, 255, 0.88) !important;
+            backdrop-filter: blur(24px) saturate(190%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+            border-radius: 18px !important;
+            padding: 18px 20px !important;
+            box-shadow: 0 10px 28px -4px rgba(45, 24, 15, 0.04), inset 0 1.5px 1.5px rgba(255, 255, 255, 1) !important;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            position: relative;
+            overflow: hidden;
+            display: block;
+            text-decoration: none !important;
+        }
+        .inv-metric-card:hover {
+            transform: translateY(-3px) !important;
+            background: #ffffff !important;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08), inset 0 2px 2px rgba(255, 255, 255, 1) !important;
+            border-color: rgba(236, 231, 222, 0.95) !important;
+        }
+        .inv-metric-card.active-danger {
+            border-color: #EF4444 !important;
+            background: rgba(254, 242, 242, 0.9) !important;
+            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.15), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .inv-metric-card.active-warning {
+            border-color: #F59E0B !important;
+            background: rgba(254, 243, 199, 0.9) !important;
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.15), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .inv-metric-card.active-success {
+            border-color: #10B981 !important;
+            background: rgba(236, 253, 245, 0.9) !important;
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.15), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .inv-metric-card.active-primary {
+            border-color: var(--rebook-leather) !important;
+            background: rgba(245, 236, 228, 0.9) !important;
+            box-shadow: 0 12px 30px var(--rebook-leather-glow), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .inv-metric-label {
+            font-size: 11.5px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            color: #78716C !important;
+        }
+        .inv-metric-number {
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.5px !important;
+            line-height: 1 !important;
+            margin: 0 !important;
+        }
+        .inv-metric-squircle {
+            width: 42px !important;
+            height: 42px !important;
+            border-radius: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 18px !important;
+            flex-shrink: 0 !important;
+            box-shadow: 0 4px 12px rgba(45, 24, 15, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 1) !important;
+        }
+        .squircle-danger {
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: #DC2626 !important;
+            border: 1px solid rgba(239, 68, 68, 0.2) !important;
+        }
+        .squircle-warning {
+            background: rgba(245, 158, 11, 0.1) !important;
+            color: #B45309 !important;
+            border: 1px solid rgba(245, 158, 11, 0.2) !important;
+        }
+        .squircle-success {
+            background: rgba(16, 185, 129, 0.1) !important;
+            color: #059669 !important;
+            border: 1px solid rgba(16, 185, 129, 0.2) !important;
+        }
+        .squircle-primary {
+            background: rgba(140, 74, 39, 0.1) !important;
+            color: var(--rebook-leather) !important;
+            border: 1px solid rgba(140, 74, 39, 0.2) !important;
         }
 
-        .table-hover tbody tr:hover {
-            background-color: rgba(140, 74, 39, 0.035);
+        /* Segmented Status Dock / Tabs */
+        .ios-status-dock {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--rebook-border);
+            border-radius: var(--squircle-pill);
+            padding: 4px;
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.02);
+            margin-bottom: 20px;
         }
 
-        /* Badge Trạng Thái */
+        /* Badges */
         .badge {
             border-radius: var(--squircle-sm);
             padding: 5px 10px;
             font-weight: 600;
             font-size: 11.5px;
-            letter-spacing: 0.3px;
-        }
-
-        .badge-cond-high {
-            background-color: #E8F5E9;
-            color: #1B5E20;
-            border: 1px solid rgba(76, 175, 80, 0.3);
-        }
-
-        .badge-cond-med {
-            background-color: #FFF8E1;
-            color: #B78103;
-            border: 1px solid rgba(255, 193, 7, 0.35);
+            letter-spacing: 0.2px;
         }
 
         /* Modal Dialog & Content - Liquid Glass */
         .modal-content {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid rgba(232, 222, 200, 0.85);
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: var(--liquid-glass-blur);
+            -webkit-backdrop-filter: var(--liquid-glass-blur);
+            border: 1px solid var(--rebook-border);
             border-radius: 18px;
-            box-shadow: 0 25px 60px rgba(45, 24, 15, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.9);
-            color: var(--admin-text-main);
+            box-shadow: 0 25px 60px rgba(45, 24, 15, 0.14), inset 0 1px 2px rgba(255, 255, 255, 0.95);
+            color: var(--rebook-ink-main);
         }
-
         .modal-header {
-            border-bottom: 1px solid rgba(232, 222, 200, 0.7);
-            background: var(--glass-bg-subtle);
+            border-bottom: 1px solid var(--rebook-border);
+            background: rgba(255, 255, 255, 0.5);
             border-radius: 18px 18px 0 0;
             padding: 18px 24px;
         }
-
         .modal-footer {
-            border-top: 1px solid rgba(232, 222, 200, 0.7);
-            background: var(--glass-bg-subtle);
+            border-top: 1px solid var(--rebook-border);
+            background: rgba(255, 255, 255, 0.5);
             border-radius: 0 0 18px 18px;
             padding: 14px 24px;
         }
 
-        /* Phân Trang (Pagination) */
-        .pagination {
-            gap: 4px;
-        }
-
+        /* Pagination */
         .page-link {
             border-radius: var(--squircle-sm) !important;
-            border: 1px solid rgba(232, 222, 200, 0.8);
-            background-color: rgba(255, 255, 255, 0.8);
-            color: var(--admin-text-main);
+            border: 1px solid var(--rebook-border);
+            background-color: rgba(255, 255, 255, 0.85);
+            color: var(--rebook-ink-main);
             font-size: 13px;
             font-weight: 500;
             padding: 6px 12px;
-            transition: all 0.2s ease;
         }
-
         .page-link:hover {
             background-color: #FFFFFF;
-            border-color: var(--admin-primary);
-            color: var(--admin-primary);
+            border-color: var(--rebook-leather);
+            color: var(--rebook-leather);
         }
-
         .page-item.active .page-link {
-            background-color: var(--admin-primary);
-            border-color: var(--admin-primary);
+            background-color: var(--rebook-leather);
+            border-color: var(--rebook-leather);
             color: #FFFFFF;
-            box-shadow: 0 3px 10px rgba(140, 74, 39, 0.25);
+            box-shadow: 0 2px 8px var(--rebook-leather-glow);
         }
 
         /* Alerts */
         .alert {
             border-radius: var(--squircle-md);
-            border: 1px solid rgba(232, 222, 200, 0.8);
+            border: 1px solid var(--rebook-border);
             backdrop-filter: blur(12px);
-            box-shadow: 0 4px 15px rgba(45, 24, 15, 0.05);
+            box-shadow: 0 2px 8px rgba(45, 24, 15, 0.03);
         }
 
         /* Footer */
         .admin-footer {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border-top: var(--glass-border);
+            background: var(--liquid-glass-bg);
+            backdrop-filter: var(--liquid-glass-blur);
+            border-top: 1px solid var(--rebook-border);
             padding: 16px 28px;
             text-align: center;
-            color: var(--admin-text-muted);
+            color: var(--rebook-ink-muted);
             font-size: 12.5px;
-        }
-
-        /* Toast Container */
-        .toast {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(232, 222, 200, 0.85);
-            border-radius: var(--squircle-lg);
-            box-shadow: 0 16px 36px rgba(45, 24, 15, 0.16);
-            overflow: hidden;
-        }
-
-        .toast-header {
-            background: linear-gradient(135deg, var(--admin-wood-dark) 0%, var(--admin-wood-black) 100%);
-            color: #ffffff;
-            border-bottom: 1px solid rgba(232, 222, 200, 0.15);
-            padding: 10px 14px;
-        }
-
-        .toast-body {
-            padding: 14px;
-            color: var(--admin-text-main);
         }
 
         @media (max-width: 992px) {
@@ -706,130 +787,167 @@
     <aside id="adminSidebar">
         <a th:href="@{/admin/books}" class="sidebar-brand">
             <div class="sidebar-brand-icon">
-                <i class="fa-solid fa-book-bookmark"></i>
+                <img th:src="@{/images/brand-book-icon.png}" alt="ReBook" style="width: 26px; height: 26px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));">
             </div>
             <div class="sidebar-brand-text">
-                <h5>CHUỖI SÁCH CŨ</h5>
-                <small>Admin &amp; Manager Portal</small>
+                <h5>ReBook</h5>
+                <small th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Hệ Thống Chuỗi Sách Cũ</small>
+                <small th:if="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}">Kênh Giao Hàng Shipper</small>
+                <small th:if="${#authorization.expression('hasRole(''MANAGER'') and !hasRole(''ADMIN'')')}" th:text="${currentManagedStore != null ? currentManagedStore.storeName : 'Cổng Quản Lý Chi Nhánh'}">Quản Lý Chi Nhánh</small>
             </div>
         </a>
 
         <ul class="sidebar-menu">
-            <li class="sidebar-heading">
-                <i class="fa-solid fa-layer-group text-warning opacity-75" style="font-size: 10px;"></i>
-                <span>Kho &amp; Sách Cũ</span>
-            </li>
-            
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/books')} ? 'active' : ''">
-                <a th:href="@{/admin/books}">
-                    <i class="fa-solid fa-book"></i>
-                    <span>Quản Lý Sách Cũ</span>
-                </a>
-            </li>
+            <!-- 1. PHÂN HỆ DÀNH RIÊNG CHO SHIPPER (ROLE_SHIPPER) -->
+            <th:block th:if="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}">
+                <li class="sidebar-heading">
+                    <i class="fa-solid fa-motorcycle text-warning opacity-75" style="font-size: 10px;"></i>
+                    <span>Nghiệp Vụ Giao Hàng</span>
+                </li>
+                <li class="sidebar-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'active' : ''">
+                    <a th:href="@{/shipper/orders(status='SHIPPING')}">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <span>Đơn Cần Đi Giao</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'DELIVERED'} ? 'active' : ''">
+                    <a th:href="@{/shipper/orders(status='DELIVERED')}">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Giao Thành Công</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'RETURNED'} ? 'active' : ''">
+                    <a th:href="@{/shipper/orders(status='RETURNED')}">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Giao Thất Bại / Hoàn</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" th:classappend="${selectedStatus == null and #httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/shipper')} ? 'active' : ''">
+                    <a th:href="@{/shipper/orders}">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span>Tất Cả Đơn Hàng</span>
+                    </a>
+                </li>
+            </th:block>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/categories')} ? 'active' : ''">
-                <a th:href="@{/admin/categories}">
-                    <i class="fa-solid fa-tags"></i>
-                    <span>Danh Mục Thể Loại</span>
-                </a>
-            </li>
+            <!-- 2. PHÂN HỆ QUẢN TRỊ ADMIN & STORE MANAGER -->
+            <th:block th:unless="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}">
+                <li class="sidebar-heading">
+                    <i class="fa-solid fa-layer-group text-warning opacity-75" style="font-size: 10px;"></i>
+                    <span>Kho &amp; Sách Cũ</span>
+                </li>
+                
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/books')} ? 'active' : ''">
+                    <a th:href="@{/admin/books}">
+                        <i class="fa-solid fa-book"></i>
+                        <span>Quản Lý Sách Cũ</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory'} ? 'active' : ''">
-                <a th:href="@{/admin/inventory}">
-                    <i class="fa-solid fa-boxes-stacked"></i>
-                    <span>Quản Lý Tồn Kho</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/categories')} ? 'active' : ''">
+                    <a th:href="@{/admin/categories}">
+                        <i class="fa-solid fa-tags"></i>
+                        <span>Danh Mục Thể Loại</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/admin/inventory/transfer'} ? 'active' : ''">
-                <a th:href="@{/admin/inventory/transfer}">
-                    <i class="fa-solid fa-dolly"></i>
-                    <span>Tạo Chuyển Kho</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/inventory') and !#httpServletRequest.requestURI.startsWith('/admin/inventory/transfer')} ? 'active' : ''">
+                    <a th:href="@{/admin/inventory}">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <span>Quản Lý Tồn Kho</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/inventory/transfers')} ? 'active' : ''">
-                <a th:href="@{/admin/inventory/transfers}">
-                    <i class="fa-solid fa-list-check"></i>
-                    <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Duyệt Điều Chuyển' : 'Tiến Độ Chuyển Kho'}">Duyệt Điều Chuyển</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/inventory/transfer')} ? 'active' : ''">
+                    <a th:href="@{/admin/inventory/transfers}">
+                        <i class="fa-solid fa-dolly"></i>
+                        <span>Điều Chuyển Kho</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/stores')} ? 'active' : ''">
-                <a th:href="@{/admin/stores}">
-                    <i class="fa-solid fa-store"></i>
-                    <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Chuỗi Chi Nhánh' : 'Chi Nhánh Của Bạn'}">Chuỗi Chi Nhánh</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/stores')} ? 'active' : ''">
+                    <a th:href="@{/admin/stores}">
+                        <i class="fa-solid fa-store"></i>
+                        <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Chuỗi Chi Nhánh' : 'Chi Nhánh Của Bạn'}">Chuỗi Chi Nhánh</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/chat')} ? 'active' : ''">
-                <a th:href="@{/admin/chat}">
-                    <i class="fa-solid fa-comments text-warning"></i>
-                    <span>Tin Nhắn Khách Hàng</span>
-                </a>
-            </li>
+                <li class="sidebar-item" sec:authorize="hasRole('ADMIN')" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/store-registrations')} ? 'active' : ''">
+                    <a th:href="@{/admin/store-registrations}">
+                        <i class="fa-solid fa-shop-lock text-warning"></i>
+                        <span>Duyệt Mở Gian Hàng</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-heading">
-                <i class="fa-solid fa-cart-shopping text-warning opacity-75" style="font-size: 10px;"></i>
-                <span>Đơn Hàng &amp; Ký Gửi</span>
-            </li>
+                <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''MANAGER'') and !hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/chat')} ? 'active' : ''">
+                    <a th:href="@{/admin/chat}">
+                        <i class="fa-solid fa-comments text-warning"></i>
+                        <span>Tin Nhắn Khách Hàng</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/orders')} ? 'active' : ''">
-                <a th:href="@{/admin/orders}">
-                    <i class="fa-solid fa-clipboard-list"></i>
-                    <span>Xử Lý Đơn Hàng</span>
-                </a>
-            </li>
+                <li class="sidebar-heading">
+                    <i class="fa-solid fa-cart-shopping text-warning opacity-75" style="font-size: 10px;"></i>
+                    <span>Đơn Hàng &amp; Ký Gửi</span>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/consignments')} ? 'active' : ''">
-                <a th:href="@{/admin/consignments}">
-                    <i class="fa-solid fa-hand-holding-dollar"></i>
-                    <span>Thẩm Định Ký Gửi</span>
-                    <span class="badge bg-danger rounded-pill ms-auto" id="sidebarConsignmentBadge"
-                          th:if="${pendingConsignmentCount != null and pendingConsignmentCount > 0}"
-                          th:text="${pendingConsignmentCount}">0</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/orders')} ? 'active' : ''">
+                    <a th:href="@{/admin/orders}">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span>Xử Lý Đơn Hàng</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/shipper')} ? 'active' : ''">
-                <a th:href="@{/shipper/orders}">
-                    <i class="fa-solid fa-motorcycle"></i>
-                    <span>Phân Hệ Shipper</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/consignments')} ? 'active' : ''">
+                    <a th:href="@{/admin/consignments}">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                        <span>Thẩm Định Ký Gửi</span>
+                        <span class="badge bg-danger rounded-pill ms-auto" id="sidebarConsignmentBadge"
+                              th:if="${pendingConsignmentCount != null and pendingConsignmentCount > 0}"
+                              th:text="${pendingConsignmentCount}">0</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-heading">
-                <i class="fa-solid fa-sliders text-warning opacity-75" style="font-size: 10px;"></i>
-                <span>Hệ Thống &amp; Báo Cáo</span>
-            </li>
+                <li class="sidebar-heading">
+                    <i class="fa-solid fa-sliders text-warning opacity-75" style="font-size: 10px;"></i>
+                    <span>Hệ Thống &amp; Báo Cáo</span>
+                </li>
 
-            <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/users')} ? 'active' : ''">
-                <a th:href="@{/admin/users}">
-                    <i class="fa-solid fa-users-gear"></i>
-                    <span>Người Dùng &amp; Quyền</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/users')} ? 'active' : ''">
+                    <a th:href="@{/admin/users}">
+                        <i class="fa-solid fa-users-gear"></i>
+                        <span>Người Dùng &amp; Quyền</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/vouchers')} ? 'active' : ''">
-                <a th:href="@{/admin/vouchers}">
-                    <i class="fa-solid fa-ticket"></i>
-                    <span>Mã Giảm Giá</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/vouchers')} ? 'active' : ''">
+                    <a th:href="@{/admin/vouchers}">
+                        <i class="fa-solid fa-ticket"></i>
+                        <span>Mã Giảm Giá</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/shipping-units')} ? 'active' : ''">
-                <a th:href="@{/admin/shipping-units}">
-                    <i class="fa-solid fa-truck-fast"></i>
-                    <span>Đơn Vị Vận Chuyển</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/shipping-units')} ? 'active' : ''">
+                    <a th:href="@{/admin/shipping-units}">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <span>Đơn Vị Vận Chuyển</span>
+                    </a>
+                </li>
 
-            <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/reports')} ? 'active' : ''">
-                <a th:href="@{/admin/reports}">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <span>Thống Kê Báo Cáo</span>
-                </a>
-            </li>
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/reports')} ? 'active' : ''">
+                    <a th:href="@{/admin/reports}">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Thống Kê Báo Cáo' : 'Báo Cáo Chi Nhánh'}">Thống Kê Báo Cáo</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/support-tickets')} ? 'active' : ''">
+                    <a th:href="@{/admin/support-tickets}">
+                        <i class="fa-solid fa-headset text-warning"></i>
+                        <span>Phiếu Hỗ Trợ &amp; Khiếu Nại</span>
+                    </a>
+                </li>
+            </th:block>
 
             <li class="sidebar-heading">
                 <i class="fa-solid fa-compass text-warning opacity-75" style="font-size: 10px;"></i>
@@ -845,8 +963,8 @@
         </ul>
 
         <div class="sidebar-footer-info">
-            <span class="text-white-50">HCMUTE • Đề Tài 14</span>
-            <div class="text-warning-emphasis fw-semibold mt-0.5">Sách Cũ 5 Chi Nhánh</div>
+            <div class="fw-bold" style="color: var(--rebook-ink-main); font-size: 11.5px;">ReBook Enterprise ERP</div>
+            <div style="color: var(--rebook-ink-muted); font-size: 11px; margin-top: 2px;">Chuỗi 5 Chi Nhánh TP.HCM</div>
         </div>
     </aside>
 
@@ -860,11 +978,14 @@
                 <button type="button" class="navbar-toggle-btn" id="toggleSidebarBtn" title="Thu gọn / Mở rộng Sidebar">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-                <div class="branch-badge d-none d-sm-inline-flex gap-2">
-                    <i class="fa-solid fa-store text-danger"></i>
+                <div class="branch-badge d-none d-sm-inline-flex gap-2 align-items-center">
+                    <i class="fa-solid fa-motorcycle text-warning" th:if="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}"></i>
+                    <i class="fa-solid fa-store text-danger" th:unless="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}"></i>
                     <span class="fw-semibold" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Hệ Thống Chuỗi 5 Chi Nhánh TP.HCM</span>
-                    <span class="fw-semibold" th:unless="${#authorization.expression('hasRole(''ADMIN'')')}">Cổng Quản Lý Chi Nhánh Cửa Hàng</span>
-                    <span class="badge bg-success-subtle text-success border border-success-subtle py-1 px-2" style="font-size: 10px;">Hoạt Động</span>
+                    <span class="fw-semibold" th:if="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')}">Cổng Điều Phối Giao Hàng Shipper</span>
+                    <span class="fw-semibold" th:if="${#authorization.expression('hasRole(''MANAGER'') and !hasRole(''ADMIN'')')}" th:text="${currentManagedStore != null ? currentManagedStore.storeName : 'Chưa Được Gán Chi Nhánh'}">Cổng Quản Lý Chi Nhánh Cửa Hàng</span>
+                    <span th:if="${#authorization.expression('hasRole(''ADMIN'') or hasRole(''SHIPPER'')') or currentManagedStore != null}" class="badge bg-success-subtle text-success border border-success-subtle py-1 px-2" style="font-size: 10px;">Hoạt Động</span>
+                    <span th:if="${#authorization.expression('hasRole(''MANAGER'') and !hasRole(''ADMIN'')') and currentManagedStore == null}" class="badge bg-warning-subtle text-warning border border-warning-subtle py-1 px-2" style="font-size: 10px;">Chưa Gán</span>
                 </div>
             </div>
 
@@ -934,6 +1055,14 @@
 
         <!-- BODY CONTENT -->
         <main class="admin-content-body">
+            <!-- Cảnh báo nếu tài khoản Manager chưa được phân công chi nhánh -->
+            <div th:if="${#authorization.expression('hasRole(''MANAGER'')') and currentManagedStore == null}" class="alert alert-warning border border-warning-subtle shadow-sm d-flex align-items-center mb-3" role="alert">
+                <i class="fa-solid fa-triangle-exclamation me-2 fs-5 text-warning"></i>
+                <div>
+                    <strong>Chưa gán chi nhánh:</strong> Tài khoản quản lý của bạn chưa được liên kết với chi nhánh nào. Vui lòng liên hệ Quản trị viên (Admin) để được phân công cửa hàng phụ trách!
+                </div>
+            </div>
+
             <!-- Thông báo thành công hoặc lỗi -->
             <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
                 <i class="fa-solid fa-circle-check me-2"></i><span th:text="${successMessage}"></span>
@@ -979,43 +1108,41 @@
             }
         });
 
-        // Tự động kích hoạt duy nhất 1 active sidebar item chính xác nhất theo URL hiện tại
+        // Tự động kích hoạt active sidebar item theo URL hiện tại (bổ trợ cho Thymeleaf)
         document.addEventListener('DOMContentLoaded', function() {
             const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
-            const sidebarLinks = document.querySelectorAll('.sidebar-item a');
-
-            // Xóa hết trạng thái active cũ để tránh đánh dấu trùng lặp
+            const sidebarLinks = Array.from(document.querySelectorAll('.sidebar-item a'));
+            
+            // Xóa active cũ để tránh lỗi kích hoạt kép
             sidebarLinks.forEach(link => link.parentElement.classList.remove('active'));
 
-            let bestMatchLink = null;
-            let bestMatchLength = -1;
-
-            // 1. Ưu tiên khớp chính xác tuyệt đối (Exact Match)
-            sidebarLinks.forEach(link => {
+            // 1. Tìm exact match trước (ưu tiên số 1)
+            let targetLink = sidebarLinks.find(link => {
                 const href = (link.getAttribute('href') || '').replace(/\/$/, '');
-                if (!href || href === '/') return;
-
-                if (href === currentPath || (href === '/admin/reports' && (currentPath === '/admin' || currentPath === '/admin/dashboard'))) {
-                    bestMatchLink = link;
-                    bestMatchLength = 9999; // Ưu tiên tối đa cho exact match
-                }
+                return href === currentPath || (href === '/admin/reports' && (currentPath === '/admin' || currentPath === '/admin/dashboard'));
             });
 
-            // 2. Nếu đang ở trang con (VD: /admin/books/edit/1, /admin/consignments/3), chọn prefix dài nhất có dấu '/' phân cách
-            if (!bestMatchLink) {
+            // 2. Nếu không có exact match, tìm prefix match dài nhất (longest prefix match)
+            if (!targetLink) {
+                let longestLength = 0;
                 sidebarLinks.forEach(link => {
                     const href = (link.getAttribute('href') || '').replace(/\/$/, '');
-                    if (!href || href === '/' || href === '/admin') return;
-
-                    if (currentPath.startsWith(href + '/') && href.length > bestMatchLength) {
-                        bestMatchLink = link;
-                        bestMatchLength = href.length;
+                    if (href && href !== '/admin' && href !== '/' && (currentPath + '/').startsWith(href + '/')) {
+                        if (href.length > longestLength) {
+                            longestLength = href.length;
+                            targetLink = link;
+                        }
                     }
                 });
             }
 
-            if (bestMatchLink) {
-                bestMatchLink.parentElement.classList.add('active');
+            // 3. Fallback cho dashboard
+            if (!targetLink && (currentPath === '/admin' || currentPath === '/admin/dashboard')) {
+                targetLink = document.querySelector('a[href*="/admin/reports"]');
+            }
+
+            if (targetLink) {
+                targetLink.parentElement.classList.add('active');
             }
         });
 

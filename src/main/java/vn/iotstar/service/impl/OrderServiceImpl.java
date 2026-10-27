@@ -57,6 +57,9 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private vn.iotstar.repository.UserVoucherRepository userVoucherRepository;
 
+    @Autowired
+    private vn.iotstar.service.INotificationService notificationService;
+
     @Override
     public Order createOrderFromCart(
             Long userId,
@@ -219,6 +222,12 @@ public class OrderServiceImpl implements IOrderService {
                         "Đơn hàng mới #" + savedOrder.getOrderCode() + " - " + savedOrder.getReceiverName()
                 );
                 messagingTemplate.convertAndSend("/topic/admin-orders", notif);
+            } catch (Exception ignored) {}
+        }
+
+        if (notificationService != null) {
+            try {
+                notificationService.notifyOrderCreated(savedOrder);
             } catch (Exception ignored) {}
         }
 
@@ -391,6 +400,12 @@ public class OrderServiceImpl implements IOrderService {
 
         // Ghi chú cho Cường: Tuyệt đối KHÔNG xóa hay can thiệp giỏ hàng (không gọi cartService.clearCart)
 
+        if (notificationService != null) {
+            try {
+                notificationService.notifyOrderCreated(savedOrder);
+            } catch (Exception ignored) {}
+        }
+
         return savedOrder;
     }
 
@@ -411,10 +426,29 @@ public class OrderServiceImpl implements IOrderService {
         Optional<Order> orderOpt = orderRepository.findByOrderCode(orderCode);
         if (orderOpt.isPresent()) {
             Order order = orderOpt.get();
+            Order.OrderStatus oldStatus = order.getOrderStatus();
             order.setPaymentStatus(Order.PaymentStatus.PAID);
             order.setOrderStatus(Order.OrderStatus.CONFIRMED);
             orderRepository.save(order);
+
+            if (notificationService != null) {
+                try {
+                    notificationService.notifyOrderStatusChanged(order, oldStatus, Order.OrderStatus.CONFIRMED);
+                } catch (Exception ignored) {}
+            }
         }
+    }
+
+    @Override
+    @Transactional
+    public void updatePaymentStatus(Long orderId, Order.PaymentStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng mã #" + orderId));
+        order.setPaymentStatus(status);
+        if (status == Order.PaymentStatus.PAID && order.getOrderStatus() == Order.OrderStatus.NEW) {
+            order.setOrderStatus(Order.OrderStatus.CONFIRMED);
+        }
+        orderRepository.save(order);
     }
 
     @Override
@@ -480,6 +514,16 @@ public class OrderServiceImpl implements IOrderService {
             order.setPaymentStatus(Order.PaymentStatus.PAID);
         }
 
+        // Ghi nhận ghi chú hoặc lý do giao hàng từ Shipper
+        if (note != null && !note.trim().isEmpty()) {
+            String prefix = "[Lý do Shipper]: " + note.trim();
+            if (order.getCustomerNotes() == null || order.getCustomerNotes().isBlank()) {
+                order.setCustomerNotes(prefix);
+            } else {
+                order.setCustomerNotes(order.getCustomerNotes() + " | " + prefix);
+            }
+        }
+
         order.setOrderStatus(newStatus);
         Order updated = orderRepository.save(order);
 
@@ -497,6 +541,12 @@ public class OrderServiceImpl implements IOrderService {
                         "Đơn hàng #" + updated.getOrderCode() + " đã chuyển sang: " + newStatus.name()
                 );
                 messagingTemplate.convertAndSend("/topic/admin-orders", notif);
+            } catch (Exception ignored) {}
+        }
+
+        if (notificationService != null) {
+            try {
+                notificationService.notifyOrderStatusChanged(updated, oldStatus, newStatus);
             } catch (Exception ignored) {}
         }
     }
@@ -541,6 +591,30 @@ public class OrderServiceImpl implements IOrderService {
     @Transactional(readOnly = true)
     public long countByStatus(Order.OrderStatus status) {
         return orderRepository.countByOrderStatus(status);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countByStoreIdAndStatus(Long storeId, Order.OrderStatus status) {
+        if (storeId == null) return 0;
+        return orderRepository.countByStoreIdAndOrderStatus(storeId, status);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countOrdersForShipper(Long shipperId, Order.OrderStatus status) {
+        if (shipperId == null) return 0;
+        if (status != null) {
+            return orderRepository.countByShipperIdAndOrderStatus(shipperId, status);
+        }
+        return orderRepository.countByShipperId(shipperId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public java.math.BigDecimal sumCodCollectedByShipper(Long shipperId) {
+        if (shipperId == null) return java.math.BigDecimal.ZERO;
+        return orderRepository.sumCodCollectedByShipper(shipperId);
     }
 
     @Override

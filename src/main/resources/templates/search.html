@@ -50,7 +50,7 @@
             left: 0;
             right: 0;
             height: 100%;
-            background-color: #3E2314;
+            background-color: #8C6849;
             background-image: url('/images/vintage-book-hero-bg.png');
             background-position: center 75%; /* Dịch ảnh lên trên để lộ rõ sàn sách và chi tiết 3D */
             background-repeat: no-repeat;
@@ -559,70 +559,80 @@
 
         .book-card {
             background: #ffffff;
-            border: 1px solid #ECE7DE;
-            border-radius: 12px;
+            border: 1px solid transparent;
+            border-radius: 14px;
             display: flex;
             flex-direction: column;
             text-decoration: none;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: none;
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
+            height: 100%;
         }
         .book-card:hover {
-            border-color: rgba(140, 74, 39, 0.35);
-            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.09);
-            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-color: rgba(236, 231, 222, 0.9);
+            box-shadow: 0 14px 34px -4px rgba(45, 24, 15, 0.08), inset 0 1.5px 1.5px rgba(255, 255, 255, 1);
+            transform: translateY(-4px);
             z-index: 2;
         }
 
         .card-thumb {
             position: relative;
-            height: 200px;
+            height: 210px;
             width: 100%;
-            background: #FAF8F5;
+            background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 12px;
             overflow: hidden;
         }
         .card-thumb img {
-            max-height: 92%;
-            max-width: 92%;
+            max-height: 100%;
+            max-width: 100%;
             object-fit: contain;
-            transition: transform 0.2s ease;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: transform 0.25s ease;
         }
         .book-card:hover .card-thumb img {
-            transform: scale(1.02);
+            transform: scale(1.04);
         }
 
         .tag-cond {
             position: absolute;
-            bottom: 8px;
-            left: 8px;
-            background: rgba(28, 25, 23, 0.85);
-            color: #ffffff;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 2.5px 7px;
-            border-radius: 6px;
-            line-height: 1.2;
-            letter-spacing: 0.3px;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(232, 222, 200, 0.95);
+            color: #57534E;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 9999px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            letter-spacing: 0.2px;
         }
 
         .card-body {
-            padding: 12px 14px;
+            padding: 14px 14px 12px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
             flex: 1;
         }
 
         .book-title {
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 700;
             color: #1C1917;
-            line-height: 1.35;
+            line-height: 1.4;
             height: 38px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -638,18 +648,17 @@
         .book-author-meta {
             font-size: 11.5px;
             color: #78716C;
+            margin-bottom: 8px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        .book-store-tag {
-            font-size: 11px;
-            font-weight: 600;
-            color: #8C4A27;
             display: flex;
             align-items: center;
             gap: 4px;
+        }
+
+        .book-store-tag {
+            display: none;
         }
 
         .price-row {
@@ -658,15 +667,18 @@
             align-items: baseline;
             margin-top: auto;
             padding-top: 4px;
+            border-top: none;
         }
         .price-text {
-            font-size: 16px;
-            font-weight: 900;
-            color: #EE4D2D !important;
+            font-size: 15px;
+            font-weight: 800;
+            color: #8C4A27 !important;
+            letter-spacing: -0.2px;
         }
         .sold-text {
-            font-size: 11.5px;
-            color: #78716C;
+            font-size: 11px;
+            color: #A8A29E;
+            font-weight: 500;
         }
 
         /* ================= GOOGLE AI MODE OMNIBOX STYLES (KHỚP 100% IMAGE_9A9EC6.PNG) ================= */
@@ -1372,24 +1384,20 @@
             <div th:if="${totalFound > 0}" class="product-grid">
                 <a th:each="book : ${books}" th:href="@{'/books/' + ${book.id}}" class="book-card">
                     <div class="card-thumb">
-                        <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" alt="Bìa sách">
-                        <span class="tag-cond" th:text="'TỪ ' + ${book.conditionPercent} + '% MỚI'">95% MỚI</span>
+                        <img th:src="${book.primaryImageUrl != null ? book.primaryImageUrl : '/images/books/book_1.jpg'}" alt="Bìa sách" loading="lazy"
+                             onerror="this.src='/images/books/book_1.jpg';">
+                        <span class="tag-cond" th:text="${book.conditionPercent} + '% mới'">95% mới</span>
                     </div>
                     <div class="card-body">
                         <h4 class="book-title" th:text="${book.title}">Tên sách</h4>
                         
                         <div class="book-author-meta">
-                            <i class="fa-solid fa-pen-nib me-1"></i>
-                            <span th:text="${book.author != null && !#strings.isEmpty(book.author) ? book.author : 'Đang cập nhật'}">Tác giả</span>
-                        </div>
-
-                        <div class="book-store-tag">
-                            <i class="fa-solid fa-location-dot text-danger"></i>
-                            <span>Có tại: 5 Chi Nhánh</span>
+                            <i class="fa-solid fa-pen-nib text-muted" style="font-size: 10px;"></i>
+                            <span th:text="${book.author != null && !#strings.isEmpty(book.author) ? book.author : 'Nhiều tác giả'}">Tác giả</span>
                         </div>
 
                         <div class="price-row">
-                            <span class="price-text" th:text="'₫' + ${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')}">₫68.000</span>
+                            <span class="price-text" th:text="${#numbers.formatDecimal(book.minPrice != null ? book.minPrice : book.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">68.000 đ</span>
                             <span class="sold-text" th:text="'Đã bán ' + ${book.totalSold != null ? book.totalSold : 12}">Đã bán 12</span>
                         </div>
                     </div>

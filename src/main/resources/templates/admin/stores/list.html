@@ -10,8 +10,8 @@
     <!-- PAGE HEADER -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1">
-                <i class="fa-solid fa-store text-warning me-2"></i>
+            <h4 class="fw-bold mb-1" style="color: var(--rebook-ink-main);">
+                <i class="fa-solid fa-store me-2" style="color: var(--rebook-leather);"></i>
                 <span th:text="${isAdmin ? 'Hệ Thống Chuỗi Chi Nhánh Cửa Hàng' : 'Chi Nhánh Của Bạn'}">Chi Nhánh</span>
             </h4>
             <p class="text-muted small mb-0" th:if="${isAdmin}">Quản lý mạng lưới 5 chi nhánh phục vụ Click & Collect và vận chuyển sách cũ tại TP. Hồ Chí Minh.</p>
@@ -53,10 +53,10 @@
                     </ul>
 
                     <div class="d-flex gap-2 pt-3 border-top">
-                        <a th:href="@{/admin/inventory(storeId=${store.id})}" class="btn btn-sm btn-outline-primary flex-fill">
+                        <a th:href="@{/admin/inventory(storeId=${store.id})}" class="btn btn-sm btn-outline-theme flex-fill">
                             <i class="fa-solid fa-boxes-stacked me-1"></i>Xem Kho Hàng
                         </a>
-                        <a th:href="@{/admin/stores/edit/{id}(id=${store.id})}" class="btn btn-sm btn-outline-secondary">
+                        <a th:href="@{/admin/stores/edit/{id}(id=${store.id})}" class="btn btn-sm btn-outline-theme">
                             <i class="fa-solid fa-pen-to-square"></i> Sửa
                         </a>
                     </div>

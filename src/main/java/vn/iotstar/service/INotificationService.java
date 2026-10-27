@@ -33,4 +33,12 @@ public interface INotificationService {
      * Đánh dấu tất cả thông báo của người dùng là đã đọc.
      */
     void markAllAsRead(Long userId, String roleName, Store managedStore);
+
+    void notifyOrderCreated(vn.iotstar.entity.Order order);
+    void notifyOrderStatusChanged(vn.iotstar.entity.Order order, vn.iotstar.entity.Order.OrderStatus oldStatus, vn.iotstar.entity.Order.OrderStatus newStatus);
+    void notifySupportTicketResolved(vn.iotstar.entity.SupportTicket ticket, vn.iotstar.entity.User recipient);
+    void notifyStoreRegistrationResult(vn.iotstar.entity.StoreRegistration registration);
+    List<Notification> getNotificationsForUser(Long userId);
+    long countUnreadForUser(Long userId);
+    void markAllReadForUser(Long userId);
 }

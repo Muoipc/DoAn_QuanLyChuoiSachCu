@@ -10,10 +10,15 @@
     <!-- PAGE HEADER -->
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-dolly text-warning me-2"></i>Điều Chuyển Sách Giữa Các Chi Nhánh</h4>
-            <p class="text-muted small mb-0">Hỗ trợ điều phối sách cũ giữa các kho trong chuỗi để cân bằng tồn kho và phục vụ đơn hàng Click & Collect.</p>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <div class="category-icon-squircle" style="width: 40px; height: 40px; margin-right: 0; background: #FFFFFF; border-color: var(--rebook-border);">
+                    <i class="fa-solid fa-dolly fs-5" style="color: var(--rebook-leather);"></i>
+                </div>
+                <h4 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.3px;">Điều Chuyển Sách Giữa Các Chi Nhánh</h4>
+            </div>
+            <p class="text-muted small mb-0 ms-1">Hỗ trợ điều phối sách cũ giữa các kho trong chuỗi để cân bằng tồn kho và phục vụ đơn hàng Click &amp; Collect.</p>
         </div>
-        <a th:href="@{/admin/inventory}" class="btn btn-outline-secondary">
+        <a th:href="@{/admin/inventory}" class="btn btn-outline-theme">
             <i class="fa-solid fa-arrow-left me-1"></i>Về kho hàng
         </a>
     </div>
@@ -22,8 +27,8 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card card-custom">
-                <div class="card-header bg-light">
-                    <i class="fa-solid fa-right-left text-primary me-2"></i>Phiếu Yêu Cầu Điều Chuyển Hàng
+                <div class="card-header">
+                    <i class="fa-solid fa-right-left me-2" style="color: var(--rebook-leather);"></i>Phiếu Yêu Cầu Điều Chuyển Hàng
                 </div>
                 <div class="card-body p-4">
                     <form th:action="@{/admin/inventory/transfer}" method="post" id="transferForm">

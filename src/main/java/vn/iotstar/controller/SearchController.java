@@ -130,8 +130,8 @@ public class SearchController {
             ).collect(Collectors.toList());
         }
 
-        // 6. Sắp xếp kết quả (bảo vệ an toàn chống NullPointerException khi giá null)
-        if ("sales".equalsIgnoreCase(sort)) {
+        // 6. Sắp xếp kết quả (bảo vệ an toàn chống NullPointerException khi giá null, hỗ trợ alias bestseller và newest)
+        if ("sales".equalsIgnoreCase(sort) || "bestseller".equalsIgnoreCase(sort)) {
             allBooks = allBooks.stream().sorted((b1, b2) -> Integer.compare(
                     b2.getTotalSold() != null ? b2.getTotalSold() : 0,
                     b1.getTotalSold() != null ? b1.getTotalSold() : 0
@@ -144,7 +144,7 @@ public class SearchController {
                 BigDecimal p2 = b2.getPrice() != null ? b2.getPrice() : BigDecimal.ZERO;
                 return p2.compareTo(p1);
             }).collect(Collectors.toList());
-        } else if ("latest".equalsIgnoreCase(sort)) {
+        } else if ("latest".equalsIgnoreCase(sort) || "newest".equalsIgnoreCase(sort)) {
             allBooks = allBooks.stream().sorted((b1, b2) -> {
                 if (b1.getCreatedAt() == null || b2.getCreatedAt() == null) return 0;
                 return b2.getCreatedAt().compareTo(b1.getCreatedAt());

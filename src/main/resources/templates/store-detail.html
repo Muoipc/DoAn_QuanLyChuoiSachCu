@@ -874,9 +874,12 @@
                     <div class="shop-status-line">Online 5 Phút Trước</div>
                     <div class="shop-header-actions">
                         <button type="button" class="btn-shop-follow" 
+                                th:classappend="${isFollowed} ? 'followed' : ''"
+                                th:data-store-id="${store.id}"
                                 th:data-is-logged-in="${isLoggedIn}"
                                 onclick="toggleFollowShop(this)">
-                            <i class="fa-solid fa-plus"></i> Theo Dõi
+                            <i th:class="${isFollowed} ? 'fa-solid fa-check me-1' : 'fa-solid fa-plus me-1'"></i> 
+                            <span th:text="${isFollowed} ? 'Đã Theo Dõi' : 'Theo Dõi'">Theo Dõi</span>
                         </button>
                         <button type="button" class="btn-shop-chat-top" 
                                 th:data-store-id="${store.id}"
@@ -922,17 +925,17 @@
                     <div class="shop-stat-box">
                         <i class="fa-solid fa-users stat-icon"></i>
                         <span class="stat-name">Người Theo Dõi:</span>
-                        <span class="stat-value">12,8k</span>
+                        <span class="stat-value" id="storeFollowersCount" th:text="${followersCount != null ? #numbers.formatDecimal(followersCount, 0, 'POINT', 0, 'COMMA') : '850'}">850</span>
                     </div>
                     <div class="shop-stat-box">
                         <i class="fa-solid fa-star stat-icon"></i>
                         <span class="stat-name">Đánh Giá:</span>
-                        <span class="stat-value">4.9 (4,9k Đánh Giá)</span>
+                        <span class="stat-value">4.9 (98% Hài Lòng)</span>
                     </div>
                     <div class="shop-stat-box">
                         <i class="fa-solid fa-user-check stat-icon"></i>
                         <span class="stat-name">Tham Gia:</span>
-                        <span class="stat-value">3 Năm Trước</span>
+                        <span class="stat-value" th:text="${joinYear != null ? joinYear : '2024'}">2024</span>
                     </div>
                     <div class="shop-stat-box">
                         <i class="fa-solid fa-circle-exclamation stat-icon" style="color:#ee4d2d;"></i>
@@ -1179,9 +1182,10 @@
 
     <!-- JAVASCRIPT TƯƠNG TÁC -->
     <script th:inline="javascript">
-        // 1. Kiểm tra đăng nhập khi bấm Theo Dõi Shop
+        // 1. Kiểm tra đăng nhập và lưu trạng thái Theo Dõi Shop
         function toggleFollowShop(btn) {
             var isLoggedIn = btn.getAttribute('data-is-logged-in') === 'true';
+            var storeId = btn.getAttribute('data-store-id') || 1;
             if (!isLoggedIn) {
                 if (confirm('Vui lòng đăng nhập để theo dõi chi nhánh cửa hàng này!\nBạn có muốn chuyển đến trang Đăng nhập ngay không?')) {
                     window.location.href = '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search);
@@ -1189,19 +1193,35 @@
                 return;
             }
 
-            // Nếu đã đăng nhập: Chuyển đổi trạng thái
-            if (btn.classList.contains('followed')) {
-                btn.classList.remove('followed');
-                btn.innerHTML = '<i class="fa-solid fa-plus"></i> Theo Dõi';
-            } else {
-                btn.classList.add('followed');
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> Đã Theo Dõi';
-                if (typeof showFlyToast === 'function') {
-                    showFlyToast('Đã theo dõi cửa hàng thành công!');
-                } else {
-                    alert('Đã theo dõi cửa hàng thành công!');
-                }
-            }
+            fetch('/stores/api/toggle-follow/' + storeId, { method: 'POST' })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        if (data.followed) {
+                            btn.classList.add('followed');
+                            btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Đã Theo Dõi';
+                            var countEl = document.getElementById('storeFollowersCount');
+                            if (countEl) {
+                                var cur = parseInt(countEl.innerText.replace(/,/g, '').replace(/\./g, '')) || 0;
+                                countEl.innerText = new Intl.NumberFormat('vi-VN').format(cur + 1);
+                            }
+                        } else {
+                            btn.classList.remove('followed');
+                            btn.innerHTML = '<i class="fa-solid fa-plus me-1"></i> Theo Dõi';
+                            var countEl = document.getElementById('storeFollowersCount');
+                            if (countEl) {
+                                var cur = parseInt(countEl.innerText.replace(/,/g, '').replace(/\./g, '')) || 1;
+                                countEl.innerText = new Intl.NumberFormat('vi-VN').format(Math.max(0, cur - 1));
+                            }
+                        }
+                    } else if (data.requireLogin) {
+                        window.location.href = '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search);
+                    }
+                })
+                .catch(function() {
+                    // Fallback client toggle
+                    btn.classList.toggle('followed');
+                });
         }
 
         // 2. Chat trực tiếp với chi nhánh qua Mini Chatbot

@@ -85,6 +85,8 @@ public class ConsignmentController {
         model.addAttribute("user", currentUser);
         model.addAttribute("stores", stores);
         model.addAttribute("categories", categories);
+        model.addAttribute("isHome", true);
+        model.addAttribute("activeTab", "consignment");
 
         // Số lượng phiếu hiện có của user
         if (currentUser != null) {

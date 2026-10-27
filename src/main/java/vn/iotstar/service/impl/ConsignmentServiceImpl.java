@@ -173,8 +173,13 @@ public class ConsignmentServiceImpl implements IConsignmentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public long countByStatus(BookConsignment.ConsignmentStatus status) {
         return consignmentRepository.countByStatus(status);
+    }
+
+    @Override
+    public long countByStoreIdAndStatus(Long storeId, BookConsignment.ConsignmentStatus status) {
+        if (storeId == null) return 0;
+        return consignmentRepository.countByStoreIdAndStatus(storeId, status);
     }
 }

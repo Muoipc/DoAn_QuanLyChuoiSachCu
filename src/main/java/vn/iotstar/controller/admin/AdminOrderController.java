@@ -75,13 +75,23 @@ public class AdminOrderController {
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("managedStore", managedStore);
 
-        // Đếm theo từng trạng thái đơn hàng phục vụ bộ đếm Badge
-        model.addAttribute("countNew", orderService.countByStatus(Order.OrderStatus.NEW));
-        model.addAttribute("countConfirmed", orderService.countByStatus(Order.OrderStatus.CONFIRMED));
-        model.addAttribute("countShipping", orderService.countByStatus(Order.OrderStatus.SHIPPING));
-        model.addAttribute("countDelivered", orderService.countByStatus(Order.OrderStatus.DELIVERED));
-        model.addAttribute("countCancelled", orderService.countByStatus(Order.OrderStatus.CANCELLED));
-        model.addAttribute("countReturned", orderService.countByStatus(Order.OrderStatus.RETURNED));
+        // Đếm theo từng trạng thái đơn hàng phục vụ bộ đếm Badge (Đồng bộ theo phạm vi chi nhánh)
+        if (isAdmin) {
+            model.addAttribute("countNew", orderService.countByStatus(Order.OrderStatus.NEW));
+            model.addAttribute("countConfirmed", orderService.countByStatus(Order.OrderStatus.CONFIRMED));
+            model.addAttribute("countShipping", orderService.countByStatus(Order.OrderStatus.SHIPPING));
+            model.addAttribute("countDelivered", orderService.countByStatus(Order.OrderStatus.DELIVERED));
+            model.addAttribute("countCancelled", orderService.countByStatus(Order.OrderStatus.CANCELLED));
+            model.addAttribute("countReturned", orderService.countByStatus(Order.OrderStatus.RETURNED));
+        } else {
+            Long sId = (managedStore != null) ? managedStore.getId() : -1L;
+            model.addAttribute("countNew", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.NEW));
+            model.addAttribute("countConfirmed", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.CONFIRMED));
+            model.addAttribute("countShipping", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.SHIPPING));
+            model.addAttribute("countDelivered", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.DELIVERED));
+            model.addAttribute("countCancelled", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.CANCELLED));
+            model.addAttribute("countReturned", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.RETURNED));
+        }
 
         return "admin/orders/list";
     }
@@ -154,6 +164,41 @@ public class AdminOrderController {
         try {
             orderService.updateOrderStatus(id, status, note);
             redirect.addFlashAttribute("successMessage", "Đã cập nhật trạng thái đơn hàng thành: " + status.name());
+        } catch (Exception e) {
+            redirect.addFlashAttribute("errorMessage", "Lỗi: " + e.getMessage());
+        }
+        return "redirect:/admin/orders/" + id;
+    }
+
+    /**
+     * Cập nhật trạng thái thanh toán đơn hàng (ví dụ: Xác nhận chuyển khoản VietQR)
+     */
+    @PostMapping("/{id}/update-payment")
+    public String updatePaymentStatus(
+            @PathVariable("id") Long id,
+            @RequestParam("paymentStatus") Order.PaymentStatus paymentStatus,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect
+    ) {
+        boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
+        Store managedStore = (userDetails != null) ? storeService.findByManagerId(userDetails.getId()) : null;
+
+        Order order = orderService.findById(id);
+        if (order == null) {
+            redirect.addFlashAttribute("errorMessage", "Không tìm thấy đơn hàng!");
+            return "redirect:/admin/orders";
+        }
+
+        if (!isAdmin) {
+            if (managedStore == null || order.getStore() == null || !managedStore.getId().equals(order.getStore().getId())) {
+                redirect.addFlashAttribute("errorMessage", "Bạn không có quyền cập nhật đơn hàng của chi nhánh khác!");
+                return "redirect:/admin/orders";
+            }
+        }
+
+        try {
+            orderService.updatePaymentStatus(id, paymentStatus);
+            redirect.addFlashAttribute("successMessage", "Đã cập nhật trạng thái thanh toán thành: " + paymentStatus.name());
         } catch (Exception e) {
             redirect.addFlashAttribute("errorMessage", "Lỗi: " + e.getMessage());
         }

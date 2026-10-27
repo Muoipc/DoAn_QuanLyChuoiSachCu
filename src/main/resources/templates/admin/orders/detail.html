@@ -10,12 +10,8 @@
     <style>
         /* Ambient Canvas Lighting for Apple Liquid Glass */
         body {
-            background: 
-                radial-gradient(circle at 8% 12%, rgba(232, 222, 200, 0.5) 0%, transparent 45%), 
-                radial-gradient(circle at 92% 18%, rgba(238, 77, 45, 0.08) 0%, transparent 45%), 
-                radial-gradient(circle at 50% 80%, rgba(140, 74, 39, 0.06) 0%, transparent 50%),
-                #f8fafc !important;
-            background-attachment: fixed !important;
+            background-color: var(--rebook-canvas) !important;
+            background-image: none !important;
         }
 
         :root {
@@ -42,6 +38,64 @@
             position: relative;
             margin-bottom: 24px;
             overflow: hidden;
+        }
+
+        @media print {
+            #adminSidebar, aside, header, footer,
+            .admin-sidebar, .admin-navbar, .admin-topbar, .admin-footer, .breadcrumb-wrapper,
+            .shopee-stepper-card, .btn, form, .status-update-card,
+            .toast-container, .sidebar-overlay,
+            .d-flex.justify-content-between.align-items-center.mb-4,
+            .row.g-4, nav, .branch-badge,
+            #sidebarToggleBtn, #toggleSidebarBtn, .navbar-toggle-btn {
+                display: none !important;
+            }
+
+            html, body, #adminMain, .admin-content-body, .admin-layout-wrapper {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+                height: auto !important;
+                min-height: auto !important;
+                overflow: visible !important;
+                color: #000000 !important;
+                font-family: 'Times New Roman', Times, serif !important;
+            }
+
+            #adminMain {
+                margin-left: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+
+            #printablePackingSlip {
+                display: block !important;
+                width: 100% !important;
+                padding: 10px 20px !important;
+                margin: 0 auto !important;
+            }
+
+            .print-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 12px;
+            }
+            .print-table th, .print-table td {
+                border: 1px solid #000000;
+                padding: 7px 10px;
+                font-size: 13px;
+                color: #000000 !important;
+            }
+            .print-table th {
+                background-color: #f2f2f2 !important;
+                font-weight: bold;
+            }
+        }
+
+        #printablePackingSlip {
+            display: none;
         }
 
         .glass-detail-header {
@@ -89,17 +143,17 @@
             z-index: 1;
         }
 
-        /* Active Gradient Orange-Red Progress Line */
+        /* Active ReBook Leather Progress Line */
         .stepper-track-progress {
             position: absolute;
             top: 25px;
             left: 55px;
             height: 4px;
-            background: linear-gradient(90deg, #f97316 0%, #ee4d2d 100%);
+            background: linear-gradient(90deg, #A05A32 0%, #8C4A27 100%);
             border-radius: 4px;
             z-index: 2;
             transition: width 0.5s var(--spring-bounce);
-            box-shadow: 0 0 10px rgba(238, 77, 45, 0.5);
+            box-shadow: 0 0 10px rgba(140, 74, 39, 0.4);
         }
 
         .stepper-node {
@@ -139,20 +193,20 @@
             transform: scale(1.04);
         }
 
-        /* Active / Current Node with Shopee Gradient & Pulse */
+        /* Active / Current Node with ReBook Leather & Pulse */
         .stepper-node.active .stepper-circle-icon {
-            background: linear-gradient(135deg, #f97316 0%, #ee4d2d 100%);
+            background: linear-gradient(135deg, #A05A32 0%, #8C4A27 100%);
             border-color: rgba(255, 255, 255, 0.95);
             color: #ffffff;
-            box-shadow: 0 6px 20px rgba(238, 77, 45, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.7);
+            box-shadow: 0 6px 20px rgba(140, 74, 39, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.7);
             transform: scale(1.1);
             animation: pulse-node 2.2s infinite;
         }
 
         @keyframes pulse-node {
-            0% { box-shadow: 0 0 0 0 rgba(238, 77, 45, 0.4); }
-            70% { box-shadow: 0 0 0 12px rgba(238, 77, 45, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(238, 77, 45, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(140, 74, 39, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(140, 74, 39, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(140, 74, 39, 0); }
         }
 
         /* Special Cancelled / Returned Step */
@@ -328,11 +382,11 @@
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
             <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
-                <a th:href="@{/admin/orders}" class="btn btn-sm btn-light rounded-pill border px-3 text-secondary me-2">
+                <a th:href="@{/admin/orders}" class="btn btn-sm btn-outline-theme rounded-pill px-3 me-2">
                     <i class="fa-solid fa-arrow-left me-1"></i>Danh sách
                 </a>
                 <h4 class="fw-bold mb-0 text-dark">
-                    Đơn Hàng: <span style="color: #1e3a8a; font-family: 'SF Pro Display', sans-serif;" th:text="${order.orderCode}">OBS-2026-1234</span>
+                    Đơn Hàng: <span style="color: var(--rebook-leather); font-family: 'SF Pro Display', sans-serif;" th:text="${order.orderCode}">OBS-2026-1234</span>
                 </h4>
 
                 <!-- Status Badges -->
@@ -346,24 +400,24 @@
             <div class="text-muted small ms-1">
                 <i class="fa-regular fa-clock me-1 text-secondary"></i>Thời gian đặt: <strong class="text-dark" th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm:ss')}">29/09/2026 14:30:00</strong>
                 <span class="mx-2">•</span>
-                <i class="fa-solid fa-store me-1 text-warning"></i>Kho xử lý: <strong class="text-dark" th:text="${order.store.storeName}">Thủ Đức</strong>
+                <i class="fa-solid fa-store me-1 text-muted"></i>Kho xử lý: <strong class="text-dark" th:text="${order.store.storeName}">Thủ Đức</strong>
             </div>
         </div>
         <div class="d-flex gap-2">
-            <button onclick="window.print()" class="btn btn-light rounded-pill px-3 py-2 border shadow-sm fw-semibold text-dark">
+            <button onclick="window.print()" class="btn btn-outline-theme rounded-pill px-3 py-2 fw-semibold">
                 <i class="fa-solid fa-print me-1"></i>In Phiếu Giao Sách
             </button>
         </div>
     </div>
 
-    <!-- 2. TIMELINE THEO DÕI HÀNH TRÌNH ĐƠN HÀNG CHUẨN SHOPEE -->
+    <!-- 2. TIMELINE THEO DÕI HÀNH TRÌNH ĐƠN HÀNG -->
     <div class="shopee-stepper-card">
         <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-light-subtle">
             <div class="d-flex align-items-center gap-2">
-                <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ee4d2d); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;">
+                <div style="width: 32px; height: 32px; border-radius: 10px; background: rgba(140, 74, 39, 0.1); border: 1px solid rgba(140, 74, 39, 0.2); display: flex; align-items: center; justify-content: center; color: var(--rebook-leather); font-size: 14px;">
                     <i class="fa-solid fa-route"></i>
                 </div>
-                <span class="fw-bold text-dark fs-6">Hành Trình Đơn Hàng (Shopee Tracking)</span>
+                <span class="fw-bold text-dark fs-6">Hành Trình Vận Chuyển Đơn Hàng</span>
             </div>
             <span class="badge bg-light text-secondary border rounded-pill px-3 py-1" style="font-size: 11.5px;">
                 Mã vận đơn: <strong class="text-dark" th:text="${order.orderCode}">OBS-2026-1234</strong>
@@ -585,10 +639,16 @@
                     <div class="pt-2 border-top border-light-subtle">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="small text-muted">Phương thức TT:</span>
-                            <div>
-                                <strong class="text-dark small" th:text="${order.paymentMethod.name()}">COD</strong>
+                            <div class="d-flex align-items-center">
+                                <strong class="text-dark small" th:text="${order.paymentMethod != null ? (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'VietQR 24/7' : order.paymentMethod.name()) : 'COD'}">COD</strong>
                                 <span th:if="${order.paymentStatus.name() == 'PAID'}" class="badge bg-success-subtle text-success border ms-1 rounded-pill" style="font-size: 11px;">Đã thanh toán</span>
                                 <span th:if="${order.paymentStatus.name() == 'UNPAID'}" class="badge bg-secondary-subtle text-secondary border ms-1 rounded-pill" style="font-size: 11px;">Chưa thanh toán</span>
+                                <form th:if="${order.paymentStatus.name() == 'UNPAID'}" th:action="@{/admin/orders/{id}/update-payment(id=${order.id})}" method="post" class="d-inline ms-1.5">
+                                    <input type="hidden" name="paymentStatus" value="PAID">
+                                    <button type="submit" class="btn btn-sm btn-outline-success py-0 px-2 rounded-pill" style="font-size: 10.5px;" title="Xác nhận đã nhận tiền chuyển khoản">
+                                        <i class="fa-solid fa-check me-1"></i>Xác nhận Đã TT
+                                    </button>
+                                </form>
                             </div>
                         </div>
 
@@ -664,6 +724,103 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- KHỐI IN PHIẾU GIAO HÀNG & ĐỒNG KIỂM (HIỂN THỊ KHI IN ẤN) -->
+    <div id="printablePackingSlip">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 16px;">
+            <div>
+                <h2 style="margin: 0; font-size: 20px; font-weight: bold; text-transform: uppercase;">CHUỖI SÁCH CŨ REBOOK</h2>
+                <div style="font-size: 13px; margin-top: 4px;">Chi nhánh xuất kho: <strong th:text="${order.store.storeName}">Tổng Kho Thủ Đức</strong></div>
+                <div style="font-size: 12px;" th:text="${order.store.address}">Số 1 Võ Văn Ngân, Thủ Đức</div>
+                <div style="font-size: 12px;">Hotline: 1900 8888 • Email: support@rebook.vn</div>
+            </div>
+            <div style="text-align: right;">
+                <h3 style="margin: 0; font-size: 18px; font-weight: bold;">PHIẾU GIAO HÀNG &amp; ĐỒNG KIỂM</h3>
+                <div style="font-size: 14px; font-weight: bold; margin-top: 4px;" th:text="'MÃ ĐƠN: ' + ${order.orderCode}">MÃ ĐƠN: OBS-2026-001</div>
+                <div style="font-size: 12px;" th:text="'Ngày in: ' + ${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}">Ngày in: 11/10/2026</div>
+            </div>
+        </div>
+
+        <!-- Thông tin khách nhận -->
+        <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 13px; line-height: 1.6;">
+            <div style="width: 60%;">
+                <div><strong>Người nhận:</strong> <span th:text="${order.receiverName}">Nguyễn Văn A</span></div>
+                <div><strong>Số điện thoại:</strong> <span th:text="${order.receiverPhone}">0901234567</span></div>
+                <div><strong>Địa chỉ giao:</strong> <span th:text="${order.receiverAddress}">Địa chỉ</span></div>
+                <div><strong>Ghi chú đơn:</strong> <span th:text="${order.customerNotes != null ? order.customerNotes : 'Không có'}">Ghi chú</span></div>
+            </div>
+            <div style="width: 38%; text-align: right;">
+                <div><strong>Hình thức giao:</strong> <span th:text="${order.deliveryMethod.name() == 'SHIPPING' ? 'Giao tận nơi' : 'Nhận tại cửa hàng'}">Giao tận nơi</span></div>
+                <div><strong>Phương thức TT:</strong> <span th:text="${order.paymentMethod.name()}">COD</span></div>
+                <div style="font-size: 15px; margin-top: 6px;">
+                    <strong>TIỀN THU COD:</strong> 
+                    <span style="font-size: 17px; font-weight: bold;" th:text="${order.paymentMethod.name() == 'COD' ? #numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : '0 VNĐ (ĐÃ THANH TOÁN)'}">150.000 VNĐ</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bảng sách chi tiết -->
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px; text-align: center;">STT</th>
+                    <th>Tựa Sách Cũ</th>
+                    <th style="width: 100px; text-align: center;">Tình Trạng</th>
+                    <th style="width: 60px; text-align: center;">SL</th>
+                    <th style="width: 100px; text-align: right;">Đơn Giá</th>
+                    <th style="width: 110px; text-align: right;">Thành Tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="it, stat : ${order.items}">
+                    <td style="text-align: center;" th:text="${stat.count}">1</td>
+                    <td>
+                        <strong th:text="${it.bookTitle}">Tựa sách</strong>
+                        <div style="font-size: 11px; color: #444;" th:if="${it.book != null}" th:text="'Mã: #' + ${it.book.id}">Mã: #12</div>
+                    </td>
+                    <td style="text-align: center;" th:text="${it.book != null ? it.book.conditionPercent + '%' : '90%'}">90%</td>
+                    <td style="text-align: center;" th:text="${it.quantity}">1</td>
+                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(it.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">85.000 đ</td>
+                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(it.totalPrice != null ? it.totalPrice : it.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">85.000 đ</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" style="text-align: right; font-weight: bold;">Tổng tiền hàng:</td>
+                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(order.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">85.000 đ</td>
+                </tr>
+                <tr th:if="${order.shippingFee != null and order.shippingFee > 0}">
+                    <td colspan="5" style="text-align: right; font-weight: bold;">Phí vận chuyển:</td>
+                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(order.shippingFee, 0, 'COMMA', 0, 'POINT')} + ' đ'">25.000 đ</td>
+                </tr>
+                <tr th:if="${order.discountAmount != null and order.discountAmount > 0}">
+                    <td colspan="5" style="text-align: right; font-weight: bold;">Giảm giá voucher:</td>
+                    <td style="text-align: right;" th:text="'-' + ${#numbers.formatDecimal(order.discountAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">-15.000 đ</td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="text-align: right; font-weight: bold; font-size: 14px;">TỔNG CỘNG THANH TOÁN:</td>
+                    <td style="text-align: right; font-weight: bold; font-size: 14px;" th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">70.000 đ</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- Cam kết & Ký nhận -->
+        <div style="margin-top: 25px; display: flex; justify-content: space-between; text-align: center; font-size: 13px;">
+            <div style="width: 30%;">
+                <strong>Người Lập Phiếu</strong>
+                <div style="margin-top: 50px; font-style: italic;">(Ký &amp; ghi rõ họ tên)</div>
+            </div>
+            <div style="width: 30%;">
+                <strong>Nhân Viên Giao Hàng</strong>
+                <div style="margin-top: 50px; font-style: italic;" th:text="${order.shipper != null ? order.shipper.fullName : '(Ký & ghi rõ họ tên)'}">Shipper</div>
+            </div>
+            <div style="width: 30%;">
+                <strong>Khách Hàng Ký Nhận</strong>
+                <div style="font-size: 11px; margin-top: 2px;">(Xác nhận đồng kiểm sách đúng mô tả)</div>
+                <div style="margin-top: 40px; font-style: italic;">(Ký &amp; ghi rõ họ tên)</div>
+            </div>
         </div>
     </div>
 

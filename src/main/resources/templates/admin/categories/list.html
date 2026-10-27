@@ -10,7 +10,7 @@
     <!-- PAGE HEADER -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-layer-group text-warning me-2"></i>Danh Mục Thể Loại Sách</h4>
+            <h4 class="fw-bold mb-1" style="color: var(--rebook-ink-main);"><i class="fa-solid fa-layer-group me-2" style="color: var(--rebook-leather);"></i>Danh Mục Thể Loại Sách</h4>
             <p class="text-muted small mb-0">Quản lý các chuyên mục thể loại sách cũ (Văn học, CNTT, Kinh tế, Lịch sử, Giáo trình HCMUTE...).</p>
         </div>
         <a th:href="@{/admin/categories/create}" class="btn btn-theme">
@@ -38,8 +38,10 @@
                             <td colspan="6" class="text-center py-4 text-muted">Chưa có danh mục nào.</td>
                         </tr>
                         <tr th:each="c : ${categories}">
-                            <td class="ps-4 fw-bold text-dark">
-                                <i class="fa-solid me-2 text-primary" th:classappend="${c.icon != null ? c.icon : 'fa-book'}"></i>
+                            <td class="ps-4 fw-bold" style="color: var(--rebook-ink-main);">
+                                <span class="category-icon-squircle">
+                                    <i class="fa-solid" th:classappend="${c.icon != null ? c.icon : 'fa-book'}"></i>
+                                </span>
                                 <span th:text="${c.categoryName}">Văn Học</span>
                             </td>
                             <td><code th:text="${c.slug}">van-hoc</code></td>
@@ -47,15 +49,15 @@
                             <td class="small text-muted" th:text="${c.description}">Mô tả chuyên mục</td>
                             <td class="text-center">
                                 <form th:action="@{/admin/categories/toggle-active/{id}(id=${c.id})}" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-sm" th:classappend="${c.isActive ? 'btn-success' : 'btn-outline-secondary'}" style="font-size: 11px; padding: 2px 8px;">
+                                    <button type="submit" class="btn btn-sm" th:classappend="${c.isActive ? 'badge bg-success-subtle text-success border border-success-subtle' : 'badge bg-secondary-subtle text-secondary border'}" style="font-size: 11.5px; padding: 4px 10px; border-radius: 9999px;">
                                         <span th:text="${c.isActive ? 'Hoạt động' : 'Tạm ẩn'}">Hoạt động</span>
                                     </button>
                                 </form>
                             </td>
                             <td class="text-end pe-4">
                                 <div class="d-inline-flex gap-1">
-                                    <a th:href="@{/admin/categories/edit/{id}(id=${c.id})}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i></a>
-                                    <a th:href="@{/admin/categories/delete/{id}(id=${c.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn muốn xóa danh mục này?');"><i class="fa-solid fa-trash-can"></i></a>
+                                    <a th:href="@{/admin/categories/edit/{id}(id=${c.id})}" class="icon-action-btn btn-edit" title="Chỉnh sửa"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a th:href="@{/admin/categories/delete/{id}(id=${c.id})}" class="icon-action-btn btn-delete" onclick="return confirm('Bạn muốn xóa danh mục này?');" title="Xóa"><i class="fa-solid fa-trash-can"></i></a>
                                 </div>
                             </td>
                         </tr>

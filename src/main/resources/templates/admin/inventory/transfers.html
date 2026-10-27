@@ -10,10 +10,14 @@
     <!-- PAGE HEADER -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1">
-                <i class="fa-solid fa-dolly text-warning me-2"></i>
-                <span th:text="${isAdmin ? 'Phê Duyệt Yêu Cầu Điều Chuyển Kho' : 'Tiến Độ & Lịch Sử Điều Chuyển Kho'}">Điều Chuyển Kho</span>
-            </h4>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <div class="category-icon-squircle" style="width: 40px; height: 40px; margin-right: 0; background: #FFFFFF; border-color: var(--rebook-border);">
+                    <i class="fa-solid fa-dolly fs-5" style="color: var(--rebook-leather);"></i>
+                </div>
+                <h4 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.3px;">
+                    <span th:text="${isAdmin ? 'Phê Duyệt Yêu Cầu Điều Chuyển Kho' : 'Tiến Độ & Lịch Sử Điều Chuyển Kho'}">Điều Chuyển Kho</span>
+                </h4>
+            </div>
             <p class="text-muted small mb-0" th:if="${isAdmin}">
                 Quản trị viên (Admin) xem xét và phê duyệt các phiếu xuất chuyển sách giữa các chi nhánh trong toàn chuỗi.
             </p>
@@ -25,64 +29,73 @@
             <a th:href="@{/admin/inventory/transfer}" class="btn btn-theme">
                 <i class="fa-solid fa-plus me-1"></i>Tạo Yêu Cầu Điều Chuyển
             </a>
-            <a th:href="@{/admin/inventory}" class="btn btn-outline-secondary">
+            <a th:href="@{/admin/inventory}" class="btn btn-outline-theme">
                 <i class="fa-solid fa-boxes-stacked me-1"></i>Xem Tồn Kho
             </a>
         </div>
     </div>
 
-    <!-- STATS CARDS -->
+    <!-- 2. STATS CARDS CHUẨN OPENDESIGN -->
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="card card-custom h-100 p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase">Tổng phiếu yêu cầu</div>
-                        <h3 class="fw-bold mb-0 mt-1" th:text="${transfers.size()}">0</h3>
-                    </div>
-                    <div class="rounded-circle p-3 bg-primary-subtle text-primary">
-                        <i class="fa-solid fa-clipboard-list fs-4"></i>
+        <!-- Tổng phiếu yêu cầu -->
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Tổng Phiếu Yêu Cầu</span>
+                    <span class="badge bg-secondary-subtle text-secondary border rounded-pill">Toàn bộ</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number" style="color: var(--rebook-leather);" th:text="${transfers.size()}">0</h3>
+                    <div class="inv-metric-squircle squircle-primary">
+                        <i class="fa-solid fa-clipboard-list"></i>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card card-custom h-100 p-3 border-warning">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase text-warning">Chờ Admin duyệt</div>
-                        <h3 class="fw-bold mb-0 mt-1 text-warning" th:text="${pendingCount}">0</h3>
-                    </div>
-                    <div class="rounded-circle p-3 bg-warning-subtle text-warning">
-                        <i class="fa-solid fa-hourglass-half fs-4"></i>
+
+        <!-- Chờ Admin duyệt -->
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Chờ Duyệt</span>
+                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill">PENDING</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number text-warning-emphasis" th:text="${pendingCount}">0</h3>
+                    <div class="inv-metric-squircle squircle-warning">
+                        <i class="fa-solid fa-hourglass-half"></i>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card card-custom h-100 p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase text-success">Đã phê duyệt</div>
-                        <h3 class="fw-bold mb-0 mt-1 text-success" 
-                            th:text="${transfers.?[status.name() == 'APPROVED'].size()}">0</h3>
-                    </div>
-                    <div class="rounded-circle p-3 bg-success-subtle text-success">
-                        <i class="fa-solid fa-circle-check fs-4"></i>
+
+        <!-- Đã phê duyệt -->
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Đã Phê Duyệt</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">APPROVED</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number text-success" th:text="${transfers.?[status.name() == 'APPROVED'].size()}">0</h3>
+                    <div class="inv-metric-squircle squircle-success">
+                        <i class="fa-solid fa-circle-check"></i>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card card-custom h-100 p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-muted small fw-semibold text-uppercase text-danger">Từ chối / Đã hủy</div>
-                        <h3 class="fw-bold mb-0 mt-1 text-danger" 
-                            th:text="${transfers.?[status.name() == 'REJECTED' or status.name() == 'CANCELLED'].size()}">0</h3>
-                    </div>
-                    <div class="rounded-circle p-3 bg-danger-subtle text-danger">
-                        <i class="fa-solid fa-ban fs-4"></i>
+
+        <!-- Từ chối / Đã hủy -->
+        <div class="col-lg-3 col-sm-6">
+            <div class="inv-metric-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="inv-metric-label">Từ Chối / Đã Hủy</span>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">REJECTED</span>
+                </div>
+                <div class="d-flex align-items-baseline justify-content-between">
+                    <h3 class="inv-metric-number text-danger" th:text="${transfers.?[status.name() == 'REJECTED' or status.name() == 'CANCELLED'].size()}">0</h3>
+                    <div class="inv-metric-squircle squircle-danger">
+                        <i class="fa-solid fa-ban"></i>
                     </div>
                 </div>
             </div>
@@ -97,10 +110,10 @@
                     <label class="form-label small text-muted mb-1">Lọc theo trạng thái:</label>
                     <select class="form-select form-select-sm" name="status" onchange="this.form.submit()">
                         <option value="">-- Tất cả trạng thái --</option>
-                        <option value="PENDING" th:selected="${selectedStatus != null and selectedStatus.name() == 'PENDING'}">⏳ Chờ Admin duyệt (PENDING)</option>
-                        <option value="APPROVED" th:selected="${selectedStatus != null and selectedStatus.name() == 'APPROVED'}">✅ Đã phê duyệt (APPROVED)</option>
-                        <option value="REJECTED" th:selected="${selectedStatus != null and selectedStatus.name() == 'REJECTED'}">❌ Bị từ chối (REJECTED)</option>
-                        <option value="CANCELLED" th:selected="${selectedStatus != null and selectedStatus.name() == 'CANCELLED'}">⚪ Đã hủy (CANCELLED)</option>
+                        <option value="PENDING" th:selected="${selectedStatus != null and selectedStatus.name() == 'PENDING'}">Chờ Admin duyệt (PENDING)</option>
+                        <option value="APPROVED" th:selected="${selectedStatus != null and selectedStatus.name() == 'APPROVED'}">Đã phê duyệt (APPROVED)</option>
+                        <option value="REJECTED" th:selected="${selectedStatus != null and selectedStatus.name() == 'REJECTED'}">Bị từ chối (REJECTED)</option>
+                        <option value="CANCELLED" th:selected="${selectedStatus != null and selectedStatus.name() == 'CANCELLED'}">Đã hủy (CANCELLED)</option>
                     </select>
                 </div>
                 <div class="col-md-5" th:if="${isAdmin}">
@@ -130,7 +143,7 @@
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0" style="min-width: 1050px;">
                     <thead class="table-light">
                         <tr>
                             <th class="ps-4">Mã Phiếu</th>

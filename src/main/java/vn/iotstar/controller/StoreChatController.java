@@ -1,12 +1,14 @@
 package vn.iotstar.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.iotstar.entity.*;
 import vn.iotstar.repository.*;
 import vn.iotstar.security.CustomUserDetails;
@@ -23,6 +25,25 @@ public class StoreChatController {
 
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm dd/MM");
     private static final Long DEFAULT_GUEST_USER_ID = 4L; // Nguyễn Song Hoàng Phúc
+
+    // Presence Tracking: Quản lý liveness của Quản lý từng chi nhánh (Thread-safe)
+    private static final java.util.concurrent.ConcurrentMap<Long, Long> STORE_LAST_SEEN = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final long PRESENCE_TIMEOUT_MS = 5 * 60 * 1000L; // 5 phút
+
+    public static void touchStorePresence(Long storeId) {
+        if (storeId != null) {
+            STORE_LAST_SEEN.put(storeId, System.currentTimeMillis());
+        }
+    }
+
+    public static boolean isStoreOnline(Store store) {
+        if (store == null) return false;
+        if (Boolean.TRUE.equals(store.getAiReplyEnabled())) {
+            return true; // Chế độ AI trực 24/7
+        }
+        Long lastSeen = STORE_LAST_SEEN.get(store.getId());
+        return lastSeen != null && (System.currentTimeMillis() - lastSeen) < PRESENCE_TIMEOUT_MS;
+    }
 
     @Autowired
     private ChatMessageRepository chatMessageRepository;
@@ -69,6 +90,9 @@ public class StoreChatController {
             boolean isVideo = ext.equals(".mp4") || ext.equals(".webm") || ext.equals(".mov") || ext.equals(".m4v") ||
                     (file.getContentType() != null && file.getContentType().startsWith("video/"));
             String mediaType = isVideo ? "VIDEO" : "IMAGE";
+            if (isVideo && !ext.matches("\\.(mp4|webm|mov|m4v|mkv|avi)")) {
+                ext = ".mp4";
+            }
             String filename = "chat_" + (isVideo ? "vid_" : "img_") + System.currentTimeMillis() + "_" + UUID.randomUUID().toString().substring(0, 8) + ext;
 
             Path targetPath = Paths.get("target/classes/static/uploads/chat", filename);
@@ -120,6 +144,7 @@ public class StoreChatController {
             item.put("storeName", store.getStoreName());
             item.put("storeAvatar", store.getImage() != null ? store.getImage() : "/images/brand-book-icon.png");
             item.put("storeDistrict", store.getDistrict());
+            item.put("isOnline", isStoreOnline(store));
 
             if (!messages.isEmpty()) {
                 ChatMessage last = messages.get(messages.size() - 1);
@@ -264,6 +289,9 @@ public class StoreChatController {
         res.put("storeName", store != null ? store.getStoreName() : "Chi Nhánh");
         res.put("storeAvatar", (store != null && store.getImage() != null) ? store.getImage() : "/images/logo-books-badge.png");
         res.put("storeAddress", store != null ? store.getAddress() : "");
+        res.put("aiReplyEnabled", store != null ? Boolean.TRUE.equals(store.getAiReplyEnabled()) : false);
+        res.put("isOnline", isStoreOnline(store));
+        res.put("managerName", (store != null && store.getManager() != null) ? store.getManager().getFullName() : "Quản lý cửa hàng");
         res.put("messages", dtos);
 
         return ResponseEntity.ok(res);
@@ -303,6 +331,9 @@ public class StoreChatController {
 
         Book book = (bookId != null) ? bookRepository.findById(bookId).orElse(null) : null;
 
+        // Lấy lịch sử tin nhắn trước khi lưu tin mới
+        List<ChatMessage> prevMessages = chatMessageRepository.findByUserIdAndStoreIdOrderByCreatedAtAsc(currentUser.getId(), storeId);
+
         // Lưu tin nhắn của khách hàng
         ChatMessage userMsg = new ChatMessage();
         userMsg.setUser(currentUser);
@@ -313,47 +344,100 @@ public class StoreChatController {
         userMsg.setMediaType(mediaType);
         userMsg.setSenderType(ChatMessage.SenderType.CUSTOMER);
         userMsg.setSenderName(currentUser.getFullName() != null ? currentUser.getFullName() : currentUser.getUsername());
+        userMsg.setNeedsAttention(true);
         chatMessageRepository.save(userMsg);
+        res.put("userMsgId", userMsg.getId());
 
-        // TÍCH HỢP TRÍ TUỆ NHÂN TẠO (AI STORE ASSISTANT):
-        // - Với các câu thông thường (tồn kho, tình trạng độ mới, giá bán, địa chỉ, giờ mở cửa, phí ship, đổi trả): AI tự động tra cứu CSDL & phản hồi ngay lập tức.
-        // - Với các câu đặc biệt (mặc cả giá, đặt cọc giữ sách, xem chi tiết trang rách/bung keo, khiếu nại, yêu cầu gặp người thật):
-        //   AI thông báo chuyển tiếp cho Thủ kho/Quản lý chi nhánh và đánh dấu [CẦN QUẦY TRẢ LỜI] trên trang quản trị.
-        Map<String, Object> aiResult = generateStoreAiReply(store, book, userMsg.getContent());
-        boolean needsStaff = Boolean.TRUE.equals(aiResult.get("needsStaff"));
+        boolean isAiEnabled = Boolean.TRUE.equals(store.getAiReplyEnabled());
+        String lower = userMsg.getContent().toLowerCase();
+        boolean customerExplicitlyWantsHuman = lower.contains("gặp người thật") || lower.contains("nhân viên đâu")
+                || lower.contains("alo shop") || lower.contains("thủ kho") || lower.contains("khiếu nại")
+                || lower.contains("bớt giá") || lower.contains("trả giá") || lower.contains("[khách hàng yêu cầu gặp nhân viên");
 
-        if (needsStaff) {
-            userMsg.setNeedsAttention(true);
-            chatMessageRepository.save(userMsg);
+        // 1. Nếu khách yêu cầu gặp người thật hoặc hỏi các câu mặc cả/khiếu nại
+        if (customerExplicitlyWantsHuman) {
+            ChatMessage handoffMsg = new ChatMessage();
+            handoffMsg.setUser(currentUser);
+            handoffMsg.setStore(store);
+            handoffMsg.setSenderType(ChatMessage.SenderType.STORE_STAFF);
+            handoffMsg.setSenderName("Hệ thống chuyển giao");
+            handoffMsg.setContent("Dạ chi nhánh đã nhận được yêu cầu gặp nhân viên! Quản lý quầy " + store.getStoreName() + " sẽ tiếp quản cuộc trò chuyện và phản hồi trực tiếp cho bạn ngay nhé ạ! 👨‍💼✨");
+            handoffMsg.setNeedsAttention(true);
+            chatMessageRepository.save(handoffMsg);
+
+            res.put("success", true);
+            res.put("needsStaff", true);
+            res.put("reply", handoffMsg.getContent());
+            res.put("replyMsgId", handoffMsg.getId());
+            res.put("senderName", handoffMsg.getSenderName());
+            res.put("storeId", storeId);
+            res.put("createdAt", handoffMsg.getCreatedAt().format(TIME_FMT));
+            return ResponseEntity.ok(res);
         }
 
-        ChatMessage aiMsg = new ChatMessage();
-        aiMsg.setUser(currentUser);
-        aiMsg.setStore(store);
-        aiMsg.setSenderType(ChatMessage.SenderType.STORE_STAFF);
-        aiMsg.setSenderName("Trợ lý AI - " + store.getStoreName());
-        aiMsg.setContent((String) aiResult.get("reply"));
-        aiMsg.setNeedsAttention(needsStaff);
-        if (aiResult.containsKey("suggestedBook")) {
-            aiMsg.setBook((Book) aiResult.get("suggestedBook"));
-        }
-        chatMessageRepository.save(aiMsg);
+        // 2. Nếu Shop đang BẬT chế độ Trợ lý AI trả lời thay
+        if (isAiEnabled) {
+            Map<String, Object> aiResult = generateStoreAiReply(store, book, userMsg.getContent());
+            boolean needsStaff = Boolean.TRUE.equals(aiResult.get("needsStaff"));
 
+            ChatMessage aiMsg = new ChatMessage();
+            aiMsg.setUser(currentUser);
+            aiMsg.setStore(store);
+            aiMsg.setSenderType(ChatMessage.SenderType.STORE_STAFF);
+            aiMsg.setSenderName("Trợ lý AI - " + store.getStoreName());
+            aiMsg.setContent((String) aiResult.get("reply"));
+            aiMsg.setNeedsAttention(needsStaff);
+            if (aiResult.containsKey("suggestedBook")) {
+                aiMsg.setBook((Book) aiResult.get("suggestedBook"));
+            }
+            chatMessageRepository.save(aiMsg);
+
+            res.put("success", true);
+            res.put("needsStaff", needsStaff);
+            res.put("reply", aiMsg.getContent());
+            res.put("replyMsgId", aiMsg.getId());
+            res.put("senderName", aiMsg.getSenderName());
+            res.put("storeId", storeId);
+            res.put("createdAt", aiMsg.getCreatedAt() != null ? aiMsg.getCreatedAt().format(TIME_FMT) : "");
+            if (aiMsg.getBook() != null) {
+                Map<String, Object> bMap = new HashMap<>();
+                bMap.put("id", aiMsg.getBook().getId());
+                bMap.put("title", aiMsg.getBook().getTitle());
+                bMap.put("price", aiMsg.getBook().getPrice());
+                bMap.put("imageUrl", aiMsg.getBook().getPrimaryImageUrl());
+                bMap.put("conditionPercent", aiMsg.getBook().getConditionPercent());
+                res.put("suggestedBook", bMap);
+            }
+            return ResponseEntity.ok(res);
+        }
+
+        // 3. Nếu Shop đang TẮT chế độ AI (Chế độ Nhân viên trực quầy đối thoại)
+        if (prevMessages.isEmpty()) {
+            // Tin nhắn đầu tiên: gửi 1 câu chào tiếp nhận tự động
+            ChatMessage greeting = new ChatMessage();
+            greeting.setUser(currentUser);
+            greeting.setStore(store);
+            greeting.setSenderType(ChatMessage.SenderType.STORE_STAFF);
+            greeting.setSenderName("Quản lý quầy - " + store.getStoreName());
+            greeting.setContent("Dạ chào bạn! " + store.getStoreName() + " đã nhận được tin nhắn. Quản lý cửa hàng đang kiểm tra quầy và sẽ phản hồi cho bạn ngay trong ít phút nhé ạ! ✨");
+            greeting.setNeedsAttention(true);
+            chatMessageRepository.save(greeting);
+
+            res.put("success", true);
+            res.put("needsStaff", true);
+            res.put("reply", greeting.getContent());
+            res.put("replyMsgId", greeting.getId());
+            res.put("senderName", greeting.getSenderName());
+            res.put("storeId", storeId);
+            res.put("createdAt", greeting.getCreatedAt().format(TIME_FMT));
+            return ResponseEntity.ok(res);
+        }
+
+        // Các tin nhắn tiếp theo: Chờ nhân viên quầy trả lời trực tiếp
         res.put("success", true);
-        res.put("needsStaff", needsStaff);
-        res.put("reply", aiMsg.getContent());
-        res.put("senderName", aiMsg.getSenderName());
+        res.put("needsStaff", true);
+        res.put("reply", null);
         res.put("storeId", storeId);
-        res.put("createdAt", aiMsg.getCreatedAt() != null ? aiMsg.getCreatedAt().format(TIME_FMT) : "");
-        if (aiMsg.getBook() != null) {
-            Map<String, Object> bMap = new HashMap<>();
-            bMap.put("id", aiMsg.getBook().getId());
-            bMap.put("title", aiMsg.getBook().getTitle());
-            bMap.put("price", aiMsg.getBook().getPrice());
-            bMap.put("imageUrl", aiMsg.getBook().getPrimaryImageUrl());
-            bMap.put("conditionPercent", aiMsg.getBook().getConditionPercent());
-            res.put("suggestedBook", bMap);
-        }
         return ResponseEntity.ok(res);
     }
 
@@ -363,77 +447,150 @@ public class StoreChatController {
      * - Tự động phát hiện "câu hỏi đặc biệt" (trả giá, giữ cọc, chụp ảnh góc rách, khiếu nại, yêu cầu gặp người thật)
      *   để thông báo chuyển tiếp cho Thủ kho/Quản lý chi nhánh trực tiếp trả lời.
      */
+    private static String removeDiacritics(String str) {
+        if (str == null) return "";
+        String nfd = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(nfd)
+                .replaceAll("")
+                .replace('đ', 'd')
+                .replace('Đ', 'd')
+                .toLowerCase()
+                .trim();
+    }
+
     private Map<String, Object> generateStoreAiReply(Store store, Book book, String userText) {
         Map<String, Object> result = new HashMap<>();
         if (userText == null || userText.isBlank()) {
-            result.put("reply", "Dạ chào bạn! Em là Trợ lý AI của " + store.getStoreName() + ". Em có thể giải đáp về tồn kho sách, độ mới, giá bán, địa chỉ và giờ mở cửa của chi nhánh ạ!");
+            result.put("reply", "Dạ ReBook xin chào bạn! Em là Trợ lý AI của " + store.getStoreName() + " 📚. Em có thể tra cứu tồn kho sách, độ mới, giá bán và chính sách tại quầy cho mình ạ!");
             result.put("needsStaff", false);
             return result;
         }
 
-        String lower = userText.toLowerCase().trim();
+        String rawLower = userText.toLowerCase().trim();
+        String unaccentQuery = removeDiacritics(userText);
 
         // 1. NHÓM CÂU HỎI ĐẶC BIỆT CẦN THỦ KHO / QUẢN LÝ TRỰC TIẾP TRẢ LỜI
-        // (Mặc cả giá, đặt cọc giữ sách, xem góc rách/chữ ký cụ thể, khiếu nại, mua sỉ, hoặc yêu cầu gặp người thật)
-        boolean isSpecial = lower.contains("giảm giá thêm") || lower.contains("bớt giá") || lower.contains("fix giá") ||
-                lower.contains("bớt không") || lower.contains("chiết khấu riêng") ||
-                lower.contains("giữ sách") || lower.contains("cọc trước") || lower.contains("đặt cọc") ||
-                lower.contains("để riêng") || lower.contains("để dành") ||
-                lower.contains("chụp góc") || lower.contains("trang 50") || lower.contains("mục lục") ||
-                lower.contains("chữ ký") || lower.contains("rách mép") || lower.contains("bung keo") ||
-                lower.contains("gặp quản lý") || lower.contains("gặp chủ") || lower.contains("gặp người thật") ||
-                lower.contains("nhân viên đâu") || lower.contains("thủ kho đâu") || lower.contains("người thật") ||
-                lower.contains("khiếu nại") || lower.contains("bị ướt") || lower.contains("giao sai") ||
-                lower.contains("mua sỉ") || lower.contains("số lượng lớn");
+        if (rawLower.contains("[video thực tế]") || rawLower.contains("video") || rawLower.contains("clip")) {
+            String vidMsg = "Dạ chi nhánh đã nhận được video kiểm tra sách từ bạn ạ! Quản lý quầy " + store.getStoreName() + " sẽ xem video và phản hồi cho bạn ngay ít phút nữa nhé! 📹✨";
+            result.put("reply", vidMsg);
+            result.put("needsStaff", true);
+            return result;
+        }
+
+        boolean isSpecial = rawLower.contains("giảm giá thêm") || rawLower.contains("bớt giá") || rawLower.contains("fix giá") ||
+                rawLower.contains("bớt không") || rawLower.contains("chiết khấu riêng") ||
+                rawLower.contains("giữ sách") || rawLower.contains("cọc trước") || rawLower.contains("đặt cọc") ||
+                rawLower.contains("để riêng") || rawLower.contains("để dành") ||
+                rawLower.contains("chụp góc") || rawLower.contains("trang 50") || rawLower.contains("mục lục") ||
+                rawLower.contains("chữ ký") || rawLower.contains("rách mép") || rawLower.contains("bung keo") ||
+                rawLower.contains("gặp quản lý") || rawLower.contains("gặp chủ") || rawLower.contains("gặp người thật") ||
+                rawLower.contains("nhân viên đâu") || rawLower.contains("thủ kho đâu") || rawLower.contains("người thật") ||
+                rawLower.contains("khiếu nại") || rawLower.contains("bị ướt") || rawLower.contains("giao sai") ||
+                rawLower.contains("mua sỉ") || rawLower.contains("số lượng lớn");
 
         if (isSpecial) {
-            String escortMsg = "Dạ đây là yêu cầu đặc biệt cần nhân viên kiểm tra thực tế tại kệ/kho sách. Em đã chuyển tiếp tin nhắn đến Thủ kho / Quản lý chi nhánh " + store.getStoreName() + ". Nhân viên quầy sẽ trực tiếp phản hồi anh/chị ngay ít phút nữa ạ! ⏳";
+            String escortMsg = "Dạ đây là yêu cầu đặc biệt cần nhân viên kiểm tra thực tế tại kệ/kho sách. Em đã chuyển tiếp tin nhắn đến Quản lý chi nhánh " + store.getStoreName() + ". Quản lý quầy sẽ trực tiếp phản hồi bạn ngay ít phút nữa nhé! ⏳👨‍💼";
             result.put("reply", escortMsg);
             result.put("needsStaff", true);
             return result;
         }
 
-        // 2. TRƯỜNG HỢP: KHÁCH HỎI VỀ ĐỊA CHỈ, VỊ TRÍ, ĐƯỜNG ĐI
-        if (lower.contains("ở đâu") || lower.contains("địa chỉ") || lower.contains("vị trí") || lower.contains("chỗ nào") || lower.contains("gần đâu")) {
-            String addrMsg = "Dạ chi nhánh " + store.getStoreName() + " có địa chỉ tại: " + store.getAddress() + " (" + store.getDistrict() + "). Cửa hàng có chỗ để xe máy miễn phí và bàn đọc sách trải nghiệm, rất mong được đón tiếp anh/chị ghé quầy ạ! 📍";
+        // 2. CHÀO HỎI & BẮT ĐẦU TRÒ CHUYỆN (GREETING INTENT)
+        boolean isGreeting = rawLower.matches(".*\\b(chào|chao|hi|hello|alo|shop ơi|shop oi|ad ơi|ad oi|bạn ơi|ban oi|hey|helo)\\b.*")
+                || rawLower.equals("hi") || rawLower.equals("hello") || rawLower.equals("alo") || rawLower.equals("chao shop") || rawLower.equals("chào shop");
+
+        if (isGreeting) {
+            String greetMsg = "Dạ ReBook xin chào bạn! Em là Trợ lý AI của **" + store.getStoreName() + "** 📚✨\n" +
+                    "Hiện tại quầy đang có sẵn rất nhiều đầu sách cũ tuyển chọn (Văn học, Kinh tế, Kỹ năng, Ngoại ngữ, CNTT...). Bạn đang tìm tựa sách, tác giả hay cần em gợi ý sách hay tại quầy ạ?";
+            result.put("reply", greetMsg);
+            result.put("needsStaff", false);
+            return result;
+        }
+
+        // 3. ĐỊA CHỈ, VỊ TRÍ, ĐƯỜNG ĐI
+        if (unaccentQuery.contains("o dau") || unaccentQuery.contains("dia chi") || unaccentQuery.contains("vi tri") || unaccentQuery.contains("cho nao") || unaccentQuery.contains("gan dau")) {
+            String addrMsg = "Dạ chi nhánh **" + store.getStoreName() + "** có địa chỉ tại: " + store.getAddress() + " (" + store.getDistrict() + "). Cửa hàng có chỗ để xe máy miễn phí và bàn đọc sách trải nghiệm, rất mong được đón tiếp bạn ghé quầy ạ! 📍";
             result.put("reply", addrMsg);
             result.put("needsStaff", false);
             return result;
         }
 
-        // 3. TRƯỜNG HỢP: KHÁCH HỎI VỀ GIỜ MỞ CỬA, THỜI GIAN HOẠT ĐỘNG
-        if (lower.contains("mở cửa") || lower.contains("đóng cửa") || lower.contains("mấy giờ") || lower.contains("giờ làm việc") || lower.contains("thời gian")) {
-            String hoursMsg = "Dạ chi nhánh " + store.getStoreName() + " mở cửa phục vụ từ 08:00 sáng đến 21:30 tối hàng ngày (kể cả Thứ 7, Chủ Nhật và ngày lễ) ạ! Anh/chị có thể ghé bất cứ lúc nào trong khung giờ này nhé! ⏰";
+        // 4. GIỜ MỞ CỬA, THỜI GIAN HOẠT ĐỘNG
+        if (unaccentQuery.contains("mo cua") || unaccentQuery.contains("dong cua") || unaccentQuery.contains("may gio") || unaccentQuery.contains("gio lam viec") || unaccentQuery.contains("thoi gian")) {
+            String hoursMsg = "Dạ chi nhánh **" + store.getStoreName() + "** mở cửa phục vụ từ 08:00 sáng đến 21:30 tối hàng ngày (kể cả Thứ 7, Chủ Nhật và ngày lễ) ạ! Bạn có thể ghé bất cứ lúc nào trong khung giờ này nhé! ⏰";
             result.put("reply", hoursMsg);
             result.put("needsStaff", false);
             return result;
         }
 
-        // 4. TRƯỜNG HỢP: KHÁCH HỎI VỀ PHÍ SHIP, GIAO HỎA TỐC, THỜI GIAN GIAO
-        if (lower.contains("ship") || lower.contains("giao hàng") || lower.contains("hỏa tốc") || lower.contains("vận chuyển") || lower.contains("bao lâu")) {
-            String shipMsg = "Dạ chi nhánh có hỗ trợ giao hỏa tốc 2-4h nội thành TP.HCM (phí từ 18.000₫ - 25.000₫) và Freeship cho đơn từ 150.000₫ ạ. Anh/chị luôn được ĐỒNG KIỂM - kiểm tra tình trạng sách thực tế trước khi thanh toán nhận hàng nhé! 🚀";
+        // 5. PHÍ SHIP, GIAO HÀNG HỎA TỐC
+        if (unaccentQuery.contains("ship") || unaccentQuery.contains("giao hang") || unaccentQuery.contains("hoa toc") || unaccentQuery.contains("van chuyen") || unaccentQuery.contains("bao lau")) {
+            String shipMsg = "Dạ chi nhánh hỗ trợ giao hỏa tốc 2-4h nội thành TP.HCM (phí từ 18.000₫ - 25.000₫) và Freeship cho đơn từ 150.000₫ ạ. Bạn luôn được ĐỒNG KIỂM - kiểm tra tình trạng sách thực tế trước khi thanh toán nhận hàng nhé! 🚀";
             result.put("reply", shipMsg);
             result.put("needsStaff", false);
             return result;
         }
 
-        // 5. TRƯỜNG HỢP: KHÁCH HỎI VỀ ĐỔI TRẢ, BẢO HÀNH, CHẤT LƯỢNG SÁCH
-        if (lower.contains("đổi trả") || lower.contains("bảo hành") || lower.contains("đồng kiểm") || lower.contains("chất lượng")) {
-            String policyMsg = "Dạ toàn bộ sách cũ tại " + store.getStoreName() + " đều qua quy trình kiểm định 4 bước: kiểm tra đủ trang, vệ sinh gáy bìa và phân loại độ mới rõ ràng. Chuỗi hỗ trợ đổi trả miễn phí trong 3 ngày nếu sách bị lỗi hoặc không đúng mô tả ạ! 🛡️";
+        // 6. ĐỔI TRẢ, BẢO HÀNH, CHẤT LƯỢNG SÁCH
+        if (unaccentQuery.contains("doi tra") || unaccentQuery.contains("bao hanh") || unaccentQuery.contains("dong kiem") || unaccentQuery.contains("chat luong")) {
+            String policyMsg = "Dạ toàn bộ sách cũ tại **" + store.getStoreName() + "** đều qua quy trình kiểm định 4 bước: kiểm tra đủ trang, vệ sinh gáy bìa và phân loại độ mới rõ ràng. Chuỗi hỗ trợ đổi trả miễn phí trong 3 ngày nếu sách bị lỗi hoặc không đúng mô tả ạ! 🛡️";
             result.put("reply", policyMsg);
             result.put("needsStaff", false);
             return result;
         }
 
-        // 6. TRƯỜNG HỢP: HỎI VỀ TỒN KHO, ĐỘ MỚI, GIÁ CỦA CUỐN SÁCH CỤ THỂ (HOẶC SÁCH ĐANG GHIM)
+        // 7. TRA CỨU SÁCH CỤ THỂ THEO TỰA HOẶC TÁC GIẢ (HỖ TRỢ CẢ CÓ DẤU & KHÔNG DẤU)
         Book targetBook = book;
         if (targetBook == null) {
             List<Book> allBooks = bookRepository.findAllActiveWithImages();
+            int bestScore = 0;
+
             for (Book b : allBooks) {
-                String cleanT = b.getTitle().toLowerCase().replaceAll("\\(.*?\\)", "").trim();
-                if (cleanT.length() >= 3 && lower.contains(cleanT)) {
+                String bTitle = b.getTitle() != null ? b.getTitle() : "";
+                String bAuthor = b.getAuthor() != null ? b.getAuthor() : "";
+                String unaccentTitle = removeDiacritics(bTitle);
+                String unaccentAuthor = removeDiacritics(bAuthor);
+
+                int score = 0;
+                // 1. Kiểm tra khớp toàn bộ tựa sách
+                if (unaccentQuery.contains(unaccentTitle) || unaccentTitle.contains(unaccentQuery)) {
+                    score += 15;
+                }
+                // 2. Tách cụm từ tựa sách chính (bỏ ngoặc)
+                String mainTitle = unaccentTitle.replaceAll("\\(.*?\\)", "").trim();
+                if (mainTitle.length() >= 3 && (unaccentQuery.contains(mainTitle) || mainTitle.contains(unaccentQuery))) {
+                    score += 12;
+                }
+                // 3. Kiểm tra cụm tiếng Anh / phụ đề trong ngoặc đơn (ví dụ: The Alchemist, Atomic Habits...)
+                java.util.regex.Matcher mPar = java.util.regex.Pattern.compile("\\((.*?)\\)").matcher(unaccentTitle);
+                while (mPar.find()) {
+                    String inside = mPar.group(1).trim();
+                    if (inside.length() >= 3 && (unaccentQuery.contains(inside) || inside.contains(unaccentQuery))) {
+                        score += 14;
+                    }
+                }
+                // 4. Khớp tác giả
+                if (!unaccentAuthor.isEmpty() && (unaccentQuery.contains(unaccentAuthor) || unaccentAuthor.contains(unaccentQuery))) {
+                    score += 10;
+                }
+                // 5. Khớp từng từ khóa chính (Keywords >= 3 ký tự)
+                String[] qWords = unaccentQuery.replaceAll("[^a-z0-9\\s]", " ").split("\\s+");
+                int wordHits = 0;
+                for (String w : qWords) {
+                    if (w.length() >= 3 && !w.equals("cuon") && !w.equals("sach") && !w.equals("khong") && !w.equals("chua") && !w.equals("con") && !w.equals("shop")) {
+                        if (unaccentTitle.contains(w)) {
+                            wordHits++;
+                        }
+                    }
+                }
+                if (wordHits >= 2 || (wordHits >= 1 && mainTitle.length() <= 8)) {
+                    score += wordHits * 3;
+                }
+
+                if (score > bestScore) {
+                    bestScore = score;
                     targetBook = b;
-                    break;
                 }
             }
         }
@@ -443,76 +600,123 @@ public class StoreChatController {
             int stock = invOpt.map(Inventory::getQuantity).orElse(0);
             int cond = targetBook.getConditionPercent() != null ? targetBook.getConditionPercent() : 90;
             String priceStr = String.format("%,d", targetBook.getPrice().longValue()).replace(',', '.') + "₫";
+            String authorName = targetBook.getAuthor() != null ? targetBook.getAuthor() : "Tác giả nổi tiếng";
 
             if (stock > 0) {
-                String stockMsg = "Dạ cuốn sách \"" + targetBook.getTitle() + "\" hiện ĐANG CÓ SẴN tại " + store.getStoreName() +
-                        " (tồn kho: " + stock + " cuốn) ạ!\n" +
-                        "• Tình trạng: Độ mới " + cond + "%, bìa gáy nguyên vẹn, trang giấy sạch đẹp.\n" +
-                        "• Giá bán sách cũ: " + priceStr + ".\n" +
-                        "Anh/chị có thể bấm đặt mua trực tiếp hoặc ghé quầy xem nhé!";
+                String stockMsg = "Dạ cuốn sách **\"" + targetBook.getTitle() + "\"** (" + authorName + ") hiện **ĐANG CÓ SẴN** tại " + store.getStoreName() + " ạ!\n" +
+                        "• Tồn kho quầy: **" + stock + " cuốn** trên kệ.\n" +
+                        "• Tình trạng: Độ mới **" + cond + "%**, gáy bìa nguyên vẹn, trang giấy sạch đẹp.\n" +
+                        "• Giá bán cũ: **" + priceStr + "**.\n" +
+                        "Bạn có thể bấm nút **Mua** ngay bên dưới để đặt giao tận nơi hoặc ghé quầy đọc thử nhé! ✨";
                 result.put("reply", stockMsg);
                 result.put("needsStaff", false);
                 result.put("suggestedBook", targetBook);
                 return result;
             } else {
-                String outMsg = "Dạ cuốn \"" + targetBook.getTitle() + "\" tại " + store.getStoreName() + " tạm thời vừa hết hàng ạ. Tuy nhiên chuỗi vẫn còn tại các chi nhánh khác trong hệ thống. Anh/chị có thể đặt ship trực tiếp trên web để chuỗi điều chuyển giao tận nơi nhé!";
-                result.put("reply", outMsg);
+                // Kiểm tra xem các chi nhánh khác có còn hàng không
+                List<Inventory> otherInvs = inventoryRepository.findByBookIdWithStore(targetBook.getId());
+                List<String> availableBranches = new ArrayList<>();
+                for (Inventory oi : otherInvs) {
+                    if (oi.getQuantity() != null && oi.getQuantity() > 0 && oi.getStore() != null && !oi.getStore().getId().equals(store.getId())) {
+                        availableBranches.add("• " + oi.getStore().getStoreName() + " (còn " + oi.getQuantity() + " cuốn)");
+                    }
+                }
+
+                StringBuilder outMsg = new StringBuilder("Dạ cuốn sách **\"" + targetBook.getTitle() + "\"** tại quầy " + store.getStoreName() + " vừa tạm hết trên kệ ạ.\n");
+                if (!availableBranches.isEmpty()) {
+                    outMsg.append("Tuy nhiên, hệ thống ReBook kiểm tra thấy vẫn còn tại:\n");
+                    for (String bInfo : availableBranches) {
+                        outMsg.append(bInfo).append("\n");
+                    }
+                    outMsg.append("Bạn có thể đặt trực tiếp trên web để chuỗi điều chuyển giao nhanh 2-4h nhé!");
+                } else {
+                    outMsg.append("Hiện tại toàn bộ chuỗi đang tạm hết tựa sách này. Bạn có thể để lại số điện thoại hoặc bấm nút [Gặp nhân viên quầy] để khi sách về chi nhánh sẽ báo bạn ngay nhé!");
+                }
+                result.put("reply", outMsg.toString());
                 result.put("needsStaff", false);
+                result.put("suggestedBook", targetBook);
                 return result;
             }
         }
 
-        // 7. HỎI GỢI Ý SÁCH HAY THEO CHỦ ĐỀ
-        if (lower.contains("gợi ý") || lower.contains("sách hay") || lower.contains("sách nên đọc") || lower.contains("tâm lý") || lower.contains("kinh tế") || lower.contains("văn học")) {
+        // 8. HỎI GỢI Ý THEO CHỦ ĐỀ / THỂ LOẠI
+        boolean isRecommendation = unaccentQuery.contains("goi y") || unaccentQuery.contains("sach hay") || unaccentQuery.contains("nen doc")
+                || unaccentQuery.contains("tam ly") || unaccentQuery.contains("kinh te") || unaccentQuery.contains("van hoc")
+                || unaccentQuery.contains("cntt") || unaccentQuery.contains("lap trinh") || unaccentQuery.contains("ky nang")
+                || unaccentQuery.contains("ngoai ngu") || unaccentQuery.contains("lich su") || unaccentQuery.contains("tieu thuyet");
+
+        if (isRecommendation) {
             List<Inventory> storeInvs = inventoryRepository.findByStoreIdWithBooks(store.getId());
-            StringBuilder suggMsg = new StringBuilder("Dạ tại quầy " + store.getStoreName() + " đang có rất nhiều đầu sách cũ được bạn đọc yêu thích:\n");
+            StringBuilder suggMsg = new StringBuilder("Dạ tại quầy **" + store.getStoreName() + "** đang có các đầu sách nổi bật được bạn đọc yêu thích:\n");
             int count = 0;
+            Book topBook = null;
             for (Inventory inv : storeInvs) {
                 if (inv.getQuantity() > 0 && inv.getBook() != null) {
-                    suggMsg.append("📖 \"").append(inv.getBook().getTitle()).append("\" - ₫").append(String.format("%,d", inv.getBook().getPrice().longValue()).replace(',', '.')).append("\n");
+                    if (topBook == null) topBook = inv.getBook();
+                    suggMsg.append("📖 **").append(inv.getBook().getTitle()).append("** - ")
+                            .append(String.format("%,d", inv.getBook().getPrice().longValue()).replace(',', '.')).append("₫")
+                            .append(" (mới ").append(inv.getBook().getConditionPercent() != null ? inv.getBook().getConditionPercent() : 90).append("%)\n");
                     count++;
                     if (count >= 3) break;
                 }
             }
-            suggMsg.append("Anh/chị muốn tìm sách theo thể loại hay tác giả cụ thể nào để em tra cứu thêm ạ?");
+            suggMsg.append("\nBạn có thể nhắn tên tựa sách cụ thể để em kiểm tra chi tiết độ mới và tồn kho kệ sách nhé! ✨");
             result.put("reply", suggMsg.toString());
             result.put("needsStaff", false);
+            if (topBook != null) {
+                result.put("suggestedBook", topBook);
+            }
             return result;
         }
 
-        // 8. CÂU HỎI CHUNG / CHƯA RÕ NGHĨA -> AI CHÀO HỎI VÀ HỎI THÊM
-        String defaultMsg = "Dạ em là Trợ lý AI của " + store.getStoreName() + ". Em đã ghi nhận câu hỏi của mình. Nếu anh/chị cần kiểm tra tồn kho cuốn sách nào hoặc cần thủ kho chụp ảnh thực tế tại quầy, anh/chị cứ nhắn tựa sách hoặc gửi ảnh cho em nhé ạ! ✨";
+        // 9. CÂU HỎI CHUNG / CHƯA RÕ NGHĨA -> PHẢN HỒI THÔNG MINH, TỰ NHIÊN
+        String defaultMsg = "Dạ hiện tại em chưa tìm thấy sách khớp chính xác với từ khóa **\"" + userText + "\"** tại quầy " + store.getStoreName() + ".\n\n" +
+                "Bạn có thể thử:\n" +
+                "1. Nhắn tên tựa sách cụ thể (ví dụ: *Đắc Nhân Tâm*, *Nhà Giả Kim*, *Hoàng Tử Bé*...)\n" +
+                "2. Nhắn thể loại bạn quan tâm (ví dụ: *sách kinh tế*, *sách kỹ năng*, *văn học*...)\n" +
+                "3. Hoặc bấm nút **[👨‍💼 Gặp nhân viên quầy]** bên dưới để Quản lý chi nhánh hỗ trợ tra cứu kho sách giúp mình nhé! 📖✨";
         result.put("reply", defaultMsg);
         result.put("needsStaff", false);
         return result;
     }
 
     /**
-     * Trang Kênh Quản Trị: Quản lý Chat của Chi Nhánh (Dành cho Quản lý / Thủ kho / Admin)
+     * Trang Kênh Quản Trị: Quản lý Chat của Chi Nhánh (Dành riêng cho Quản lý chi nhánh - ROLE_MANAGER)
+     * Admin hệ thống được chuyển hướng vì chat trực tiếp thuộc thẩm quyền từng cửa hàng.
      */
     @GetMapping("/admin/chat")
     public String adminChatView(
-            @RequestParam(value = "storeId", required = false) Long storeId,
             @RequestParam(value = "userId", required = false) Long targetUserId,
             @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect,
             Model model) {
 
         boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
-        List<Store> stores;
-        Long activeStoreId;
-
         if (isAdmin) {
-            stores = storeRepository.findByIsActiveTrue();
-            activeStoreId = (storeId != null) ? storeId : (!stores.isEmpty() ? stores.get(0).getId() : 1L);
-        } else {
-            List<Store> managedStores = (userDetails != null)
-                    ? storeRepository.findByManagerId(userDetails.getId())
-                    : Collections.emptyList();
-            stores = managedStores;
-            activeStoreId = !managedStores.isEmpty() ? managedStores.get(0).getId() : 1L;
+            redirect.addFlashAttribute("errorMessage", "Kênh tin nhắn trực tiếp do Quản lý từng chi nhánh cửa hàng phụ trách. Admin hệ thống chỉ quản lý cấu hình chuỗi và báo cáo tổng quan.");
+            return "redirect:/admin";
         }
 
-        Store currentStore = storeRepository.findById(activeStoreId).orElse(!stores.isEmpty() ? stores.get(0) : null);
+        // Quản lý chi nhánh: Chỉ được xem hội thoại thuộc chi nhánh mình phụ trách
+        Store managedStore = (userDetails != null && userDetails.getId() != null)
+                ? storeRepository.findByManagerId(userDetails.getId()).stream().findFirst().orElse(null)
+                : null;
+
+        if (managedStore == null) {
+            model.addAttribute("stores", Collections.emptyList());
+            model.addAttribute("currentStore", null);
+            model.addAttribute("currentStoreId", null);
+            model.addAttribute("customers", Collections.emptyList());
+            model.addAttribute("activeCustomer", null);
+            model.addAttribute("conversation", Collections.emptyList());
+            model.addAttribute("needAttentionUserIds", Collections.emptyList());
+            model.addAttribute("activeCustomerNeedsAttention", false);
+            model.addAttribute("pageTitle", "Kênh Tin Nhắn Chi Nhánh");
+            return "admin/chat/index";
+        }
+
+        Long activeStoreId = managedStore.getId();
+        Store currentStore = managedStore;
         List<User> customers = chatMessageRepository.findDistinctUsersByStoreId(activeStoreId);
 
         User activeCustomer = null;
@@ -524,7 +728,7 @@ public class StoreChatController {
             activeCustomer = customers.get(0);
         }
 
-        if (activeCustomer != null && currentStore != null) {
+        if (activeCustomer != null) {
             conversation = chatMessageRepository.findConversation(currentStore.getId(), activeCustomer.getId());
             // Đánh dấu đã đọc
             for (ChatMessage m : conversation) {
@@ -538,15 +742,16 @@ public class StoreChatController {
         List<Long> needAttentionUserIds = chatMessageRepository.findUserIdsNeedingAttention(activeStoreId);
         boolean activeCustomerNeedsAttention = activeCustomer != null && needAttentionUserIds.contains(activeCustomer.getId());
 
-        model.addAttribute("stores", stores);
+        model.addAttribute("stores", List.of(managedStore));
         model.addAttribute("currentStore", currentStore);
+        model.addAttribute("currentManagedStore", currentStore);
         model.addAttribute("currentStoreId", activeStoreId);
         model.addAttribute("customers", customers);
         model.addAttribute("activeCustomer", activeCustomer);
         model.addAttribute("conversation", conversation);
         model.addAttribute("needAttentionUserIds", needAttentionUserIds);
         model.addAttribute("activeCustomerNeedsAttention", activeCustomerNeedsAttention);
-        model.addAttribute("pageTitle", "Kênh Tin Nhắn Chi Nhánh — " + (currentStore != null ? currentStore.getStoreName() : ""));
+        model.addAttribute("pageTitle", "Kênh Tin Nhắn — " + currentStore.getStoreName());
 
         return "admin/chat/index";
     }
@@ -565,6 +770,18 @@ public class StoreChatController {
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         Map<String, Object> res = new HashMap<>();
+
+        // Kiểm tra quyền: Manager chỉ được trả lời tin nhắn của chi nhánh mình
+        if (userDetails != null && "ROLE_MANAGER".equals(userDetails.getRoleName())) {
+            List<Store> managerStores = storeRepository.findByManagerId(userDetails.getId());
+            boolean ownsStore = managerStores.stream().anyMatch(s -> s.getId().equals(storeId));
+            if (!ownsStore) {
+                res.put("success", false);
+                res.put("message", "Bạn không có quyền trả lời tin nhắn của chi nhánh khác!");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
+            }
+        }
+
         Store store = storeRepository.findById(storeId).orElse(null);
         User customer = userRepository.findById(customerId).orElse(null);
 
@@ -604,5 +821,129 @@ public class StoreChatController {
 
         res.put("success", true);
         return ResponseEntity.ok(res);
+    }
+
+    /**
+     * API: Quản lý bật/tắt chế độ AI trả lời tự động thay nhân viên
+     */
+    @PostMapping("/api/chat/store/{storeId}/toggle-ai")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> toggleAiReply(
+            @PathVariable Long storeId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Map<String, Object> res = new HashMap<>();
+        if (userDetails != null && "ROLE_MANAGER".equals(userDetails.getRoleName())) {
+            List<Store> managerStores = storeRepository.findByManagerId(userDetails.getId());
+            boolean ownsStore = managerStores.stream().anyMatch(s -> s.getId().equals(storeId));
+            if (!ownsStore) {
+                res.put("success", false);
+                res.put("message", "Bạn không có quyền quản lý chi nhánh này!");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
+            }
+        }
+        Store store = storeRepository.findById(storeId).orElse(null);
+        if (store == null) {
+            res.put("success", false);
+            res.put("message", "Chi nhánh không tồn tại.");
+            return ResponseEntity.badRequest().body(res);
+        }
+        boolean newState = !Boolean.TRUE.equals(store.getAiReplyEnabled());
+        store.setAiReplyEnabled(newState);
+        storeRepository.save(store);
+
+        res.put("success", true);
+        res.put("aiReplyEnabled", newState);
+        res.put("message", newState ? "Đã bật chế độ Trợ lý AI trả lời tự động." : "Đã chuyển sang chế độ Nhân viên trực quầy.");
+        return ResponseEntity.ok(res);
+    }
+
+    /**
+     * API: Khách hàng bấm nút yêu cầu gặp nhân viên quầy trực tiếp
+     */
+    @PostMapping("/api/chat/store/{storeId}/request-staff")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> requestHumanStaff(
+            @PathVariable Long storeId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        User currentUser = resolveCurrentUser(userDetails);
+        Store store = storeRepository.findById(storeId).orElse(null);
+        Map<String, Object> res = new HashMap<>();
+
+        if (currentUser == null || store == null) {
+            res.put("success", false);
+            return ResponseEntity.badRequest().body(res);
+        }
+
+        ChatMessage reqMsg = new ChatMessage();
+        reqMsg.setUser(currentUser);
+        reqMsg.setStore(store);
+        reqMsg.setSenderType(ChatMessage.SenderType.CUSTOMER);
+        reqMsg.setSenderName(currentUser.getFullName() != null ? currentUser.getFullName() : currentUser.getUsername());
+        reqMsg.setContent("[Khách hàng yêu cầu gặp nhân viên quầy trực tiếp]");
+        reqMsg.setNeedsAttention(true);
+        chatMessageRepository.save(reqMsg);
+
+        ChatMessage noticeMsg = new ChatMessage();
+        noticeMsg.setUser(currentUser);
+        noticeMsg.setStore(store);
+        noticeMsg.setSenderType(ChatMessage.SenderType.STORE_STAFF);
+        noticeMsg.setSenderName("Hệ thống chuyển giao");
+        noticeMsg.setContent("Dạ chi nhánh đã nhận được yêu cầu gặp nhân viên! Quản lý quầy " + store.getStoreName() + " sẽ tiếp quản cuộc trò chuyện và phản hồi trực tiếp cho bạn ngay nhé ạ! 👨‍💼✨");
+        noticeMsg.setNeedsAttention(true);
+        chatMessageRepository.save(noticeMsg);
+
+        res.put("success", true);
+        res.put("reply", noticeMsg.getContent());
+        res.put("senderName", noticeMsg.getSenderName());
+        res.put("createdAt", noticeMsg.getCreatedAt().format(TIME_FMT));
+        return ResponseEntity.ok(res);
+    }
+
+    /**
+     * API: Nạp hội thoại thời gian thực cho trang Quản trị chi nhánh (Live Polling 3s)
+     */
+    @GetMapping("/api/chat/staff/conversation")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getStaffConversation(
+            @RequestParam("storeId") Long storeId,
+            @RequestParam("userId") Long customerId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Map<String, Object> res = new HashMap<>();
+        if (userDetails != null && "ROLE_MANAGER".equals(userDetails.getRoleName())) {
+            List<Store> managerStores = storeRepository.findByManagerId(userDetails.getId());
+            boolean ownsStore = managerStores.stream().anyMatch(s -> s.getId().equals(storeId));
+            if (!ownsStore) {
+                res.put("success", false);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
+            }
+        }
+        touchStorePresence(storeId);
+        List<ChatMessage> conversation = chatMessageRepository.findConversation(storeId, customerId);
+        List<Map<String, Object>> dtos = new ArrayList<>();
+        for (ChatMessage m : conversation) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", m.getId());
+            map.put("content", m.getContent());
+            map.put("mediaUrl", m.getMediaUrl());
+            map.put("mediaType", m.getMediaType());
+            map.put("senderType", m.getSenderType().name());
+            map.put("senderName", m.getSenderName());
+            map.put("createdAt", m.getCreatedAt() != null ? m.getCreatedAt().format(TIME_FMT) : "");
+            dtos.add(map);
+        }
+        res.put("success", true);
+        res.put("messages", dtos);
+        return ResponseEntity.ok(res);
+    }
+
+    /**
+     * API: Heartbeat ghi nhận Quản lý chi nhánh đang mở tab chat
+     */
+    @PostMapping("/api/chat/staff/heartbeat")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> staffHeartbeat(
+            @RequestParam("storeId") Long storeId) {
+        touchStorePresence(storeId);
+        return ResponseEntity.ok(Map.of("success", true));
     }
 }

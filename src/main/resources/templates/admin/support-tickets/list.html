@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
+<head>
+    <title>Phiếu Trợ Giúp &amp; Khiếu Nại - ReBook Quản Trị</title>
+</head>
+<body>
+<div th:fragment="content">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h4 class="fw-bold mb-1" style="color: var(--rebook-ink-main);">
+                <i class="fa-solid fa-headset me-2" style="color: var(--rebook-leather);"></i>
+                <span>Phiếu Hỗ Trợ &amp; Khiếu Nại Khách Hàng</span>
+            </h4>
+            <p class="text-muted small mb-0">Tiếp nhận yêu cầu tra cứu đơn hàng, tư vấn tình trạng sách cũ, bảo hành và giải quyết khiếu nại gửi từ trang Hỗ Trợ.</p>
+        </div>
+        <div>
+            <a th:href="@{/help}" target="_blank" class="btn btn-sm btn-outline-theme">
+                <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Xem Trang Hỗ Trợ Client
+            </a>
+        </div>
+    </div>
+
+    <!-- TABS LỌC TRẠNG THÁI -->
+    <div class="d-flex gap-2 mb-4 flex-wrap">
+        <a th:href="@{/admin/support-tickets}" 
+           class="btn btn-sm" 
+           th:classappend="${selectedStatus == 'ALL'} ? 'btn-theme' : 'btn-outline-theme'">
+            Tất Cả Phiếu
+        </a>
+        <a th:href="@{/admin/support-tickets(status='OPEN')}" 
+           class="btn btn-sm position-relative" 
+           th:classappend="${selectedStatus == 'OPEN'} ? 'btn-theme' : 'btn-outline-theme'">
+            <i class="fa-solid fa-hourglass-half me-1"></i>Chưa Xử Lý
+            <span th:if="${countOpen > 0}" class="badge bg-danger rounded-pill ms-1" th:text="${countOpen}">1</span>
+        </a>
+        <a th:href="@{/admin/support-tickets(status='RESOLVED')}" 
+           class="btn btn-sm" 
+           th:classappend="${selectedStatus == 'RESOLVED'} ? 'btn-theme' : 'btn-outline-theme'">
+            <i class="fa-solid fa-circle-check me-1"></i>Đã Giải Quyết
+        </a>
+    </div>
+
+    <!-- DANH SÁCH PHIẾU HỖ TRỢ -->
+    <div class="card card-custom">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead style="background: var(--rebook-paper-light); border-bottom: 1.5px solid var(--rebook-border);">
+                        <tr>
+                            <th class="ps-3" style="width: 70px;">Mã</th>
+                            <th>Khách Hàng &amp; Liên Hệ</th>
+                            <th>Mã Đơn / Chủ Đề</th>
+                            <th>Nội Dung Yêu Cầu</th>
+                            <th>Thời Gian</th>
+                            <th>Trạng Thái</th>
+                            <th class="text-end pe-3" style="width: 140px;">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${tickets == null or tickets.isEmpty()}">
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-inbox fa-2x mb-2 d-block opacity-50"></i>
+                                Không có phiếu hỗ trợ nào trong mục này.
+                            </td>
+                        </tr>
+                        <tr th:each="t : ${tickets}">
+                            <td class="ps-3 fw-bold text-muted" th:text="'#' + ${t.id}">#1</td>
+                            <td>
+                                <div class="fw-bold" style="color: var(--rebook-ink-main);" th:text="${t.fullName}">Nguyễn Văn B</div>
+                                <div class="small text-muted">
+                                    <i class="fa-solid fa-envelope me-1"></i><span th:text="${t.email}">user@gmail.com</span>
+                                </div>
+                                <div class="small text-muted" th:if="${t.phone != null and !t.phone.isEmpty()}">
+                                    <i class="fa-solid fa-phone me-1"></i><span th:text="${t.phone}">0901234567</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border mb-1" th:text="${t.category != null ? t.category : 'Hỗ trợ chung'}">Vấn đề đơn hàng</span>
+                                <div class="small fw-semibold text-danger font-monospace" th:if="${t.orderCode != null and !t.orderCode.isEmpty()}">
+                                    <i class="fa-solid fa-barcode me-1"></i><span th:text="${t.orderCode}">ORD123456</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="small text-dark" style="max-width: 320px; line-height: 1.45;" th:text="${t.message}">Nội dung khiếu nại...</div>
+                                <div th:if="${t.adminReply != null and !t.adminReply.isEmpty()}" class="mt-2 p-2 rounded bg-light border" style="font-size: 12px; color: #065F46;">
+                                    <strong><i class="fa-solid fa-reply me-1"></i>Phản hồi:</strong> <span th:text="${t.adminReply}">Nội dung phản hồi...</span>
+                                </div>
+                            </td>
+                            <td class="small text-muted" th:text="${#temporals.format(t.createdAt, 'HH:mm dd/MM/yyyy')}">
+                                10:20 14/10/2026
+                            </td>
+                            <td>
+                                <span th:if="${t.status.name() == 'OPEN'}" class="badge bg-warning text-dark px-2 py-1">
+                                    <i class="fa-solid fa-hourglass-half me-1"></i>Chờ Xử Lý
+                                </span>
+                                <span th:if="${t.status.name() == 'RESOLVED'}" class="badge bg-success px-2 py-1">
+                                    <i class="fa-solid fa-circle-check me-1"></i>Đã Xử Lý
+                                </span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <div class="d-inline-flex gap-1">
+                                    <!-- NÚT PHẢN HỒI (MỞ MODAL) -->
+                                    <button type="button" class="btn btn-sm btn-outline-theme px-2"
+                                            th:onclick="'openReplyModal(' + ${t.id} + ', \'' + ${#strings.escapeJavaScript(t.fullName)} + '\', \'' + ${#strings.escapeJavaScript(t.message)} + '\')'"
+                                            title="Phản hồi phiếu hỗ trợ">
+                                        <i class="fa-solid fa-reply"></i>
+                                    </button>
+                                    <!-- NÚT XÓA -->
+                                    <form th:action="@{/admin/support-tickets/{id}/delete(id=${t.id})}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phiếu hỗ trợ này?');" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger px-2" title="Xóa">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PHẢN HỒI PHIẾU HỖ TRỢ -->
+    <div class="modal fade" id="replyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 16px; border: 1px solid var(--rebook-border);">
+                <form id="replyForm" method="post">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <h5 class="modal-title fw-bold" style="color: var(--rebook-ink-main);">
+                            <i class="fa-solid fa-reply me-2" style="color: var(--rebook-leather);"></i>Phản Hồi &amp; Đóng Phiếu Hỗ Trợ
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="p-2 mb-3 rounded bg-light border">
+                            <div class="small fw-bold text-dark mb-1">Khách hàng: <span id="modalCustomerName" class="text-primary">Tên KH</span></div>
+                            <div class="small text-muted" id="modalCustomerMsg">Nội dung câu hỏi...</div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label small fw-bold">Nội dung phản hồi / Giải pháp xử lý <span class="text-danger">*</span></label>
+                            <textarea name="reply" id="modalReplyText" class="form-control" rows="4" 
+                                      placeholder="Ví dụ: Đã kiểm tra đơn hàng, kho Thủ Đức đã gửi bù sách mới hoặc đã hoàn tiền vào ví..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0 pt-0">
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-sm btn-theme px-3">Xác Nhận &amp; Đóng Phiếu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openReplyModal(id, customerName, message) {
+            document.getElementById('replyForm').action = '/admin/support-tickets/' + id + '/resolve';
+            document.getElementById('modalCustomerName').textContent = customerName;
+            document.getElementById('modalCustomerMsg').textContent = message;
+            document.getElementById('modalReplyText').value = '';
+            var myModal = new bootstrap.Modal(document.getElementById('replyModal'));
+            myModal.show();
+        }
+    </script>
+
+</div>
+</body>
+</html>

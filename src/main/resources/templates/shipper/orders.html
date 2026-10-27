@@ -10,12 +10,8 @@
     <style>
         /* Ambient Canvas Lighting for Apple Liquid Glass Effect */
         body {
-            background: 
-                radial-gradient(circle at 8% 12%, rgba(232, 222, 200, 0.5) 0%, transparent 45%), 
-                radial-gradient(circle at 92% 18%, rgba(238, 77, 45, 0.08) 0%, transparent 45%), 
-                radial-gradient(circle at 50% 80%, rgba(140, 74, 39, 0.06) 0%, transparent 50%),
-                #f8fafc !important;
-            background-attachment: fixed !important;
+            background-color: var(--rebook-canvas) !important;
+            background-image: none !important;
         }
 
         /* Apple Liquid Glass Design Tokens */
@@ -407,24 +403,76 @@
         </div>
     </div>
 
+    <!-- 1.1 THẺ KPI THỐNG KÊ GIAO HÀNG TRONG NGÀY -->
+    <div class="row g-3 mb-4">
+        <!-- Đang đi giao -->
+        <div class="col-6 col-lg-3">
+            <div class="shipper-header-glass p-3 mb-0 h-100 d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted fw-semibold small">Đang Đi Giao</div>
+                    <h4 class="fw-bold mb-0 text-dark" th:text="${countShipping}">0</h4>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fa-solid fa-truck-fast"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Đã giao thành công -->
+        <div class="col-6 col-lg-3">
+            <div class="shipper-header-glass p-3 mb-0 h-100 d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted fw-semibold small">Đã Giao Thành Công</div>
+                    <h4 class="fw-bold mb-0 text-success" th:text="${countDelivered}">0</h4>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.15); color: #059669; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Giao thất bại / Hoàn -->
+        <div class="col-6 col-lg-3">
+            <div class="shipper-header-glass p-3 mb-0 h-100 d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted fw-semibold small">Giao Thất Bại</div>
+                    <h4 class="fw-bold mb-0 text-danger" th:text="${countReturned}">0</h4>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(239, 68, 68, 0.15); color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Tổng tiền COD đã thu -->
+        <div class="col-6 col-lg-3">
+            <div class="shipper-header-glass p-3 mb-0 h-100 d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted fw-semibold small">Tiền COD Đã Thu</div>
+                    <h4 class="fw-bold mb-0 text-primary" th:text="${totalCodCollected != null ? #numbers.formatDecimal(totalCodCollected, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</h4>
+                </div>
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(37, 99, 235, 0.15); color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 2. FILTER TABS: IOS PILL SEGMENTED CONTROL -->
     <div class="d-flex justify-content-start">
         <div class="ios-pill-dock">
             <a class="ios-pill-item" th:classappend="${selectedStatus == null} ? 'active' : ''"
                th:href="@{/shipper/orders(shipperId=${currentShipper != null ? currentShipper.id : null})}">
-                <i class="fa-solid fa-layer-group"></i>Tất cả đơn
+                <i class="fa-solid fa-layer-group"></i>Tất cả đơn <span class="badge rounded-pill bg-light text-dark ms-1" th:text="${countAll}">0</span>
             </a>
             <a class="ios-pill-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'active' : ''"
                th:href="@{/shipper/orders(status='SHIPPING', shipperId=${currentShipper != null ? currentShipper.id : null})}">
-                <i class="fa-solid fa-truck-fast"></i>Đang đi giao
+                <i class="fa-solid fa-truck-fast"></i>Đang đi giao <span class="badge rounded-pill bg-warning text-dark ms-1" th:text="${countShipping}">0</span>
             </a>
             <a class="ios-pill-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'DELIVERED'} ? 'active' : ''"
                th:href="@{/shipper/orders(status='DELIVERED', shipperId=${currentShipper != null ? currentShipper.id : null})}">
-                <i class="fa-solid fa-circle-check"></i>Đã giao thành công
+                <i class="fa-solid fa-circle-check"></i>Đã giao thành công <span class="badge rounded-pill bg-success text-white ms-1" th:text="${countDelivered}">0</span>
             </a>
             <a class="ios-pill-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'RETURNED'} ? 'active' : ''"
                th:href="@{/shipper/orders(status='RETURNED', shipperId=${currentShipper != null ? currentShipper.id : null})}">
-                <i class="fa-solid fa-rotate-left"></i>Giao thất bại / Hoàn
+                <i class="fa-solid fa-rotate-left"></i>Giao thất bại / Hoàn <span class="badge rounded-pill bg-danger text-white ms-1" th:text="${countReturned}">0</span>
             </a>
         </div>
     </div>
@@ -441,7 +489,7 @@
                 <div class="p-4 d-flex flex-column flex-grow-1">
                     <!-- Header hàng: Mã đơn & Trạng thái -->
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <a th:href="@{/admin/orders/{id}(id=${ord.id})}" class="order-code-badge" th:text="${ord.orderCode}">OBS-2026-1234</a>
+                        <span class="order-code-badge" th:text="${ord.orderCode}">OBS-2026-1234</span>
                         <span th:if="${ord.orderStatus.name() == 'SHIPPING'}" class="apple-status-pill status-pill-shipping">
                             <i class="fa-solid fa-truck-fast"></i>Đang giao
                         </span>
@@ -464,16 +512,21 @@
                     </div>
 
                     <!-- THÔNG TIN KHÁCH HÀNG & GIAO HÀNG (Phân tách rõ ràng) -->
-                    <div class="customer-info-box flex-grow-1">
+                    <div class="customer-info-box mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
                                 <small class="text-muted text-uppercase fw-semibold" style="font-size: 11px;">Khách nhận hàng</small>
                                 <div class="fw-bold text-dark fs-6" th:text="${ord.receiverName}">Nguyễn Văn A</div>
                             </div>
-                            <!-- Nút bấm gọi điện thoại cho khách -->
-                            <a th:href="'tel:' + ${ord.receiverPhone}" class="btn-call-customer">
-                                <i class="fa-solid fa-phone"></i>Gọi ngay
-                            </a>
+                            <!-- Nhóm nút bấm: Chỉ đường Google Maps & Gọi điện thoại -->
+                            <div class="d-flex align-items-center gap-1.5">
+                                <a th:href="'https://www.google.com/maps/search/?api=1&query=' + ${#uris.escapeQueryParam(ord.receiverAddress)}" target="_blank" class="btn-call-customer" style="background: rgba(37, 99, 235, 0.1); color: #2563eb; border-color: rgba(37, 99, 235, 0.25);" title="Dẫn đường qua Google Maps">
+                                    <i class="fa-solid fa-diamond-turn-right"></i>Đường đi
+                                </a>
+                                <a th:href="'tel:' + ${ord.receiverPhone}" class="btn-call-customer">
+                                    <i class="fa-solid fa-phone"></i>Gọi ngay
+                                </a>
+                            </div>
                         </div>
 
                         <div class="small text-muted mb-2">
@@ -487,6 +540,23 @@
 
                         <div class="mt-2 pt-2 border-top border-light-subtle small text-muted fst-italic" th:if="${ord.customerNotes != null and !ord.customerNotes.isEmpty()}">
                             <i class="fa-regular fa-comment-dots me-1 text-warning"></i><span th:text="${ord.customerNotes}">Giao trong giờ hành chính.</span>
+                        </div>
+                    </div>
+
+                    <!-- KIỆN SÁCH CẦN GIAO (DANH SÁCH SÁCH BÊN TRONG) -->
+                    <div class="mb-3 p-2.5 rounded-3 flex-grow-1" style="background: rgba(0, 0, 0, 0.02); border: 1px solid #ECE7DE;" th:if="${ord.items != null and !ord.items.isEmpty()}">
+                        <div class="small fw-semibold text-muted mb-2 d-flex justify-content-between align-items-center">
+                            <span><i class="fa-solid fa-boxes-packing text-warning me-1"></i>Kiện hàng: <strong class="text-dark" th:text="${ord.items.size()} + ' cuốn'">1 cuốn</strong></span>
+                            <span class="badge bg-light text-secondary border" style="font-size: 10px;">Đồng kiểm</span>
+                        </div>
+                        <div class="d-flex flex-column gap-2" style="max-height: 160px; overflow-y: auto;">
+                            <div th:each="it : ${ord.items}" class="d-flex align-items-center gap-2 pb-1.5 border-bottom border-light-subtle">
+                                <img th:src="${it.book != null and it.book.primaryImageUrl != null ? it.book.primaryImageUrl : '/images/brand-book-icon.png'}" style="width: 30px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(0,0,0,0.08); flex-shrink: 0;" onerror="this.onerror=null; this.src='/images/brand-book-icon.png';">
+                                <div class="flex-grow-1 min-w-0" style="font-size: 12px;">
+                                    <div class="text-truncate fw-semibold text-dark" th:text="${it.bookTitle}">Tựa sách</div>
+                                    <div class="text-muted" style="font-size: 11px;" th:text="'SL: ' + ${it.quantity} + ' · ₫' + ${#numbers.formatDecimal(it.price, 0, 'COMMA', 0, 'POINT')}">SL: 1 · ₫85.000</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -512,6 +582,7 @@
                             <!-- Nút Giao Thành Công -->
                             <form th:id="'form-delivered-' + ${ord.id}" th:action="@{/shipper/orders/{id}/update(id=${ord.id})}" method="post">
                                 <input type="hidden" name="status" value="DELIVERED">
+                                <input type="hidden" name="note" value="Giao hàng thành công - Khách đã ký nhận và thanh toán">
                                 <input type="hidden" name="shipperId" th:value="${currentShipper != null ? currentShipper.id : null}">
                                 <button type="button" class="btn-action-bounce btn-deliver-success" 
                                         th:data-order-id="${ord.id}"
@@ -524,6 +595,7 @@
                             <!-- Nút Báo Thất Bại / Hoàn Hàng -->
                             <form th:id="'form-returned-' + ${ord.id}" th:action="@{/shipper/orders/{id}/update(id=${ord.id})}" method="post">
                                 <input type="hidden" name="status" value="RETURNED">
+                                <input type="hidden" name="note" value="">
                                 <input type="hidden" name="shipperId" th:value="${currentShipper != null ? currentShipper.id : null}">
                                 <button type="button" class="btn-action-bounce btn-deliver-fail" 
                                         th:data-order-id="${ord.id}"
@@ -583,7 +655,21 @@
                 <i id="modalIcon" class="fa-solid fa-circle-check"></i>
             </div>
             <h5 class="fw-bold mb-2 text-dark" id="modalTitle">Xác nhận giao hàng</h5>
-            <p class="text-secondary small mb-4" id="modalMessage">Bạn đã bàn giao toàn bộ kiện sách đến tận tay khách hàng?</p>
+            <p class="text-secondary small mb-3" id="modalMessage">Bạn đã bàn giao toàn bộ kiện sách đến tận tay khách hàng?</p>
+
+            <!-- Lựa chọn lý do khi giao thất bại / hoàn hàng -->
+            <div id="returnReasonContainer" style="display: none;" class="mb-4 text-start">
+                <label class="form-label small fw-semibold text-dark mb-1"><i class="fa-solid fa-clipboard-question text-danger me-1"></i>Lý do giao hàng không thành công:</label>
+                <select id="selectReturnReason" class="form-select form-select-sm" style="border-radius: 10px; font-size: 12.5px;" onchange="toggleCustomReason(this.value)">
+                    <option value="Khách không nghe máy (đã gọi 3 lần)">Khách không nghe máy (đã gọi 3 lần)</option>
+                    <option value="Khách hẹn giao lại ngày/giờ khác">Khách hẹn giao lại ngày/giờ khác</option>
+                    <option value="Sai địa chỉ / Không tìm thấy số nhà">Sai địa chỉ / Không tìm thấy số nhà</option>
+                    <option value="Khách từ chối nhận sách khi đồng kiểm">Khách từ chối nhận sách khi đồng kiểm</option>
+                    <option value="Khách không chuẩn bị đủ tiền mặt COD">Khách không chuẩn bị đủ tiền mặt COD</option>
+                    <option value="OTHER">Lý do khác...</option>
+                </select>
+                <input type="text" id="customReturnReasonInput" class="form-control form-control-sm mt-2" placeholder="Nhập lý do chi tiết..." style="display: none; border-radius: 10px; font-size: 12px;">
+            </div>
 
             <div class="d-flex align-items-center gap-2">
                 <button type="button" class="btn btn-light w-50 py-2 rounded-pill fw-semibold border" onclick="hideConfirmModal()">
@@ -598,6 +684,15 @@
 
     <script>
         let currentTargetFormId = null;
+        let currentActionType = null;
+
+        function toggleCustomReason(val) {
+            const customInput = document.getElementById('customReturnReasonInput');
+            if (customInput) {
+                customInput.style.display = (val === 'OTHER') ? 'block' : 'none';
+                if (val === 'OTHER') customInput.focus();
+            }
+        }
 
         function showConfirmModal(orderId, orderCode, actionType) {
             const overlay = document.getElementById('confirmModalOverlay');
@@ -606,6 +701,9 @@
             const title = document.getElementById('modalTitle');
             const msg = document.getElementById('modalMessage');
             const submitBtn = document.getElementById('btnModalSubmit');
+            const reasonBox = document.getElementById('returnReasonContainer');
+
+            currentActionType = actionType;
 
             if (actionType === 'DELIVERED') {
                 currentTargetFormId = 'form-delivered-' + orderId;
@@ -615,14 +713,16 @@
                 msg.textContent = 'Xác nhận khách hàng đã nhận đầy đủ sách và hoàn tất thu tiền COD (nếu có)?';
                 submitBtn.className = 'btn btn-deliver-success w-50 py-2 rounded-pill fw-semibold text-white';
                 submitBtn.textContent = 'Đã Giao Xong';
+                if (reasonBox) reasonBox.style.display = 'none';
             } else {
                 currentTargetFormId = 'form-returned-' + orderId;
                 iconContainer.className = 'auth-modal-icon-circle icon-circle-danger';
                 icon.className = 'fa-solid fa-rotate-left';
                 title.textContent = 'Báo Hoàn Hàng Đơn ' + orderCode;
-                msg.textContent = 'Xác nhận khách không nhận hoặc không thể liên lạc được để chuyển hoàn về kho sách?';
+                msg.textContent = 'Vui lòng chọn lý do đơn hàng không giao được thành công để chuyển hoàn về kho sách:';
                 submitBtn.className = 'btn btn-danger w-50 py-2 rounded-pill fw-semibold text-white';
                 submitBtn.textContent = 'Xác Nhận Hoàn';
+                if (reasonBox) reasonBox.style.display = 'block';
             }
 
             overlay.style.display = 'flex';
@@ -632,6 +732,7 @@
             const overlay = document.getElementById('confirmModalOverlay');
             overlay.style.display = 'none';
             currentTargetFormId = null;
+            currentActionType = null;
         }
 
         function closeConfirmModal(e) {
@@ -641,12 +742,24 @@
         }
 
         function submitActiveShipperForm() {
-            if (currentTargetFormId) {
-                const targetForm = document.getElementById(currentTargetFormId);
-                if (targetForm) {
-                    targetForm.submit();
+            if (!currentTargetFormId) return;
+            const targetForm = document.getElementById(currentTargetFormId);
+            if (!targetForm) return;
+
+            if (currentActionType === 'RETURNED') {
+                const sel = document.getElementById('selectReturnReason');
+                const customInp = document.getElementById('customReturnReasonInput');
+                let reason = sel ? sel.value : 'Giao thất bại';
+                if (reason === 'OTHER') {
+                    reason = customInp && customInp.value.trim() ? customInp.value.trim() : 'Lý do khác';
+                }
+                const noteInput = targetForm.querySelector('input[name="note"]');
+                if (noteInput) {
+                    noteInput.value = reason;
                 }
             }
+
+            targetForm.submit();
         }
     </script>
 

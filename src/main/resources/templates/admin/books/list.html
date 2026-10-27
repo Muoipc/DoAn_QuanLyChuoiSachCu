@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
 <head>
@@ -59,28 +59,26 @@
 
         /* Buttons Liquid Glass */
         .btn-liquid-primary {
-            background: linear-gradient(135deg, #8C4A27 0%, #A0522D 45%, #EE4D2D 100%);
+            background: var(--rebook-leather) !important;
             color: #ffffff !important;
-            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid var(--rebook-leather) !important;
             border-radius: 9999px;
-            padding: 10px 22px;
+            padding: 9px 20px;
             font-weight: 600;
             font-size: 13.5px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 
-                0 8px 24px rgba(140, 74, 39, 0.3),
-                inset 0 1.5px 1.5px rgba(255, 255, 255, 0.45);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 14px var(--rebook-leather-glow), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             text-decoration: none;
         }
 
         .btn-liquid-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 
-                0 14px 32px rgba(140, 74, 39, 0.42),
-                inset 0 2px 2px rgba(255, 255, 255, 0.7);
+            background: var(--rebook-leather-hover) !important;
+            border-color: var(--rebook-leather-hover) !important;
+            box-shadow: 0 8px 20px var(--rebook-leather-glow), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.7);
             color: #ffffff !important;
         }
 
@@ -128,18 +126,20 @@
         }
 
         .glass-btn-dark {
-            background: #1E293B;
+            background: var(--rebook-leather);
             color: #ffffff;
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid var(--rebook-leather);
             border-radius: 12px;
             padding: 9px 18px;
             font-weight: 600;
             font-size: 13.5px;
+            box-shadow: 0 4px 14px var(--rebook-leather-glow);
             transition: all 0.2s ease;
         }
 
         .glass-btn-dark:hover {
-            background: #0F172A;
+            background: var(--rebook-leather-hover);
+            border-color: var(--rebook-leather-hover);
             color: #ffffff;
             transform: translateY(-1px);
         }
@@ -183,17 +183,17 @@
             width: 52px;
             height: 74px;
             border-radius: 8px;
-            overflow: hidden;
+            overflow: visible;
             box-shadow: 0 6px 14px rgba(45, 24, 15, 0.12);
             border: 1px solid rgba(255, 255, 255, 0.8);
             flex-shrink: 0;
             background: #f1f5f9;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
+            cursor: zoom-in;
         }
 
-        .table-liquid tbody tr:hover .book-cover-frame {
-            transform: scale(1.05) rotate(-1deg);
-            box-shadow: 0 10px 20px rgba(45, 24, 15, 0.18);
+        .book-cover-frame:hover {
+            z-index: 100;
         }
 
         .book-cover-frame img {
@@ -201,6 +201,15 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            border-radius: 8px;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+        }
+
+        .book-cover-frame:hover img {
+            transform: scale(2.6) translateX(24px);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+            z-index: 999;
+            position: relative;
         }
 
         /* Tags 4px bo góc thanh lịch */
@@ -379,8 +388,8 @@
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
             <div>
                 <div class="d-flex align-items-center gap-2 mb-1">
-                    <div class="p-2 rounded-3 text-white" style="background: linear-gradient(135deg, #8C4A27, #EE4D2D); box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);">
-                        <i class="fa-solid fa-book-bookmark fs-5"></i>
+                    <div class="category-icon-squircle" style="width: 40px; height: 40px; margin-right: 0; background: #FFFFFF; border-color: var(--rebook-border);">
+                        <img th:src="@{/images/brand-book-icon.png}" alt="ReBook" style="width: 24px; height: 24px; object-fit: contain;">
                     </div>
                     <h4 class="fw-bold mb-0 text-dark">Quản Lý Danh Mục Sách Cũ</h4>
                     <span class="badge rounded-pill bg-light text-secondary border px-3 py-1 ms-2" style="font-size: 12px;">
@@ -446,7 +455,7 @@
         <div class="card-liquid-glass overflow-hidden mb-4">
             <div class="card-liquid-header">
                 <div class="d-flex align-items-center gap-2">
-                    <i class="fa-solid fa-table-list text-warning"></i>
+                    <i class="fa-solid fa-table-list" style="color: var(--rebook-leather);"></i>
                     <span class="fw-bold text-dark">Danh Sách Sách Cũ Đang Quản Trị</span>
                 </div>
                 <span class="badge rounded-pill bg-white text-muted border px-3 py-1 shadow-sm" style="font-size: 12px;">
@@ -602,14 +611,14 @@
                             <!-- Thao tác -->
                             <td class="text-end pe-4">
                                 <div class="d-inline-flex gap-1">
-                                    <a th:href="@{/books/{id}(id=${book.id})}" target="_blank" class="btn-glass-action" title="Xem bài đăng trên sàn">
+<a th:href="@{/books/{id}(id=${book.id})}" target="_blank" class="icon-action-btn" title="Xem bài đăng trên sàn">
                                         <i class="fa-solid fa-up-right-from-square text-primary"></i>
                                     </a>
-                                    <a th:href="@{/admin/books/edit/{id}(id=${book.id})}" class="btn-glass-action" title="Chỉnh sửa chi tiết">
+                                    <a th:href="@{/admin/books/edit/{id}(id=${book.id})}" class="icon-action-btn btn-edit" title="Chỉnh sửa chi tiết">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                     <a th:href="@{/admin/books/delete/{id}(id=${book.id})}" 
-                                       class="btn-glass-action-danger" 
+                                       class="icon-action-btn btn-delete" 
                                        title="Xóa cuốn sách này" 
                                        onclick="return confirm('Bạn có chắc chắn muốn xóa cuốn sách này khỏi cơ sở dữ liệu? Toàn bộ ảnh và dữ liệu tồn kho liên quan cũng sẽ bị gỡ bỏ.');">
                                         <i class="fa-solid fa-trash-can"></i>
@@ -650,3 +659,4 @@
 </div>
 </body>
 </html>
+

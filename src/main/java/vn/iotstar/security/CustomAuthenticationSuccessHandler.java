@@ -66,7 +66,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
         boolean isShipper = authorities.stream().anyMatch(a -> "ROLE_SHIPPER".equals(a.getAuthority()));
 
         if (isManager) {
-            getRedirectStrategy().sendRedirect(request, response, "/admin/inventory?storeId=1");
+            getRedirectStrategy().sendRedirect(request, response, "/admin/inventory");
             return;
         }
         if (isAdmin) {

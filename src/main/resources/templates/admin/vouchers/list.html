@@ -10,7 +10,7 @@
     <!-- PAGE HEADER -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
-            <h4 class="fw-bold mb-1"><i class="fa-solid fa-ticket text-warning me-2"></i>Quản Lý Mã Giảm Giá (Vouchers)</h4>
+            <h4 class="fw-bold mb-1" style="color: var(--rebook-ink-main);"><i class="fa-solid fa-ticket me-2" style="color: var(--rebook-leather);"></i>Quản Lý Mã Giảm Giá (Vouchers)</h4>
             <p class="text-muted small mb-0">Thiết lập các mã voucher khuyến mãi, giảm theo % hoặc số tiền cố định cho khách mua sách cũ.</p>
         </div>
         <a th:href="@{/admin/vouchers/create}" class="btn btn-theme">
@@ -41,13 +41,13 @@
                         </tr>
                         <tr th:each="v : ${vouchers}">
                             <td class="ps-4">
-                                <span class="badge bg-danger-subtle text-danger border border-danger fw-bold fs-6" th:text="${v.code}">GIAM10</span>
+                                <span class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle fw-bold px-2.5 py-1" style="letter-spacing: 0.5px; font-size: 12px;" th:text="${v.code}">GIAM10</span>
                             </td>
                             <td class="small" th:text="${v.description}">Mô tả</td>
                             <td>
                                 <strong class="text-success" th:if="${v.discountType != null and v.discountType.name() == 'PERCENT'}" th:text="'-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + '%'">-10%</strong>
                                 <strong class="text-success" th:if="${v.discountType != null and v.discountType.name() == 'FIXED_AMOUNT'}" th:text="'-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + ' đ'">-20,000 đ</strong>
-                                <strong class="text-primary" th:if="${v.discountType != null and v.discountType.name() == 'FREE_SHIPPING'}"><i class="fa-solid fa-truck-fast me-1"></i>Freeship <span th:if="${v.discountValue != null and v.discountValue > 0}" th:text="'(-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + ' đ)'"></span></strong>
+                                <strong style="color: var(--rebook-leather);" th:if="${v.discountType != null and v.discountType.name() == 'FREE_SHIPPING'}"><i class="fa-solid fa-truck-fast me-1"></i>Freeship <span th:if="${v.discountValue != null and v.discountValue > 0}" th:text="'(-' + ${#numbers.formatDecimal(v.discountValue, 0, 'COMMA', 0, 'POINT')} + ' đ)'"></span></strong>
                             </td>
                             <td class="small" th:text="${#numbers.formatDecimal(v.minOrderAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">100,000 đ</td>
                             <td class="small text-muted">
@@ -58,15 +58,15 @@
                             </td>
                             <td class="text-center">
                                 <form th:action="@{/admin/vouchers/toggle-active/{id}(id=${v.id})}" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-sm" th:classappend="${v.isActive ? 'btn-success' : 'btn-outline-secondary'}" style="font-size: 11px; padding: 2px 8px;">
+                                    <button type="submit" class="btn btn-sm" th:classappend="${v.isActive ? 'badge bg-success-subtle text-success border border-success-subtle' : 'badge bg-secondary-subtle text-secondary border'}" style="font-size: 11.5px; padding: 4px 10px; border-radius: 9999px;">
                                         <span th:text="${v.isActive ? 'Khả dụng' : 'Khóa'}">Khả dụng</span>
                                     </button>
                                 </form>
                             </td>
                             <td class="text-end pe-4">
                                 <div class="d-inline-flex gap-1">
-                                    <a th:href="@{/admin/vouchers/edit/{id}(id=${v.id})}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i></a>
-                                    <a th:href="@{/admin/vouchers/delete/{id}(id=${v.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn muốn xóa voucher này?');"><i class="fa-solid fa-trash-can"></i></a>
+                                    <a th:href="@{/admin/vouchers/edit/{id}(id=${v.id})}" class="icon-action-btn btn-edit" title="Chỉnh sửa"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a th:href="@{/admin/vouchers/delete/{id}(id=${v.id})}" class="icon-action-btn btn-delete" onclick="return confirm('Bạn muốn xóa voucher này?');" title="Xóa"><i class="fa-solid fa-trash-can"></i></a>
                                 </div>
                             </td>
                         </tr>
