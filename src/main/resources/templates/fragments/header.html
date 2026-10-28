@@ -1694,24 +1694,6 @@
                     </div>
                 </div>
 
-                <!-- NÚT KÊNH NGƯỜI BÁN DÀNH CHO ĐỐI TÁC (TÀI KHOẢN ĐỘC LẬP) -->
-                <a sec:authorize="!hasRole('SHIPPER')" 
-                   th:href="${#authorization.expression('hasAnyRole(''VENDOR'', ''MANAGER'', ''ADMIN'')')} ? @{/admin/books} : @{/seller/register}" 
-                   class="btn-seller-portal-header"
-                   style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; background:linear-gradient(135deg, #8C4A27 0%, #A0522D 100%); color:#FFFFFF; text-decoration:none; font-size:12.5px; font-weight:700; border-radius:9999px; box-shadow:0 3px 10px rgba(140, 74, 39, 0.25); white-space:nowrap; transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
-                    <i class="fa-solid fa-store" style="font-size:12px; color:#FFE4D6;"></i>
-                    <span th:text="${#authorization.expression('hasAnyRole(''VENDOR'', ''MANAGER'', ''ADMIN'')')} ? 'Kênh Bán Hàng' : 'Kênh Người Bán'">Kênh Người Bán</span>
-                </a>
-
-                <!-- NÚT CỔNG SHIPPER TRÊN HEADER CHO TÀI KHOẢN SHIPPER -->
-                <a sec:authorize="hasRole('SHIPPER')" 
-                   th:href="@{/shipper/orders}" 
-                   class="btn-seller-portal-header"
-                   style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); color:#FFFFFF; text-decoration:none; font-size:12.5px; font-weight:700; border-radius:9999px; box-shadow:0 3px 10px rgba(37, 99, 235, 0.25); white-space:nowrap;">
-                    <i class="fa-solid fa-truck-fast" style="font-size:12px; color:#DBEAFE;"></i>
-                    <span>Cổng Giao Hàng</span>
-                </a>
-
                 <!-- 2. Giỏ hàng Shopee với Live Badge Counter & Popover -->
                 <div class="shopee-cart-wrap" id="shopeeCartWrap">
                     <a th:href="@{/cart}" class="chotot-circle-btn" aria-label="Giỏ hàng" title="Giỏ hàng">
