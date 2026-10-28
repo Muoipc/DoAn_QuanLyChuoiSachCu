@@ -61,7 +61,7 @@ public class StoreChatController {
     private InventoryRepository inventoryRepository;
 
     @Autowired
-    private AiAssistantController aiAssistantController;
+    private vn.iotstar.service.IOpenRouterService openRouterService;
 
     private User resolveCurrentUser(CustomUserDetails userDetails) {
         if (userDetails != null && userDetails.getId() != null) {
@@ -515,52 +515,68 @@ public class StoreChatController {
             return result;
         }
 
-        // 4. TƯ VẤN SÁCH & TỒN KHO THỜI GIAN THỰC (ĐỒNG BỘ TRÍ TUỆ VỚI THANH SEARCH AI)
-        if (aiAssistantController != null) {
-            try {
-                Map<String, Object> payload = new HashMap<>();
-                payload.put("message", userText);
-                ResponseEntity<Map<String, Object>> aiResp = aiAssistantController.chat(payload);
-                if (aiResp != null && aiResp.getBody() != null) {
-                    Map<String, Object> body = aiResp.getBody();
-                    String reply = (String) body.get("reply");
-                    if (reply != null && !reply.isBlank()) {
-                        Book suggestedBook = book;
-                        Object suggObj = body.get("suggestedBooks");
-                        if (suggObj instanceof List) {
-                            List<?> list = (List<?>) suggObj;
-                            if (!list.isEmpty() && list.get(0) instanceof Map) {
-                                Map<?, ?> firstBookMap = (Map<?, ?>) list.get(0);
-                                Object idObj = firstBookMap.get("id");
-                                if (idObj instanceof Number) {
-                                    Long bId = ((Number) idObj).longValue();
-                                    suggestedBook = bookRepository.findById(bId).orElse(suggestedBook);
-                                }
-                            }
-                        }
+        // 4. LẤY DANH SÁCH SÁCH TỒN KHO THỰC TẾ TRÊN KỆ CỦA QUẦY CHI NHÁNH NÀY (STORE RAG)
+        List<Inventory> storeInvs = inventoryRepository.findByStoreIdWithBooks(store.getId());
+        StringBuilder branchCatalog = new StringBuilder();
+        branchCatalog.append("Chi nhánh: ").append(store.getStoreName()).append("\n");
+        branchCatalog.append("Địa chỉ: ").append(store.getAddress() != null ? store.getAddress() : "TP.HCM")
+                .append(" (").append(store.getDistrict() != null ? store.getDistrict() : "TP.HCM").append(")\n");
+        branchCatalog.append("Giờ mở cửa: 08:00 - 21:30 hàng ngày\n");
+        branchCatalog.append("DANH SÁCH SÁCH ĐANG CÓ SẴN TRÊN KỆ TẠI QUẦY NÀY:\n");
 
-                        // Kiểm tra tồn kho tại chi nhánh hiện tại để chỉ dẫn kệ quầy thực tế
-                        if (suggestedBook != null) {
-                            result.put("suggestedBook", suggestedBook);
-                            Optional<Inventory> storeInv = inventoryRepository.findByStoreIdAndBookId(store.getId(), suggestedBook.getId());
-                            int curStock = storeInv.map(Inventory::getQuantity).orElse(0);
-                            if (curStock > 0) {
-                                reply += "\n\n📍 Cuốn **\"" + suggestedBook.getTitle() + "\"** hiện **CÒN " + curStock + " CUỐN TRÊN KỆ** tại "
-                                        + store.getStoreName() + " (" + (store.getAddress() != null ? store.getAddress() : "TP.HCM") + "). Bạn có thể bấm nút **Mua** bên dưới để giữ sách ngay nhé! 📚✨";
-                            }
-                        }
+        Book matchedCandidate = book;
+        int invCount = 0;
+        for (Inventory inv : storeInvs) {
+            if (inv.getQuantity() != null && inv.getQuantity() > 0 && inv.getBook() != null) {
+                Book b = inv.getBook();
+                branchCatalog.append("- Tựa sách: \"").append(b.getTitle()).append("\"")
+                        .append(" | Tác giả: ").append(b.getAuthor() != null ? b.getAuthor() : "Chưa rõ")
+                        .append(" | Độ mới: ").append(b.getConditionPercent() != null ? b.getConditionPercent() : 90).append("%")
+                        .append(" | Giá bán cũ: ").append(String.format("%,d", b.getPrice().longValue()).replace(',', '.')).append("₫")
+                        .append(" | Còn trên kệ: ").append(inv.getQuantity()).append(" cuốn\n");
 
-                        result.put("reply", reply);
-                        result.put("needsStaff", false);
-                        return result;
+                if (matchedCandidate == null && b.getTitle() != null) {
+                    String bClean = b.getTitle().toLowerCase().replaceAll("\\(.*?\\)", "").trim();
+                    if (bClean.length() >= 3 && rawLower.contains(bClean)) {
+                        matchedCandidate = b;
                     }
                 }
-            } catch (Exception e) {
-                System.err.println("[StoreChat AI] Ngoại lệ khi gọi AiAssistant: " + e.getMessage());
+                invCount++;
+                if (invCount >= 30) break;
             }
         }
 
-        // 5. CHÀO HỎI & BẮT ĐẦU TRÒ CHUYỆN (GREETING INTENT)
+        // 5. ƯU TIÊN 1: TRỢ LÝ AI TRỰC QUẦY VỚI NGỮ CẢNH VÀ PHONG CÁCH RIÊNG CỦA SHOP
+        if (openRouterService != null && openRouterService.isConfigured()) {
+            try {
+                String storePrompt = "Bạn là nhân viên trực quầy kiêm thủ kho tại chi nhánh sách cũ '" + store.getStoreName() + "' thuộc hệ thống ReBook TP.HCM.\n\n"
+                        + "### VAI TRÒ VÀ TÁC PHONG CỦA BẠN (STORE STAFF):\n"
+                        + "- Bạn đang đứng trực tiếp tại quầy của chi nhánh '" + store.getStoreName() + "' (" + (store.getAddress() != null ? store.getAddress() : "TP.HCM") + "). Bạn KHÔNG PHẢI là tổng đài viên hay thanh tìm kiếm chung.\n"
+                        + "- Xưng 'Em' và gọi khách là 'Bạn' hoặc 'Anh/Chị' với thái độ niềm nở, am hiểu sách và nhiệt tình hỗ trợ.\n\n"
+                        + "### THÔNG TIN VÀ TỒN KHO THỰC TẾ TRÊN KỆ CỦA QUẦY BẠN:\n"
+                        + branchCatalog.toString() + "\n\n"
+                        + "### NGUYÊN TẮC TƯ VẤN TẠI QUẦY:\n"
+                        + "1. Khi khách hỏi tìm sách hoặc xin tư vấn: ƯU TIÊN KIỂM TRA danh sách sách đang có trên kệ của quầy bạn ở trên.\n"
+                        + "2. Nếu quầy BẠN CÓ HÀNG: Báo rõ số lượng còn trên kệ quầy em, độ mới %, giá bán cũ tiết kiệm và mời khách ghé quầy trải nghiệm hoặc bấm nút Mua để giao nhanh.\n"
+                        + "3. Nếu quầy BẠN TẠM HẾT: Thông báo thành thật rằng trên kệ quầy em vừa hết, nhưng hệ thống chuỗi có thể điều chuyển về hoặc gợi ý 1-2 tựa sách cùng chủ đề đang có sẵn tại quầy bạn.\n"
+                        + "4. Khi khách hỏi địa chỉ, giờ giấc, bãi đỗ xe: Cung cấp chính xác thông tin quầy của bạn (mở 08:00 - 21:30, gửi xe máy miễn phí).\n"
+                        + "5. Trả lời súc tích, ngắt đoạn rõ ràng, in đậm tựa sách bằng Markdown (**Tên Sách**).";
+
+                String aiReply = openRouterService.generateReply(userText, storePrompt);
+                if (aiReply != null && !aiReply.isBlank()) {
+                    result.put("reply", aiReply.trim());
+                    result.put("needsStaff", false);
+                    if (matchedCandidate != null) {
+                        result.put("suggestedBook", matchedCandidate);
+                    }
+                    return result;
+                }
+            } catch (Exception e) {
+                System.err.println("[StoreChat AI] Lỗi LLM trực quầy: " + e.getMessage());
+            }
+        }
+
+        // 6. CHÀO HỎI & BẮT ĐẦU TRÒ CHUYỆN (GREETING INTENT)
         boolean isGreeting = rawLower.matches(".*\\b(chào|chao|hi|hello|alo|shop ơi|shop oi|ad ơi|ad oi|bạn ơi|ban oi|hey|helo)\\b.*")
                 || rawLower.equals("hi") || rawLower.equals("hello") || rawLower.equals("alo") || rawLower.equals("chao shop") || rawLower.equals("chào shop");
 
@@ -710,7 +726,7 @@ public class StoreChatController {
                 || unaccentQuery.contains("ngoai ngu") || unaccentQuery.contains("lich su") || unaccentQuery.contains("tieu thuyet");
 
         if (isRecommendation) {
-            List<Inventory> storeInvs = inventoryRepository.findByStoreIdWithBooks(store.getId());
+            storeInvs = inventoryRepository.findByStoreIdWithBooks(store.getId());
             StringBuilder suggMsg = new StringBuilder("Dạ tại quầy **" + store.getStoreName() + "** đang có các đầu sách nổi bật được bạn đọc yêu thích:\n");
             int count = 0;
             Book topBook = null;
