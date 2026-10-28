@@ -3389,26 +3389,27 @@
 
         function postChatMessageToServer(text, mediaUrl, mediaType, tempMsgId) {
             if (currentStoreId === 0) {
-                // KÊNH CHĂM SÓC KHÁCH HÀNG (TỔNG ĐÀI TOÀN SÀN)
-                var payload = {
-                    fullName: 'Khách hàng',
-                    email: 'cskh_live@rebook.vn',
-                    category: 'Tin nhắn CSKH Trực Tuyến',
-                    message: text || 'Gửi tệp đính kèm'
-                };
-                fetch('/help/api/quick-submit', {
+                // KÊNH CHĂM SÓC KHÁCH HÀNG AI TOÀN SÀN
+                fetch('/help/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                }).catch(function(){});
-
-                setTimeout(function() {
+                    body: JSON.stringify({ message: text || 'Gửi tệp đính kèm' })
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
                     hideMiniChatTyping();
                     isSendingMiniChat = false;
-                    var replyMsg = 'Dạ chuyên viên CSKH ReBook đã ghi nhận phản hồi của bạn. Chúng tôi sẽ liên hệ giải quyết trong thời gian sớm nhất. Trường hợp cần hỗ trợ tức thì, bạn vui lòng gọi Hotline 1900 2416 (miễn phí) nhé!';
-                    appendChatMessageDOM('STORE_STAFF', replyMsg, null, null, null, null, null, null, null, formatMiniChatTime(), 'Chuyên viên CSKH', 'cskh_' + Date.now());
+                    var replyMsg = (data && data.reply) ? data.reply : 'Dạ Ban CSKH ReBook đã tiếp nhận yêu cầu. Mọi phản hồi cần hỗ trợ khẩn cấp, bạn vui lòng liên hệ Hotline 1900 2416 nhé!';
+                    appendChatMessageDOM('STORE_STAFF', replyMsg, null, null, null, null, null, null, null, formatMiniChatTime(), 'Trợ Lý AI CSKH ReBook', 'cskh_' + Date.now());
                     scrollMiniChatBottom();
-                }, 750);
+                })
+                .catch(function(err) {
+                    hideMiniChatTyping();
+                    isSendingMiniChat = false;
+                    var replyMsg = 'Dạ em là Trợ lý CSKH ReBook. Em đã ghi nhận câu hỏi của anh/chị. Anh/chị có thể gọi ngay Hotline miễn cước 1900 2416 để được hỗ trợ tức thì nhé!';
+                    appendChatMessageDOM('STORE_STAFF', replyMsg, null, null, null, null, null, null, null, formatMiniChatTime(), 'Trợ Lý AI CSKH ReBook', 'cskh_' + Date.now());
+                    scrollMiniChatBottom();
+                });
                 return;
             }
 
