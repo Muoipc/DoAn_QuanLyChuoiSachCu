@@ -3620,56 +3620,6 @@
 
     </div>
 
-    <!-- NÚT CHĂM SÓC KHÁCH HÀNG (FLOATING SUPPORT SPEED-DIAL - NẰM PHÍA TRÊN NÚT CHAT) -->
-    <div id="cskhFloatingBtn" class="cskh-floating-widget-btn" onclick="toggleCskhMenu(event)" title="Chăm Sóc & Hỗ Trợ Khách Hàng 24/7" style="position:fixed !important; bottom:96px !important; right:24px !important; width:52px !important; height:52px !important; border-radius:18px !important; background:linear-gradient(135deg, #8C4A27 0%, #A0522D 100%) !important; color:#FFFFFF !important; box-shadow:0 10px 25px rgba(140, 74, 39, 0.35) !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:99998 !important; cursor:pointer !important; transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
-        <i class="fa-solid fa-headset" style="font-size:22px; color:#FFE4D6;"></i>
-        <span style="position:absolute; top:-2px; right:-2px; width:12px; height:12px; background:#10B981; border:2px solid #FFFFFF; border-radius:9999px;"></span>
-    </div>
-
-    <!-- POPOVER MENU CHĂM SÓC KHÁCH HÀNG -->
-    <div id="cskhMenuPopover" style="display:none; position:fixed; bottom:158px; right:24px; width:290px; background:rgba(255, 255, 255, 0.95); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1.5px solid rgba(255, 255, 255, 0.95); border-radius:20px; box-shadow:0 16px 40px rgba(45, 24, 15, 0.16); z-index:99999; overflow:hidden; font-family:'Roboto', sans-serif;">
-        <div style="background:linear-gradient(135deg, #8C4A27 0%, #A0522D 100%); color:#FFFFFF; padding:14px 16px; display:flex; justify-content:space-between; align-items:center;">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <i class="fa-solid fa-headset" style="font-size:16px; color:#FFE4D6;"></i>
-                <span style="font-weight:800; font-size:14px;">Hỗ Trợ Khách Hàng 24/7</span>
-            </div>
-            <button type="button" onclick="closeCskhMenu()" style="background:none; border:none; color:#FFFFFF; font-size:18px; cursor:pointer; line-height:1;">&times;</button>
-        </div>
-        <div style="padding:10px 8px;">
-            <a href="tel:19002416" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; text-decoration:none; color:#1C1917; transition:background 0.15s;" onmouseover="this.style.background='#FAF5F0'" onmouseout="this.style.background='transparent'">
-                <div style="width:36px; height:36px; border-radius:10px; background:#FEF2F2; color:#DC2626; display:flex; align-items:center; justify-content:center; font-size:15px;"><i class="fa-solid fa-phone-volume"></i></div>
-                <div>
-                    <div style="font-weight:700; font-size:13.5px; color:#DC2626;">Hotline: 1900 2416</div>
-                    <div style="font-size:11.5px; color:#78716C;">Miễn phí cước cuộc gọi 24/7</div>
-                </div>
-            </a>
-
-            <div onclick="openQuickTicketModal()" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; cursor:pointer; color:#1C1917; transition:background 0.15s;" onmouseover="this.style.background='#FAF5F0'" onmouseout="this.style.background='transparent'">
-                <div style="width:36px; height:36px; border-radius:10px; background:#EFF6FF; color:#2563EB; display:flex; align-items:center; justify-content:center; font-size:15px;"><i class="fa-solid fa-paper-plane"></i></div>
-                <div>
-                    <div style="font-weight:700; font-size:13.5px;">Gửi Yêu Cầu Hỗ Trợ</div>
-                    <div style="font-size:11.5px; color:#78716C;">Khiếu nại, đổi trả, định giá ký gửi</div>
-                </div>
-            </div>
-
-            <a th:href="@{/help}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; text-decoration:none; color:#1C1917; transition:background 0.15s;" onmouseover="this.style.background='#FAF5F0'" onmouseout="this.style.background='transparent'">
-                <div style="width:36px; height:36px; border-radius:10px; background:#F0FDF4; color:#16A34A; display:flex; align-items:center; justify-content:center; font-size:15px;"><i class="fa-solid fa-circle-question"></i></div>
-                <div>
-                    <div style="font-weight:700; font-size:13.5px;">Trung Tâm Trợ Giúp</div>
-                    <div style="font-size:11.5px; color:#78716C;">Hướng dẫn mua bán sách Shopee style</div>
-                </div>
-            </a>
-
-            <a th:href="@{/user/support-tickets}" sec:authorize="isAuthenticated()" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; text-decoration:none; color:#1C1917; transition:background 0.15s;" onmouseover="this.style.background='#FAF5F0'" onmouseout="this.style.background='transparent'">
-                <div style="width:36px; height:36px; border-radius:10px; background:#F5ECE4; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:15px;"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                <div>
-                    <div style="font-weight:700; font-size:13.5px;">Lịch Sử Phiếu Hỗ Trợ</div>
-                    <div style="font-size:11.5px; color:#78716C;">Xem phản hồi từ Ban Quản Trị</div>
-                </div>
-            </a>
-        </div>
-    </div>
-
     <!-- MODAL GỬI PHIẾU HỖ TRỢ NHANH TOÀN SÀN (AJAX QUICK TICKET) -->
     <div id="quickTicketModalBackdrop" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); z-index:100000; align-items:center; justify-content:center;">
         <div style="background:#FFFFFF; border-radius:20px; width:92%; max-width:480px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,0.25); max-height:90vh; overflow-y:auto; font-family:'Roboto', sans-serif;">
@@ -3729,26 +3679,7 @@
     </div>
 
     <script>
-        function toggleCskhMenu(e) {
-            if (e) e.stopPropagation();
-            var popover = document.getElementById('cskhMenuPopover');
-            if (!popover) return;
-            popover.style.display = popover.style.display === 'none' || popover.style.display === '' ? 'block' : 'none';
-        }
-        function closeCskhMenu() {
-            var popover = document.getElementById('cskhMenuPopover');
-            if (popover) popover.style.display = 'none';
-        }
-        document.addEventListener('click', function(e) {
-            var popover = document.getElementById('cskhMenuPopover');
-            var btn = document.getElementById('cskhFloatingBtn');
-            if (popover && popover.style.display === 'block' && !popover.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
-                closeCskhMenu();
-            }
-        });
-
         function openQuickTicketModal(prefilledOrderCode) {
-            closeCskhMenu();
             var modal = document.getElementById('quickTicketModalBackdrop');
             if (modal) modal.style.display = 'flex';
             if (prefilledOrderCode) {
