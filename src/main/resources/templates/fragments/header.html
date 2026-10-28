@@ -2558,6 +2558,25 @@
                     });
 
                     var totalUnreadAll = 0;
+                    var cskhHtml = '<div class="shop-conv-row cskh-conv-row" onclick="openChatWithSupportDesk()" ' +
+                        'style="display:flex; align-items:center; gap:12px; padding:12px 18px; cursor:pointer; transition:background 0.12s; background:#FAF7F2; border-bottom:1.5px solid #EFE9DF; position:relative;" ' +
+                        'onmouseover="this.style.background=\'#F2ECE4\';" onmouseout="this.style.background=\'#FAF7F2\';">' +
+                        '<div style="position:relative; width:40px; height:40px; flex-shrink:0;">' +
+                            '<div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg, #8C4A27 0%, #A0522D 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-size:17px; box-shadow:0 3px 8px rgba(140,74,39,0.25);">' +
+                                '<i class="fa-solid fa-headset"></i>' +
+                            '</div>' +
+                            '<span style="position:absolute; bottom:0; right:0; width:9px; height:9px; border-radius:50%; background:#10B981; border:2px solid #FFFFFF;" title="Đang trực tuyến 24/7"></span>' +
+                        '</div>' +
+                        '<div style="flex:1; min-width:0; padding-right:8px;">' +
+                            '<div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">' +
+                                '<span style="font-size:13px; font-weight:700; color:#8C4A27; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Chăm Sóc Khách Hàng (24/7)</span>' +
+                                '<span style="font-size:9.5px; font-weight:700; background:#8C4A27; color:#fff; padding:1px 6px; border-radius:9999px;">TỔNG ĐÀI</span>' +
+                            '</div>' +
+                            '<div style="font-size:12px; color:#574E45; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Hỗ trợ đơn hàng, khiếu nại, đổi trả...</div>' +
+                        '</div>' +
+                        '<div style="font-size:11px; color:#10B981; font-weight:600; flex-shrink:0;">Trực tuyến</div>' +
+                    '</div>';
+
                     var html = '';
                     list.forEach(function(s) {
                         var isPinned = !!pinnedMap[s.storeId];
@@ -2604,7 +2623,7 @@
                             '<button type="button" class="btn-row-more" onclick="openRowActionsDropdown(event, ' + s.storeId + ', \'' + escapeMiniJs(s.storeName) + '\')" style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); width:32px; height:32px; border-radius:50%; background:none; border:none; color:#52525B; font-size:17px; cursor:pointer; align-items:center; justify-content:center; padding:0; z-index:5;" onmouseover="this.style.background=\'#E4E4E7\'; this.style.color=\'#18181B\';" onmouseout="this.style.background=\'none\'; this.style.color=\'#52525B\';"><i class="fa-solid fa-ellipsis-vertical"></i></button>' +
                         '</div>';
                     });
-                    container.innerHTML = html;
+                    container.innerHTML = cskhHtml + html;
                     updateFloatingUnreadBadge(totalUnreadAll);
                 })
                 .catch(function(err) { console.error('Lỗi tải cuộc trò chuyện:', err); });
@@ -2914,6 +2933,77 @@
 
             cancelChatMediaUpload();
             loadStoreChatMessages(currentStoreId, bookTitle);
+        }
+
+        function openChatWithSupportDesk() {
+            currentStoreId = 0;
+            currentStoreName = 'Chăm Sóc Khách Hàng (Tổng Đài 24/7)';
+            stopMiniChatPolling();
+
+            var widget = document.getElementById('aiMiniChatWidget');
+            var fab = document.getElementById('aiFloatingBtn');
+            if (widget) widget.style.display = 'flex';
+            if (fab) fab.classList.add('hidden-fab');
+
+            var listView = document.getElementById('miniChatShopListView');
+            var roomView = document.getElementById('miniChatRoomView');
+            if (listView) listView.style.display = 'none';
+            if (roomView) roomView.style.display = 'flex';
+
+            var nameEl = document.getElementById('activeStoreName');
+            var distEl = document.getElementById('activeStoreDistrict');
+            var avtEl = document.getElementById('activeStoreAvatar');
+            var staffEl = document.getElementById('activeStoreStaffStatus');
+            var inputEl = document.getElementById('miniChatInput');
+            var quickBar = document.getElementById('miniChatQuickBar');
+
+            if (nameEl) nameEl.textContent = 'Chăm Sóc Khách Hàng (Tổng Đài 24/7)';
+            if (distEl) distEl.textContent = 'Hệ Thống Chuỗi Sách Cũ TP.HCM';
+            if (staffEl) staffEl.textContent = 'Trực tuyến 24/7';
+            if (avtEl) avtEl.src = '/images/brand-book-icon.png';
+            if (inputEl) {
+                inputEl.placeholder = 'Nhập thắc mắc hoặc phản ánh gửi Ban CSKH...';
+                inputEl.focus();
+            }
+            if (quickBar) quickBar.style.display = 'none';
+
+            cancelChatMediaUpload();
+
+            var chatBody = document.getElementById('miniChatBody');
+            if (!chatBody) return;
+            renderedMsgIds.clear();
+
+            var welcomeHtml = '<div style="display:flex; justify-content:center; margin-bottom:8px;">' +
+                '<span style="background:#F4F4F5; color:#71717A; font-size:11px; padding:3px 10px; border-radius:9999px;">Hôm nay · Kết nối Ban CSKH Toàn Sàn</span>' +
+            '</div>' +
+            '<div class="mini-chat-bubble-row" style="display:flex; gap:8px; align-items:flex-start; margin-bottom:12px;">' +
+                '<div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #8C4A27 0%, #A0522D 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; flex-shrink:0;">' +
+                    '<i class="fa-solid fa-headset"></i>' +
+                '</div>' +
+                '<div style="max-width:88%; background:#FFFFFF; border:1px solid #ECE7DE; border-radius:14px; border-top-left-radius:4px; padding:12px 14px; box-shadow:0 2px 6px rgba(0,0,0,0.03);">' +
+                    '<div style="font-weight:700; color:#8C4A27; font-size:12.5px; margin-bottom:4px;">Ban Quản Trị CSKH ReBook kính chào Quý khách!</div>' +
+                    '<div style="color:#1C1917; font-size:12.5px; line-height:1.5; margin-bottom:12px;">' +
+                        'Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7 về đơn hàng, chất lượng sách, đổi trả hoặc định giá ký gửi. Bạn có thể chọn tiện ích nhanh bên dưới hoặc gõ tin nhắn trực tiếp:' +
+                    '</div>' +
+                    '<div style="display:flex; flex-direction:column; gap:6px;">' +
+                        '<a href="tel:19002416" style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:#FEF2F2; color:#DC2626; border-radius:8px; font-weight:700; font-size:12px; text-decoration:none;">' +
+                            '<i class="fa-solid fa-phone-volume"></i> Hotline: 1900 2416 (Miễn cước 24/7)' +
+                        '</a>' +
+                        '<div onclick="openQuickTicketModal()" style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:#EFF6FF; color:#2563EB; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;">' +
+                            '<i class="fa-solid fa-file-circle-plus"></i> Tạo phiếu khiếu nại / yêu cầu hỗ trợ' +
+                        '</div>' +
+                        '<a href="/orders" style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:#FAF5F0; color:#8C4A27; border-radius:8px; font-weight:700; font-size:12px; text-decoration:none;">' +
+                            '<i class="fa-solid fa-box"></i> Tra cứu danh sách đơn mua của tôi' +
+                        '</a>' +
+                        '<a href="/help" style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:#F0FDF4; color:#16A34A; border-radius:8px; font-weight:700; font-size:12px; text-decoration:none;">' +
+                            '<i class="fa-solid fa-circle-question"></i> Xem Trung Tâm Trợ Giúp & FAQ' +
+                        '</a>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+            chatBody.innerHTML = welcomeHtml;
+            scrollMiniChatBottom();
         }
 
         function backToShopList() {
@@ -3299,6 +3389,30 @@
         }
 
         function postChatMessageToServer(text, mediaUrl, mediaType, tempMsgId) {
+            if (currentStoreId === 0) {
+                // KÊNH CHĂM SÓC KHÁCH HÀNG (TỔNG ĐÀI TOÀN SÀN)
+                var payload = {
+                    fullName: 'Khách hàng',
+                    email: 'cskh_live@rebook.vn',
+                    category: 'Tin nhắn CSKH Trực Tuyến',
+                    message: text || 'Gửi tệp đính kèm'
+                };
+                fetch('/help/api/quick-submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).catch(function(){});
+
+                setTimeout(function() {
+                    hideMiniChatTyping();
+                    isSendingMiniChat = false;
+                    var replyMsg = 'Dạ chuyên viên CSKH ReBook đã ghi nhận phản hồi của bạn. Chúng tôi sẽ liên hệ giải quyết trong thời gian sớm nhất. Trường hợp cần hỗ trợ tức thì, bạn vui lòng gọi Hotline 1900 2416 (miễn phí) nhé!';
+                    appendChatMessageDOM('STORE_STAFF', replyMsg, null, null, null, null, null, null, null, formatMiniChatTime(), 'Chuyên viên CSKH', 'cskh_' + Date.now());
+                    scrollMiniChatBottom();
+                }, 750);
+                return;
+            }
+
             var formData = new URLSearchParams();
             if (text) formData.append('content', text);
             if (mediaUrl) formData.append('mediaUrl', mediaUrl);
