@@ -498,105 +498,34 @@
                     </div>
                 </div>
 
-                <!-- CỘT BÊN PHẢI: FORM ĐĂNG KÝ HOẶC BẢNG THEO DÕI HỒ SƠ -->
+                <!-- CỘT BÊN PHẢI: FORM ĐĂNG KÝ GIAN HÀNG & TẠO TÀI KHOẢN QUẢN LÝ RIÊNG -->
                 <div>
-
-                    <!-- 1. GIAO DIỆN THEO DÕI TRẠNG THÁI (STATUS VIEW) -->
-                    <div th:if="${viewMode == 'STATUS' and latestReg != null}" class="seller-form-card">
-                        <div class="status-hero-card">
-                            <!-- CHỜ DUYỆT -->
-                            <div th:if="${latestReg.status.name() == 'PENDING'}">
-                                <span class="status-badge-lg status-badge-pending">
-                                    <i class="fa-solid fa-hourglass-half"></i> Hồ Sơ Đang Chờ Xét Duyệt
-                                </span>
-                                <h3 style="font-size:20px; font-weight:800; color:#1C1917; margin-bottom:10px;">Hồ Sơ Mở Gian Hàng Đang Được Thẩm Định</h3>
-                                <p style="font-size:13.5px; color:#78716C; line-height:1.6; max-width:440px; margin:0 auto 20px;">
-                                    Cảm ơn bạn đã nộp hồ sơ mở gian hàng <strong>'<span th:text="${latestReg.storeName}">Tên Quầy</span>'</strong>. Ban quản trị ReBook sẽ thẩm định thông tin và duyệt trong vòng 24 giờ.
-                                </p>
-                            </div>
-
-                            <!-- ĐÃ DUYỆT -->
-                            <div th:if="${latestReg.status.name() == 'APPROVED'}">
-                                <span class="status-badge-lg status-badge-approved">
-                                    <i class="fa-solid fa-circle-check"></i> Gian Hàng Đã Kích Hoạt
-                                </span>
-                                <h3 style="font-size:20px; font-weight:800; color:#1C1917; margin-bottom:10px;">Chúc Mừng Bạn Đã Trở Thành Đối Tác!</h3>
-                                <p style="font-size:13.5px; color:#78716C; line-height:1.6; margin-bottom:20px;">
-                                    Tài khoản của bạn đã được nâng cấp lên <strong>Quản Lý Cửa Hàng (Store Manager)</strong>. Hãy vào Kênh Quản Trị để bắt đầu đăng bán sách.
-                                </p>
-                                <a th:href="@{/admin/inventory}" class="btn-submit-registration">
-                                    <i class="fa-solid fa-warehouse"></i> Vào Kênh Quản Trị Cửa Hàng
-                                </a>
-                            </div>
-
-                            <!-- TỪ CHỐI -->
-                            <div th:if="${latestReg.status.name() == 'REJECTED'}">
-                                <span class="status-badge-lg status-badge-rejected">
-                                    <i class="fa-solid fa-circle-xmark"></i> Hồ Sơ Bị Từ Chối
-                                </span>
-                                <h3 style="font-size:20px; font-weight:800; color:#1C1917; margin-bottom:10px;">Hồ Sơ Chưa Đạt Tiêu Chuẩn</h3>
-                                <p style="font-size:13.5px; color:#DC2626; margin-bottom:20px;" th:text="${latestReg.rejectReason != null ? latestReg.rejectReason : 'Hồ sơ chưa đạt tiêu chuẩn quy định của ReBook.'}"></p>
-                                <a th:href="@{/seller/register?reapply=true}" class="btn-submit-registration" style="background:#2D180F;">
-                                    <i class="fa-solid fa-rotate-left"></i> Chỉnh Sửa &amp; Nộp Lại Hồ Sơ
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- CHI TIẾT HỒ SƠ ĐÃ NỘP -->
-                        <div style="background:#FAF8F5; border:1px solid #E5E0D8; border-radius:14px; padding:20px;">
-                            <div style="font-size:13.5px; font-weight:800; color:#1C1917; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
-                                <i class="fa-solid fa-file-lines text-muted"></i> Thông tin hồ sơ đã ghi nhận:
-                            </div>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px;">
-                                <div><span style="color:#78716C;">Tên quầy:</span> <strong th:text="${latestReg.storeName}"></strong></div>
-                                <div><span style="color:#78716C;">Hotline:</span> <strong th:text="${latestReg.phone}"></strong></div>
-                                <div><span style="color:#78716C;">Khu vực:</span> <strong th:text="${latestReg.district + ', ' + latestReg.province}"></strong></div>
-                                <div><span style="color:#78716C;">Chủ quầy:</span> <strong th:text="${latestReg.ownerName}"></strong></div>
-                                <div><span style="color:#78716C;">Ngân hàng:</span> <strong th:text="${latestReg.bankName + ' - ' + latestReg.bankAccount}"></strong></div>
-                                <div><span style="color:#78716C;">Giờ mở cửa:</span> <strong th:text="${latestReg.openTime + ' - ' + latestReg.closeTime}"></strong></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. GIAO DIỆN FORM ĐIỀN ĐĂNG KÝ (FORM VIEW) -->
-                    <div th:if="${viewMode == 'FORM'}" class="seller-form-card">
+                    <div class="seller-form-card">
                         <form th:action="@{/seller/register}" method="post" enctype="multipart/form-data" th:object="${form}" id="sellerApplyForm">
 
-                            <!-- KHỐI 1: TẠO TÀI KHOẢN MỚI NẾU CHƯA ĐĂNG NHẬP (GUEST) -->
-                            <div th:if="${!isLoggedIn}" style="margin-bottom: 24px; padding: 18px 20px; background: rgba(140, 74, 39, 0.05); border: 1.5px solid rgba(140, 74, 39, 0.2); border-radius: 14px;">
+                            <!-- KHỐI 1: TẠO TÀI KHOẢN QUẢN LÝ CỬA HÀNG RIÊNG BIỆT (TÁCH BIỆT TÀI KHOẢN USER) -->
+                            <div style="margin-bottom: 24px; padding: 20px 22px; background: rgba(140, 74, 39, 0.05); border: 1.5px solid rgba(140, 74, 39, 0.25); border-radius: 14px;">
                                 <div class="form-section-title" style="margin-top:0; margin-bottom:8px; color:#8C4A27; border:none; padding:0;">
                                     <i class="fa-solid fa-user-shield"></i>
-                                    <span>Khởi Tạo Tài Khoản Quản Lý Quầy Sách</span>
+                                    <span>Tạo Tài Khoản Quản Lý Cửa Hàng Riêng Biệt</span>
                                 </div>
                                 <p style="font-size:12.5px; color:#78716C; margin-bottom:14px;">
-                                    Bạn chưa có tài khoản? Hãy điền thông tin đăng nhập bên dưới để hệ thống tự động cấp quyền Quản Lý khi Admin duyệt hồ sơ.
+                                    Tài khoản này được tách biệt hoàn toàn với tài khoản khách hàng thông thường để bạn trực tiếp quản trị quầy sách, tồn kho và đơn hàng sau khi được duyệt.
                                 </p>
                                 <div class="form-row-grid three-cols">
                                     <div class="form-group">
-                                        <label>Tên đăng nhập <span class="required">*</span></label>
-                                        <input type="text" th:field="*{newUsername}" class="seller-input" placeholder="Ví dụ: nhasachbinhthanh">
+                                        <label>Tên đăng nhập Quản lý <span class="required">*</span></label>
+                                        <input type="text" th:field="*{newUsername}" class="seller-input" placeholder="Ví dụ: nhasachbinhthanh" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Mật khẩu <span class="required">*</span></label>
-                                        <input type="password" th:field="*{newPassword}" class="seller-input" placeholder="Tối thiểu 6 ký tự">
+                                        <input type="password" th:field="*{newPassword}" class="seller-input" placeholder="Tối thiểu 6 ký tự" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Xác nhận mật khẩu <span class="required">*</span></label>
-                                        <input type="password" th:field="*{confirmPassword}" class="seller-input" placeholder="Nhập lại mật khẩu">
+                                        <input type="password" th:field="*{confirmPassword}" class="seller-input" placeholder="Nhập lại mật khẩu" required>
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- THÔNG BÁO TÀI KHOẢN HIỆN TẠI NẾU ĐÃ ĐĂNG NHẬP -->
-                            <div th:if="${isLoggedIn and user != null}" style="margin-bottom: 20px; padding: 12px 18px; background: #FAF6F0; border: 1px solid #ECE7DE; border-radius: 12px; display:flex; align-items:center; justify-content:space-between;">
-                                <div style="display:flex; align-items:center; gap:12px;">
-                                    <img th:src="${user.avatar != null ? user.avatar : '/images/avatars/avatar-default.png'}" style="width:34px; height:34px; border-radius:50%; object-fit:cover;" alt="Avatar">
-                                    <div>
-                                        <span style="font-size:11.5px; color:#78716C;">Đang đăng ký bằng tài khoản:</span>
-                                        <div style="font-size:13px; font-weight:700; color:#1C1917;" th:text="${user.fullName + ' (@' + user.username + ')'}">User Name</div>
-                                    </div>
-                                </div>
-                                <span class="badge" style="background:#8C4A27; color:#fff; font-size:11px; padding:5px 10px; border-radius:6px;">Tài khoản hiện tại</span>
                             </div>
 
                             <!-- KHỐI 2: THÔNG TIN GIAN HÀNG & KHO SÁCH -->
