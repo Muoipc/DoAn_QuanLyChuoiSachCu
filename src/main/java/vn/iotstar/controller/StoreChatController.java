@@ -24,7 +24,6 @@ import java.util.*;
 public class StoreChatController {
 
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm dd/MM");
-    private static final Long DEFAULT_GUEST_USER_ID = 4L; // Nguyễn Song Hoàng Phúc
 
     // Presence Tracking: Quản lý liveness của Quản lý từng chi nhánh (Thread-safe)
     private static final java.util.concurrent.ConcurrentMap<Long, Long> STORE_LAST_SEEN = new java.util.concurrent.ConcurrentHashMap<>();
@@ -67,7 +66,7 @@ public class StoreChatController {
         if (userDetails != null && userDetails.getId() != null) {
             return userRepository.findById(userDetails.getId()).orElse(null);
         }
-        return userRepository.findById(DEFAULT_GUEST_USER_ID).orElse(null);
+        return null;
     }
 
     /**
@@ -75,8 +74,19 @@ public class StoreChatController {
      */
     @PostMapping("/api/chat/upload-media")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> uploadChatMedia(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, Object>> uploadChatMedia(
+            @RequestParam("file") MultipartFile file,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         Map<String, Object> res = new HashMap<>();
+
+        User currentUser = resolveCurrentUser(userDetails);
+        if (currentUser == null) {
+            res.put("success", false);
+            res.put("requireLogin", true);
+            res.put("message", "Vui lòng đăng nhập để gửi tệp đính kèm!");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
+        }
+
         if (file == null || file.isEmpty()) {
             res.put("success", false);
             res.put("message", "Vui lòng chọn tệp hình ảnh hoặc video hợp lệ!");
@@ -133,8 +143,10 @@ public class StoreChatController {
 
         if (currentUser == null) {
             res.put("success", false);
+            res.put("requireLogin", true);
+            res.put("message", "Vui lòng đăng nhập để xem danh sách cuộc trò chuyện.");
             res.put("conversations", Collections.emptyList());
-            return ResponseEntity.ok(res);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
         }
 
         List<Store> allStores = storeRepository.findByIsActiveTrue();
@@ -192,12 +204,14 @@ public class StoreChatController {
         User currentUser = resolveCurrentUser(userDetails);
         Map<String, Object> res = new HashMap<>();
 
-        if (currentUser != null) {
-            chatMessageRepository.markAllAsRead(currentUser.getId(), storeId);
-            res.put("success", true);
-        } else {
+        if (currentUser == null) {
             res.put("success", false);
+            res.put("requireLogin", true);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
         }
+
+        chatMessageRepository.markAllAsRead(currentUser.getId(), storeId);
+        res.put("success", true);
         return ResponseEntity.ok(res);
     }
 
@@ -213,17 +227,19 @@ public class StoreChatController {
         User currentUser = resolveCurrentUser(userDetails);
         Map<String, Object> res = new HashMap<>();
 
-        if (currentUser != null) {
-            List<ChatMessage> list = chatMessageRepository.findByUserIdAndStoreIdOrderByCreatedAtAsc(currentUser.getId(), storeId);
-            if (!list.isEmpty()) {
-                ChatMessage last = list.get(list.size() - 1);
-                last.setIsRead(false);
-                chatMessageRepository.save(last);
-            }
-            res.put("success", true);
-        } else {
+        if (currentUser == null) {
             res.put("success", false);
+            res.put("requireLogin", true);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
         }
+
+        List<ChatMessage> list = chatMessageRepository.findByUserIdAndStoreIdOrderByCreatedAtAsc(currentUser.getId(), storeId);
+        if (!list.isEmpty()) {
+            ChatMessage last = list.get(list.size() - 1);
+            last.setIsRead(false);
+            chatMessageRepository.save(last);
+        }
+        res.put("success", true);
         return ResponseEntity.ok(res);
     }
 
@@ -239,12 +255,14 @@ public class StoreChatController {
         User currentUser = resolveCurrentUser(userDetails);
         Map<String, Object> res = new HashMap<>();
 
-        if (currentUser != null) {
-            chatMessageRepository.deleteByUserIdAndStoreId(currentUser.getId(), storeId);
-            res.put("success", true);
-        } else {
+        if (currentUser == null) {
             res.put("success", false);
+            res.put("requireLogin", true);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
         }
+
+        chatMessageRepository.deleteByUserIdAndStoreId(currentUser.getId(), storeId);
+        res.put("success", true);
         return ResponseEntity.ok(res);
     }
 
@@ -262,8 +280,10 @@ public class StoreChatController {
 
         if (currentUser == null) {
             res.put("success", false);
+            res.put("requireLogin", true);
+            res.put("message", "Vui lòng đăng nhập để xem lịch sử tin nhắn.");
             res.put("messages", Collections.emptyList());
-            return ResponseEntity.ok(res);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
         }
 
         List<ChatMessage> list = chatMessageRepository.findByUserIdAndStoreIdOrderByCreatedAtAsc(currentUser.getId(), storeId);
@@ -319,7 +339,14 @@ public class StoreChatController {
         boolean hasContent = content != null && !content.trim().isEmpty();
         boolean hasMedia = mediaUrl != null && !mediaUrl.trim().isEmpty();
 
-        if (currentUser == null || (!hasContent && !hasMedia)) {
+        if (currentUser == null) {
+            res.put("success", false);
+            res.put("requireLogin", true);
+            res.put("message", "Vui lòng đăng nhập tài khoản để nhắn tin với cửa hàng!");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
+        }
+
+        if (!hasContent && !hasMedia) {
             res.put("success", false);
             res.put("message", "Nội dung tin nhắn hoặc tệp đính kèm không được để trống.");
             return ResponseEntity.badRequest().body(res);

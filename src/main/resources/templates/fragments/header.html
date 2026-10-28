@@ -2077,7 +2077,9 @@
     </style>
 
     <!-- SCRIPT ĐIỀU KHIỂN CHUNG CHO HEADER & TOAST/MODAL TOÀN CỤC -->
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var isUserLoggedIn = /*[[${#authorization.expression('isAuthenticated()')}]]*/ false;
         // ================= DYNAMIC NOTIFICATION SYSTEM (CLIENT) =================
         function loadHeaderUserNotifications() {
             var listEl = document.getElementById('headerNotiList');
@@ -2503,6 +2505,26 @@
         }
 
         function loadShopConversations() {
+            var container = document.getElementById('miniChatShopListContainer');
+            if (!container) return;
+
+            if (!isUserLoggedIn) {
+                container.innerHTML = '<div style="text-align:center; padding:36px 18px; color:#52525B;">' +
+                    '<div style="width:48px; height:48px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:20px;">' +
+                        '<i class="fa-solid fa-user-lock"></i>' +
+                    '</div>' +
+                    '<strong style="font-size:13.5px; color:#1C1917; display:block; margin-bottom:5px;">Chưa Đăng Nhập</strong>' +
+                    '<p style="font-size:12px; color:#78716C; line-height:1.45; margin-bottom:16px;">' +
+                        'Khách vãng lai không thể xem tin nhắn hoặc lịch sử. Vui lòng đăng nhập để lưu trữ cuộc trò chuyện riêng với quầy.' +
+                    '</p>' +
+                    '<a href="/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search) + '" style="display:inline-block; padding:7px 20px; border-radius:8px; background:#8C4A27; color:#fff; text-decoration:none; font-weight:700; font-size:12.5px; box-shadow:0 3px 8px rgba(140,74,39,0.25);">' +
+                        '<i class="fa-solid fa-right-to-bracket me-1"></i>Đăng Nhập Ngay' +
+                    '</a>' +
+                '</div>';
+                updateFloatingUnreadBadge(0);
+                return;
+            }
+
             fetch('/api/chat/conversations')
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
@@ -3132,7 +3154,37 @@
 
         function loadStoreChatMessages(storeId, autoSendBookTitle) {
             var body = document.getElementById('miniChatBody');
+            var inputEl = document.getElementById('miniChatInput');
+            var quickBar = document.getElementById('miniChatQuickBar');
             if (!body) return;
+
+            if (!isUserLoggedIn) {
+                body.innerHTML = '<div style="text-align:center; padding:36px 18px; color:#52525B;">' +
+                    '<div style="width:48px; height:48px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:20px;">' +
+                        '<i class="fa-solid fa-lock"></i>' +
+                    '</div>' +
+                    '<strong style="font-size:14px; color:#1C1917; display:block; margin-bottom:6px;">Yêu Cầu Đăng Nhập</strong>' +
+                    '<p style="font-size:12px; color:#78716C; line-height:1.5; margin-bottom:16px;">' +
+                        'Khách vãng lai không thể nhắn tin hoặc xem lịch sử. Vui lòng đăng nhập tài khoản để nhắn tin riêng với quầy <strong>' + escapeMiniHtml(currentStoreName) + '</strong>.' +
+                    '</p>' +
+                    '<a href="/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search) + '" style="display:inline-block; padding:8px 22px; border-radius:9px; background:#8C4A27; color:#fff; text-decoration:none; font-weight:700; font-size:12.5px; box-shadow:0 3px 8px rgba(140,74,39,0.25);">' +
+                        '<i class="fa-solid fa-right-to-bracket me-1"></i>Đăng Nhập Ngay' +
+                    '</a>' +
+                '</div>';
+                if (inputEl) {
+                    inputEl.disabled = true;
+                    inputEl.placeholder = 'Vui lòng đăng nhập để gửi tin nhắn...';
+                }
+                if (quickBar) quickBar.style.display = 'none';
+                return;
+            }
+
+            if (inputEl) {
+                inputEl.disabled = false;
+                inputEl.placeholder = 'Nhắn tin cho ' + currentStoreName + '...';
+            }
+            if (quickBar) quickBar.style.display = 'flex';
+
             body.innerHTML = '<div style="text-align:center; padding:20px; color:#A8A29E; font-size:11.5px;">Đang tải tin nhắn...</div>';
             renderedMsgIds.clear();
 
@@ -3185,6 +3237,12 @@
         }
 
         function sendMiniChatMessage() {
+            if (!isUserLoggedIn) {
+                alert('Vui lòng đăng nhập tài khoản để nhắn tin trò chuyện với cửa hàng!');
+                window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+                return;
+            }
+
             var inp = document.getElementById('miniChatInput');
             if (!inp || isSendingMiniChat) return;
             var text = inp.value.trim();
