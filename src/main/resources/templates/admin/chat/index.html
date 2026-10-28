@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <!-- CÔNG TẮC BẬT/TẮT CHẾ ĐỘ AI TRẢ LỜI THAY -->
+                            <!-- CÔNG TẮC BẬT/TẮT CHẾ ĐỘ AI TRẢ LỜI THAY & NÚT CẤU HÌNH AI RIÊNG -->
                             <div class="d-flex align-items-center gap-2 bg-white px-3 py-1.5 rounded-pill border shadow-sm" style="border-color: rgba(232, 222, 200, 0.8) !important;">
                                 <span class="small fw-bold text-dark" style="font-size: 11.5px;"><i class="fa-solid fa-robot text-primary me-1"></i>Trợ lý AI trả lời thay:</span>
                                 <div class="form-check form-switch m-0 p-0 d-flex align-items-center" style="min-height:auto;">
@@ -108,6 +108,11 @@
                                       style="font-size: 9.5px; padding: 3px 8px;"
                                       th:text="${currentStore != null and currentStore.aiReplyEnabled == true ? 'ĐANG BẬT' : 'ĐANG TẮT'}">ĐANG TẮT</span>
                             </div>
+                            <button type="button" class="btn btn-sm btn-outline-dark rounded-pill fw-semibold shadow-sm d-inline-flex align-items-center gap-1.5 px-3 py-1.5" 
+                                    style="font-size: 11.5px; border-color: rgba(140, 74, 39, 0.35); background: #FAF8F5;" 
+                                    onclick="openStoreAiConfigModal()">
+                                <i class="fa-solid fa-sliders text-warning"></i> Cấu hình AI quầy
+                            </button>
                             <span class="text-muted small" th:if="${currentStore != null}">
                                 <i class="fa-solid fa-location-dot me-1 text-warning"></i><span th:text="${currentStore.address}">Địa chỉ</span>
                             </span>
@@ -414,6 +419,104 @@
             }).catch(e => console.debug(e));
         }
 
+        // ================= CẤU HÌNH TRỢ LÝ AI RIÊNG CỦA QUẦY =================
+        function openStoreAiConfigModal() {
+            if (!currentStoreId) return;
+            fetch('/api/chat/store/' + currentStoreId + '/ai-config')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('aiCfgAssistantName').value = data.assistantName || '';
+                        document.getElementById('aiCfgTone').value = data.tone || 'FRIENDLY';
+                        document.getElementById('aiCfgShopDesc').value = data.shopDescription || '';
+                        document.getElementById('aiCfgCustomFaq').value = data.customFaq || '';
+                        document.getElementById('aiCfgModalStoreName').innerText = data.storeName || '';
+                        document.getElementById('aiCfgTestOutput').style.display = 'none';
+
+                        const modalEl = document.getElementById('modalStoreAiConfig');
+                        if (modalEl) {
+                            const modal = new bootstrap.Modal(modalEl);
+                            modal.show();
+                        }
+                    }
+                })
+                .catch(err => console.error('Lỗi tải cấu hình AI:', err));
+        }
+
+        function saveStoreAiConfig() {
+            if (!currentStoreId) return;
+            const btn = document.getElementById('btnSaveAiConfig');
+            if (btn) btn.disabled = true;
+
+            const params = new URLSearchParams();
+            params.append('assistantName', document.getElementById('aiCfgAssistantName').value.trim());
+            params.append('tone', document.getElementById('aiCfgTone').value);
+            params.append('shopDescription', document.getElementById('aiCfgShopDesc').value.trim());
+            params.append('customFaq', document.getElementById('aiCfgCustomFaq').value.trim());
+
+            fetch('/api/chat/store/' + currentStoreId + '/ai-config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (btn) btn.disabled = false;
+                if (data.success) {
+                    alert(data.message || 'Lưu cấu hình AI thành công!');
+                    const modalEl = document.getElementById('modalStoreAiConfig');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                } else {
+                    alert(data.message || 'Không thể lưu cấu hình AI!');
+                }
+            })
+            .catch(err => {
+                if (btn) btn.disabled = false;
+                alert('Lỗi lưu cấu hình: ' + err.message);
+            });
+        }
+
+        function testStoreAiReplyInSandbox() {
+            if (!currentStoreId) return;
+            const input = document.getElementById('aiCfgTestInput');
+            const msg = input ? input.value.trim() : '';
+            if (!msg) {
+                alert('Vui lòng nhập câu hỏi thử nghiệm cho AI!');
+                return;
+            }
+
+            const btn = document.getElementById('btnTestAi');
+            const outBox = document.getElementById('aiCfgTestOutput');
+            const outContent = document.getElementById('aiCfgTestContent');
+            if (btn) btn.disabled = true;
+            if (outBox) outBox.style.display = 'block';
+            if (outContent) outContent.innerHTML = '<em>Đang suy nghĩ câu trả lời theo hồ sơ quầy...</em>';
+
+            const params = new URLSearchParams();
+            params.append('message', msg);
+
+            fetch('/api/chat/store/' + currentStoreId + '/test-ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (btn) btn.disabled = false;
+                if (outContent) {
+                    const reply = (data.reply || 'Không nhận được câu trả lời.')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\n/g, '<br>');
+                    outContent.innerHTML = '<strong>[' + (data.assistantName || 'AI') + ']:</strong><br>' + reply;
+                }
+            })
+            .catch(err => {
+                if (btn) btn.disabled = false;
+                if (outContent) outContent.innerText = 'Lỗi thử nghiệm: ' + err.message;
+            });
+        }
+
         // Tự cuộn xuống đáy khung chat & khởi động polling và heartbeat
         window.addEventListener('load', function() {
             const box = document.getElementById('adminChatBody');
@@ -425,6 +528,79 @@
         });
         /*]]>*/
     </script>
+
+    <!-- MODAL CẤU HÌNH TRỢ LÝ AI RIÊNG CỦA QUẦY SÁCH -->
+    <div class="modal fade" id="modalStoreAiConfig" tabindex="-1" aria-labelledby="modalStoreAiConfigLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg" style="background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px);">
+                <div class="modal-header border-bottom py-3 px-4" style="background: #FAF8F5;">
+                    <div class="d-flex align-items-center gap-2.5">
+                        <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(140, 74, 39, 0.12); color: #8C4A27; display: flex; align-items: center; justify-content: center; font-size: 17px;">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold text-dark fs-6 mb-0" id="modalStoreAiConfigLabel">Hồ Sơ & Trí Tuệ Trợ Lý AI Riêng Biệt</h5>
+                            <small class="text-muted" style="font-size: 11.5px;">Thiết lập cho: <strong class="text-dark" id="aiCfgModalStoreName">Tên Quầy</strong></small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="formStoreAiConfig" onsubmit="event.preventDefault(); saveStoreAiConfig();">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small text-dark"><i class="fa-solid fa-id-card-clip text-primary me-1"></i>Tên Trợ Lý AI của Quầy:</label>
+                                <input type="text" id="aiCfgAssistantName" class="form-control rounded-3" placeholder="VD: Bé Mọt Thủ Đức, Cậu Ba Đường Sách..." required>
+                                <small class="text-muted" style="font-size: 11px;">Tên định danh hiển thị trên bong bóng chat gửi khách.</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small text-dark"><i class="fa-solid fa-masks-theater text-warning me-1"></i>Phong Cách / Giọng Điệu (Tone):</label>
+                                <select id="aiCfgTone" class="form-select rounded-3">
+                                    <option value="FRIENDLY">Ấm Áp, Niềm Nở (Thân thiện, xưng Em)</option>
+                                    <option value="VINTAGE">Hoài Cổ, Tao Nhã (Sách xưa, trân trọng)</option>
+                                    <option value="INTELLECTUAL">Tri Thức, Học Thuật (Am hiểu sâu sắc tác phẩm)</option>
+                                    <option value="ENERGETIC">Trẻ Trung, Năng Động (Emoji vui tươi, gần gũi)</option>
+                                </select>
+                                <small class="text-muted" style="font-size: 11px;">Định hình cách xưng hô và thái độ tư vấn của AI.</small>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold small text-dark"><i class="fa-solid fa-store text-danger me-1"></i>Thế Mạnh & Đặc Sản Riêng của Quầy (Shop Lore):</label>
+                                <textarea id="aiCfgShopDesc" class="form-control rounded-3" rows="2" placeholder="VD: Quầy chuyên sách kinh điển trước 1975, có phục vụ trà hoa cúc miễn phí, gần cổng ĐH Sư Phạm Kỹ Thuật..."></textarea>
+                                <small class="text-muted" style="font-size: 11px;">AI sẽ hiểu rõ không gian, vị trí và các điểm nổi bật của riêng quầy bạn.</small>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold small text-dark"><i class="fa-solid fa-clipboard-list text-success me-1"></i>Chính Sách & Dặn Dò Riêng của Chủ Quầy:</label>
+                                <textarea id="aiCfgCustomFaq" class="form-control rounded-3" rows="2" placeholder="VD: Khách mua từ 3 cuốn tặng 1 bookmark da; Có bãi gửi xe máy miễn phí trước quầy; Nhận thu mua sách vào sáng Chủ Nhật..."></textarea>
+                                <small class="text-muted" style="font-size: 11px;">Những điều bạn muốn AI lưu ý khi khách hỏi mua hoặc hỏi điều kiện quầy.</small>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- KHUNG THỬ NGHIỆM SANDBOX TRỰC TIẾP -->
+                    <div class="mt-4 pt-3 border-top">
+                        <div class="fw-bold small text-dark mb-2 d-flex align-items-center gap-1.5">
+                            <i class="fa-solid fa-vial-circle-check text-info"></i>Thử Nghiệm Câu Trả Lời Của AI Quầy (Sandbox Test)
+                        </div>
+                        <div class="input-group mb-2">
+                            <input type="text" id="aiCfgTestInput" class="form-control rounded-start-3" placeholder="Nhập câu hỏi thử (VD: Quầy mình có sách gì hay?, Shop mở mấy giờ?)...">
+                            <button type="button" id="btnTestAi" class="btn btn-outline-secondary fw-semibold px-3" onclick="testStoreAiReplyInSandbox()">
+                                <i class="fa-solid fa-paper-plane me-1"></i>Hỏi Thử
+                            </button>
+                        </div>
+                        <div id="aiCfgTestOutput" class="p-3 rounded-3 small border" style="display:none; background:#FAF8F5; border-color:#ECE7DE !important; max-height:160px; overflow-y:auto; line-height:1.5;">
+                            <div id="aiCfgTestContent"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top py-2.5 px-4" style="background: #FAF8F5;">
+                    <button type="button" class="btn btn-light rounded-pill px-3.5 fw-semibold" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" id="btnSaveAiConfig" class="btn btn-primary rounded-pill px-4 fw-bold" style="background:#8C4A27; border-color:#8C4A27;" onclick="saveStoreAiConfig()">
+                        <i class="fa-solid fa-floppy-disk me-1.5"></i>Lưu Cấu Hình AI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

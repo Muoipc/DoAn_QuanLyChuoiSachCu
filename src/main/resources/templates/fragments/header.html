@@ -3255,14 +3255,15 @@
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                     .replace(/\n/g, '<br>');
 
-                var isAiMessage = (senderName && senderName.indexOf('Trợ lý AI') !== -1);
+                var isAiMessage = (senderName && (senderName.indexOf('Trợ lý AI') !== -1 || senderName.indexOf('Bé Mọt') !== -1 || senderName.indexOf('Cậu Ba') !== -1 || senderName.indexOf('Thầy Giáo') !== -1 || senderName.indexOf('Cố Nhân') !== -1 || senderName.indexOf('Mọt') !== -1 || senderName.indexOf('AI') !== -1));
                 var avatarHtml = isAiMessage
-                    ? '<div style="width:26px; height:26px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;" title="Trợ lý AI tự động"><i class="fa-solid fa-robot"></i></div>'
+                    ? '<div style="width:26px; height:26px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;" title="Trợ lý AI riêng của quầy"><i class="fa-solid fa-robot"></i></div>'
                     : '<div style="width:26px; height:26px; border-radius:50%; background:#ECFDF5; border:1px solid #A7F3D0; color:#059669; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;" title="Nhân viên quầy"><i class="fa-solid fa-user-tie"></i></div>';
 
+                var displayName = escapeMiniHtml(senderName || (isAiMessage ? 'Trợ lý AI quầy' : 'Quản lý quầy'));
                 var senderBadge = isAiMessage
-                    ? '<div style="font-size:10px; font-weight:700; color:#8C4A27; margin-bottom:2px; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-robot" style="font-size:9.5px;"></i> Trợ lý AI ReBook</div>'
-                    : '<div style="font-size:10px; font-weight:800; color:#059669; margin-bottom:2px; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-circle-check" style="font-size:9px;"></i> ' + escapeMiniHtml(senderName || 'Quản lý quầy') + '</div>';
+                    ? '<div style="font-size:10px; font-weight:700; color:#8C4A27; margin-bottom:2px; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-robot" style="font-size:9.5px;"></i> ' + displayName + '</div>'
+                    : '<div style="font-size:10px; font-weight:800; color:#059669; margin-bottom:2px; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-circle-check" style="font-size:9px;"></i> ' + displayName + '</div>';
 
                 var bubbleStyle = isAiMessage
                     ? 'background:#FAF8F5; border:1px solid #ECE7DE;'

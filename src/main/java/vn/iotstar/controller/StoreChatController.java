@@ -387,7 +387,7 @@ public class StoreChatController {
             aiMsg.setUser(currentUser);
             aiMsg.setStore(store);
             aiMsg.setSenderType(ChatMessage.SenderType.STORE_STAFF);
-            aiMsg.setSenderName("Trợ lý AI - " + store.getStoreName());
+            aiMsg.setSenderName(store.getAiAssistantName() + " - " + store.getStoreName());
             aiMsg.setContent((String) aiResult.get("reply"));
             aiMsg.setNeedsAttention(needsStaff);
             if (aiResult.containsKey("suggestedBook")) {
@@ -546,20 +546,33 @@ public class StoreChatController {
             }
         }
 
-        // 5. ƯU TIÊN 1: TRỢ LÝ AI TRỰC QUẦY VỚI NGỮ CẢNH VÀ PHONG CÁCH RIÊNG CỦA SHOP
+        // 5. ƯU TIÊN 1: TRỢ LÝ AI TRỰC QUẦY VỚI HỒ SƠ VÀ KIẾN THỨC RIÊNG CỦA SHOP
         if (openRouterService != null && openRouterService.isConfigured()) {
             try {
-                String storePrompt = "Bạn là nhân viên trực quầy kiêm thủ kho tại chi nhánh sách cũ '" + store.getStoreName() + "' thuộc hệ thống ReBook TP.HCM.\n\n"
-                        + "### VAI TRÒ VÀ TÁC PHONG CỦA BẠN (STORE STAFF):\n"
-                        + "- Bạn đang đứng trực tiếp tại quầy của chi nhánh '" + store.getStoreName() + "' (" + (store.getAddress() != null ? store.getAddress() : "TP.HCM") + "). Bạn KHÔNG PHẢI là tổng đài viên hay thanh tìm kiếm chung.\n"
-                        + "- Xưng 'Em' và gọi khách là 'Bạn' hoặc 'Anh/Chị' với thái độ niềm nở, am hiểu sách và nhiệt tình hỗ trợ.\n\n"
-                        + "### THÔNG TIN VÀ TỒN KHO THỰC TẾ TRÊN KỆ CỦA QUẦY BẠN:\n"
+                String asstName = store.getAiAssistantName();
+                String toneDesc = resolveToneGuidance(store.getAiTone());
+                String shopDesc = (store.getAiShopDescription() != null && !store.getAiShopDescription().isBlank())
+                        ? store.getAiShopDescription().trim()
+                        : "Chi nhánh uy tín của chuỗi sách cũ ReBook TP.HCM, không gian ấm cúng, sách chọn lọc kỹ càng.";
+                String customFaq = (store.getAiCustomFaq() != null && !store.getAiCustomFaq().isBlank())
+                        ? store.getAiCustomFaq().trim()
+                        : "Có chỗ để xe máy miễn phí, cho phép khách mở xem sách trực tiếp trước khi nhận.";
+
+                String storePrompt = "Bạn là '" + asstName + "' - Trợ lý AI kiêm nhân viên trực quầy của chi nhánh sách cũ '" + store.getStoreName() + "' thuộc hệ thống ReBook TP.HCM.\n\n"
+                        + "### THÔNG TIN VÀ BẢN SẮC RIÊNG CỦA QUẦY:\n"
+                        + "- Tên định danh của bạn: " + asstName + "\n"
+                        + "- Phong cách & Giọng điệu giao tiếp: " + toneDesc + "\n"
+                        + "- Vị trí quầy: " + (store.getAddress() != null ? store.getAddress() : "TP.HCM") + " (" + (store.getDistrict() != null ? store.getDistrict() : "TP.HCM") + ")\n"
+                        + "- Giờ mở cửa: 08:00 - 21:30 hàng ngày\n"
+                        + "- Giới thiệu đặc thù của quầy: " + shopDesc + "\n"
+                        + "- Lời dặn dò & chính sách riêng của chủ quầy: " + customFaq + "\n\n"
+                        + "### TỒN KHO THỰC TẾ TRÊN KỆ CỦA QUẦY HIỆN TẠI:\n"
                         + branchCatalog.toString() + "\n\n"
-                        + "### NGUYÊN TẮC TƯ VẤN TẠI QUẦY:\n"
-                        + "1. Khi khách hỏi tìm sách hoặc xin tư vấn: ƯU TIÊN KIỂM TRA danh sách sách đang có trên kệ của quầy bạn ở trên.\n"
-                        + "2. Nếu quầy BẠN CÓ HÀNG: Báo rõ số lượng còn trên kệ quầy em, độ mới %, giá bán cũ tiết kiệm và mời khách ghé quầy trải nghiệm hoặc bấm nút Mua để giao nhanh.\n"
-                        + "3. Nếu quầy BẠN TẠM HẾT: Thông báo thành thật rằng trên kệ quầy em vừa hết, nhưng hệ thống chuỗi có thể điều chuyển về hoặc gợi ý 1-2 tựa sách cùng chủ đề đang có sẵn tại quầy bạn.\n"
-                        + "4. Khi khách hỏi địa chỉ, giờ giấc, bãi đỗ xe: Cung cấp chính xác thông tin quầy của bạn (mở 08:00 - 21:30, gửi xe máy miễn phí).\n"
+                        + "### NGUYÊN TẮC TƯ VẤN KHÁCH HÀNG:\n"
+                        + "1. Bạn đang đứng trực tiếp tại quầy '" + store.getStoreName() + "'. Hãy nói chuyện với tư cách là người của quầy này, xưng 'Em' và giữ đúng phong cách '" + store.getAiTone() + "'.\n"
+                        + "2. Khi khách hỏi tìm sách hoặc xin tư vấn: ƯU TIÊN KIỂM TRA danh mục sách trên kệ của quầy bạn ở trên.\n"
+                        + "3. Nếu quầy BẠN CÓ HÀNG: Báo rõ số lượng còn trên kệ quầy em, độ mới %, giá bán cũ tiết kiệm và mời khách ghé quầy trải nghiệm hoặc bấm nút Mua để giao nhanh.\n"
+                        + "4. Nếu quầy BẠN TẠM HẾT: Thành thật thông báo trên kệ quầy em vừa hết, nhưng hệ thống chuỗi có thể điều chuyển về hoặc gợi ý 1-2 tựa sách cùng chủ đề đang có sẵn tại quầy bạn.\n"
                         + "5. Trả lời súc tích, ngắt đoạn rõ ràng, in đậm tựa sách bằng Markdown (**Tên Sách**).";
 
                 String aiReply = openRouterService.generateReply(userText, storePrompt);
@@ -1017,13 +1030,104 @@ public class StoreChatController {
     }
 
     /**
-     * API: Heartbeat ghi nhận Quản lý chi nhánh đang mở tab chat
+     * Helper chuyển đổi giá trị Tone thành hướng dẫn văn phong tiếng Việt cho LLM.
      */
-    @PostMapping("/api/chat/staff/heartbeat")
+    private String resolveToneGuidance(String tone) {
+        if (tone == null) return "Xưng 'Em' và gọi khách là 'Bạn' hoặc 'Anh/Chị'. Giọng điệu ấm áp, niềm nở, ân cần như người quen quầy sách quen thuộc.";
+        return switch (tone.toUpperCase()) {
+            case "VINTAGE" -> "Xưng 'Em' và gọi khách là 'Bạn/Quý bạn'. Giọng điệu hoài cổ, tao nhã, yêu quý sách xưa, nhẹ nhàng trân trọng từng trang giấy thời gian.";
+            case "INTELLECTUAL" -> "Xưng 'Em' và gọi khách là 'Bạn'. Phong cách học thuật, am hiểu sâu sắc về tác giả, nội dung và giá trị tư tưởng của từng tác phẩm.";
+            case "ENERGETIC" -> "Xưng 'Em' và gọi khách là 'Bạn'. Năng động, vui tươi, dùng các biểu tượng emoji tươi vui (✨, 📚, 🔥), phù hợp sinh viên học sinh trẻ trung.";
+            default -> "Xưng 'Em' và gọi khách là 'Bạn' hoặc 'Anh/Chị'. Giọng điệu ấm áp, niềm nở, ân cần như người quen quầy sách quen thuộc.";
+        };
+    }
+
+    /**
+     * API: Lấy cấu hình Trợ lý AI riêng của chi nhánh
+     */
+    @GetMapping("/api/chat/store/{storeId}/ai-config")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> staffHeartbeat(
-            @RequestParam("storeId") Long storeId) {
-        touchStorePresence(storeId);
-        return ResponseEntity.ok(Map.of("success", true));
+    public ResponseEntity<Map<String, Object>> getStoreAiConfig(@PathVariable("storeId") Long storeId) {
+        Store store = storeRepository.findById(storeId).orElse(null);
+        if (store == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("storeId", store.getId());
+        resp.put("storeName", store.getStoreName());
+        resp.put("assistantName", store.getAiAssistantName());
+        resp.put("tone", store.getAiTone());
+        resp.put("shopDescription", store.getAiShopDescription() != null ? store.getAiShopDescription() : "");
+        resp.put("customFaq", store.getAiCustomFaq() != null ? store.getAiCustomFaq() : "");
+        resp.put("aiReplyEnabled", store.getAiReplyEnabled());
+        return ResponseEntity.ok(resp);
+    }
+
+    /**
+     * API: Cập nhật cấu hình Trợ lý AI riêng của chi nhánh
+     */
+    @PostMapping("/api/chat/store/{storeId}/ai-config")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateStoreAiConfig(
+            @PathVariable("storeId") Long storeId,
+            @RequestParam("assistantName") String assistantName,
+            @RequestParam("tone") String tone,
+            @RequestParam(value = "shopDescription", required = false) String shopDescription,
+            @RequestParam(value = "customFaq", required = false) String customFaq,
+            @RequestParam(value = "aiReplyEnabled", required = false) Boolean aiReplyEnabled,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Store store = storeRepository.findById(storeId).orElse(null);
+        if (store == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
+        boolean isStoreManager = userDetails != null && store.getManager() != null && store.getManager().getId().equals(userDetails.getId());
+        if (!isAdmin && !isStoreManager) {
+            Map<String, Object> err = new HashMap<>();
+            err.put("success", false);
+            err.put("message", "Bạn không có quyền cấu hình Trợ lý AI của chi nhánh này!");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+        }
+
+        if (assistantName != null && !assistantName.isBlank()) {
+            store.setAiAssistantName(assistantName.trim());
+        }
+        if (tone != null && !tone.isBlank()) {
+            store.setAiTone(tone.trim());
+        }
+        store.setAiShopDescription(shopDescription != null ? shopDescription.trim() : null);
+        store.setAiCustomFaq(customFaq != null ? customFaq.trim() : null);
+        if (aiReplyEnabled != null) {
+            store.setAiReplyEnabled(aiReplyEnabled);
+        }
+        storeRepository.save(store);
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("message", "Lưu cấu hình Trợ lý AI riêng cho quầy " + store.getStoreName() + " thành công!");
+        resp.put("assistantName", store.getAiAssistantName());
+        resp.put("tone", store.getAiTone());
+        return ResponseEntity.ok(resp);
+    }
+
+    /**
+     * API: Thử nghiệm câu trả lời của Trợ lý AI riêng của quầy (Sandbox)
+     */
+    @PostMapping("/api/chat/store/{storeId}/test-ai")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> testStoreAiReply(
+            @PathVariable("storeId") Long storeId,
+            @RequestParam("message") String message) {
+        Store store = storeRepository.findById(storeId).orElse(null);
+        if (store == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Map<String, Object> result = generateStoreAiReply(store, null, message);
+        result.put("assistantName", store.getAiAssistantName());
+        result.put("storeName", store.getStoreName());
+        return ResponseEntity.ok(result);
     }
 }

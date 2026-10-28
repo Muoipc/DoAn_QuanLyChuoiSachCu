@@ -52,6 +52,18 @@ public class Store {
     @Column(name = "ai_reply_enabled")
     private Boolean aiReplyEnabled = false;
 
+    @Column(name = "ai_assistant_name", length = 100)
+    private String aiAssistantName = "Trợ lý quầy sách";
+
+    @Column(name = "ai_tone", length = 50)
+    private String aiTone = "FRIENDLY";
+
+    @Column(name = "ai_shop_description", columnDefinition = "TEXT")
+    private String aiShopDescription;
+
+    @Column(name = "ai_custom_faq", columnDefinition = "TEXT")
+    private String aiCustomFaq;
+
     @Column(name = "commission_rate", precision = 5, scale = 2)
     private java.math.BigDecimal commissionRate = new java.math.BigDecimal("10.00");
 
@@ -89,6 +101,14 @@ public class Store {
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
     public Boolean getAiReplyEnabled() { return aiReplyEnabled != null ? aiReplyEnabled : false; }
     public void setAiReplyEnabled(Boolean aiReplyEnabled) { this.aiReplyEnabled = aiReplyEnabled; }
+    public String getAiAssistantName() { return (aiAssistantName != null && !aiAssistantName.isBlank()) ? aiAssistantName : "Trợ lý quầy sách"; }
+    public void setAiAssistantName(String aiAssistantName) { this.aiAssistantName = aiAssistantName; }
+    public String getAiTone() { return aiTone != null ? aiTone : "FRIENDLY"; }
+    public void setAiTone(String aiTone) { this.aiTone = aiTone; }
+    public String getAiShopDescription() { return aiShopDescription; }
+    public void setAiShopDescription(String aiShopDescription) { this.aiShopDescription = aiShopDescription; }
+    public String getAiCustomFaq() { return aiCustomFaq; }
+    public void setAiCustomFaq(String aiCustomFaq) { this.aiCustomFaq = aiCustomFaq; }
     public java.math.BigDecimal getCommissionRate() { return commissionRate; }
     public void setCommissionRate(java.math.BigDecimal commissionRate) { this.commissionRate = commissionRate; }
     public LocalDateTime getCreatedAt() { return createdAt; }
