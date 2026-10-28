@@ -3069,6 +3069,17 @@
                             var hasNew = false;
                             data.messages.forEach(function(m) {
                                 if (m.id && !renderedMsgIds.has(String(m.id))) {
+                                    // Khử trùng lặp: Nếu là tin khách hàng gửi và trên màn hình đang có tin nhắn tạm temp-*, reconcile ngay
+                                    if (m.senderType === 'CUSTOMER') {
+                                        var tempCustomerRow = document.querySelector('[data-msg-id^="temp-"]');
+                                        if (tempCustomerRow) {
+                                            var oldId = tempCustomerRow.getAttribute('data-msg-id');
+                                            tempCustomerRow.setAttribute('data-msg-id', String(m.id));
+                                            renderedMsgIds.delete(oldId);
+                                            renderedMsgIds.add(String(m.id));
+                                            return;
+                                        }
+                                    }
                                     appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.mediaUrl, m.mediaType, m.createdAt, m.senderName, m.id);
                                     hasNew = true;
                                 }
@@ -3234,6 +3245,21 @@
             })
             .then(function(res) { return res.json(); })
             .then(function(data) {
+                // 1. RECONCILE NGAY LẬP TỨC: Khóa trùng lặp với polling ngầm
+                if (data && data.userMsgId) {
+                    renderedMsgIds.add(String(data.userMsgId));
+                    if (tempMsgId) {
+                        var tempRow = document.querySelector('[data-msg-id="' + tempMsgId + '"]');
+                        if (tempRow) {
+                            tempRow.setAttribute('data-msg-id', String(data.userMsgId));
+                        }
+                        renderedMsgIds.delete(tempMsgId);
+                    }
+                }
+                if (data && data.replyMsgId) {
+                    renderedMsgIds.add(String(data.replyMsgId));
+                }
+
                 var elapsed = Date.now() - sendTimestamp;
                 var waitMore = Math.max(0, 700 - elapsed);
 
@@ -3241,22 +3267,16 @@
                     hideMiniChatTyping();
                     isSendingMiniChat = false;
 
-                    // Reconcile: thay thế tempId thành userMsgId thực tế từ DB
-                    if (data && data.userMsgId && tempMsgId) {
-                        var tempRow = document.querySelector('[data-msg-id="' + tempMsgId + '"]');
-                        if (tempRow) {
-                            tempRow.setAttribute('data-msg-id', String(data.userMsgId));
-                        }
-                        renderedMsgIds.delete(tempMsgId);
-                        renderedMsgIds.add(String(data.userMsgId));
-                    }
-
                     var reply = data.reply || null;
                     var b = data.suggestedBook || null;
                     var replyTime = data.createdAt || formatMiniChatTime();
 
                     if (reply) {
-                        appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime, data.senderName, data.replyMsgId);
+                        // Kiểm tra xem tin nhắn reply đã tồn tại trên màn hình chưa (tránh polling vừa vẽ xong)
+                        var existingReply = data.replyMsgId ? document.querySelector('[data-msg-id="' + data.replyMsgId + '"]') : null;
+                        if (!existingReply) {
+                            appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime, data.senderName, data.replyMsgId);
+                        }
                     }
                     scrollMiniChatBottom();
                 }, waitMore);
