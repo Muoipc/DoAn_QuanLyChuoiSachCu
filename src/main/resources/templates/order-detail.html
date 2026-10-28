@@ -616,6 +616,9 @@
                 <button type="button" class="btn-shopee-outline" onclick="openReturnModal()" style="cursor:pointer;">
                     <i class="fa-solid fa-rotate-left me-1"></i> Yêu Cầu Trả Hàng / Hoàn Tiền
                 </button>
+                <button type="button" class="btn-shopee-outline" th:onclick="'openQuickTicketModal(\'' + ${order.orderCode} + '\')'" style="cursor:pointer; color:#8C4A27; border-color:#8C4A27;">
+                    <i class="fa-solid fa-headset me-1"></i> Hỗ Trợ Đơn Hàng
+                </button>
             </div>
         </div>
 

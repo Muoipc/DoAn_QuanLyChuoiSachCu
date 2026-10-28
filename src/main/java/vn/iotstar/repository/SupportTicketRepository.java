@@ -11,5 +11,7 @@ public interface SupportTicketRepository extends JpaRepository<SupportTicket, Lo
     List<SupportTicket> findByStatusOrderByCreatedAtDesc(SupportTicket.TicketStatus status);
     List<SupportTicket> findAllByOrderByCreatedAtDesc();
     List<SupportTicket> findByEmailOrderByCreatedAtDesc(String email);
+    List<SupportTicket> findByUserIdOrderByCreatedAtDesc(Long userId);
     long countByStatus(SupportTicket.TicketStatus status);
+    long countByUserIdAndStatus(Long userId, SupportTicket.TicketStatus status);
 }

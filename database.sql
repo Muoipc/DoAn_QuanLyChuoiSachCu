@@ -341,6 +341,23 @@ CREATE TABLE store_registrations (
     CONSTRAINT fk_store_reg_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 22. BẢNG PHIẾU HỖ TRỢ & CHĂM SÓC KHÁCH HÀNG (SUPPORT_TICKETS)
+CREATE TABLE support_tickets (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NULL,
+    full_name VARCHAR(150) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    phone VARCHAR(20),
+    order_code VARCHAR(50),
+    category VARCHAR(100),
+    message TEXT NOT NULL,
+    status ENUM('OPEN', 'IN_PROGRESS', 'RESOLVED') NOT NULL DEFAULT 'OPEN',
+    admin_reply TEXT,
+    resolved_at DATETIME(6),
+    created_at DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),
+    CONSTRAINT fk_support_tickets_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ====================================================================
 -- DỮ LIỆU KHỞI TẠO BAN ĐẦU (SEED DATA MẪU PHỤC VỤ TEST ĐỒ ÁN)
 -- ====================================================================
