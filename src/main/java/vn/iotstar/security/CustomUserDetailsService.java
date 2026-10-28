@@ -22,11 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        String lookupKey = usernameOrEmail;
-        if ("manager_thuduc".equalsIgnoreCase(lookupKey) || "thuduc".equalsIgnoreCase(lookupKey) || "khothuduc".equalsIgnoreCase(lookupKey)) {
-            lookupKey = "manager_td";
-        }
-        User user = userRepository.findByUsernameOrEmail(lookupKey, lookupKey)
+        User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
             .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng với: " + usernameOrEmail));
 
         return new CustomUserDetails(user);

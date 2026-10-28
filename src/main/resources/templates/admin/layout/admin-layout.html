@@ -785,7 +785,7 @@
          1. SIDEBAR (GỖ GỤ CỔ ĐIỂN - NỀN SÁCH CŨ ẤM ÁP)
          =================================================================== -->
     <aside id="adminSidebar">
-        <a th:href="@{/admin/books}" class="sidebar-brand">
+        <a th:href="${#authorization.expression('hasRole(''SHIPPER'') and !hasRole(''ADMIN'')')} ? @{/shipper/orders} : (${#authorization.expression('hasRole(''MANAGER'') and !hasRole(''ADMIN'')')} ? @{/admin/inventory} : @{/admin})" class="sidebar-brand">
             <div class="sidebar-brand-icon">
                 <img th:src="@{/images/brand-book-icon.png}" alt="ReBook" style="width: 26px; height: 26px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));">
             </div>

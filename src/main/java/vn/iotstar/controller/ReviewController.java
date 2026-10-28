@@ -39,7 +39,6 @@ import java.util.*;
 public class ReviewController {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-    private static final Long DEFAULT_GUEST_USER_ID = 4L;
 
     @Autowired
     private ReviewRepository reviewRepository;
@@ -54,14 +53,13 @@ public class ReviewController {
     private UserRepository userRepository;
 
     /**
-     * Xác định User ID hiện tại: ưu tiên từ phiên đăng nhập Spring Security,
-     * nếu là chế độ test cục bộ thì dùng DEFAULT_GUEST_USER_ID.
+     * Xác định User ID hiện tại từ phiên đăng nhập Spring Security.
      */
     private Long resolveUserId(CustomUserDetails userDetails) {
         if (userDetails != null && userDetails.getId() != null) {
             return userDetails.getId();
         }
-        return DEFAULT_GUEST_USER_ID;
+        return null;
     }
 
     /**
@@ -161,6 +159,9 @@ public class ReviewController {
         User user = userRepository.findById(userId).orElse(null);
         Book book = bookRepository.findById(bookId).orElse(null);
         Order order = (orderId != null) ? orderRepository.findById(orderId).orElse(null) : null;
+        if (order != null && (order.getUser() == null || !order.getUser().getId().equals(userId))) {
+            order = null; // Bác bỏ orderId không thuộc về tài khoản này
+        }
 
         // Nếu không có orderId từ form, thử tìm đơn hàng DELIVERED gần nhất của user có sách này
         if (order == null && user != null && book != null) {
@@ -249,6 +250,9 @@ public class ReviewController {
         User user = userRepository.findById(userId).orElse(null);
         Book book = bookRepository.findById(bookId).orElse(null);
         Order order = (orderId != null) ? orderRepository.findById(orderId).orElse(null) : null;
+        if (order != null && (order.getUser() == null || !order.getUser().getId().equals(userId))) {
+            order = null; // Bác bỏ orderId không thuộc về tài khoản này
+        }
 
         if (order == null && user != null && book != null) {
             List<Order> deliveredOrders = reviewRepository.findDeliveredOrdersByUserIdAndBookId(userId, bookId);

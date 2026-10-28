@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.iotstar.dto.BookAdminDTO;
 import vn.iotstar.entity.Book;
 import vn.iotstar.entity.Inventory;
+import vn.iotstar.security.CustomUserDetails;
 import vn.iotstar.service.IBookService;
 import vn.iotstar.service.IInventoryService;
 import vn.iotstar.service.IStoreService;
@@ -165,10 +167,17 @@ public class AdminBookController {
     }
 
     /**
-     * Xóa sách cũ
+     * Xóa sách cũ (Chỉ Quản trị viên toàn hệ thống ROLE_ADMIN mới có quyền xóa)
      */
     @GetMapping("/delete/{id}")
-    public String deleteBook(@PathVariable("id") Long id, RedirectAttributes redirect) {
+    public String deleteBook(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect) {
+        if (userDetails == null || !"ROLE_ADMIN".equals(userDetails.getRoleName())) {
+            redirect.addFlashAttribute("errorMessage", "Chỉ Quản trị viên tối cao (Admin) mới có quyền xóa hoàn toàn sách khỏi hệ thống chuỗi!");
+            return "redirect:/admin/books";
+        }
         try {
             bookService.deleteBook(id);
             redirect.addFlashAttribute("successMessage", "Đã xóa sách mã #" + id + " thành công!");

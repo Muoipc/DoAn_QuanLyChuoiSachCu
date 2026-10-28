@@ -33,13 +33,19 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        boolean isAdmin = authorities.stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+        boolean isManager = authorities.stream().anyMatch(a -> "ROLE_MANAGER".equals(a.getAuthority()));
+        boolean isVendor = authorities.stream().anyMatch(a -> "ROLE_VENDOR".equals(a.getAuthority()));
+        boolean isShipper = authorities.stream().anyMatch(a -> "ROLE_SHIPPER".equals(a.getAuthority()));
+
         // 1. Kiểm tra tham số redirectURL hoặc redirect từ request (POST body hoặc query string)
         String redirectUrl = request.getParameter("redirectURL");
         if (redirectUrl == null || redirectUrl.isBlank()) {
             redirectUrl = request.getParameter("redirect");
         }
 
-        if (redirectUrl != null && !redirectUrl.isBlank() && isSafeUrl(redirectUrl)) {
+        if (redirectUrl != null && !redirectUrl.isBlank() && isSafeUrl(redirectUrl, isAdmin, isManager, isVendor, isShipper)) {
             requestCache.removeRequest(request, response);
             clearAuthenticationAttributes(request);
             getRedirectStrategy().sendRedirect(request, response, redirectUrl);
@@ -50,7 +56,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
             String targetUrl = savedRequest.getRedirectUrl();
-            if (targetUrl != null && !targetUrl.isBlank() && isSafeUrl(targetUrl)) {
+            if (targetUrl != null && !targetUrl.isBlank() && isSafeUrl(targetUrl, isAdmin, isManager, isVendor, isShipper)) {
                 requestCache.removeRequest(request, response);
                 clearAuthenticationAttributes(request);
                 getRedirectStrategy().sendRedirect(request, response, targetUrl);
@@ -60,16 +66,16 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
         // 3. Phân luồng điều hướng theo vai trò khi không có URL chỉ định
         clearAuthenticationAttributes(request);
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        boolean isManager = authorities.stream().anyMatch(a -> "ROLE_MANAGER".equals(a.getAuthority()));
-        boolean isAdmin = authorities.stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
-        boolean isShipper = authorities.stream().anyMatch(a -> "ROLE_SHIPPER".equals(a.getAuthority()));
 
+        if (isAdmin) {
+            getRedirectStrategy().sendRedirect(request, response, "/admin");
+            return;
+        }
         if (isManager) {
             getRedirectStrategy().sendRedirect(request, response, "/admin/inventory");
             return;
         }
-        if (isAdmin) {
+        if (isVendor) {
             getRedirectStrategy().sendRedirect(request, response, "/admin/books");
             return;
         }
@@ -82,14 +88,24 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
         getRedirectStrategy().sendRedirect(request, response, "/");
     }
 
-    private boolean isSafeUrl(String url) {
+    private boolean isSafeUrl(String url, boolean isAdmin, boolean isManager, boolean isVendor, boolean isShipper) {
         if (url == null || url.isBlank()) {
             return false;
         }
         // Chỉ chấp nhận relative URL nội bộ, loại bỏ Open Redirect (như //evil.com hoặc http://...)
-        if (url.startsWith("/") && !url.startsWith("//")) {
-            return !url.contains("/login");
+        if (!url.startsWith("/") || url.startsWith("//")) {
+            return false;
         }
-        return false;
+        if (url.contains("/login") || url.contains("/logout")) {
+            return false;
+        }
+        // Chặn user thường bị redirect vào vùng cấm gây lỗi 403 Forbidden
+        if (url.startsWith("/admin") && !isAdmin && !isManager && !isVendor) {
+            return false;
+        }
+        if (url.startsWith("/shipper") && !isAdmin && !isShipper) {
+            return false;
+        }
+        return true;
     }
 }

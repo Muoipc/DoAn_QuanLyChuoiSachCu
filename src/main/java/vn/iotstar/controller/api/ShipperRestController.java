@@ -44,7 +44,7 @@ public class ShipperRestController {
     ) {
         Long shipperId = getCurrentShipperId();
         if (shipperId == null) {
-            shipperId = 6L; // Default shipper id in demo data
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Yêu cầu đăng nhập tài khoản Shipper!"));
         }
 
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -61,24 +61,38 @@ public class ShipperRestController {
         return ResponseEntity.ok(response);
     }
 
+    private boolean canAccessOrder(Order order, Long shipperId) {
+        if (order == null || shipperId == null) return false;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth != null && auth.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+        if (isAdmin) return true;
+        return order.getShipper() != null && order.getShipper().getId().equals(shipperId);
+    }
+
     /**
      * Xem chi tiết 1 đơn hàng giao
      * GET /api/shipper/orders/{id}
      */
     @GetMapping("/orders/{id}")
     public ResponseEntity<?> getOrderDetail(@PathVariable("id") Long id) {
-        Order order = orderService.findById(id);
-        if (order != null) {
-            Map<String, Object> resp = new HashMap<>();
-            resp.put("success", true);
-            resp.put("order", order);
-            return ResponseEntity.ok(resp);
-        } else {
-            Map<String, Object> err = new HashMap<>();
-            err.put("success", false);
-            err.put("message", "Không tìm thấy đơn hàng #" + id);
-            return ResponseEntity.status(404).body(err);
+        Long shipperId = getCurrentShipperId();
+        if (shipperId == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Yêu cầu đăng nhập tài khoản Shipper!"));
         }
+
+        Order order = orderService.findById(id);
+        if (order == null) {
+            return ResponseEntity.status(404).body(Map.of("success", false, "message", "Không tìm thấy đơn hàng #" + id));
+        }
+
+        if (!canAccessOrder(order, shipperId)) {
+            return ResponseEntity.status(403).body(Map.of("success", false, "message", "Bạn không có quyền truy cập đơn hàng được phân công cho người khác!"));
+        }
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("order", order);
+        return ResponseEntity.ok(resp);
     }
 
     /**
@@ -90,6 +104,20 @@ public class ShipperRestController {
             @PathVariable("id") Long id,
             @RequestBody Map<String, String> payload
     ) {
+        Long shipperId = getCurrentShipperId();
+        if (shipperId == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Yêu cầu đăng nhập tài khoản Shipper!"));
+        }
+
+        Order order = orderService.findById(id);
+        if (order == null) {
+            return ResponseEntity.status(404).body(Map.of("success", false, "message", "Không tìm thấy đơn hàng #" + id));
+        }
+
+        if (!canAccessOrder(order, shipperId)) {
+            return ResponseEntity.status(403).body(Map.of("success", false, "message", "Bạn không có quyền cập nhật đơn hàng của người khác!"));
+        }
+
         try {
             String statusStr = payload.get("status");
             String note = payload.get("note");
@@ -130,6 +158,20 @@ public class ShipperRestController {
             @PathVariable("id") Long id,
             @RequestBody(required = false) Map<String, String> payload
     ) {
+        Long shipperId = getCurrentShipperId();
+        if (shipperId == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Yêu cầu đăng nhập tài khoản Shipper!"));
+        }
+
+        Order order = orderService.findById(id);
+        if (order == null) {
+            return ResponseEntity.status(404).body(Map.of("success", false, "message", "Không tìm thấy đơn hàng #" + id));
+        }
+
+        if (!canAccessOrder(order, shipperId)) {
+            return ResponseEntity.status(403).body(Map.of("success", false, "message", "Bạn không có quyền cập nhật đơn hàng của người khác!"));
+        }
+
         String note = (payload != null) ? payload.getOrDefault("note", "Giao hàng thành công - Khách đã ký nhận và thanh toán") : "Giao hàng thành công";
         try {
             orderService.updateOrderStatus(id, Order.OrderStatus.DELIVERED, note);
@@ -154,6 +196,20 @@ public class ShipperRestController {
             @PathVariable("id") Long id,
             @RequestBody(required = false) Map<String, String> payload
     ) {
+        Long shipperId = getCurrentShipperId();
+        if (shipperId == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Yêu cầu đăng nhập tài khoản Shipper!"));
+        }
+
+        Order order = orderService.findById(id);
+        if (order == null) {
+            return ResponseEntity.status(404).body(Map.of("success", false, "message", "Không tìm thấy đơn hàng #" + id));
+        }
+
+        if (!canAccessOrder(order, shipperId)) {
+            return ResponseEntity.status(403).body(Map.of("success", false, "message", "Bạn không có quyền cập nhật đơn hàng của người khác!"));
+        }
+
         String reason = (payload != null && payload.get("reason") != null && !payload.get("reason").isBlank())
                 ? payload.get("reason").trim()
                 : "Khách không nhận hàng";
@@ -179,13 +235,14 @@ public class ShipperRestController {
     public ResponseEntity<?> getShipperStats() {
         Long shipperId = getCurrentShipperId();
         if (shipperId == null) {
-            shipperId = 6L;
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Yêu cầu đăng nhập tài khoản Shipper!"));
         }
 
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", true);
         resp.put("shipperId", shipperId);
         resp.put("countAll", orderService.countOrdersForShipper(shipperId, null));
+        resp.put("countPickedUp", orderService.countOrdersForShipper(shipperId, Order.OrderStatus.PICKED_UP));
         resp.put("countShipping", orderService.countOrdersForShipper(shipperId, Order.OrderStatus.SHIPPING));
         resp.put("countDelivered", orderService.countOrdersForShipper(shipperId, Order.OrderStatus.DELIVERED));
         resp.put("countReturned", orderService.countOrdersForShipper(shipperId, Order.OrderStatus.RETURNED));

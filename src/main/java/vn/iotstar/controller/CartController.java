@@ -30,9 +30,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/cart")
 public class CartController {
 
-    // User ID demo mặc định khi khách chưa đăng nhập (Nguyễn Song Hoàng Phúc - ID: 4)
-    private static final Long DEFAULT_GUEST_USER_ID = 4L;
-
     @Autowired
     private ICartService cartService;
 
@@ -47,13 +44,13 @@ public class CartController {
     private vn.iotstar.repository.BookRepository bookRepository;
 
     /**
-     * Xác định userId của phiên hiện tại: ưu tiên tài khoản đã đăng nhập Spring Security.
+     * Xác định userId của phiên hiện tại: bắt buộc tài khoản đã đăng nhập Spring Security.
      */
     private Long resolveUserId(CustomUserDetails userDetails) {
         if (userDetails != null && userDetails.getId() != null) {
             return userDetails.getId();
         }
-        return DEFAULT_GUEST_USER_ID;
+        return null;
     }
 
     /**
@@ -63,6 +60,9 @@ public class CartController {
     @GetMapping
     public String viewCart(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         Long userId = resolveUserId(userDetails);
+        if (userId == null) {
+            return "redirect:/login?redirectURL=/cart";
+        }
         Cart cart = cartService.getOrCreateCartForUser(userId);
         List<CartItem> cartItems = cartService.getCartItemsWithDetails(cart.getId());
 
@@ -122,6 +122,9 @@ public class CartController {
         }
 
         Long userId = resolveUserId(userDetails);
+        if (userId == null) {
+            return "redirect:/login?redirectURL=/books/" + bookId;
+        }
         cartService.addToCart(userId, bookId, storeId, quantity);
 
         redirectAttributes.addFlashAttribute("successMessage", "Đã thêm sách vào giỏ hàng thành công!");
@@ -134,9 +137,22 @@ public class CartController {
      */
     @PostMapping("/update")
     public String updateQuantity(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam("itemId") Long itemId,
             @RequestParam("quantity") int quantity,
             RedirectAttributes redirectAttributes) {
+
+        Long userId = resolveUserId(userDetails);
+        if (userId == null) {
+            return "redirect:/login?redirectURL=/cart";
+        }
+        Cart cart = cartService.getOrCreateCartForUser(userId);
+        boolean ownsItem = cartService.getCartItemsWithDetails(cart.getId())
+                .stream().anyMatch(ci -> ci.getId().equals(itemId));
+        if (!ownsItem) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Mục giỏ hàng không hợp lệ!");
+            return "redirect:/cart";
+        }
 
         cartService.updateQuantity(itemId, quantity);
         redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật số lượng sách!");
@@ -148,7 +164,23 @@ public class CartController {
      * URL: GET/POST /cart/remove/{itemId}
      */
     @GetMapping("/remove/{itemId}")
-    public String removeItem(@PathVariable("itemId") Long itemId, RedirectAttributes redirectAttributes) {
+    public String removeItem(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable("itemId") Long itemId, 
+            RedirectAttributes redirectAttributes) {
+
+        Long userId = resolveUserId(userDetails);
+        if (userId == null) {
+            return "redirect:/login?redirectURL=/cart";
+        }
+        Cart cart = cartService.getOrCreateCartForUser(userId);
+        boolean ownsItem = cartService.getCartItemsWithDetails(cart.getId())
+                .stream().anyMatch(ci -> ci.getId().equals(itemId));
+        if (!ownsItem) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Mục giỏ hàng không hợp lệ!");
+            return "redirect:/cart";
+        }
+
         cartService.removeCartItem(itemId);
         redirectAttributes.addFlashAttribute("successMessage", "Đã xóa sách khỏi giỏ hàng!");
         return "redirect:/cart";

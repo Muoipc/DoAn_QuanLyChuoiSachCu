@@ -84,7 +84,7 @@ class StoreRegistrationServiceTest {
         when(registrationRepository.findById(100L)).thenReturn(Optional.of(reg));
         when(storeRepository.findBySlug(anyString())).thenReturn(Optional.empty());
         when(storeRepository.save(any(Store.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(roleRepository.findByName("ROLE_MANAGER")).thenReturn(Optional.of(new Role(2, "ROLE_MANAGER", "Quản lý cửa hàng")));
+        when(roleRepository.findByName("ROLE_VENDOR")).thenReturn(Optional.of(new Role(5, "ROLE_VENDOR", "Đối tác bán hàng / Chủ gian hàng")));
 
         Store approvedStore = registrationService.approveRegistration(100L);
 
@@ -93,7 +93,7 @@ class StoreRegistrationServiceTest {
         assertEquals(applicant, approvedStore.getManager());
         assertTrue(approvedStore.getIsActive());
         assertEquals(StoreRegistration.Status.APPROVED, reg.getStatus());
-        assertEquals("ROLE_MANAGER", applicant.getRole().getName());
+        assertEquals("ROLE_VENDOR", applicant.getRole().getName());
 
         verify(storeRepository, times(1)).save(any(Store.class));
         verify(userRepository, times(1)).save(applicant);

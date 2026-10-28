@@ -204,10 +204,11 @@ CREATE TABLE orders (
     order_status ENUM(
         'NEW',               -- Đơn hàng mới
         'CONFIRMED',         -- Đã xác nhận
+        'PICKED_UP',         -- Đã lấy hàng
         'SHIPPING',          -- Đang giao
         'DELIVERED',         -- Đã giao
         'CANCELLED',         -- Hủy đơn
-        'RETURNED'           -- Trả hàng - Hoàn tiền
+        'RETURNED'           -- Trả hàng - hoàn tiền
     ) DEFAULT 'NEW',
     subtotal DECIMAL(14,2) NOT NULL,
     shipping_fee DECIMAL(12,2) DEFAULT 0.00,
@@ -315,6 +316,31 @@ CREATE TABLE user_vouchers (
     CONSTRAINT fk_user_vouchers_voucher FOREIGN KEY (voucher_id) REFERENCES vouchers(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 21. BẢNG ĐĂNG KÝ GIAN HÀNG / MỞ SHOP (STORE_REGISTRATIONS)
+CREATE TABLE store_registrations (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    store_name VARCHAR(200) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(150),
+    address VARCHAR(255) NOT NULL,
+    province VARCHAR(100) NOT NULL DEFAULT 'TP. Hồ Chí Minh',
+    district VARCHAR(100) NOT NULL,
+    open_time VARCHAR(20) DEFAULT '08:00',
+    close_time VARCHAR(20) DEFAULT '21:30',
+    owner_name VARCHAR(150) NOT NULL,
+    owner_id_card VARCHAR(30) NOT NULL,
+    bank_name VARCHAR(100) NOT NULL,
+    bank_account VARCHAR(50) NOT NULL,
+    description VARCHAR(1000),
+    image VARCHAR(500),
+    status ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
+    reject_reason VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_store_reg_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ====================================================================
 -- DỮ LIỆU KHỞI TẠO BAN ĐẦU (SEED DATA MẪU PHỤC VỤ TEST ĐỒ ÁN)
 -- ====================================================================
@@ -324,7 +350,8 @@ INSERT INTO roles (id, name, description) VALUES
 (1, 'ROLE_ADMIN', 'Quản trị viên toàn hệ thống'),
 (2, 'ROLE_MANAGER', 'Quản lý chi nhánh cửa hàng sách'),
 (3, 'ROLE_USER', 'Khách hàng mua sách và ký gửi'),
-(4, 'ROLE_SHIPPER', 'Nhân viên giao nhận đơn hàng');
+(4, 'ROLE_SHIPPER', 'Nhân viên giao nhận đơn hàng'),
+(5, 'ROLE_VENDOR', 'Đối tác bán hàng / Chủ gian hàng');
 
 -- 2. Nạp người dùng mẫu (Mật khẩu mặc định: 123456 -> băm BCrypt: $2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i)
 INSERT INTO users (id, role_id, username, email, password, full_name, phone, avatar, enabled) VALUES

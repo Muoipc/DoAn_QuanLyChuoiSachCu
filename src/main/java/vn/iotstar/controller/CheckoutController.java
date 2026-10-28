@@ -365,13 +365,21 @@ public class CheckoutController {
      * URL: GET /checkout/success
      */
     @GetMapping("/success")
-    public String checkoutSuccess(@RequestParam("orderCode") String orderCode, Model model) {
+    public String checkoutSuccess(
+            @RequestParam("orderCode") String orderCode,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            Model model) {
         Optional<Order> orderOpt = orderService.findByOrderCode(orderCode);
         if (orderOpt.isEmpty()) {
             return "redirect:/";
         }
 
         Order order = orderOpt.get();
+        boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
+        if (!isAdmin && (userDetails == null || order.getUser() == null || !order.getUser().getId().equals(userDetails.getId()))) {
+            return "redirect:/";
+        }
+
         model.addAttribute("order", order);
         model.addAttribute("pageTitle", "Đặt Hàng Thành Công #" + order.getOrderCode() + " - Chuỗi Sách Cũ");
 

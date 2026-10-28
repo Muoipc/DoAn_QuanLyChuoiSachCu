@@ -158,15 +158,15 @@ public class OrderHistoryController {
 
         // Nếu người dùng gõ mã test tùy ý (như link Shopee mẫu), fallback sang đơn hàng gần nhất
         if (orderOpt.isEmpty()) {
-            List<Order> allOrders = orderRepository.findAll();
-            if (!allOrders.isEmpty()) {
-                orderOpt = Optional.of(allOrders.get(allOrders.size() - 1));
-            } else {
-                return "redirect:/orders";
-            }
+            return "redirect:/orders";
         }
 
         Order order = orderOpt.get();
+        boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
+        if (!isAdmin && (userDetails == null || order.getUser() == null || !order.getUser().getId().equals(userDetails.getId()))) {
+            return "redirect:/orders";
+        }
+
         model.addAttribute("order", order);
         model.addAttribute("pageTitle", "Chi Tiết Đơn Hàng #" + order.getOrderCode() + " — Chuỗi Sách Cũ TP.HCM");
 
@@ -192,6 +192,11 @@ public class OrderHistoryController {
         Optional<Order> orderOpt = orderRepository.findByOrderCodeWithDetails(orderCode);
         if (orderOpt.isPresent()) {
             Order order = orderOpt.get();
+            boolean isAdmin = "ROLE_ADMIN".equals(userDetails.getRoleName());
+            if (!isAdmin && (order.getUser() == null || !order.getUser().getId().equals(userDetails.getId()))) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Bạn không có quyền hủy đơn hàng của tài khoản khác!");
+                return "redirect:/orders";
+            }
             if (order.getOrderStatus() == Order.OrderStatus.NEW) {
                 order.setOrderStatus(Order.OrderStatus.CANCELLED);
                 orderRepository.save(order);
