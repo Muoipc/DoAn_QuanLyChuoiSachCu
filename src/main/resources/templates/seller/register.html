@@ -1,658 +1,742 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kênh Người Bán - Đăng Ký Mở Gian Hàng Sách Cũ | ReBook</title>
+    <title>Mở Gian Hàng Đối Tác — Chuỗi Cửa Hàng Sách Cũ TP.HCM</title>
+    <link rel="icon" type="image/png" th:href="@{/images/favicon.png}">
 
-    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/liquid-glass.css}">
 
     <style>
         :root {
-            --color-wood: #8C4A27;
-            --color-wood-dark: #2D180F;
-            --color-paper: #FAF8F5;
-            --color-border: #ECE7DE;
+            --color-fire: #8C4A27;
+            --color-fire-hover: #733615;
+            --color-bg-body: #FFFFFF;
             --color-text-main: #1C1917;
-            --color-text-sub: #78716C;
+            --color-text-secondary: #57534E;
+            --color-text-light: #78716C;
+            --color-border: #E5E0D8;
         }
 
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #FAF8F5;
+            font-family: "Roboto", sans-serif;
+            background-color: #FFFFFF;
             color: var(--color-text-main);
-            margin: 0;
-            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+        a { color: inherit; text-decoration: none; }
 
-        .seller-container {
-            width: 1100px;
-            max-width: calc(100% - 32px);
-            margin: 24px auto 60px;
+        /* HEADER AUTH */
+        .auth-header {
+            background: #FFFFFF !important;
+            padding: 14px 0;
+            border-bottom: 1px solid #ECE7DE;
+            position: relative;
+            z-index: 10;
         }
-
-        /* Hero Banner Giới Thiệu */
-        .seller-hero-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 246, 240, 0.9) 100%);
-            backdrop-filter: blur(20px);
-            border: 1.5px solid #ECE7DE;
-            border-radius: 20px;
-            padding: 36px 40px;
-            margin-bottom: 28px;
-            box-shadow: 0 10px 30px rgba(45, 24, 15, 0.05);
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 clamp(12px, 3vw, 24px);
+        }
+        .header-inner {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 24px;
-        }
-
-        .seller-hero-title {
-            font-size: 26px;
-            font-weight: 800;
-            color: #1C1917;
-            margin: 0 0 10px;
-            display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             gap: 12px;
         }
-
-        .seller-hero-sub {
-            font-size: 14px;
-            color: #78716C;
-            line-height: 1.6;
-            margin: 0 0 20px;
-            max-width: 650px;
-        }
-
-        /* 4 Thẻ Lợi Ích Đối Tác */
-        .seller-perks-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-            margin-top: 14px;
-        }
-
-        .seller-perk-item {
-            background: #FFFFFF;
-            border: 1px solid #ECE7DE;
-            border-radius: 12px;
-            padding: 14px;
+        .brand-box {
             display: flex;
-            align-items: flex-start;
-            gap: 10px;
+            align-items: center;
+            gap: clamp(10px, 2vw, 16px);
+        }
+        .auth-brand-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: #FAF8F5;
+            border: 1px solid #E5E0D8;
+            border-radius: 9999px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .auth-brand-pill:hover {
+            transform: translateY(-1px);
+            border-color: #8C4A27;
+        }
+        .auth-brand-icon {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+        }
+        .auth-brand-text {
+            font-size: 15px;
+            font-weight: 900;
+            color: #1C1917;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .auth-page-title {
+            font-size: clamp(15px, 2vw, 19px);
+            font-weight: 800;
+            color: #1C1917;
+            border-left: 2px solid #1C1917;
+            padding-left: clamp(10px, 1.5vw, 14px);
+            text-transform: uppercase;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+        .header-right-actions {
+            display: flex;
+            align-items: center;
+            gap: clamp(12px, 2vw, 20px);
+            flex-wrap: wrap;
+        }
+        .auth-help-link {
+            font-size: clamp(12.5px, 1.5vw, 13.5px);
+            font-weight: 700;
+            color: #8C4A27;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+        .auth-help-link:hover {
+            color: #733615;
         }
 
-        .seller-perk-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            background: #FAF6F0;
-            color: #8C4A27;
+        /* MAIN AUTH BANNER SPLIT (2 CỘT ĐỘC LẬP CHUYÊN NGHIỆP) */
+        .auth-main-section {
+            flex: 1;
+            background-color: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 15px;
-            flex-shrink: 0;
+            padding: clamp(28px, 4vw, 56px) 0;
+            position: relative;
+            overflow: hidden;
+            min-height: calc(100vh - 140px);
+        }
+        .auth-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            align-items: flex-start;
+            gap: clamp(28px, 4vw, 56px);
+            position: relative;
+            z-index: 2;
+            width: 100%;
         }
 
-        .seller-perk-text h4 {
-            font-size: 13px;
-            font-weight: 700;
-            margin: 0 0 3px;
+        /* BÊN TRÁI: BANNER THƯƠNG HIỆU & ĐẶC QUYỀN GIAN HÀNG */
+        .auth-banner-left {
             color: #1C1917;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: sticky;
+            top: 24px;
         }
-
-        .seller-perk-text p {
-            font-size: 11.5px;
-            color: #78716C;
-            margin: 0;
-            line-height: 1.35;
-        }
-
-        /* Form Card */
-        .seller-form-card {
-            background: #FFFFFF;
-            border: 1.5px solid #ECE7DE;
-            border-radius: 20px;
-            padding: 36px 40px;
-            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.04);
-        }
-
-        .form-section-title {
-            font-size: 17px;
+        .banner-tag {
+            display: inline-flex;
+            align-items: center;
+            align-self: flex-start;
+            background: #FAF8F5;
+            border: 1px solid #E5E0D8;
+            color: #8C4A27;
+            font-size: 12px;
             font-weight: 800;
+            padding: 5px 14px;
+            border-radius: 9999px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .banner-heading {
+            font-size: clamp(24px, 3.2vw, 34px);
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 16px;
             color: #1C1917;
-            margin: 24px 0 16px;
+        }
+        .banner-sub {
+            font-size: clamp(13.5px, 1.5vw, 15px);
+            color: #57534E;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .banner-perks-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .perk-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: #FAF8F5;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid #E5E0D8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+        .perk-card:hover {
+            border-color: #8C4A27;
+            background: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(140, 74, 39, 0.08);
+        }
+        .perk-icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #8C4A27;
+            color: #FFFFFF;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1.5px solid #F5F1EA;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+        .perk-text h4 {
+            font-size: 14px;
+            font-weight: 800;
+            color: #1C1917;
+            margin-bottom: 3px;
+        }
+        .perk-text p {
+            font-size: 12.5px;
+            color: #78716C;
+            line-height: 1.45;
+            margin: 0;
         }
 
+        /* BÊN PHẢI: FORM ĐĂNG KÝ GIAN HÀNG */
+        .seller-form-card {
+            background: #FFFFFF;
+            border-radius: clamp(18px, 3vw, 24px);
+            border: 1px solid #E5E0D8;
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
+            padding: clamp(24px, 4vw, 36px);
+            width: 100%;
+        }
+        .form-section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #1C1917;
+            margin: 22px 0 14px 0;
+            padding-bottom: 8px;
+            border-bottom: 1.5px solid #F0ECE4;
+        }
         .form-section-title:first-child {
             margin-top: 0;
         }
-
         .form-section-title i {
             color: #8C4A27;
         }
-
         .form-row-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-            margin-bottom: 16px;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
         }
-
         .form-row-grid.three-cols {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr 1.2fr 1fr;
         }
-
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 6px;
+            margin-bottom: 14px;
         }
-
         .form-group label {
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 700;
-            color: #2D180F;
+            color: #44403C;
         }
-
         .form-group label .required {
-            color: #EE4D2D;
+            color: #DC2626;
+            margin-left: 2px;
         }
-
-        .seller-input {
+        .seller-input, .seller-textarea {
             width: 100%;
-            height: 44px;
-            border: 1px solid #E5DFD5;
-            border-radius: 8px;
-            padding: 0 14px;
-            font-size: 13.5px;
-            color: #1C1917;
+            border: 1px solid #D6D0C7;
+            border-radius: 10px;
             background: #FAF8F5;
-            box-sizing: border-box;
-            transition: all 0.2s ease;
-        }
-
-        .seller-input:focus {
-            outline: none;
-            border-color: #8C4A27;
-            background: #FFFFFF;
-            box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.12);
-        }
-
-        .seller-textarea {
-            width: 100%;
-            height: 80px;
-            border: 1px solid #E5DFD5;
-            border-radius: 8px;
             padding: 10px 14px;
             font-size: 13.5px;
+            font-family: inherit;
             color: #1C1917;
-            background: #FAF8F5;
-            box-sizing: border-box;
+            outline: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .seller-input:focus, .seller-textarea:focus {
+            background: #FFFFFF;
+            border-color: #8C4A27;
+            box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.12);
+        }
+        .seller-textarea {
+            min-height: 80px;
             resize: vertical;
         }
 
-        .seller-textarea:focus {
-            outline: none;
-            border-color: #8C4A27;
-            background: #FFFFFF;
-            box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.12);
-        }
-
-        /* Checkbox Cam Kết */
-        .policy-check-box {
-            background: #FAF6F0;
-            border: 1px solid #ECE7DE;
-            border-radius: 10px;
-            padding: 16px;
-            margin: 24px 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .policy-check-box input[type="checkbox"] {
-            margin-top: 3px;
-            accent-color: #8C4A27;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .policy-check-text {
-            font-size: 12.5px;
-            color: #44403C;
-            line-height: 1.5;
-        }
-
-        /* Nút Submit */
+        /* NÚT SUBMIT */
         .btn-submit-registration {
-            background: #8C4A27;
-            color: #FFFFFF;
+            background: #8C4A27 !important;
+            color: #FFFFFF !important;
             border: none;
             border-radius: 10px;
-            padding: 14px 32px;
-            font-size: 15px;
-            font-weight: 700;
+            padding: 14px 28px;
+            font-size: 14.5px;
+            font-weight: 800;
             cursor: pointer;
+            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.35);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: inherit;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 14px rgba(140, 74, 39, 0.25);
         }
-
         .btn-submit-registration:hover {
-            background: #733615;
+            background: #733615 !important;
             transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(115, 54, 21, 0.45);
+        }
+        .btn-submit-registration:active {
+            transform: scale(0.98);
         }
 
-        /* Card Trạng Thái (STATUS VIEW) */
+        /* TRẠNG THÁI STATUS VIEW */
         .status-hero-card {
-            background: #FFFFFF;
-            border: 1.5px solid #ECE7DE;
-            border-radius: 20px;
-            padding: 40px;
+            background: #FAF8F5;
+            border: 1.5px solid #E5E0D8;
+            border-radius: 18px;
+            padding: 32px;
             text-align: center;
-            box-shadow: 0 8px 24px rgba(45, 24, 15, 0.04);
+            margin-bottom: 24px;
+        }
+        .status-badge-lg {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-size: 13.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .status-badge-pending {
+            background: #FEF3C7;
+            color: #92400E;
+            border: 1px solid #FCD34D;
+        }
+        .status-badge-approved {
+            background: #D1FAE5;
+            color: #065F46;
+            border: 1px solid #A7F3D0;
+        }
+        .status-badge-rejected {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 1px solid #FECACA;
         }
 
-        .status-icon-bubble {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
+        /* ALERT */
+        .auth-alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            margin-bottom: 18px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 32px;
+            gap: 10px;
+        }
+        .alert-danger {
+            background: #FEE2E2;
+            border: 1px solid #FCA5A5;
+            color: #991B1B;
+        }
+        .alert-success {
+            background: #ECFDF5;
+            border: 1px solid #6EE7B7;
+            color: #065F46;
         }
 
-        .status-icon-pending { background: #FEF3C7; color: #D97706; }
-        .status-icon-approved { background: #D1FAE5; color: #059669; }
-        .status-icon-rejected { background: #FEE2E2; color: #DC2626; }
-
-        .status-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: #1C1917;
-            margin: 0 0 10px;
-        }
-
-        .status-desc {
-            font-size: 14px;
-            color: #78716C;
-            max-width: 600px;
-            margin: 0 auto 24px;
-            line-height: 1.6;
-        }
-
-        .reg-details-box {
+        /* FOOTER */
+        .auth-footer {
             background: #FAF8F5;
-            border: 1px solid #ECE7DE;
-            border-radius: 12px;
-            padding: 20px 24px;
-            max-width: 650px;
-            margin: 0 auto 28px;
-            text-align: left;
-        }
-
-        .reg-details-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px dashed #E5DFD5;
-            font-size: 13.5px;
-        }
-
-        .reg-details-row:last-child {
-            border-bottom: none;
-        }
-
-        .reg-details-row .label {
+            border-top: 1px solid #ECE7DE;
+            padding: 24px 0;
+            font-size: 13px;
             color: #78716C;
-            font-weight: 600;
+            text-align: center;
         }
 
-        .reg-details-row .val {
-            color: #1C1917;
-            font-weight: 700;
+        @media (max-width: 1024px) {
+            .auth-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .form-row-grid.three-cols {
+                grid-template-columns: 1fr 1fr;
+            }
+            .auth-banner-left {
+                position: static;
+            }
+        }
+        @media (max-width: 768px) {
+            .form-row-grid, .form-row-grid.three-cols {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER TOÀN CỤC REBOOK -->
-    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
-
-    <main class="seller-container">
-
-        <!-- THÔNG BÁO FLASH MESSAGE -->
-        <div th:if="${successMessage}" class="alert alert-success" style="background:#D1FAE5; color:#065F46; border:1px solid #A7F3D0; border-radius:10px; padding:12px 18px; margin-bottom:20px; font-size:13.5px; font-weight:600;">
-            <i class="fa-solid fa-circle-check me-2"></i><span th:text="${successMessage}"></span>
-        </div>
-        <div th:if="${errorMessage}" class="alert alert-danger" style="background:#FEE2E2; color:#991B1B; border:1px solid #FECACA; border-radius:10px; padding:12px 18px; margin-bottom:20px; font-size:13.5px; font-weight:600;">
-            <i class="fa-solid fa-circle-exclamation me-2"></i><span th:text="${errorMessage}"></span>
-        </div>
-
-        <!-- 1. GIAO DIỆN THEO DÕI TRẠNG THÁI (STATUS VIEW) -->
-        <div th:if="${viewMode == 'STATUS' and latestReg != null}">
-            <div class="status-hero-card">
-
-                <!-- TRẠNG THÁI: CHỜ XÉT DUYỆT (PENDING) -->
-                <div th:if="${latestReg.status.name() == 'PENDING'}">
-                    <div class="status-icon-bubble status-icon-pending">
-                        <i class="fa-solid fa-hourglass-half"></i>
-                    </div>
-                    <h2 class="status-title i18n-text" data-i18n="Hồ Sơ Đang Chờ Duyệt">Hồ Sơ Mở Gian Hàng Đang Được Xét Duyệt</h2>
-                    <p class="status-desc">
-                        Cảm ơn bạn đã đăng ký trở thành đối tác của ReBook! Ban quản trị đang thẩm định thông tin quầy sách và tài khoản đối soát. Kết quả sẽ được cập nhật trong vòng <strong>24 giờ làm việc</strong>.
-                    </p>
-                </div>
-
-                <!-- TRẠNG THÁI: ĐÃ ĐƯỢC DUYỆT (APPROVED) -->
-                <div th:if="${latestReg.status.name() == 'APPROVED'}">
-                    <div class="status-icon-bubble status-icon-approved">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
-                    <h2 class="status-title i18n-text" data-i18n="Gian Hàng Đã Được Duyệt">Chúc Mừng! Gian Hàng Của Bạn Đã Được Kích Hoạt</h2>
-                    <p class="status-desc">
-                        Hồ sơ mở gian hàng đã được Ban quản trị phê duyệt. Tài khoản của bạn đã được nâng cấp lên <strong>Quản Lý Chi Nhánh</strong>. Hãy bắt đầu đăng sách và quản lý kho ngay!
-                    </p>
-                    <div style="margin-bottom:24px;">
-                        <a th:href="@{/admin/inventory}" class="btn-submit-registration" style="text-decoration:none;">
-                            <i class="fa-solid fa-gauge-high"></i> Vào Kênh Quản Trị Cửa Hàng
-                        </a>
-                    </div>
-                </div>
-
-                <!-- TRẠNG THÁI: BỊ TỪ CHỐI (REJECTED) -->
-                <div th:if="${latestReg.status.name() == 'REJECTED'}">
-                    <div class="status-icon-bubble status-icon-rejected">
-                        <i class="fa-solid fa-circle-xmark"></i>
-                    </div>
-                    <h2 class="status-title" style="color:#DC2626;">Hồ Sơ Mở Gian Hàng Chưa Đạt Tiêu Chuẩn</h2>
-                    <p class="status-desc" th:text="${latestReg.rejectReason != null ? latestReg.rejectReason : 'Thông tin quầy sách hoặc thông tin đối soát chưa hợp lệ.'}">
-                        Lý do từ chối...
-                    </p>
-                    <div style="margin-bottom:24px;">
-                        <a th:href="@{/seller/register?reapply=true}" class="btn-submit-registration" style="text-decoration:none; background:#2D180F;">
-                            <i class="fa-solid fa-rotate-right"></i> Chỉnh Sửa &amp; Nộp Lại Hồ Sơ
-                        </a>
-                    </div>
-                </div>
-
-                <!-- BẢNG TÓM TẮT THÔNG TIN HỒ SƠ -->
-                <div class="reg-details-box">
-                    <div class="reg-details-row">
-                        <span class="label">Mã hồ sơ:</span>
-                        <span class="val" th:text="'#REG-' + ${latestReg.id}">#REG-101</span>
-                    </div>
-                    <div class="reg-details-row">
-                        <span class="label">Tên gian hàng:</span>
-                        <span class="val" th:text="${latestReg.storeName}">Tiệm Sách Cũ Gò Vấp</span>
-                    </div>
-                    <div class="reg-details-row">
-                        <span class="label">Chủ quầy đại diện:</span>
-                        <span class="val" th:text="${latestReg.ownerName}">Nguyễn Văn A</span>
-                    </div>
-                    <div class="reg-details-row">
-                        <span class="label">Địa chỉ quầy:</span>
-                        <span class="val" th:text="${latestReg.address} + ', ' + ${latestReg.district} + ', ' + ${latestReg.province}">Gò Vấp, TP.HCM</span>
-                    </div>
-                    <div class="reg-details-row">
-                        <span class="label">Hotline liên hệ:</span>
-                        <span class="val" th:text="${latestReg.phone}">0901234567</span>
-                    </div>
-                    <div class="reg-details-row">
-                        <span class="label">Tài khoản nhận tiền:</span>
-                        <span class="val" th:text="${latestReg.bankName} + ' - ' + ${latestReg.bankAccount}">Vietcombank</span>
-                    </div>
-                    <div class="reg-details-row">
-                        <span class="label">Thời gian nộp:</span>
-                        <span class="val" th:text="${#temporals.format(latestReg.createdAt, 'HH:mm dd/MM/yyyy')}">10:30 14/10/2026</span>
-                    </div>
-                </div>
-
-                <div style="font-size:13px; color:#78716C;">
-                    Cần hỗ trợ gấp? Liên hệ Hotline Quản Trị Viên: <strong style="color:#8C4A27;">028.3722.1223</strong> (08:00 - 21:30)
-                </div>
-
+    <!-- HEADER AUTH RIÊNG BIỆT DÀNH CHO KÊNH NGƯỜI BÁN -->
+    <header class="auth-header">
+        <div class="container header-inner">
+            <div class="brand-box">
+                <a th:href="@{/}" class="auth-brand-pill">
+                    <img th:src="@{/images/brand-book-icon.png}" alt="ReBook" class="auth-brand-icon">
+                    <span class="auth-brand-text">ReBook</span>
+                </a>
+                <span class="auth-page-title">Đăng Ký Mở Gian Hàng</span>
+            </div>
+            
+            <div class="header-right-actions">
+                <a th:href="@{/}" class="auth-help-link">
+                    <i class="fa-solid fa-arrow-left"></i> <span>Quay lại mua sắm</span>
+                </a>
+                <span style="color: #D6D0C7;">|</span>
+                <a th:href="@{/login}" class="auth-help-link">
+                    <span>Đã có tài khoản Quản lý? Đăng nhập ngay</span>
+                    <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
             </div>
         </div>
+    </header>
 
-        <!-- 2. GIAO DIỆN FORM ĐIỀN ĐĂNG KÝ (FORM VIEW) -->
-        <div th:if="${viewMode == 'FORM'}">
+    <!-- THÔNG BÁO FLASH TOÀN CỤC -->
+    <div class="container" style="margin-top: 20px;" th:if="${successMessage}">
+        <div class="auth-alert alert-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span th:text="${successMessage}"></span>
+        </div>
+    </div>
+    <div class="container" style="margin-top: 20px;" th:if="${errorMessage}">
+        <div class="auth-alert alert-danger">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span th:text="${errorMessage}"></span>
+        </div>
+    </div>
 
-            <!-- HERO INTRO -->
-            <div class="seller-hero-card">
+    <!-- MAIN SECTION CHIA 2 CỘT -->
+    <main class="auth-main-section">
+        <div class="container">
+            <div class="auth-grid">
+
+                <!-- CỘT BÊN TRÁI: BANNER GIỚI THIỆU & ĐẶC QUYỀN ĐỐI TÁC -->
+                <div class="auth-banner-left">
+                    <span class="banner-tag"><i class="fa-solid fa-store me-1"></i> Kênh Người Bán ReBook</span>
+                    <h1 class="banner-heading">Mở Gian Hàng Sách Cũ,<br>Tiếp Cận Hàng Triệu Độc Giả</h1>
+                    <p class="banner-sub">
+                        Trở thành chi nhánh đối tác của chuỗi ReBook TP.HCM. Tận dụng hạ tầng giao nhận hỏa tốc, quản lý tồn kho thông minh và kết nối trực tiếp với cộng đồng sinh viên các trường ĐH.
+                    </p>
+
+                    <div class="banner-perks-grid">
+                        <div class="perk-card">
+                            <div class="perk-icon-wrap"><i class="fa-solid fa-users"></i></div>
+                            <div class="perk-text">
+                                <h4>Tiếp Cận Khách Hàng Sinh Viên</h4>
+                                <p>Kết nối trực tiếp độc giả từ 5 cơ sở kho lớn tại Thủ Đức, Q.1, Làng ĐHQG, Phú Nhuận và Q.5.</p>
+                            </div>
+                        </div>
+
+                        <div class="perk-card">
+                            <div class="perk-icon-wrap"><i class="fa-solid fa-robot"></i></div>
+                            <div class="perk-text">
+                                <h4>Trợ Lý AI Trực Quầy 24/7</h4>
+                                <p>Hệ thống AI tự động tư vấn sách, kiểm tra số lượng trên kệ và chốt đơn tự động khi bạn vắng mặt.</p>
+                            </div>
+                        </div>
+
+                        <div class="perk-card">
+                            <div class="perk-icon-wrap"><i class="fa-solid fa-truck-fast"></i></div>
+                            <div class="perk-text">
+                                <h4>Hạ Tầng Shipper Đồng Kiểm</h4>
+                                <p>Shipper ReBook đến tận quầy lấy sách và giao tới tay khách hàng với tỷ lệ hoàn đơn dưới 1%.</p>
+                            </div>
+                        </div>
+
+                        <div class="perk-card">
+                            <div class="perk-icon-wrap"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                            <div class="perk-text">
+                                <h4>Đối Soát &amp; Rút Tiền Minh Bạch</h4>
+                                <p>Chiết khấu sàn chỉ 10%, tiền bán sách chuyển tự động về tài khoản ngân hàng của bạn định kỳ.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CỘT BÊN PHẢI: FORM ĐĂNG KÝ HOẶC BẢNG THEO DÕI HỒ SƠ -->
                 <div>
-                    <h1 class="seller-hero-title">
-                        <i class="fa-solid fa-store" style="color:#8C4A27;"></i>
-                        <span class="i18n-text" data-i18n="Kênh Người Bán">Kênh Người Bán</span> &mdash; <span class="i18n-text" data-i18n="Mở Gian Hàng">Mở Gian Hàng Sách Cũ</span>
-                    </h1>
-                    <p class="seller-hero-sub">
-                        Trở thành đối tác kinh doanh trong chuỗi ReBook. Dễ dàng đưa sách cũ tiếp cận hàng ngàn bạn đọc tại TP.HCM, trang bị công cụ quản lý kho thông minh và Trợ Lý AI trực chat tự động 24/7.
-                    </p>
 
-                    <!-- 4 TIỆN ÍCH -->
-                    <div class="seller-perks-grid">
-                        <div class="seller-perk-item">
-                            <div class="seller-perk-icon"><i class="fa-solid fa-users"></i></div>
-                            <div class="seller-perk-text">
-                                <h4>Bạn Đọc Lớn</h4>
-                                <p>Tiếp cận độc giả TP.HCM ngay từ ngày đầu.</p>
+                    <!-- 1. GIAO DIỆN THEO DÕI TRẠNG THÁI (STATUS VIEW) -->
+                    <div th:if="${viewMode == 'STATUS' and latestReg != null}" class="seller-form-card">
+                        <div class="status-hero-card">
+                            <!-- CHỜ DUYỆT -->
+                            <div th:if="${latestReg.status.name() == 'PENDING'}">
+                                <span class="status-badge-lg status-badge-pending">
+                                    <i class="fa-solid fa-hourglass-half"></i> Hồ Sơ Đang Chờ Xét Duyệt
+                                </span>
+                                <h3 style="font-size:20px; font-weight:800; color:#1C1917; margin-bottom:10px;">Hồ Sơ Mở Gian Hàng Đang Được Thẩm Định</h3>
+                                <p style="font-size:13.5px; color:#78716C; line-height:1.6; max-width:440px; margin:0 auto 20px;">
+                                    Cảm ơn bạn đã nộp hồ sơ mở gian hàng <strong>'<span th:text="${latestReg.storeName}">Tên Quầy</span>'</strong>. Ban quản trị ReBook sẽ thẩm định thông tin và duyệt trong vòng 24 giờ.
+                                </p>
+                            </div>
+
+                            <!-- ĐÃ DUYỆT -->
+                            <div th:if="${latestReg.status.name() == 'APPROVED'}">
+                                <span class="status-badge-lg status-badge-approved">
+                                    <i class="fa-solid fa-circle-check"></i> Gian Hàng Đã Kích Hoạt
+                                </span>
+                                <h3 style="font-size:20px; font-weight:800; color:#1C1917; margin-bottom:10px;">Chúc Mừng Bạn Đã Trở Thành Đối Tác!</h3>
+                                <p style="font-size:13.5px; color:#78716C; line-height:1.6; margin-bottom:20px;">
+                                    Tài khoản của bạn đã được nâng cấp lên <strong>Quản Lý Cửa Hàng (Store Manager)</strong>. Hãy vào Kênh Quản Trị để bắt đầu đăng bán sách.
+                                </p>
+                                <a th:href="@{/admin/inventory}" class="btn-submit-registration">
+                                    <i class="fa-solid fa-warehouse"></i> Vào Kênh Quản Trị Cửa Hàng
+                                </a>
+                            </div>
+
+                            <!-- TỪ CHỐI -->
+                            <div th:if="${latestReg.status.name() == 'REJECTED'}">
+                                <span class="status-badge-lg status-badge-rejected">
+                                    <i class="fa-solid fa-circle-xmark"></i> Hồ Sơ Bị Từ Chối
+                                </span>
+                                <h3 style="font-size:20px; font-weight:800; color:#1C1917; margin-bottom:10px;">Hồ Sơ Chưa Đạt Tiêu Chuẩn</h3>
+                                <p style="font-size:13.5px; color:#DC2626; margin-bottom:20px;" th:text="${latestReg.rejectReason != null ? latestReg.rejectReason : 'Hồ sơ chưa đạt tiêu chuẩn quy định của ReBook.'}"></p>
+                                <a th:href="@{/seller/register?reapply=true}" class="btn-submit-registration" style="background:#2D180F;">
+                                    <i class="fa-solid fa-rotate-left"></i> Chỉnh Sửa &amp; Nộp Lại Hồ Sơ
+                                </a>
                             </div>
                         </div>
-                        <div class="seller-perk-item">
-                            <div class="seller-perk-icon"><i class="fa-solid fa-robot"></i></div>
-                            <div class="seller-perk-text">
-                                <h4>AI Chat Trực Quầy</h4>
-                                <p>Tự động tư vấn tồn kho &amp; giá sách 24/7.</p>
+
+                        <!-- CHI TIẾT HỒ SƠ ĐÃ NỘP -->
+                        <div style="background:#FAF8F5; border:1px solid #E5E0D8; border-radius:14px; padding:20px;">
+                            <div style="font-size:13.5px; font-weight:800; color:#1C1917; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+                                <i class="fa-solid fa-file-lines text-muted"></i> Thông tin hồ sơ đã ghi nhận:
                             </div>
-                        </div>
-                        <div class="seller-perk-item">
-                            <div class="seller-perk-icon"><i class="fa-solid fa-truck-fast"></i></div>
-                            <div class="seller-perk-text">
-                                <h4>Mạng Lưới Shipper</h4>
-                                <p>Điều phối giao nhận COD đồng kiểm 24h.</p>
-                            </div>
-                        </div>
-                        <div class="seller-perk-item">
-                            <div class="seller-perk-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-                            <div class="seller-perk-text">
-                                <h4>Đối Soát 2 Lần/Tuần</h4>
-                                <p>Chiết khấu sàn 10%, đối soát minh bạch.</p>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px;">
+                                <div><span style="color:#78716C;">Tên quầy:</span> <strong th:text="${latestReg.storeName}"></strong></div>
+                                <div><span style="color:#78716C;">Hotline:</span> <strong th:text="${latestReg.phone}"></strong></div>
+                                <div><span style="color:#78716C;">Khu vực:</span> <strong th:text="${latestReg.district + ', ' + latestReg.province}"></strong></div>
+                                <div><span style="color:#78716C;">Chủ quầy:</span> <strong th:text="${latestReg.ownerName}"></strong></div>
+                                <div><span style="color:#78716C;">Ngân hàng:</span> <strong th:text="${latestReg.bankName + ' - ' + latestReg.bankAccount}"></strong></div>
+                                <div><span style="color:#78716C;">Giờ mở cửa:</span> <strong th:text="${latestReg.openTime + ' - ' + latestReg.closeTime}"></strong></div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- 2. GIAO DIỆN FORM ĐIỀN ĐĂNG KÝ (FORM VIEW) -->
+                    <div th:if="${viewMode == 'FORM'}" class="seller-form-card">
+                        <form th:action="@{/seller/register}" method="post" enctype="multipart/form-data" th:object="${form}" id="sellerApplyForm">
+
+                            <!-- KHỐI 1: TẠO TÀI KHOẢN MỚI NẾU CHƯA ĐĂNG NHẬP (GUEST) -->
+                            <div th:if="${!isLoggedIn}" style="margin-bottom: 24px; padding: 18px 20px; background: rgba(140, 74, 39, 0.05); border: 1.5px solid rgba(140, 74, 39, 0.2); border-radius: 14px;">
+                                <div class="form-section-title" style="margin-top:0; margin-bottom:8px; color:#8C4A27; border:none; padding:0;">
+                                    <i class="fa-solid fa-user-shield"></i>
+                                    <span>Khởi Tạo Tài Khoản Quản Lý Quầy Sách</span>
+                                </div>
+                                <p style="font-size:12.5px; color:#78716C; margin-bottom:14px;">
+                                    Bạn chưa có tài khoản? Hãy điền thông tin đăng nhập bên dưới để hệ thống tự động cấp quyền Quản Lý khi Admin duyệt hồ sơ.
+                                </p>
+                                <div class="form-row-grid three-cols">
+                                    <div class="form-group">
+                                        <label>Tên đăng nhập <span class="required">*</span></label>
+                                        <input type="text" th:field="*{newUsername}" class="seller-input" placeholder="Ví dụ: nhasachbinhthanh">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mật khẩu <span class="required">*</span></label>
+                                        <input type="password" th:field="*{newPassword}" class="seller-input" placeholder="Tối thiểu 6 ký tự">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Xác nhận mật khẩu <span class="required">*</span></label>
+                                        <input type="password" th:field="*{confirmPassword}" class="seller-input" placeholder="Nhập lại mật khẩu">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- THÔNG BÁO TÀI KHOẢN HIỆN TẠI NẾU ĐÃ ĐĂNG NHẬP -->
+                            <div th:if="${isLoggedIn and user != null}" style="margin-bottom: 20px; padding: 12px 18px; background: #FAF6F0; border: 1px solid #ECE7DE; border-radius: 12px; display:flex; align-items:center; justify-content:space-between;">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <img th:src="${user.avatar != null ? user.avatar : '/images/avatars/avatar-default.png'}" style="width:34px; height:34px; border-radius:50%; object-fit:cover;" alt="Avatar">
+                                    <div>
+                                        <span style="font-size:11.5px; color:#78716C;">Đang đăng ký bằng tài khoản:</span>
+                                        <div style="font-size:13px; font-weight:700; color:#1C1917;" th:text="${user.fullName + ' (@' + user.username + ')'}">User Name</div>
+                                    </div>
+                                </div>
+                                <span class="badge" style="background:#8C4A27; color:#fff; font-size:11px; padding:5px 10px; border-radius:6px;">Tài khoản hiện tại</span>
+                            </div>
+
+                            <!-- KHỐI 2: THÔNG TIN GIAN HÀNG & KHO SÁCH -->
+                            <div class="form-section-title">
+                                <i class="fa-solid fa-shop"></i>
+                                <span>Phần 1: Thông Tin Gian Hàng &amp; Địa Chỉ Quầy Sách</span>
+                            </div>
+
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label>Tên quầy sách / Gian hàng <span class="required">*</span></label>
+                                    <input type="text" th:field="*{storeName}" id="storeName" class="seller-input" placeholder="Ví dụ: Hiệu Sách Cũ Bình Thạnh, Tiệm Sách Xưa..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Hotline trực quầy <span class="required">*</span></label>
+                                    <input type="tel" th:field="*{phone}" id="phone" class="seller-input" placeholder="Ví dụ: 0901234567" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row-grid three-cols">
+                                <div class="form-group">
+                                    <label>Tỉnh / Thành phố <span class="required">*</span></label>
+                                    <input type="text" th:field="*{province}" class="seller-input" readonly value="TP. Hồ Chí Minh">
+                                </div>
+                                <div class="form-group">
+                                    <label>Quận / Huyện <span class="required">*</span></label>
+                                    <select th:field="*{district}" id="district" class="seller-input" required>
+                                        <option value="">-- Chọn Quận / Huyện --</option>
+                                        <option value="TP. Thủ Đức">TP. Thủ Đức</option>
+                                        <option value="Quận 1">Quận 1</option>
+                                        <option value="Quận 3">Quận 3</option>
+                                        <option value="Quận 5">Quận 5</option>
+                                        <option value="Quận 10">Quận 10</option>
+                                        <option value="Quận Bình Thạnh">Quận Bình Thạnh</option>
+                                        <option value="Quận Phú Nhuận">Quận Phú Nhuận</option>
+                                        <option value="Quận Gò Vấp">Quận Gò Vấp</option>
+                                        <option value="Quận Tân Bình">Quận Tân Bình</option>
+                                        <option value="Quận 7">Quận 7</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Khung giờ mở cửa</label>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <input type="text" th:field="*{openTime}" class="seller-input" placeholder="08:00" style="text-align:center;">
+                                        <span>-</span>
+                                        <input type="text" th:field="*{closeTime}" class="seller-input" placeholder="21:30" style="text-align:center;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Địa chỉ quầy sách chi tiết <span class="required">*</span></label>
+                                <input type="text" th:field="*{address}" id="address" class="seller-input" placeholder="Số nhà, tên đường, phường/xã..." required>
+                            </div>
+
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label>Ảnh đại diện / Biển hiệu gian hàng</label>
+                                    <input type="file" name="imageFile" accept="image/*" class="seller-input" style="padding-top:7px;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email liên hệ công việc</label>
+                                    <input type="email" th:field="*{email}" class="seller-input" placeholder="contact@hieusachcu.vn">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Mô tả giới thiệu thể loại sách chủ lực</label>
+                                <textarea th:field="*{description}" class="seller-textarea" placeholder="Giới thiệu thể loại sách chủ lực (Giáo trình ĐH, Văn học kinh điển, Truyện tranh, Ngoại ngữ...)..."></textarea>
+                            </div>
+
+                            <!-- KHỐI 3: ĐỊNH DANH CHỦ QUẦY & THANH TOÁN ĐỐI SOÁT -->
+                            <div class="form-section-title">
+                                <i class="fa-solid fa-id-card-clip"></i>
+                                <span>Phần 2: Định Danh Chủ Quầy &amp; Tài Khoản Nhận Thanh Toán</span>
+                            </div>
+
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label>Họ và tên chủ quầy / Đại diện <span class="required">*</span></label>
+                                    <input type="text" th:field="*{ownerName}" id="ownerName" class="seller-input" placeholder="Họ và tên đúng theo CCCD" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Số CCCD / CMND <span class="required">*</span></label>
+                                    <input type="text" th:field="*{ownerIdCard}" id="ownerIdCard" class="seller-input" placeholder="12 chữ số CCCD gắn chip" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label>Ngân hàng nhận tiền đối soát <span class="required">*</span></label>
+                                    <select th:field="*{bankName}" id="bankName" class="seller-input" required>
+                                        <option value="">-- Chọn Ngân Hàng --</option>
+                                        <option value="Vietcombank">Vietcombank (Ngoại Thương)</option>
+                                        <option value="MB Bank">MB Bank (Quân Đội)</option>
+                                        <option value="Techcombank">Techcombank (Kỹ Thương)</option>
+                                        <option value="VietinBank">VietinBank (Công Thương)</option>
+                                        <option value="BIDV">BIDV (Đầu Tư &amp; Phát Triển)</option>
+                                        <option value="ACB">ACB (Á Châu)</option>
+                                        <option value="TPBank">TPBank (Tiên Phong)</option>
+                                        <option value="VPBank">VPBank (Việt Nam Thịnh Vượng)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Số tài khoản ngân hàng <span class="required">*</span></label>
+                                    <input type="text" th:field="*{bankAccount}" id="bankAccount" class="seller-input" placeholder="Số tài khoản chính chủ" required>
+                                </div>
+                            </div>
+
+                            <!-- CAM KẾT VẬN HÀNH -->
+                            <div style="margin: 20px 0; padding: 14px 16px; background: #FAF8F5; border: 1px solid #E5E0D8; border-radius: 10px; display:flex; align-items:flex-start; gap:10px;">
+                                <input type="checkbox" id="policyAgreement" required style="margin-top:3px; cursor:pointer;">
+                                <label for="policyAgreement" style="font-size:12.5px; color:#57534E; line-height:1.5; cursor:pointer;">
+                                    <strong>Cam kết đối tác ReBook:</strong> Tôi cam kết cung cấp sách cũ có nguồn gốc rõ ràng, không bán sách giả/sách lậu. Tôi đồng ý mức chiết khấu nền tảng là <strong>10%</strong> trên giá trị đơn hàng thành công và đồng kiểm chất lượng cùng Shipper ReBook.
+                                </label>
+                            </div>
+
+                            <!-- NÚT GỬI HỒ SƠ -->
+                            <div style="display:flex; justify-content:flex-end;">
+                                <button type="submit" class="btn-submit-registration">
+                                    <i class="fa-solid fa-paper-plane"></i> Gửi Hồ Sơ Đăng Ký Mở Gian Hàng
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+
                 </div>
+
             </div>
-
-            <!-- FORM ĐĂNG KÝ -->
-            <div class="seller-form-card">
-                <form th:action="@{/seller/register}" method="post" enctype="multipart/form-data" th:object="${form}">
-
-                    <!-- KHỐI ĐẶC BIỆT: NẾU CHƯA CÓ TÀI KHOẢN, TỰ TẠO TÀI KHOẢN QUẢN LÝ QUẦY TẠI ĐÂY -->
-                    <div th:if="${!isLoggedIn}" style="margin-bottom: 28px; padding: 20px 24px; background: rgba(140, 74, 39, 0.05); border: 1.5px solid rgba(140, 74, 39, 0.2); border-radius: 16px;">
-                        <div class="form-section-title" style="margin-top:0; margin-bottom:12px; color:#8C4A27;">
-                            <i class="fa-solid fa-user-shield"></i>
-                            <span>Khởi Tạo Tài Khoản Quản Lý Quầy Sách (Dành cho đối tác mới)</span>
-                        </div>
-                        <p style="font-size:13px; color:#78716C; margin-bottom:16px;">
-                            Bạn chưa có tài khoản? Hãy điền thông tin đăng nhập bên dưới để hệ thống cấp quyền Quản lý cửa hàng ngay khi Admin duyệt hồ sơ.
-                        </p>
-                        <div class="form-row-grid three-cols">
-                            <div class="form-group">
-                                <label>Tên đăng nhập (Username) <span class="required">*</span></label>
-                                <input type="text" th:field="*{newUsername}" class="seller-input" placeholder="Ví dụ: nhasachbinhthanh" th:required="${!isLoggedIn}">
-                            </div>
-                            <div class="form-group">
-                                <label>Mật khẩu đăng nhập <span class="required">*</span></label>
-                                <input type="password" th:field="*{newPassword}" class="seller-input" placeholder="Tối thiểu 6 ký tự" th:required="${!isLoggedIn}">
-                            </div>
-                            <div class="form-group">
-                                <label>Xác nhận mật khẩu <span class="required">*</span></label>
-                                <input type="password" th:field="*{confirmPassword}" class="seller-input" placeholder="Nhập lại mật khẩu" th:required="${!isLoggedIn}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- THÔNG BÁO TÀI KHOẢN HIỆN TẠI NẾU ĐÃ ĐĂNG NHẬP -->
-                    <div th:if="${isLoggedIn and user != null}" style="margin-bottom: 24px; padding: 14px 20px; background: #FAF6F0; border: 1px solid #ECE7DE; border-radius: 12px; display:flex; align-items:center; justify-content:space-between;">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <img th:src="${user.avatar != null ? user.avatar : '/images/avatars/avatar-default.png'}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" alt="Avatar">
-                            <div>
-                                <span style="font-size:12px; color:#78716C;">Đang đăng ký bằng tài khoản:</span>
-                                <div style="font-size:13.5px; font-weight:700; color:#1C1917;" th:text="${user.fullName + ' (@' + user.username + ')'}">Nguyen Song Hoang Phuc</div>
-                            </div>
-                        </div>
-                        <span class="badge" style="background:#8C4A27; color:#fff; font-size:11px; padding:6px 12px; border-radius:8px;">Tài khoản khách hàng</span>
-                    </div>
-
-                    <!-- PHẦN 1: THÔNG TIN GIAN HÀNG -->
-                    <div class="form-section-title">
-                        <i class="fa-solid fa-shop"></i>
-                        <span>Phần 1: Thông Tin Gian Hàng &amp; Địa Chỉ Quầy Sách</span>
-                    </div>
-
-                    <div class="form-row-grid">
-                        <div class="form-group">
-                            <label>Tên gian hàng / Hiệu sách cũ <span class="required">*</span></label>
-                            <input type="text" th:field="*{storeName}" class="seller-input" placeholder="Ví dụ: Hiệu Sách Cũ Bình Thạnh, Tiệm Sách Xưa..." required>
-                        </div>
-                        <div class="form-group">
-                            <label>Hotline trực quầy <span class="required">*</span></label>
-                            <input type="tel" th:field="*{phone}" class="seller-input" placeholder="Ví dụ: 0901234567" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row-grid three-cols">
-                        <div class="form-group">
-                            <label>Tỉnh / Thành phố <span class="required">*</span></label>
-                            <input type="text" th:field="*{province}" class="seller-input" readonly value="TP. Hồ Chí Minh">
-                        </div>
-                        <div class="form-group">
-                            <label>Quận / Huyện <span class="required">*</span></label>
-                            <select th:field="*{district}" class="seller-input" required>
-                                <option value="">-- Chọn Quận / Huyện --</option>
-                                <option value="TP. Thủ Đức">TP. Thủ Đức</option>
-                                <option value="Quận 1">Quận 1</option>
-                                <option value="Quận 3">Quận 3</option>
-                                <option value="Quận 5">Quận 5</option>
-                                <option value="Quận 10">Quận 10</option>
-                                <option value="Quận Bình Thạnh">Quận Bình Thạnh</option>
-                                <option value="Quận Phú Nhuận">Quận Phú Nhuận</option>
-                                <option value="Quận Gò Vấp">Quận Gò Vấp</option>
-                                <option value="Quận Tân Bình">Quận Tân Bình</option>
-                                <option value="Quận 7">Quận 7</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Khung giờ mở cửa</label>
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <input type="text" th:field="*{openTime}" class="seller-input" placeholder="08:00" style="text-align:center;">
-                                <span>-</span>
-                                <input type="text" th:field="*{closeTime}" class="seller-input" placeholder="21:30" style="text-align:center;">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom:16px;">
-                        <label>Địa chỉ quầy / Kho sách chi tiết <span class="required">*</span></label>
-                        <input type="text" th:field="*{address}" class="seller-input" placeholder="Số nhà, tên đường, phường/xã..." required>
-                    </div>
-
-                    <div class="form-row-grid">
-                        <div class="form-group">
-                            <label>Ảnh đại diện / Biển hiệu gian hàng (Tùy chọn)</label>
-                            <input type="file" name="imageFile" accept="image/*" class="seller-input" style="padding-top:7px;">
-                        </div>
-                        <div class="form-group">
-                            <label>Mô tả giới thiệu quầy sách</label>
-                            <textarea th:field="*{description}" class="seller-textarea" placeholder="Giới thiệu thể loại sách chủ lực (Văn học, Giáo trình ĐH, Ngoại ngữ, Truyện tranh...)..."></textarea>
-                        </div>
-                    </div>
-
-                    <!-- PHẦN 2: THÔNG TIN CHỦ QUẦY & THANH TOÁN ĐỐI SOÁT -->
-                    <div class="form-section-title">
-                        <i class="fa-solid fa-id-card-clip"></i>
-                        <span>Phần 2: Định Danh Chủ Quầy &amp; Tài Khoản Nhận Thanh Toán</span>
-                    </div>
-
-                    <div class="form-row-grid">
-                        <div class="form-group">
-                            <label>Họ và tên chủ quầy / Người đại diện <span class="required">*</span></label>
-                            <input type="text" th:field="*{ownerName}" class="seller-input" placeholder="Họ và tên đúng theo CCCD" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Số CCCD / CMND <span class="required">*</span></label>
-                            <input type="text" th:field="*{ownerIdCard}" class="seller-input" placeholder="12 chữ số CCCD gắn chip" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row-grid">
-                        <div class="form-group">
-                            <label>Ngân hàng nhận tiền đối soát <span class="required">*</span></label>
-                            <select th:field="*{bankName}" class="seller-input" required>
-                                <option value="">-- Chọn Ngân Hàng --</option>
-                                <option value="Vietcombank">Vietcombank (Ngoại Thương)</option>
-                                <option value="MB Bank">MB Bank (Quân Đội)</option>
-                                <option value="Techcombank">Techcombank (Kỹ Thương)</option>
-                                <option value="VietinBank">VietinBank (Công Thương)</option>
-                                <option value="BIDV">BIDV (Đầu Tư &amp; Phát Triển)</option>
-                                <option value="ACB">ACB (Á Châu)</option>
-                                <option value="TPBank">TPBank (Tiên Phong)</option>
-                                <option value="VPBank">VPBank (Việt Nam Thịnh Vượng)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Số tài khoản ngân hàng <span class="required">*</span></label>
-                            <input type="text" th:field="*{bankAccount}" class="seller-input" placeholder="Số tài khoản chính chủ" required>
-                        </div>
-                    </div>
-
-                    <!-- PHẦN 3: CAM KẾT VẬN HÀNH -->
-                    <div class="policy-check-box">
-                        <input type="checkbox" id="policyAgreement" required>
-                        <label for="policyAgreement" class="policy-check-text">
-                            <strong>Cam kết đối tác ReBook:</strong> Tôi cam kết cung cấp sách cũ có nguồn gốc rõ ràng, không kinh doanh sách giả/sách vi phạm bản quyền. Tôi đồng ý mức chiết khấu nền tảng là <strong>10%</strong> trên giá trị đơn hàng hoàn tất và đồng kiểm chất lượng sách cùng Shipper ReBook.
-                        </label>
-                    </div>
-
-                    <!-- NÚT NỘP HỒ SƠ -->
-                    <div style="display:flex; justify-content:flex-end;">
-                        <button type="submit" class="btn-submit-registration">
-                            <i class="fa-solid fa-paper-plane"></i> Gửi Hồ Sơ Đăng Ký Mở Gian Hàng
-                        </button>
-                    </div>
-
-                </form>
-            </div>
-
         </div>
-
     </main>
 
     <!-- FOOTER CHUẨN REBOOK -->
-    <footer class="footer-bottom-bar" style="background:#FAF6F0; border-top:1px solid rgba(232,222,200,0.7); padding:32px 0; text-align:center; font-size:13px; color:#78716C;">
-        <div class="container-shopee">
-            <p style="margin:0; font-weight:600;">© 2026 ReBook - Nền Tảng Chuỗi Cửa Hàng Sách Cũ TP.HCM</p>
+    <footer class="auth-footer">
+        <div class="container">
+            <p>© 2026 ReBook - Nền Tảng Chuỗi Cửa Hàng Sách Cũ TP.HCM</p>
+            <p style="margin-top: 4px; font-size:11.5px; color:#A8A29E;">Nguyễn Song Hoàng Phúc (24162096) & Thái Duy Cường (24162013)</p>
         </div>
     </footer>
 
-    <!-- I18N SCRIPT -->
-    <script th:src="@{/js/i18n.js}"></script>
 </body>
 </html>
