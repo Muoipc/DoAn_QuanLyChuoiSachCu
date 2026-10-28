@@ -1792,6 +1792,58 @@
             gap: 12px;
             pointer-events: none;
         }
+
+        /* Typing Indicator Hiệu Ứng Shop Đang Soạn Tin Nhắn */
+        .typing-bubble-wrap {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            margin-bottom: 6px;
+            animation: typingFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes typingFadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-bubble {
+            background: #FAF8F5;
+            border: 1px solid #ECE7DE;
+            border-radius: 14px;
+            border-bottom-left-radius: 4px;
+            padding: 7px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04);
+        }
+        .typing-dot {
+            width: 5.5px;
+            height: 5.5px;
+            border-radius: 50%;
+            background: #8C4A27;
+            display: inline-block;
+            animation: chatDotBounce 1.3s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.18s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.36s; }
+        @keyframes chatDotBounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.3;
+            }
+            30% {
+                transform: translateY(-4.5px);
+                opacity: 1;
+            }
+        }
+        .typing-label {
+            font-size: 10.5px;
+            color: #8C4A27;
+            font-weight: 600;
+            margin-left: 5px;
+            font-style: normal;
+        }
         .liquid-toast-item {
             pointer-events: auto;
             min-width: 300px;
@@ -2929,8 +2981,18 @@
 
             var typingRow = document.createElement('div');
             typingRow.id = 'miniChatTyping';
-            typingRow.style.cssText = 'display:flex; gap:8px; align-items:center; color:#78716c; font-size:12px; margin-bottom:4px;';
-            typingRow.innerHTML = '<div style="width:24px; height:24px; border-radius:50%; background:#8C4A27; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px;"><i class="fa-solid fa-store"></i></div> <span style="font-style:italic;">' + escapeMiniHtml(currentStoreName) + ' đang kiểm tra...</span>';
+            typingRow.className = 'typing-bubble-wrap';
+
+            var avatarHtml = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-bottom:2px;"><i class="fa-solid fa-robot"></i></div>';
+
+            typingRow.innerHTML = avatarHtml +
+                '<div class="typing-bubble">' +
+                    '<span class="typing-dot"></span>' +
+                    '<span class="typing-dot"></span>' +
+                    '<span class="typing-dot"></span>' +
+                    '<span class="typing-label">' + escapeMiniHtml(currentStoreName) + ' đang soạn tin...</span>' +
+                '</div>';
+
             body.appendChild(typingRow);
             scrollMiniChatBottom();
         }
@@ -3164,6 +3226,7 @@
             if (mediaType) formData.append('mediaType', mediaType);
             if (currentBookId) formData.append('bookId', currentBookId);
 
+            var sendTimestamp = Date.now();
             fetch('/api/chat/store/' + currentStoreId + '/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -3171,27 +3234,32 @@
             })
             .then(function(res) { return res.json(); })
             .then(function(data) {
-                hideMiniChatTyping();
-                isSendingMiniChat = false;
+                var elapsed = Date.now() - sendTimestamp;
+                var waitMore = Math.max(0, 700 - elapsed);
 
-                // Reconcile: thay thế tempId thành userMsgId thực tế từ DB
-                if (data && data.userMsgId && tempMsgId) {
-                    var tempRow = document.querySelector('[data-msg-id="' + tempMsgId + '"]');
-                    if (tempRow) {
-                        tempRow.setAttribute('data-msg-id', String(data.userMsgId));
+                setTimeout(function() {
+                    hideMiniChatTyping();
+                    isSendingMiniChat = false;
+
+                    // Reconcile: thay thế tempId thành userMsgId thực tế từ DB
+                    if (data && data.userMsgId && tempMsgId) {
+                        var tempRow = document.querySelector('[data-msg-id="' + tempMsgId + '"]');
+                        if (tempRow) {
+                            tempRow.setAttribute('data-msg-id', String(data.userMsgId));
+                        }
+                        renderedMsgIds.delete(tempMsgId);
+                        renderedMsgIds.add(String(data.userMsgId));
                     }
-                    renderedMsgIds.delete(tempMsgId);
-                    renderedMsgIds.add(String(data.userMsgId));
-                }
 
-                var reply = data.reply || null;
-                var b = data.suggestedBook || null;
-                var replyTime = data.createdAt || formatMiniChatTime();
+                    var reply = data.reply || null;
+                    var b = data.suggestedBook || null;
+                    var replyTime = data.createdAt || formatMiniChatTime();
 
-                if (reply) {
-                    appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime, data.senderName, data.replyMsgId);
-                }
-                scrollMiniChatBottom();
+                    if (reply) {
+                        appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime, data.senderName, data.replyMsgId);
+                    }
+                    scrollMiniChatBottom();
+                }, waitMore);
             })
             .catch(function() {
                 hideMiniChatTyping();
