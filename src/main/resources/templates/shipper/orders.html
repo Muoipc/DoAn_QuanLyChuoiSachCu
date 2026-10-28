@@ -462,6 +462,10 @@
                th:href="@{/shipper/orders(shipperId=${currentShipper != null ? currentShipper.id : null})}">
                 <i class="fa-solid fa-layer-group"></i>Tất cả đơn <span class="badge rounded-pill bg-light text-dark ms-1" th:text="${countAll}">0</span>
             </a>
+            <a class="ios-pill-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'PICKED_UP'} ? 'active' : ''"
+               th:href="@{/shipper/orders(status='PICKED_UP', shipperId=${currentShipper != null ? currentShipper.id : null})}">
+                <i class="fa-solid fa-boxes-packing"></i>Đã lấy hàng <span class="badge rounded-pill bg-purple text-white ms-1" style="background:#7c3aed;" th:text="${countPickedUp}">0</span>
+            </a>
             <a class="ios-pill-item" th:classappend="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'active' : ''"
                th:href="@{/shipper/orders(status='SHIPPING', shipperId=${currentShipper != null ? currentShipper.id : null})}">
                 <i class="fa-solid fa-truck-fast"></i>Đang đi giao <span class="badge rounded-pill bg-warning text-dark ms-1" th:text="${countShipping}">0</span>
@@ -576,7 +580,19 @@
                         </div>
                     </div>
 
-                    <!-- HÀNH ĐỘNG CẬP NHẬT TRẠNG THÁI (Hiệu ứng nhấn nảy & Kính mờ) -->
+                    <!-- HÀNH ĐỘNG CẬP NHẬT TRẠNG THÁI: PICKED_UP -> Bắt đầu giao -->
+                    <div class="pt-2 border-top" th:if="${ord.orderStatus.name() == 'PICKED_UP'}">
+                        <form th:action="@{/shipper/orders/{id}/update(id=${ord.id})}" method="post">
+                            <input type="hidden" name="status" value="SHIPPING">
+                            <input type="hidden" name="note" value="Shipper đã rời kho và đang trên đường giao sách">
+                            <input type="hidden" name="shipperId" th:value="${currentShipper != null ? currentShipper.id : null}">
+                            <button type="submit" class="btn-action-bounce w-100 py-2.5 rounded-3 fw-bold text-white border-0 shadow-sm" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); font-size: 13.5px;">
+                                <i class="fa-solid fa-truck-fast me-1.5"></i>Bắt Đầu Đi Giao Cho Khách
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- HÀNH ĐỘNG CẬP NHẬT TRẠNG THÁI: SHIPPING -> Giao thành công / Thất bại -->
                     <div class="pt-2 border-top" th:if="${ord.orderStatus.name() == 'SHIPPING'}">
                         <div class="d-flex flex-column gap-2">
                             <!-- Nút Giao Thành Công -->
@@ -608,7 +624,7 @@
                     </div>
 
                     <!-- Trạng thái đã hoàn tất -->
-                    <div class="text-center text-muted small py-2 mt-auto" th:if="${ord.orderStatus.name() != 'SHIPPING'}">
+                    <div class="text-center text-muted small py-2 mt-auto" th:if="${ord.orderStatus.name() != 'SHIPPING' and ord.orderStatus.name() != 'PICKED_UP'}">
                         <span class="badge bg-light text-secondary border px-3 py-2 rounded-pill">
                             <i class="fa-solid fa-check-double me-1 text-success"></i>Đơn hàng đã hoàn tất hành trình
                         </span>

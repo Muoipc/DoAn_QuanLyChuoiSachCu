@@ -39,11 +39,8 @@ public class HomeController {
      */
     @GetMapping({"/", "/home"})
     public String home(Model model) {
-        // 1. Lấy danh sách sách bán chạy trên 10 cuốn cho khu vực Flash Sale (Top 5 cuốn)
+        // 1. Lấy danh sách sách bán chạy trên 10 cuốn của các shop sắp xếp giảm dần theo đề bài UTEx
         List<Book> flashSaleBooks = bookRepository.findTopSoldWithImages(10);
-        if (flashSaleBooks.size() > 5) {
-            flashSaleBooks = flashSaleBooks.subList(0, 5);
-        }
 
         // 2. Lấy danh sách 20 cuốn sách cũ hiển thị trang chủ
         Pageable pageable = PageRequest.of(0, 20);

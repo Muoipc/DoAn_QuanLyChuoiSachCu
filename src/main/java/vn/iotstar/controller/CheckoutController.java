@@ -212,6 +212,9 @@ public class CheckoutController {
         model.addAttribute("receiverName", receiverName);
         model.addAttribute("receiverPhone", receiverPhone);
 
+        int userPoints = currentUser != null && currentUser.getLoyaltyPoints() != null ? currentUser.getLoyaltyPoints() : 0;
+        model.addAttribute("userPoints", userPoints);
+
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("subtotal", subtotal);
         model.addAttribute("totalSavings", totalSavings);

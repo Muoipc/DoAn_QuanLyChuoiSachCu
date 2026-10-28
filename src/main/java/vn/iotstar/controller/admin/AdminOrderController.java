@@ -79,6 +79,7 @@ public class AdminOrderController {
         if (isAdmin) {
             model.addAttribute("countNew", orderService.countByStatus(Order.OrderStatus.NEW));
             model.addAttribute("countConfirmed", orderService.countByStatus(Order.OrderStatus.CONFIRMED));
+            model.addAttribute("countPickedUp", orderService.countByStatus(Order.OrderStatus.PICKED_UP));
             model.addAttribute("countShipping", orderService.countByStatus(Order.OrderStatus.SHIPPING));
             model.addAttribute("countDelivered", orderService.countByStatus(Order.OrderStatus.DELIVERED));
             model.addAttribute("countCancelled", orderService.countByStatus(Order.OrderStatus.CANCELLED));
@@ -87,6 +88,7 @@ public class AdminOrderController {
             Long sId = (managedStore != null) ? managedStore.getId() : -1L;
             model.addAttribute("countNew", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.NEW));
             model.addAttribute("countConfirmed", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.CONFIRMED));
+            model.addAttribute("countPickedUp", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.PICKED_UP));
             model.addAttribute("countShipping", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.SHIPPING));
             model.addAttribute("countDelivered", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.DELIVERED));
             model.addAttribute("countCancelled", orderService.countByStoreIdAndStatus(sId, Order.OrderStatus.CANCELLED));

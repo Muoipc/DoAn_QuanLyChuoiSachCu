@@ -1711,8 +1711,8 @@
                         </a>
                     </h3>
                     <div class="shop-online-status">
-                        <span class="online-indicator-dot"></span>
-                        <span>Online 5 Phút Trước</span>
+                        <span class="online-indicator-dot" th:styleappend="${isStoreOnline} ? 'background:#10B981;' : 'background:#A8A29E;'"></span>
+                        <span th:text="${isStoreOnline ? 'Trực tiếp' : 'Vắng mặt'}">Trực tiếp</span>
                         <span class="status-sep">|</span>
                         <span th:text="${store != null ? store.district : 'TP. Thủ Đức'}">TP. Thủ Đức</span>
                     </div>
@@ -1760,7 +1760,7 @@
                     </div>
                     <div class="shop-stat-item">
                         <span class="stat-label">Người Theo Dõi:</span>
-                        <span class="stat-val" th:text="${storeFollowers != null ? storeFollowers : '850'}">850</span>
+                        <span class="stat-val" th:text="${storeFollowers != null ? storeFollowers : '0'}">0</span>
                     </div>
                 </div>
             </div>
@@ -1924,23 +1924,31 @@
 
                     <div style="margin-bottom: 12px;">
                         <textarea name="comment" id="reviewCommentInput" class="review-textarea" rows="3"
-                                  placeholder="Chia sẻ nhận xét thực tế về cuốn sách: độ sạch trang giấy, gáy sách, mép bìa, dịch vụ đóng gói..." required></textarea>
+                                  minlength="50" oninput="updateReviewCharCount(this)"
+                                  placeholder="Chia sẻ nhận xét thực tế về cuốn sách: độ sạch trang giấy, gáy sách, mép bìa, dịch vụ đóng gói (tối thiểu 50 ký tự)..." required></textarea>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 4px; font-size: 11.5px;">
+                            <span id="reviewCharCount" style="color: #dc2626; font-weight:600;">0/50 ký tự (Chưa đạt tối thiểu 50 ký tự)</span>
+                            <span style="color:#0284c7; cursor:pointer;" onclick="fillSampleReview()">
+                                <i class="fa-solid fa-wand-magic-sparkles me-1"></i>Nhận xét mẫu chuẩn
+                            </span>
+                        </div>
                     </div>
 
-                    <!-- ĐÍNH KÈM HÌNH ẢNH THỰC TẾ CHUẨN SHOPEE -->
+                    <!-- ĐÍNH KÈM HÌNH ẢNH / VIDEO THỰC TẾ CHUẨN SHOPEE -->
                     <div style="margin-bottom: 14px; display: flex; align-items: center; gap: 12px;">
                         <input type="hidden" name="mediaUrl" id="reviewMediaUrlInput">
-                        <input type="file" id="reviewFileInput" accept="image/*" style="display:none;" onchange="handleReviewImageUpload(this)">
+                        <input type="file" id="reviewFileInput" accept="image/*,video/mp4,video/webm,video/quicktime" style="display:none;" onchange="handleReviewImageUpload(this)">
                         
                         <button type="button" class="btn-attach-img" onclick="document.getElementById('reviewFileInput').click()"
                                 style="display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 8px; border: 1.5px dashed #cbd5e1; background: rgba(255,255,255,0.85); font-size: 13px; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s;">
-                            <i class="fa-solid fa-camera" style="color: #ee4d2d; font-size: 14px;"></i>
-                            <span id="btnAttachImgText">Thêm hình ảnh thực tế</span>
+                            <i class="fa-solid fa-photo-film" style="color: #ee4d2d; font-size: 14px;"></i>
+                            <span id="btnAttachImgText">Thêm hình ảnh / video thực tế</span>
                         </button>
                         
                         <div id="reviewImgPreviewWrap" style="display:none; position:relative; width:52px; height:52px; border-radius:6px; border:1.5px solid #ee4d2d; overflow:hidden;">
                             <img id="reviewImgPreview" src="" alt="Ảnh review" style="width:100%; height:100%; object-fit:cover;">
-                            <span onclick="clearReviewImage()" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.65); color:#fff; border-radius:50%; width:16px; height:16px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer;" title="Xóa ảnh">&times;</span>
+                            <video id="reviewVidPreview" src="" style="width:100%; height:100%; object-fit:cover; display:none;"></video>
+                            <span onclick="clearReviewImage()" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.65); color:#fff; border-radius:50%; width:16px; height:16px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer;" title="Xóa media">&times;</span>
                         </div>
                         <span id="reviewUploadStatus" style="font-size: 12px; color: #64748b;"></span>
                     </div>
@@ -1984,9 +1992,11 @@
                             </div>
                             <div class="review-comment-content" th:text="${rv.comment}">Sách giao rất nhanh, bìa phẳng và sạch sẽ y như mô tả!</div>
 
-                            <!-- Ảnh đính kèm của đánh giá chuẩn Shopee -->
+                            <!-- Ảnh hoặc Video đính kèm của đánh giá chuẩn Shopee -->
                             <div th:if="${rv.mediaUrl != null and !rv.mediaUrl.isBlank()}" class="review-media-box" style="margin-top: 10px;">
-                                <img th:src="${rv.mediaUrl}" alt="Ảnh thực tế sản phẩm" onclick="openReviewImgModal(this.src)" 
+                                <video th:if="${rv.mediaType != null and rv.mediaType.name() == 'VIDEO'}" th:src="${rv.mediaUrl}" controls 
+                                       style="max-width: 200px; max-height: 140px; border-radius: 6px; border: 1.5px solid #e2e8f0;"></video>
+                                <img th:unless="${rv.mediaType != null and rv.mediaType.name() == 'VIDEO'}" th:src="${rv.mediaUrl}" alt="Ảnh thực tế sản phẩm" onclick="openReviewImgModal(this.src)" 
                                      style="width: 72px; height: 72px; object-fit: cover; border-radius: 6px; border: 1.5px solid #e2e8f0; cursor: pointer;" 
                                      title="Nhấn để phóng to ảnh thực tế">
                             </div>
@@ -2212,10 +2222,10 @@
             } else if (network === 'messenger') {
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(url).then(function() {
-                        if (typeof showShopeeToast === 'function') {
+                        if (typeof showLiquidToast === 'function') {
+                            showLiquidToast('Đã sao chép liên kết sách để gửi qua Messenger!', 'success');
+                        } else if (typeof showShopeeToast === 'function') {
                             showShopeeToast('Đã sao chép liên kết sách để gửi qua Messenger!');
-                        } else {
-                            alert('Đã sao chép liên kết sách để gửi qua Messenger!');
                         }
                     });
                 }
@@ -2654,9 +2664,13 @@
                             <div class="review-comment-content">${escapeHtml(rv.comment)}</div>
                             ${rv.mediaUrl && rv.mediaUrl.trim() !== '' ? `
                                 <div class="review-media-box" style="margin-top: 10px;">
-                                    <img src="${escapeHtml(rv.mediaUrl)}" alt="Ảnh thực tế" onclick="openReviewImgModal(this.src)" 
-                                         style="width: 72px; height: 72px; object-fit: cover; border-radius: 6px; border: 1.5px solid #e2e8f0; cursor: pointer;" 
-                                         title="Nhấn để phóng to ảnh thực tế">
+                                    ${(rv.mediaType === 'VIDEO' || rv.mediaUrl.match(/\.(mp4|webm|mov|ogg)$/i)) ? `
+                                        <video src="${escapeHtml(rv.mediaUrl)}" controls style="max-width: 200px; max-height: 140px; border-radius: 6px; border: 1.5px solid #e2e8f0;"></video>
+                                    ` : `
+                                        <img src="${escapeHtml(rv.mediaUrl)}" alt="Ảnh thực tế" onclick="openReviewImgModal(this.src)" 
+                                             style="width: 72px; height: 72px; object-fit: cover; border-radius: 6px; border: 1.5px solid #e2e8f0; cursor: pointer;" 
+                                             title="Nhấn để phóng to ảnh thực tế">
+                                    `}
                                 </div>
                             ` : ''}
                         </div>
@@ -2667,17 +2681,40 @@
             container.innerHTML = html;
         }
 
-        // TẢI LÊN ẢNH THỰC TẾ CHO ĐÁNH GIÁ CHUẨN SHOPEE
+        // BỘ ĐẾM KÝ TỰ & NHẬN XÉT MẪU
+        function updateReviewCharCount(textarea) {
+            const count = textarea.value.trim().length;
+            const el = document.getElementById('reviewCharCount');
+            if (!el) return;
+            if (count < 50) {
+                el.style.color = '#dc2626';
+                el.innerText = `${count}/50 ký tự (Chưa đủ ${50 - count} ký tự)`;
+            } else {
+                el.style.color = '#16a34a';
+                el.innerText = `${count}/50 ký tự (Đạt chuẩn)`;
+            }
+        }
+
+        function fillSampleReview() {
+            const textarea = document.getElementById('reviewCommentInput');
+            if (textarea) {
+                textarea.value = 'Cuốn sách cũ được đóng gói rất cẩn thận, các trang giấy còn rất sạch sẽ và nguyên vẹn. Gáy sách phẳng, chất lượng vượt mong đợi của mình!';
+                updateReviewCharCount(textarea);
+            }
+        }
+
+        // TẢI LÊN ẢNH / VIDEO THỰC TẾ CHO ĐÁNH GIÁ CHUẨN SHOPEE
         function handleReviewImageUpload(input) {
             if (!input.files || input.files.length === 0) return;
             const file = input.files[0];
             const statusEl = document.getElementById('reviewUploadStatus');
             const previewWrap = document.getElementById('reviewImgPreviewWrap');
             const previewImg = document.getElementById('reviewImgPreview');
+            const previewVid = document.getElementById('reviewVidPreview');
             const mediaUrlInput = document.getElementById('reviewMediaUrlInput');
             const btnText = document.getElementById('btnAttachImgText');
 
-            if (statusEl) statusEl.innerText = 'Đang tải ảnh lên...';
+            if (statusEl) statusEl.innerText = 'Đang tải media lên...';
             if (btnText) btnText.innerText = 'Đang tải...';
 
             const formData = new FormData();
@@ -2691,19 +2728,32 @@
             .then(data => {
                 if (data.success && data.imageUrl) {
                     if (mediaUrlInput) mediaUrlInput.value = data.imageUrl;
-                    if (previewImg) previewImg.src = data.imageUrl;
+                    const isVideo = data.mediaType === 'VIDEO' || data.imageUrl.match(/\.(mp4|webm|mov|ogg)$/i);
+                    if (isVideo) {
+                        if (previewImg) previewImg.style.display = 'none';
+                        if (previewVid) {
+                            previewVid.src = data.imageUrl;
+                            previewVid.style.display = 'block';
+                        }
+                    } else {
+                        if (previewVid) previewVid.style.display = 'none';
+                        if (previewImg) {
+                            previewImg.src = data.imageUrl;
+                            previewImg.style.display = 'block';
+                        }
+                    }
                     if (previewWrap) previewWrap.style.display = 'block';
-                    if (statusEl) statusEl.innerText = 'Đã thêm ảnh!';
-                    if (btnText) btnText.innerText = 'Đổi ảnh khác';
+                    if (statusEl) statusEl.innerText = isVideo ? 'Đã thêm video!' : 'Đã thêm ảnh!';
+                    if (btnText) btnText.innerText = 'Đổi tệp khác';
                 } else {
-                    if (statusEl) statusEl.innerText = data.message || 'Lỗi tải ảnh!';
-                    if (btnText) btnText.innerText = 'Thêm hình ảnh thực tế';
+                    if (statusEl) statusEl.innerText = data.message || 'Lỗi tải tệp!';
+                    if (btnText) btnText.innerText = 'Thêm hình ảnh / video thực tế';
                 }
             })
             .catch(err => {
                 console.error(err);
-                if (statusEl) statusEl.innerText = 'Không thể tải ảnh lên!';
-                if (btnText) btnText.innerText = 'Thêm hình ảnh thực tế';
+                if (statusEl) statusEl.innerText = 'Không thể tải media lên!';
+                if (btnText) btnText.innerText = 'Thêm hình ảnh / video thực tế';
             });
         }
 
@@ -2716,10 +2766,12 @@
             if (previewWrap) previewWrap.style.display = 'none';
             const previewImg = document.getElementById('reviewImgPreview');
             if (previewImg) previewImg.src = '';
+            const previewVid = document.getElementById('reviewVidPreview');
+            if (previewVid) previewVid.src = '';
             const statusEl = document.getElementById('reviewUploadStatus');
             if (statusEl) statusEl.innerText = '';
             const btnText = document.getElementById('btnAttachImgText');
-            if (btnText) btnText.innerText = 'Thêm hình ảnh thực tế';
+            if (btnText) btnText.innerText = 'Thêm hình ảnh / video thực tế';
         }
 
         function openReviewImgModal(src) {
@@ -2745,8 +2797,9 @@
             const mediaUrlInput = document.getElementById('reviewMediaUrlInput');
             const mediaUrl = mediaUrlInput ? mediaUrlInput.value.trim() : '';
 
-            if (!comment) {
-                showShopeeToast('Vui lòng nhập nhận xét chất lượng sách!', true);
+            if (!comment || comment.length < 50) {
+                showShopeeToast('Nội dung nhận xét sách phải có tối thiểu 50 ký tự (hiện có ' + comment.length + ' ký tự)!', true);
+                if (commentInput) commentInput.focus();
                 return;
             }
 

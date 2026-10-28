@@ -876,16 +876,23 @@
                             </div>
                         </div>
 
-                        <!-- Điểm Tích Lũy Sách Cũ -->
+                        <!-- Điểm Tích Lũy Sách Cũ Thực Tế Từ CSDL -->
                         <div class="coins-row-flex" style="border-top:1px dashed rgba(232, 222, 200, 0.8); padding-top:16px;">
                             <div class="coins-label-left">
                                 <i class="fa-solid fa-coins text-warning" style="font-size:18px;"></i>
                                 <span>Điểm Tích Lũy</span>
-                                <span style="font-size:12.5px; color:#78716C; font-weight:400;">Dùng 2.000 điểm [-2.000 đ]</span>
+                                <span th:if="${userPoints != null and userPoints > 0}" style="font-size:12.5px; color:#78716C; font-weight:400;" 
+                                      th:text="'Bạn đang có ' + ${#numbers.formatDecimal(userPoints, 0, 'POINT', 0, 'COMMA')} + ' điểm'">Bạn có 0 điểm</span>
+                                <span th:unless="${userPoints != null and userPoints > 0}" style="font-size:12px; color:#A8A29E; font-weight:400;">
+                                    (Bạn có 0 điểm · Hoàn 1% điểm thưởng sau khi nhận hàng)
+                                </span>
                             </div>
                             <div style="display:flex; align-items:center; gap:12px;">
-                                <span style="font-weight:700; color:var(--rebook-leather);" id="coinsDiscountTxt">-2.000 đ</span>
-                                <input type="checkbox" id="useCoinsCheck" checked onchange="toggleCoins(this)" style="width:18px; height:18px; accent-color:var(--rebook-leather); cursor:pointer;">
+                                <span style="font-weight:700; color:var(--rebook-leather);" id="coinsDiscountTxt">-0 đ</span>
+                                <input type="checkbox" id="useCoinsCheck" name="useCoins" value="true"
+                                       th:disabled="${userPoints == null or userPoints <= 0}"
+                                       onchange="toggleCoins(this)" 
+                                       style="width:18px; height:18px; accent-color:var(--rebook-leather); cursor:pointer;">
                             </div>
                         </div>
                     </div>
@@ -1252,11 +1259,16 @@
             });
         }
 
+        const availableUserPoints = /*[[${userPoints != null ? userPoints : 0}]]*/ 0;
+
         function toggleCoins(cb) {
-            if (cb.checked) {
-                currentCoinsDiscount = 2000;
-                document.getElementById('summaryCoinsDiscount').innerText = '-2.000 đ';
-                document.getElementById('coinsDiscountTxt').innerText = '-2.000 đ';
+            if (cb.checked && availableUserPoints > 0) {
+                // Tối đa 10% giá trị đơn hàng hoặc số điểm user đang có
+                currentCoinsDiscount = Math.min(availableUserPoints, Math.round(rawSubtotal * 0.1));
+                if (currentCoinsDiscount <= 0) currentCoinsDiscount = Math.min(availableUserPoints, 2000);
+                const formatted = '-' + currentCoinsDiscount.toLocaleString('vi-VN') + ' đ';
+                document.getElementById('summaryCoinsDiscount').innerText = formatted;
+                document.getElementById('coinsDiscountTxt').innerText = formatted;
             } else {
                 currentCoinsDiscount = 0;
                 document.getElementById('summaryCoinsDiscount').innerText = '-0 đ';

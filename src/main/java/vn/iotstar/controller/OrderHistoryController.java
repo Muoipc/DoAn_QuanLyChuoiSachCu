@@ -104,9 +104,11 @@ public class OrderHistoryController {
         long countAll = allUserOrders.size();
         long countNew = allUserOrders.stream().filter(o -> o.getOrderStatus() == Order.OrderStatus.NEW).count();
         long countConfirmed = allUserOrders.stream().filter(o -> o.getOrderStatus() == Order.OrderStatus.CONFIRMED).count();
+        long countPickedUp = allUserOrders.stream().filter(o -> o.getOrderStatus() == Order.OrderStatus.PICKED_UP).count();
         long countShipping = allUserOrders.stream().filter(o -> o.getOrderStatus() == Order.OrderStatus.SHIPPING).count();
         long countDelivered = allUserOrders.stream().filter(o -> o.getOrderStatus() == Order.OrderStatus.DELIVERED).count();
         long countCancelled = allUserOrders.stream().filter(o -> o.getOrderStatus() == Order.OrderStatus.CANCELLED).count();
+        long countReturned = allUserOrders.stream().filter(o -> o.getOrderStatus() == Order.OrderStatus.RETURNED).count();
 
         model.addAttribute("orders", orders);
         model.addAttribute("currentStatus", statusStr.toUpperCase());
@@ -115,9 +117,11 @@ public class OrderHistoryController {
         model.addAttribute("countAll", countAll);
         model.addAttribute("countNew", countNew);
         model.addAttribute("countConfirmed", countConfirmed);
+        model.addAttribute("countPickedUp", countPickedUp);
         model.addAttribute("countShipping", countShipping);
         model.addAttribute("countDelivered", countDelivered);
         model.addAttribute("countCancelled", countCancelled);
+        model.addAttribute("countReturned", countReturned);
 
         model.addAttribute("pageTitle", "Đơn Mua Của Tôi - Chuỗi Sách Cũ TP.HCM");
 

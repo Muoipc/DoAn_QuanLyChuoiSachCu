@@ -514,6 +514,16 @@ public class OrderServiceImpl implements IOrderService {
             order.setPaymentStatus(Order.PaymentStatus.PAID);
         }
 
+        // Tích lũy 1% điểm thưởng thành viên khi đơn hàng giao thành công
+        if (newStatus == Order.OrderStatus.DELIVERED && order.getUser() != null) {
+            int earnedPoints = (int) Math.round(order.getFinalAmount().doubleValue() * 0.01);
+            if (earnedPoints > 0) {
+                User u = order.getUser();
+                u.setLoyaltyPoints(u.getLoyaltyPoints() + earnedPoints);
+                userRepository.save(u);
+            }
+        }
+
         // Ghi nhận ghi chú hoặc lý do giao hàng từ Shipper
         if (note != null && !note.trim().isEmpty()) {
             String prefix = "[Lý do Shipper]: " + note.trim();
@@ -560,7 +570,7 @@ public class OrderServiceImpl implements IOrderService {
 
         order.setShipper(shipper);
         if (order.getOrderStatus() == Order.OrderStatus.NEW || order.getOrderStatus() == Order.OrderStatus.CONFIRMED) {
-            order.setOrderStatus(Order.OrderStatus.SHIPPING);
+            order.setOrderStatus(Order.OrderStatus.PICKED_UP);
         }
         orderRepository.save(order);
     }

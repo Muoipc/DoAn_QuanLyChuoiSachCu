@@ -2082,8 +2082,12 @@
 
             <div class="modal-store-grid">
                 <div th:each="s : ${stores}" class="modal-store-card">
-                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 6px;">
-                        <i class="fa-solid fa-building text-danger me-1"></i> <span th:text="${s.storeName}">Chi Nhánh 1</span>
+                    <h5 style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 6px; display:flex; align-items:center; justify-content:space-between;">
+                        <span><i class="fa-solid fa-building text-danger me-1"></i> <span th:text="${s.storeName}">Chi Nhánh 1</span></span>
+                        <span class="badge rounded-pill" 
+                              th:classappend="${s.aiReplyEnabled == true} ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-secondary-subtle text-secondary border border-secondary-subtle'"
+                              style="font-size:10px; padding:2px 8px;"
+                              th:text="${s.aiReplyEnabled == true ? '🟢 Trực tiếp' : '⚪ Vắng mặt'}">Trực tiếp</span>
                     </h5>
                     <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 4px;">
                         <i class="fa-solid fa-location-dot text-muted me-1"></i> <span th:text="${s.address}">Địa chỉ</span>
@@ -2199,20 +2203,32 @@
                 }
             }).catch(() => {});
 
-        // Đếm ngược Flash Sale thời gian thực (đến cuối ngày)
-        let now = new Date();
-        let endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-        let totalSeconds = Math.floor((endOfDay - now) / 1000);
-        if (totalSeconds < 0) totalSeconds = 0;
+        // Đếm ngược Flash Sale thời gian thực theo 4 khung giờ vàng (09h, 12h, 18h, 21h, 24h)
+        function getSecondsToNextFlashSlot() {
+            const d = new Date();
+            const curH = d.getHours();
+            const slots = [9, 12, 15, 18, 21, 24];
+            let nextH = slots.find(s => s > curH);
+            if (!nextH) nextH = 24;
+            const target = new Date(d.getFullYear(), d.getMonth(), d.getDate(), nextH, 0, 0);
+            return Math.max(0, Math.floor((target - d) / 1000));
+        }
+
+        let totalSeconds = getSecondsToNextFlashSlot();
         setInterval(() => {
             if (totalSeconds > 0) {
                 totalSeconds--;
                 const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
                 const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
                 const s = String(totalSeconds % 60).padStart(2, '0');
-                document.getElementById('flashHours').innerText = h;
-                document.getElementById('flashMinutes').innerText = m;
-                document.getElementById('flashSeconds').innerText = s;
+                const elH = document.getElementById('flashHours');
+                const elM = document.getElementById('flashMinutes');
+                const elS = document.getElementById('flashSeconds');
+                if (elH) elH.innerText = h;
+                if (elM) elM.innerText = m;
+                if (elS) elS.innerText = s;
+            } else {
+                totalSeconds = getSecondsToNextFlashSlot();
             }
         }, 1000);
 

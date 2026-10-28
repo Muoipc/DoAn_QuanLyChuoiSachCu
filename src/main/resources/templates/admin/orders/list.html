@@ -218,6 +218,11 @@
             color: #0369a1;
             border: 1px solid rgba(14, 165, 233, 0.25);
         }
+        .badge-pickedup {
+            background: rgba(139, 92, 246, 0.12);
+            color: #7c3aed;
+            border: 1px solid rgba(139, 92, 246, 0.25);
+        }
         .badge-shipping {
             background: rgba(245, 158, 11, 0.14);
             color: #b45309;
@@ -339,6 +344,11 @@
                th:href="@{/admin/orders(status='CONFIRMED', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
                 <span>Đã xác nhận</span>
                 <span class="tab-counter" th:text="${countConfirmed}">0</span>
+            </a>
+            <a class="ios-status-tab" th:classappend="${selectedStatus != null and selectedStatus.name() == 'PICKED_UP'} ? 'active' : ''" 
+               th:href="@{/admin/orders(status='PICKED_UP', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
+                <span>Đã lấy hàng</span>
+                <span class="tab-counter" th:text="${countPickedUp}">0</span>
             </a>
             <a class="ios-status-tab" th:classappend="${selectedStatus != null and selectedStatus.name() == 'SHIPPING'} ? 'active' : ''" 
                th:href="@{/admin/orders(status='SHIPPING', storeId=${selectedStoreId}, deliveryMethod=${selectedDeliveryMethod}, keyword=${keyword})}">
@@ -488,6 +498,7 @@
                             <td class="text-center">
                                 <span th:if="${ord.orderStatus.name() == 'NEW'}" class="apple-pill-badge badge-new">Mới đặt</span>
                                 <span th:if="${ord.orderStatus.name() == 'CONFIRMED'}" class="apple-pill-badge badge-confirmed">Đã xác nhận</span>
+                                <span th:if="${ord.orderStatus.name() == 'PICKED_UP'}" class="apple-pill-badge badge-pickedup">Đã lấy hàng</span>
                                 <span th:if="${ord.orderStatus.name() == 'SHIPPING'}" class="apple-pill-badge badge-shipping">Đang giao</span>
                                 <span th:if="${ord.orderStatus.name() == 'DELIVERED'}" class="apple-pill-badge badge-delivered">Đã giao</span>
                                 <span th:if="${ord.orderStatus.name() == 'CANCELLED'}" class="apple-pill-badge badge-cancelled">Đã hủy</span>

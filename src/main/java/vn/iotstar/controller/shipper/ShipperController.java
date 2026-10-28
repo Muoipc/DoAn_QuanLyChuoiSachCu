@@ -62,8 +62,9 @@ public class ShipperController {
         model.addAttribute("totalPages", orderPage.getTotalPages());
         model.addAttribute("totalElements", orderPage.getTotalElements());
 
-        // 4 Chỉ số KPI vận hành thực tế cho Shipper
+        // 5 Chỉ số KPI vận hành thực tế cho Shipper
         model.addAttribute("countAll", orderService.countOrdersForShipper(currentShipperId, null));
+        model.addAttribute("countPickedUp", orderService.countOrdersForShipper(currentShipperId, Order.OrderStatus.PICKED_UP));
         model.addAttribute("countShipping", orderService.countOrdersForShipper(currentShipperId, Order.OrderStatus.SHIPPING));
         model.addAttribute("countDelivered", orderService.countOrdersForShipper(currentShipperId, Order.OrderStatus.DELIVERED));
         model.addAttribute("countReturned", orderService.countOrdersForShipper(currentShipperId, Order.OrderStatus.RETURNED));
@@ -85,7 +86,11 @@ public class ShipperController {
     ) {
         try {
             orderService.updateOrderStatus(id, status, note);
-            if (status == Order.OrderStatus.DELIVERED) {
+            if (status == Order.OrderStatus.PICKED_UP) {
+                redirect.addFlashAttribute("successMessage", "Đã xác nhận lấy hàng thành công từ chi nhánh cho đơn #" + id + "!");
+            } else if (status == Order.OrderStatus.SHIPPING) {
+                redirect.addFlashAttribute("successMessage", "Đang tiến hành giao đơn hàng #" + id + " tới khách hàng!");
+            } else if (status == Order.OrderStatus.DELIVERED) {
                 redirect.addFlashAttribute("successMessage", "Xác nhận giao đơn hàng #" + id + " thành công!");
             } else if (status == Order.OrderStatus.RETURNED) {
                 redirect.addFlashAttribute("successMessage", "Đã cập nhật đơn hàng #" + id + " sang trạng thái TRẢ HÀNG / HOÀN TIỀN!");
