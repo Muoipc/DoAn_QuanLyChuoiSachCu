@@ -60,6 +60,9 @@ public class StoreChatController {
     @Autowired
     private InventoryRepository inventoryRepository;
 
+    @Autowired
+    private AiAssistantController aiAssistantController;
+
     private User resolveCurrentUser(CustomUserDetails userDetails) {
         if (userDetails != null && userDetails.getId() != null) {
             return userRepository.findById(userDetails.getId()).orElse(null);
@@ -348,7 +351,7 @@ public class StoreChatController {
         chatMessageRepository.save(userMsg);
         res.put("userMsgId", userMsg.getId());
 
-        boolean isAiEnabled = Boolean.TRUE.equals(store.getAiReplyEnabled());
+        boolean isAiEnabled = (store.getAiReplyEnabled() == null || Boolean.TRUE.equals(store.getAiReplyEnabled()));
         String lower = userMsg.getContent().toLowerCase();
         boolean customerExplicitlyWantsHuman = lower.contains("gặp người thật") || lower.contains("nhân viên đâu")
                 || lower.contains("alo shop") || lower.contains("thủ kho") || lower.contains("khiếu nại")
@@ -496,7 +499,68 @@ public class StoreChatController {
             return result;
         }
 
-        // 2. CHÀO HỎI & BẮT ĐẦU TRÒ CHUYỆN (GREETING INTENT)
+        // 2. ĐỊA CHỈ, VỊ TRÍ, ĐƯỜNG ĐI CHI NHÁNH
+        if (unaccentQuery.contains("o dau") || unaccentQuery.contains("dia chi") || unaccentQuery.contains("vi tri") || unaccentQuery.contains("cho nao") || unaccentQuery.contains("gan dau")) {
+            String addrMsg = "Dạ chi nhánh **" + store.getStoreName() + "** có địa chỉ tại: " + store.getAddress() + " (" + store.getDistrict() + "). Cửa hàng có chỗ để xe máy miễn phí và bàn đọc sách trải nghiệm, rất mong được đón tiếp bạn ghé quầy ạ! 📍";
+            result.put("reply", addrMsg);
+            result.put("needsStaff", false);
+            return result;
+        }
+
+        // 3. GIỜ MỞ CỬA, THỜI GIAN HOẠT ĐỘNG CHI NHÁNH
+        if (unaccentQuery.contains("mo cua") || unaccentQuery.contains("dong cua") || unaccentQuery.contains("may gio") || unaccentQuery.contains("gio lam viec") || unaccentQuery.contains("thoi gian")) {
+            String hoursMsg = "Dạ chi nhánh **" + store.getStoreName() + "** mở cửa phục vụ từ 08:00 sáng đến 21:30 tối hàng ngày (kể cả Thứ 7, Chủ Nhật và ngày lễ) ạ! Bạn có thể ghé bất cứ lúc nào trong khung giờ này nhé! ⏰";
+            result.put("reply", hoursMsg);
+            result.put("needsStaff", false);
+            return result;
+        }
+
+        // 4. TƯ VẤN SÁCH & TỒN KHO THỜI GIAN THỰC (ĐỒNG BỘ TRÍ TUỆ VỚI THANH SEARCH AI)
+        if (aiAssistantController != null) {
+            try {
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("message", userText);
+                ResponseEntity<Map<String, Object>> aiResp = aiAssistantController.chat(payload);
+                if (aiResp != null && aiResp.getBody() != null) {
+                    Map<String, Object> body = aiResp.getBody();
+                    String reply = (String) body.get("reply");
+                    if (reply != null && !reply.isBlank()) {
+                        Book suggestedBook = book;
+                        Object suggObj = body.get("suggestedBooks");
+                        if (suggObj instanceof List) {
+                            List<?> list = (List<?>) suggObj;
+                            if (!list.isEmpty() && list.get(0) instanceof Map) {
+                                Map<?, ?> firstBookMap = (Map<?, ?>) list.get(0);
+                                Object idObj = firstBookMap.get("id");
+                                if (idObj instanceof Number) {
+                                    Long bId = ((Number) idObj).longValue();
+                                    suggestedBook = bookRepository.findById(bId).orElse(suggestedBook);
+                                }
+                            }
+                        }
+
+                        // Kiểm tra tồn kho tại chi nhánh hiện tại để chỉ dẫn kệ quầy thực tế
+                        if (suggestedBook != null) {
+                            result.put("suggestedBook", suggestedBook);
+                            Optional<Inventory> storeInv = inventoryRepository.findByStoreIdAndBookId(store.getId(), suggestedBook.getId());
+                            int curStock = storeInv.map(Inventory::getQuantity).orElse(0);
+                            if (curStock > 0) {
+                                reply += "\n\n📍 Cuốn **\"" + suggestedBook.getTitle() + "\"** hiện **CÒN " + curStock + " CUỐN TRÊN KỆ** tại "
+                                        + store.getStoreName() + " (" + (store.getAddress() != null ? store.getAddress() : "TP.HCM") + "). Bạn có thể bấm nút **Mua** bên dưới để giữ sách ngay nhé! 📚✨";
+                            }
+                        }
+
+                        result.put("reply", reply);
+                        result.put("needsStaff", false);
+                        return result;
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("[StoreChat AI] Ngoại lệ khi gọi AiAssistant: " + e.getMessage());
+            }
+        }
+
+        // 5. CHÀO HỎI & BẮT ĐẦU TRÒ CHUYỆN (GREETING INTENT)
         boolean isGreeting = rawLower.matches(".*\\b(chào|chao|hi|hello|alo|shop ơi|shop oi|ad ơi|ad oi|bạn ơi|ban oi|hey|helo)\\b.*")
                 || rawLower.equals("hi") || rawLower.equals("hello") || rawLower.equals("alo") || rawLower.equals("chao shop") || rawLower.equals("chào shop");
 
