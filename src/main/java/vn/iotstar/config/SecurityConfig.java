@@ -75,6 +75,7 @@ public class SecurityConfig {
                     "/vouchers", "/vouchers/**", "/api/**",
                     "/checkout", "/checkout/vnpay-return", "/checkout/success",
                     "/reviews/**", "/consignments", "/consignments/**",
+                    "/seller/register", "/seller/register/**",
                     "/ai-assistant", "/ai-assistant/**", "/help", "/help/**"
                 ).permitAll()
                 // Phân quyền phân hệ nghiệp vụ nội bộ

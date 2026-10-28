@@ -482,7 +482,44 @@
 
             <!-- FORM ĐĂNG KÝ -->
             <div class="seller-form-card">
-                <form th:action="@{/seller/register}" method="post" enctype="multipart/form-data" th:object="${registration}">
+                <form th:action="@{/seller/register}" method="post" enctype="multipart/form-data" th:object="${form}">
+
+                    <!-- KHỐI ĐẶC BIỆT: NẾU CHƯA CÓ TÀI KHOẢN, TỰ TẠO TÀI KHOẢN QUẢN LÝ QUẦY TẠI ĐÂY -->
+                    <div th:if="${!isLoggedIn}" style="margin-bottom: 28px; padding: 20px 24px; background: rgba(140, 74, 39, 0.05); border: 1.5px solid rgba(140, 74, 39, 0.2); border-radius: 16px;">
+                        <div class="form-section-title" style="margin-top:0; margin-bottom:12px; color:#8C4A27;">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <span>Khởi Tạo Tài Khoản Quản Lý Quầy Sách (Dành cho đối tác mới)</span>
+                        </div>
+                        <p style="font-size:13px; color:#78716C; margin-bottom:16px;">
+                            Bạn chưa có tài khoản? Hãy điền thông tin đăng nhập bên dưới để hệ thống cấp quyền Quản lý cửa hàng ngay khi Admin duyệt hồ sơ.
+                        </p>
+                        <div class="form-row-grid three-cols">
+                            <div class="form-group">
+                                <label>Tên đăng nhập (Username) <span class="required">*</span></label>
+                                <input type="text" th:field="*{newUsername}" class="seller-input" placeholder="Ví dụ: nhasachbinhthanh" th:required="${!isLoggedIn}">
+                            </div>
+                            <div class="form-group">
+                                <label>Mật khẩu đăng nhập <span class="required">*</span></label>
+                                <input type="password" th:field="*{newPassword}" class="seller-input" placeholder="Tối thiểu 6 ký tự" th:required="${!isLoggedIn}">
+                            </div>
+                            <div class="form-group">
+                                <label>Xác nhận mật khẩu <span class="required">*</span></label>
+                                <input type="password" th:field="*{confirmPassword}" class="seller-input" placeholder="Nhập lại mật khẩu" th:required="${!isLoggedIn}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- THÔNG BÁO TÀI KHOẢN HIỆN TẠI NẾU ĐÃ ĐĂNG NHẬP -->
+                    <div th:if="${isLoggedIn and user != null}" style="margin-bottom: 24px; padding: 14px 20px; background: #FAF6F0; border: 1px solid #ECE7DE; border-radius: 12px; display:flex; align-items:center; justify-content:space-between;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <img th:src="${user.avatar != null ? user.avatar : '/images/avatars/avatar-default.png'}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" alt="Avatar">
+                            <div>
+                                <span style="font-size:12px; color:#78716C;">Đang đăng ký bằng tài khoản:</span>
+                                <div style="font-size:13.5px; font-weight:700; color:#1C1917;" th:text="${user.fullName + ' (@' + user.username + ')'}">Nguyen Song Hoang Phuc</div>
+                            </div>
+                        </div>
+                        <span class="badge" style="background:#8C4A27; color:#fff; font-size:11px; padding:6px 12px; border-radius:8px;">Tài khoản khách hàng</span>
+                    </div>
 
                     <!-- PHẦN 1: THÔNG TIN GIAN HÀNG -->
                     <div class="form-section-title">

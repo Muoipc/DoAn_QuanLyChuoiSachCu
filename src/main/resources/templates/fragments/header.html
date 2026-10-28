@@ -1693,6 +1693,14 @@
                     </div>
                 </div>
 
+                <!-- NÚT KÊNH NGƯỜI BÁN NỔI BẬT TRÊN HEADER (KHÔNG CẦN TÀI KHOẢN TRƯỚC) -->
+                <a sec:authorize="!hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/seller/register}" 
+                   class="btn-seller-portal-header"
+                   style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; background:linear-gradient(135deg, #8C4A27 0%, #A0522D 100%); color:#FFFFFF; text-decoration:none; font-size:12.5px; font-weight:700; border-radius:9999px; box-shadow:0 3px 10px rgba(140, 74, 39, 0.25); white-space:nowrap; transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+                    <i class="fa-solid fa-store" style="font-size:12px; color:#FFE4D6;"></i>
+                    <span>Kênh Người Bán</span>
+                </a>
+
                 <!-- 2. Giỏ hàng Shopee với Live Badge Counter & Popover -->
                 <div class="shopee-cart-wrap" id="shopeeCartWrap">
                     <a th:href="@{/cart}" class="chotot-circle-btn" aria-label="Giỏ hàng" title="Giỏ hàng">
