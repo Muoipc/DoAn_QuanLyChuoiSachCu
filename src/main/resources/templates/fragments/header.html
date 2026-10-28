@@ -1540,7 +1540,7 @@
 
     <!-- 2. HEADER CHÍNH CHUẨN CHỢ TỐT VINTAGE (STICKY TOP 0) -->
     <header class="shopee-header-section" th:classappend="${isHome == true} ? 'chotot-home-header' : ''">
-        <div class="container-shopee header-main-row" style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
+        <div class="container-shopee header-main-row" style="display:flex; align-items:center; justify-content:space-between; gap:16px; position:relative;">
             <!-- Brand Logo dạng pill trắng nổi bật chuẩn Apple Liquid Glass -->
             <div class="chotot-header-left" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
                 <a th:href="@{/}" class="shopee-brand-logo chotot-brand-pill" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none;">
@@ -1662,7 +1662,7 @@
             </form>
 
             <!-- NẾU LÀ HOME / SEARCH / CONSIGNMENT (CÓ HERO BANNER PHÍA DƯỚI) -> NAV TABS Ở CHÍNH GIỮA HEADER -->
-            <nav th:if="${isHome == true}" class="chotot-nav-tabs" style="margin: 0 auto;">
+            <nav th:if="${isHome == true}" class="chotot-nav-tabs" style="position: absolute; left: 50%; transform: translateX(-50%); z-index: 10;">
                 <a th:href="@{/}" class="chotot-nav-tab" th:classappend="${activeTab != 'consignment' and isHome == true and (selectedCat == null and (selectedQuery == null or selectedQuery == ''))} ? 'active' : ''">
                     <span class="i18n-text" data-i18n="Sách Cũ">Sách Cũ</span>
                 </a>
