@@ -409,6 +409,18 @@
             padding: 16px;
         }
 
+        @media (max-width: 992px) {
+            .flash-sale-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .flash-sale-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         .flash-book-card {
             background: #ffffff;
             border: 1px solid #ECE7DE;
@@ -1965,19 +1977,18 @@
 
     <main class="container-shopee">
 
-        <!-- 5. SHOPEE FLASH SALE SÁCH CŨ -->
+        <!-- 5. TOP SÁCH BÁN CHẠY (>10 CUỐN) THEO QUY ĐỊNH UTEX -->
         <section class="shopee-flash-sale" id="flash-sale">
             <div class="flash-sale-header">
                 <div class="flash-title-wrap">
                     <div class="flash-logo-text">
-                        <i class="fa-solid fa-bolt-lightning" style="color:#ffbe00;"></i>
-                        <span>FLASH SALE SÁCH CŨ</span>
+                        <i class="fa-solid fa-fire" style="color:#ee4d2d;"></i>
+                        <span>TOP SÁCH BÁN CHẠY (>10 CUỐN)</span>
                     </div>
                     <div class="flash-countdown">
-                        <span>KẾT THÚC TRONG</span>
-                        <span class="timer-box" id="flashHours">02</span> :
-                        <span class="timer-box" id="flashMinutes">45</span> :
-                        <span class="timer-box" id="flashSeconds">18</span>
+                        <span style="background:rgba(238, 77, 45, 0.12); color:#ee4d2d; font-weight:700; padding:3px 10px; border-radius:6px; font-size:12px;">
+                            <i class="fa-solid fa-ranking-star me-1"></i>XẾP HẠNG TOÀN HỆ THỐNG
+                        </span>
                     </div>
                 </div>
 
@@ -1987,7 +1998,7 @@
                 </a>
             </div>
 
-            <!-- Lưới 5 sản phẩm Flash Sale -->
+            <!-- Lưới 10 sản phẩm bán chạy nhất -->
             <div class="flash-sale-grid">
                 <a th:each="book, iterStat : ${flashSaleBooks}" 
                    th:href="@{'/books/' + ${book.id}}" 
