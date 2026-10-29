@@ -290,9 +290,11 @@ public class CheckoutController {
 
         Order.PaymentMethod paymentMethod = "VNPAY".equalsIgnoreCase(paymentMethodStr)
                 ? Order.PaymentMethod.VNPAY
-                : ("BANK_TRANSFER".equalsIgnoreCase(paymentMethodStr) || "VIETQR".equalsIgnoreCase(paymentMethodStr)
-                    ? Order.PaymentMethod.BANK_TRANSFER
-                    : Order.PaymentMethod.COD);
+                : ("MOMO".equalsIgnoreCase(paymentMethodStr)
+                    ? Order.PaymentMethod.MOMO
+                    : ("BANK_TRANSFER".equalsIgnoreCase(paymentMethodStr) || "VIETQR".equalsIgnoreCase(paymentMethodStr)
+                        ? Order.PaymentMethod.BANK_TRANSFER
+                        : Order.PaymentMethod.COD));
 
         // Nếu nhận tại chi nhánh, lấy địa chỉ của chính chi nhánh đó
         if (deliveryMethod == Order.DeliveryMethod.STORE_PICKUP) {

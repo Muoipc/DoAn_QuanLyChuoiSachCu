@@ -199,7 +199,7 @@ CREATE TABLE orders (
     receiver_phone VARCHAR(20) NOT NULL,
     receiver_address VARCHAR(255) NOT NULL,
     delivery_method ENUM('HOME_DELIVERY', 'STORE_PICKUP') DEFAULT 'HOME_DELIVERY',
-    payment_method ENUM('COD', 'VNPAY') DEFAULT 'COD',
+    payment_method ENUM('COD', 'VNPAY', 'BANK_TRANSFER', 'MOMO') DEFAULT 'COD',
     payment_status ENUM('UNPAID', 'PAID', 'REFUNDED') DEFAULT 'UNPAID',
     order_status ENUM(
         'NEW',               -- Đơn hàng mới

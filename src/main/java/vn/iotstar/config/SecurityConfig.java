@@ -72,7 +72,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/", "/home", "/books/**", "/categories/**", "/stores/**",
                     "/search/**", "/vouchers", "/vouchers/**",
-                    "/checkout/vnpay-return", "/checkout/vnpay-sandbox",
+                    "/checkout/vnpay-return", "/checkout/vnpay-sandbox", "/checkout/success",
                     "/seller/register", "/seller/register/**",
                     "/ai-assistant", "/ai-assistant/**", "/help", "/help/**"
                 ).permitAll()
