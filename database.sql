@@ -1,4 +1,4 @@
-﻿-- ====================================================================
+-- ====================================================================
 -- ĐỒ ÁN CUỐI KỲ: XÂY DỰNG WEBSITE QUẢN LÝ CHUỖI CỬA HÀNG SÁCH CŨ
 -- MÔN HỌC: LẬP TRÌNH WEB (WEBPR330479) - HCMUTE
 -- GVHD: ThS. NGUYỄN HỮU TRUNG
@@ -379,7 +379,7 @@ INSERT INTO users (id, role_id, username, email, password, full_name, phone, ava
 (5, 3, 'cuong_customer', 'cuong@student.hcmute.edu.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Thái Duy Cường', '0945678901', '/images/avatars/avatar-cuong.png', TRUE),
 (6, 4, 'shipper_hung', 'shipper_hung@oldbookstore.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Trần Văn Hùng (Shipper)', '0956789012', '/images/avatars/avatar-default.png', TRUE),
 (100, 3, 'phuc0125', 'nguyensonghoangphuc0125@gmail.com', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Nguyễn Song Hoàng Phúc', '0901234567', '/images/avatars/avatar-phuc.png', TRUE),
-(101, 4, 'shipper_hcm', 'shipper_hcm@rebook.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Trần Văn Hùng (Shipper)', '0956789012', '/images/avatars/avatar-default.png', TRUE),
+(101, 4, 'shipper_an', 'shipper_an@oldbookstore.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Nguyễn Văn An (Shipper)', '0866773884', '/images/avatars/avatar-default.png', TRUE),
 (102, 2, 'seller_demo', 'seller_demo@rebook.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Đối Tác Bán Hàng Demo', '0988776655', '/images/avatars/avatar-default.png', TRUE);
 
 -- 3. Nạp địa chỉ giao hàng mẫu
