@@ -80,6 +80,7 @@ public class CheckoutController {
             @RequestParam(value = "storeId", required = false, defaultValue = "1") Long storeId,
             @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
             @RequestParam(value = "condition", required = false, defaultValue = "budget") String condition,
+            @RequestParam(value = "selectedItems", required = false) String selectedItems,
             @RequestParam(value = "voucherCode", required = false) String voucherCode,
             HttpServletRequest request,
             Model model) {
@@ -164,6 +165,24 @@ public class CheckoutController {
             Cart cart = cartService.getOrCreateCartForUser(userId);
             cartItems = cartService.getCartItemsWithDetails(cart.getId());
 
+            // Lọc các sản phẩm được tích chọn (nếu có truyền selectedItems)
+            if (selectedItems != null && !selectedItems.isBlank()) {
+                java.util.Set<Long> selectedIdSet = java.util.Arrays.stream(selectedItems.split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .map(s -> {
+                            try { return Long.parseLong(s); } catch (Exception e) { return null; }
+                        })
+                        .filter(java.util.Objects::nonNull)
+                        .collect(java.util.stream.Collectors.toSet());
+
+                if (!selectedIdSet.isEmpty()) {
+                    cartItems = cartItems.stream()
+                            .filter(ci -> selectedIdSet.contains(ci.getId()))
+                            .toList();
+                }
+            }
+
             if (cartItems.isEmpty()) {
                 return "redirect:/cart";
             }
@@ -182,6 +201,7 @@ public class CheckoutController {
                     .sum();
 
             model.addAttribute("buyNow", false);
+            model.addAttribute("selectedItems", selectedItems);
             model.addAttribute("directBookId", null);
             model.addAttribute("directStoreId", null);
             model.addAttribute("directQuantity", null);
@@ -252,6 +272,7 @@ public class CheckoutController {
             @RequestParam(value = "voucherCode", required = false) String voucherCode,
             @RequestParam(value = "customerNotes", required = false) String customerNotes,
             @RequestParam(value = "buyNow", required = false, defaultValue = "false") boolean buyNow,
+            @RequestParam(value = "selectedItems", required = false) String selectedItems,
             @RequestParam(value = "bookId", required = false) Long bookId,
             @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
             @RequestParam(value = "condition", required = false, defaultValue = "standard") String condition,
@@ -305,6 +326,18 @@ public class CheckoutController {
                         customerNotes
                 );
             } else {
+                List<Long> selectedIdList = null;
+                if (selectedItems != null && !selectedItems.isBlank()) {
+                    selectedIdList = java.util.Arrays.stream(selectedItems.split(","))
+                            .map(String::trim)
+                            .filter(s -> !s.isEmpty())
+                            .map(s -> {
+                                try { return Long.parseLong(s); } catch (Exception e) { return null; }
+                            })
+                            .filter(java.util.Objects::nonNull)
+                            .toList();
+                }
+
                 order = orderService.createOrderFromCart(
                         userId,
                         deliveryMethod,
@@ -315,7 +348,8 @@ public class CheckoutController {
                         shippingUnitId,
                         paymentMethod,
                         voucherCode,
-                        customerNotes
+                        customerNotes,
+                        selectedIdList
                 );
             }
 

@@ -727,10 +727,14 @@
                 </div>
 
                 <!-- DANH SÁCH CÁC CUỐN SÁCH CŨ TRONG GIỎ (CARD-IN-CARD 14PX) -->
-                <div th:each="item : ${cartItems}" class="cart-item-row">
+                <div th:each="item : ${cartItems}" class="cart-item-row" 
+                     th:data-item-id="${item.id}"
+                     th:data-price="${item.itemTotal}"
+                     th:data-savings="${item.savings != null ? item.savings : 0}"
+                     th:data-qty="${item.quantity}">
                     <!-- Checkbox -->
                     <div style="display: flex; align-items: center; justify-content: center;">
-                        <input type="checkbox" class="checkbox-custom item-check" checked>
+                        <input type="checkbox" class="checkbox-custom item-check" checked th:value="${item.id}">
                     </div>
 
                     <!-- Cột Sản phẩm: Ảnh bìa + Tên sách + Phân loại hàng + Tag kho -->
@@ -837,10 +841,10 @@
                             <i class="fa-solid fa-ticket me-1"></i> Giảm giá Voucher: <span id="cartSummaryVoucherVal">-0 đ</span>
                         </div>
                         <div class="total-payment-line">
-                            <span>Tổng thanh toán (<strong th:text="${totalQuantity} + ' Sản phẩm'">1 Sản phẩm</strong>):</span>
+                            <span>Tổng thanh toán (<strong id="cartSelectedQtyDisplay" th:text="${totalQuantity} + ' Sản phẩm'">1 Sản phẩm</strong>):</span>
                             <span class="total-amount-fire" id="cartFinalTotalDisplay" th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'">68.000 đ</span>
                         </div>
-                        <div class="savings-note-gold" th:if="${totalSavings != null and totalSavings.doubleValue() > 0}" 
+                        <div class="savings-note-gold" id="cartSavingsDisplay" th:if="${totalSavings != null and totalSavings.doubleValue() > 0}" 
                              th:text="'Tiết kiệm được ' + ${#numbers.formatDecimal(totalSavings, 0, 'POINT', 0, 'COMMA')} + ' đ so với sách mới'">
                             Tiết kiệm được 52.000 đ
                         </div>
@@ -1071,6 +1075,7 @@
             if (checkAllBottom) checkAllBottom.checked = checked;
             if (checkShopGroup) checkShopGroup.checked = checked;
             itemChecks.forEach(cb => cb.checked = checked);
+            calculateCartFinalTotal();
         }
 
         if (checkAllHead) {
@@ -1083,8 +1088,18 @@
             checkShopGroup.addEventListener('change', function() { toggleAll(this.checked); });
         }
 
+        itemChecks.forEach(cb => {
+            cb.addEventListener('change', function() {
+                const allChecked = Array.from(itemChecks).every(c => c.checked);
+                const someChecked = Array.from(itemChecks).some(c => c.checked);
+                if (checkAllHead) checkAllHead.checked = allChecked;
+                if (checkAllBottom) checkAllBottom.checked = allChecked;
+                if (checkShopGroup) checkShopGroup.checked = someChecked;
+                calculateCartFinalTotal();
+            });
+        });
+
         /* LOGIC TÍNH TIỀN TẠM TÍNH VÀ ÁP DỤNG VOUCHER CHO CART */
-        const rawSubtotal = /*[[${totalPrice}]]*/ 68000;
         let appliedVoucherCode = null;
         let appliedVoucherDiscount = 0;
         const coinsDiscount = 2000;
@@ -1094,12 +1109,58 @@
         }
 
         function calculateCartFinalTotal() {
-            const coinsVal = 0;
-            const finalTotal = Math.max(0, rawSubtotal - appliedVoucherDiscount - coinsVal);
-            
+            let selectedSubtotal = 0;
+            let selectedQty = 0;
+            let selectedSavings = 0;
+
+            const rows = document.querySelectorAll('.cart-item-row');
+            rows.forEach(row => {
+                const cb = row.querySelector('.item-check');
+                if (cb && cb.checked) {
+                    const price = parseFloat(row.getAttribute('data-price')) || 0;
+                    const qty = parseInt(row.getAttribute('data-qty')) || 1;
+                    const savings = parseFloat(row.getAttribute('data-savings')) || 0;
+                    selectedSubtotal += price;
+                    selectedQty += qty;
+                    selectedSavings += savings;
+                }
+            });
+
+            // Nếu không chọn sản phẩm nào thì voucher không áp dụng
+            let currentVoucherDiscount = (selectedSubtotal > 0) ? appliedVoucherDiscount : 0;
+            const finalTotal = Math.max(0, selectedSubtotal - currentVoucherDiscount);
+
             const displayEl = document.getElementById('cartFinalTotalDisplay');
             if (displayEl) {
                 displayEl.innerText = formatVND(finalTotal);
+            }
+
+            const qtyDisplay = document.getElementById('cartSelectedQtyDisplay');
+            if (qtyDisplay) {
+                qtyDisplay.innerText = selectedQty + ' Sản phẩm';
+            }
+
+            const savingsDisplay = document.getElementById('cartSavingsDisplay');
+            if (savingsDisplay) {
+                if (selectedSavings > 0 && selectedQty > 0) {
+                    savingsDisplay.style.display = 'block';
+                    savingsDisplay.innerText = 'Tiết kiệm được ' + formatVND(selectedSavings) + ' so với sách mới';
+                } else {
+                    savingsDisplay.style.display = 'none';
+                }
+            }
+
+            const checkoutBtn = document.getElementById('btnCartCheckout');
+            if (checkoutBtn) {
+                if (selectedQty === 0) {
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.style.opacity = '0.5';
+                    checkoutBtn.style.cursor = 'not-allowed';
+                } else {
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.style.opacity = '1';
+                    checkoutBtn.style.cursor = 'pointer';
+                }
             }
         }
 
@@ -1138,14 +1199,31 @@
             }
         }
 
+        function getSelectedSubtotal() {
+            let total = 0;
+            document.querySelectorAll('.cart-item-row').forEach(row => {
+                const cb = row.querySelector('.item-check');
+                if (cb && cb.checked) {
+                    total += parseFloat(row.getAttribute('data-price')) || 0;
+                }
+            });
+            return total;
+        }
+
         function applyVoucherCode(code) {
             if (!code) return;
             code = code.trim().toUpperCase();
 
+            const currentSubtotal = getSelectedSubtotal();
+            if (currentSubtotal <= 0) {
+                showModalAlert('Vui lòng chọn sản phẩm trước khi áp dụng voucher!', false);
+                return;
+            }
+
             fetch('/api/vouchers/check', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: code, orderAmount: rawSubtotal })
+                body: JSON.stringify({ code: code, orderAmount: currentSubtotal })
             })
             .then(res => res.json())
             .then(data => {
@@ -1249,11 +1327,25 @@
         }
 
         function proceedToCheckout() {
-            if (appliedVoucherCode) {
-                window.location.href = '/checkout?voucherCode=' + encodeURIComponent(appliedVoucherCode);
-            } else {
-                window.location.href = '/checkout';
+            const selectedIds = [];
+            document.querySelectorAll('.cart-item-row').forEach(row => {
+                const cb = row.querySelector('.item-check');
+                if (cb && cb.checked) {
+                    const id = row.getAttribute('data-item-id') || cb.value;
+                    if (id) selectedIds.push(id);
+                }
+            });
+
+            if (selectedIds.length === 0) {
+                alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
+                return;
             }
+
+            let checkoutUrl = '/checkout?selectedItems=' + encodeURIComponent(selectedIds.join(','));
+            if (appliedVoucherCode) {
+                checkoutUrl += '&voucherCode=' + encodeURIComponent(appliedVoucherCode);
+            }
+            window.location.href = checkoutUrl;
         }
 
         // ================= XÁC NHẬN XÓA APPLE LIQUID GLASS =================
