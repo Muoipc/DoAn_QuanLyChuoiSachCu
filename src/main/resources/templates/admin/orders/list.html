@@ -445,13 +445,13 @@
                 <div class="category-icon-squircle" style="width: 40px; height: 40px; margin-right: 0; background: #FFFFFF; border-color: var(--rebook-border);">
                     <i class="fa-solid fa-clipboard-list fs-5" style="color: var(--rebook-leather);"></i>
                 </div>
-                <h4 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.3px;">Quản Lý Đơn Hàng Chuỗi</h4>
+                <h4 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.3px;" th:text="${isAdmin ? 'Giám Sát Đơn Hàng Toàn Chuỗi' : 'Xử Lý Đơn Hàng Chi Nhánh'}">Quản Lý Đơn Hàng Chuỗi</h4>
             </div>
-            <p class="text-muted small mb-0 ms-1">
+            <p class="text-muted small mb-0 ms-1" th:text="${isAdmin ? 'Chế độ Giám sát (Chỉ xem): Tra cứu thông tin và tiến độ đơn hàng các chi nhánh. Quyền xử lý trực tiếp thuộc về Quản lý từng Shop.' : 'Tiếp nhận đơn hàng của Shop, đóng gói sách cũ và phân công nhân viên giao hàng (Shipper).'}">
                 Theo dõi toàn bộ đơn hàng sách cũ đa chi nhánh, tiếp nhận đơn Click &amp; Collect và phân công nhân viên giao hàng.
             </p>
         </div>
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2" th:if="${!isAdmin}">
             <a th:href="@{/shipper/orders}" class="btn btn-outline-dark btn-sm rounded-pill px-3 py-2 fw-semibold">
                 <i class="fa-solid fa-motorcycle me-1 text-warning"></i>Cổng Shipper
             </a>
@@ -696,7 +696,7 @@
                             </td>
                             <td class="text-end pe-4">
                                 <a th:href="@{/admin/orders/{id}(id=${ord.id})}" class="btn-view-order">
-                                    <i class="fa-solid fa-eye"></i>Xử lý
+                                    <i class="fa-solid fa-eye"></i><span th:text="${isAdmin ? 'Xem chi tiết' : 'Xử lý'}">Xử lý</span>
                                 </a>
                             </td>
                         </tr>

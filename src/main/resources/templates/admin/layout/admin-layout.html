@@ -1166,7 +1166,7 @@
                 <li class="sidebar-item" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin/orders')} ? 'active' : ''">
                     <a th:href="@{/admin/orders}">
                         <i class="fa-solid fa-clipboard-list"></i>
-                        <span>Xử Lý Đơn Hàng</span>
+                        <span th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'Giám Sát Đơn Hàng' : 'Xử Lý Đơn Hàng'}">Xử Lý Đơn Hàng</span>
                     </a>
                 </li>
 

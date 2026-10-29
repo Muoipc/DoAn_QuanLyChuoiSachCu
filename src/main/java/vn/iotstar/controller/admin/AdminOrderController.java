@@ -156,11 +156,13 @@ public class AdminOrderController {
             return "redirect:/admin/orders";
         }
 
-        if (!isAdmin) {
-            if (managedStore == null || order.getStore() == null || !managedStore.getId().equals(order.getStore().getId())) {
-                redirect.addFlashAttribute("errorMessage", "Bạn không có quyền cập nhật đơn hàng của chi nhánh khác!");
-                return "redirect:/admin/orders";
-            }
+        if (isAdmin) {
+            redirect.addFlashAttribute("errorMessage", "Quản trị viên (Admin) chỉ có quyền xem và giám sát thông tin đơn hàng. Việc xử lý trực tiếp thuộc về Quản lý chi nhánh (Shop)!");
+            return "redirect:/admin/orders/" + id;
+        }
+        if (managedStore == null || order.getStore() == null || !managedStore.getId().equals(order.getStore().getId())) {
+            redirect.addFlashAttribute("errorMessage", "Bạn không có quyền cập nhật đơn hàng của chi nhánh khác!");
+            return "redirect:/admin/orders";
         }
 
         try {
@@ -191,11 +193,13 @@ public class AdminOrderController {
             return "redirect:/admin/orders";
         }
 
-        if (!isAdmin) {
-            if (managedStore == null || order.getStore() == null || !managedStore.getId().equals(order.getStore().getId())) {
-                redirect.addFlashAttribute("errorMessage", "Bạn không có quyền cập nhật đơn hàng của chi nhánh khác!");
-                return "redirect:/admin/orders";
-            }
+        if (isAdmin) {
+            redirect.addFlashAttribute("errorMessage", "Quản trị viên (Admin) chỉ có quyền xem và giám sát thông tin đơn hàng. Việc xử lý trực tiếp thuộc về Quản lý chi nhánh (Shop)!");
+            return "redirect:/admin/orders/" + id;
+        }
+        if (managedStore == null || order.getStore() == null || !managedStore.getId().equals(order.getStore().getId())) {
+            redirect.addFlashAttribute("errorMessage", "Bạn không có quyền cập nhật đơn hàng của chi nhánh khác!");
+            return "redirect:/admin/orders";
         }
 
         try {
@@ -226,11 +230,13 @@ public class AdminOrderController {
             return "redirect:/admin/orders";
         }
 
-        if (!isAdmin) {
-            if (managedStore == null || order.getStore() == null || !managedStore.getId().equals(order.getStore().getId())) {
-                redirect.addFlashAttribute("errorMessage", "Bạn không có quyền phân công shipper cho chi nhánh khác!");
-                return "redirect:/admin/orders";
-            }
+        if (isAdmin) {
+            redirect.addFlashAttribute("errorMessage", "Quản trị viên (Admin) chỉ có quyền xem và giám sát thông tin đơn hàng. Việc phân công Shipper thuộc về Quản lý chi nhánh (Shop)!");
+            return "redirect:/admin/orders/" + id;
+        }
+        if (managedStore == null || order.getStore() == null || !managedStore.getId().equals(order.getStore().getId())) {
+            redirect.addFlashAttribute("errorMessage", "Bạn không có quyền phân công shipper cho chi nhánh khác!");
+            return "redirect:/admin/orders";
         }
 
         try {
