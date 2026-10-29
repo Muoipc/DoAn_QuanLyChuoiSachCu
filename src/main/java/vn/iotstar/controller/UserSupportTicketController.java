@@ -38,6 +38,7 @@ public class UserSupportTicketController {
 
         Long userId = userDetails.getId();
         User user = userRepository.findById(userId).orElse(null);
+        try { supportTicketRepository.deleteChatLogsFromTickets(); } catch (Exception ignored) {}
         List<SupportTicket> tickets = supportTicketRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         long countOpen = supportTicketRepository.countByUserIdAndStatus(userId, SupportTicket.TicketStatus.OPEN);

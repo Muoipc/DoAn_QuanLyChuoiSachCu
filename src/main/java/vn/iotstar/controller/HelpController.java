@@ -167,25 +167,12 @@ public class HelpController {
             user = userRepository.findById(userDetails.getId()).orElse(null);
         }
 
-        // Tự động lưu phiếu SupportTicket để CSKH / Admin theo dõi được lịch sử phản ánh của khách
-        SupportTicket ticket = new SupportTicket();
-        String customerName = user != null ? (user.getFullName() != null ? user.getFullName() : user.getUsername()) : "Khách hàng";
-        ticket.setFullName(customerName);
-        ticket.setEmail(user != null && user.getEmail() != null ? user.getEmail() : "cskh_live@rebook.vn");
-        ticket.setPhone(user != null ? user.getPhone() : null);
-        ticket.setCategory("Trò Chuyện CSKH Trực Tuyến");
-        ticket.setMessage(message.trim());
-        ticket.setStatus(SupportTicket.TicketStatus.OPEN);
-        ticket.setUser(user);
-        supportTicketRepository.save(ticket);
-
-        // Sinh câu trả lời bằng Trợ Lý AI CSKH ReBook
+        // Chỉ trò chuyện trực tuyến với CSKH AI, không tự động tạo phiếu khiếu nại (SupportTicket)
         String aiReply = generateSupportAiReply(message.trim(), user);
 
         return ResponseEntity.ok(Map.of(
                 "success", true,
-                "reply", aiReply,
-                "ticketId", ticket.getId()
+                "reply", aiReply
         ));
     }
 

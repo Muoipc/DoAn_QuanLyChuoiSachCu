@@ -36,6 +36,7 @@ public class AdminSupportTicketController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model
     ) {
+        try { supportTicketRepository.deleteChatLogsFromTickets(); } catch (Exception ignored) {}
         List<SupportTicket> tickets;
         if ("OPEN".equalsIgnoreCase(statusFilter)) {
             tickets = supportTicketRepository.findByStatusOrderByCreatedAtDesc(SupportTicket.TicketStatus.OPEN);

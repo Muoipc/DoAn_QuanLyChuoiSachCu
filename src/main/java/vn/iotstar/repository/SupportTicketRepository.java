@@ -1,7 +1,10 @@
 package vn.iotstar.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import vn.iotstar.entity.SupportTicket;
 
 import java.util.List;
@@ -14,4 +17,9 @@ public interface SupportTicketRepository extends JpaRepository<SupportTicket, Lo
     List<SupportTicket> findByUserIdOrderByCreatedAtDesc(Long userId);
     long countByStatus(SupportTicket.TicketStatus status);
     long countByUserIdAndStatus(Long userId, SupportTicket.TicketStatus status);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM SupportTicket t WHERE t.category IN ('Trò Chuyện CSKH Trực Tuyến', 'Tin nhắn CSKH Trực Tuyến')")
+    void deleteChatLogsFromTickets();
 }
