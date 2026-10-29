@@ -124,7 +124,9 @@
 
                                     <!-- NÚT TỪ CHỐI (MỞ PROMPT / MODAL) -->
                                     <button type="button" class="btn btn-sm btn-outline-danger px-2" 
-                                            th:onclick="'openRejectModal(' + ${reg.id} + ', \'' + ${#strings.escapeJavaScript(reg.storeName)} + '\')'"
+                                            th:data-id="${reg.id}"
+                                            th:data-name="${reg.storeName}"
+                                            onclick="openRejectModal(this.getAttribute('data-id'), this.getAttribute('data-name'))"
                                             title="Từ chối hồ sơ">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>

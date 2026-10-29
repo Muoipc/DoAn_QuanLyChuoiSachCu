@@ -193,27 +193,31 @@
         </div>
     </div>
 
-    <!-- 2. STATS CARDS CHUẨN OPENDESIGN -->
+    <!-- 2. STATS CARDS CHUẨN OPENDESIGN (NHẤN ĐỂ LỌC CHI TIẾT) -->
     <div class="row g-3 mb-4">
         <!-- Tổng phiếu yêu cầu -->
         <div class="col-lg-3 col-sm-6">
-            <div class="inv-metric-card h-100">
+            <a th:href="@{/admin/inventory/transfers(storeId=${selectedStoreId})}"
+               class="inv-metric-card text-decoration-none d-block h-100"
+               th:classappend="${selectedStatus == null} ? 'active-primary' : ''">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="inv-metric-label">Tổng Phiếu Yêu Cầu</span>
                     <span class="badge bg-secondary-subtle text-secondary border rounded-pill">Toàn bộ</span>
                 </div>
                 <div class="d-flex align-items-baseline justify-content-between">
-                    <h3 class="inv-metric-number" style="color: var(--rebook-leather);" th:text="${transfers.size()}">0</h3>
+                    <h3 class="inv-metric-number" style="color: var(--rebook-leather);" th:text="${totalCount != null ? totalCount : transfers.size()}">0</h3>
                     <div class="inv-metric-squircle squircle-primary">
                         <i class="fa-solid fa-clipboard-list"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Chờ Admin duyệt -->
         <div class="col-lg-3 col-sm-6">
-            <div class="inv-metric-card h-100">
+            <a th:href="@{/admin/inventory/transfers(status=${selectedStatus != null and selectedStatus.name() == 'PENDING' ? null : 'PENDING'}, storeId=${selectedStoreId})}"
+               class="inv-metric-card text-decoration-none d-block h-100"
+               th:classappend="${selectedStatus != null and selectedStatus.name() == 'PENDING'} ? 'active-warning' : ''">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="inv-metric-label">Chờ Duyệt</span>
                     <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill">PENDING</span>
@@ -224,39 +228,43 @@
                         <i class="fa-solid fa-hourglass-half"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Đã phê duyệt -->
         <div class="col-lg-3 col-sm-6">
-            <div class="inv-metric-card h-100">
+            <a th:href="@{/admin/inventory/transfers(status=${selectedStatus != null and selectedStatus.name() == 'APPROVED' ? null : 'APPROVED'}, storeId=${selectedStoreId})}"
+               class="inv-metric-card text-decoration-none d-block h-100"
+               th:classappend="${selectedStatus != null and selectedStatus.name() == 'APPROVED'} ? 'active-success' : ''">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="inv-metric-label">Đã Phê Duyệt</span>
                     <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">APPROVED</span>
                 </div>
                 <div class="d-flex align-items-baseline justify-content-between">
-                    <h3 class="inv-metric-number text-success" th:text="${transfers.?[status.name() == 'APPROVED'].size()}">0</h3>
+                    <h3 class="inv-metric-number text-success" th:text="${approvedCount != null ? approvedCount : 0}">0</h3>
                     <div class="inv-metric-squircle squircle-success">
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Từ chối / Đã hủy -->
         <div class="col-lg-3 col-sm-6">
-            <div class="inv-metric-card h-100">
+            <a th:href="@{/admin/inventory/transfers(status=${selectedStatus != null and (selectedStatus.name() == 'REJECTED' or selectedStatus.name() == 'CANCELLED') ? null : 'REJECTED'}, storeId=${selectedStoreId})}"
+               class="inv-metric-card text-decoration-none d-block h-100"
+               th:classappend="${selectedStatus != null and (selectedStatus.name() == 'REJECTED' or selectedStatus.name() == 'CANCELLED')} ? 'active-danger' : ''">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="inv-metric-label">Từ Chối / Đã Hủy</span>
                     <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">REJECTED</span>
                 </div>
                 <div class="d-flex align-items-baseline justify-content-between">
-                    <h3 class="inv-metric-number text-danger" th:text="${transfers.?[status.name() == 'REJECTED' or status.name() == 'CANCELLED'].size()}">0</h3>
+                    <h3 class="inv-metric-number text-danger" th:text="${rejectedCount != null ? rejectedCount : 0}">0</h3>
                     <div class="inv-metric-squircle squircle-danger">
                         <i class="fa-solid fa-ban"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 

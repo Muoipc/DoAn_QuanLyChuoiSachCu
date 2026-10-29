@@ -130,8 +130,8 @@
                     </div>
 
                     <!-- NỘI DUNG TIN NHẮN (MESSAGE BODY) -->
-                    <div id="adminChatBody" class="card-body overflow-auto flex-grow-1 p-3.5 d-flex flex-column gap-3"
-                         style="background: rgba(250, 246, 240, 0.35); max-height: 460px; min-height: 420px;">
+                    <div id="adminChatBody" class="card-body overflow-auto flex-grow-1 p-3 d-flex flex-column gap-3"
+                         style="background: rgba(250, 246, 240, 0.35); max-height: 460px; min-height: 420px; padding: 18px 22px !important;">
 
                         <div th:if="${conversation.empty and activeCustomer != null}" class="text-center py-5 text-muted my-auto">
                             <i class="fa-solid fa-envelope-open-text fa-3x mb-3 text-secondary opacity-50"></i>
@@ -162,11 +162,11 @@
                             </div>
 
                             <!-- BONG BÓNG TIN NHẮN LIQUID GLASS -->
-                            <div class="p-3 rounded-4 shadow-sm"
-                                 style="max-width: 80%; line-height: 1.5; font-size: 13.5px;"
+                            <div class="rounded-4 shadow-sm"
+                                 style="max-width: 78%; padding: 10px 16px !important; line-height: 1.5; font-size: 13.5px; word-break: break-word;"
                                  th:styleappend="${m.senderType == T(vn.iotstar.entity.ChatMessage.SenderType).CUSTOMER 
-                                     ? 'background: rgba(255, 255, 255, 0.95); color: #1C1917; border: 1.5px solid rgba(232, 222, 200, 0.85); border-bottom-left-radius: 4px; box-shadow: 0 4px 14px rgba(45, 24, 15, 0.04);' 
-                                     : 'background: linear-gradient(135deg, rgba(255, 247, 237, 0.95) 0%, rgba(254, 237, 213, 0.92) 100%); color: #1C1917; border: 1.5px solid rgba(253, 186, 116, 0.8); border-bottom-right-radius: 4px; box-shadow: 0 4px 14px rgba(140, 74, 39, 0.07);'}">
+                                     ? 'background: rgba(255, 255, 255, 0.96); color: #1C1917; border: 1.5px solid rgba(232, 222, 200, 0.85); border-bottom-left-radius: 4px !important; box-shadow: 0 4px 14px rgba(45, 24, 15, 0.04);' 
+                                     : 'background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%); color: #1C1917; border: 1.5px solid rgba(253, 186, 116, 0.85); border-bottom-right-radius: 4px !important; box-shadow: 0 4px 14px rgba(140, 74, 39, 0.07);'}">
                                 <span th:text="${m.content}">Nội dung tin nhắn</span>
 
                                 <!-- ẢNH ĐÍNH KÈM -->
@@ -343,7 +343,7 @@
                                 '<strong class="text-dark">Quản lý quầy</strong>' +
                                 '<span class="ms-1">' + now + '</span>' +
                             '</div>' +
-                            '<div class="p-2.5 rounded-3 shadow-xs text-white" style="max-width: 75%; font-size: 13.5px; background: #8C4A27; border-top-right-radius: 4px !important;">' +
+                            '<div class="rounded-4 shadow-sm" style="max-width: 78%; padding: 10px 16px !important; line-height: 1.5; font-size: 13.5px; word-break: break-word; background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%); color: #1C1917; border: 1.5px solid rgba(253, 186, 116, 0.85); border-bottom-right-radius: 4px !important; box-shadow: 0 4px 14px rgba(140, 74, 39, 0.07);">' +
                                 (content ? '<div>' + content + '</div>' : '') +
                                 mediaHtml +
                             '</div>';
@@ -395,7 +395,7 @@
                                         '<strong class="text-dark">' + (m.senderName || 'Khách hàng') + '</strong>' +
                                         '<span class="ms-1">' + (m.createdAt || '') + '</span>' +
                                     '</div>' +
-                                    '<div class="p-2.5 rounded-3 border shadow-xs bg-white text-dark" style="max-width: 75%; font-size: 13.5px; border-color: rgba(232, 222, 200, 0.8) !important; border-top-left-radius: 4px !important;">' +
+                                    '<div class="rounded-4 border shadow-sm bg-white text-dark" style="max-width: 78%; padding: 10px 16px !important; line-height: 1.5; font-size: 13.5px; word-break: break-word; border-color: rgba(232, 222, 200, 0.85) !important; border-bottom-left-radius: 4px !important; box-shadow: 0 4px 14px rgba(45, 24, 15, 0.04);">' +
                                         (m.content ? '<div>' + m.content + '</div>' : '') +
                                         mHtml +
                                     '</div>';

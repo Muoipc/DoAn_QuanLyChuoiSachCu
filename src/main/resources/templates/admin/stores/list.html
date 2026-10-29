@@ -28,8 +28,8 @@
             <div class="card card-custom h-100 position-relative">
                 <!-- ẢNH ĐẠI DIỆN CỬA HÀNG -->
                 <div style="height: 180px; overflow: hidden; border-radius: 12px 12px 0 0; background: #e2e8f0;">
-                    <img th:src="${store.image != null and !store.image.isEmpty() ? store.image : 'https://images.unsplash.com/photo-1507842229451-7f01be777a26?w=600'}" 
-                         class="w-100 h-100 object-fit-cover" alt="Ảnh chi nhánh">
+                    <img th:src="${store.image != null and !store.image.isEmpty() ? store.image : '/images/store-thuduc.jpg'}" 
+                         onerror="this.onerror=null;this.src='/images/store-thuduc.jpg';" class="w-100 h-100 object-fit-cover" alt="Ảnh chi nhánh">
                 </div>
 
                 <div class="card-body p-4 d-flex flex-column">

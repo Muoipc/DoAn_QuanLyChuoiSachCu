@@ -277,7 +277,7 @@
                 </div>
 
                 <div class="card-body-row">
-                    <img th:src="${c.photosJson != null ? c.photosJson : '/images/books/book_1.jpg'}" alt="Bìa sách" class="book-img-thumb">
+                    <img th:src="${c.primaryPhotoUrl}" alt="Bìa sách" class="book-img-thumb" onerror="this.onerror=null;this.src='/images/books/book-1.jpg';">
                     <div>
                         <h4 class="book-title-h4" th:text="${c.bookTitle}">Tên cuốn sách</h4>
                         <div class="book-meta-sub">

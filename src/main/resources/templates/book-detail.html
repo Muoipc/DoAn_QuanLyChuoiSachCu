@@ -458,6 +458,33 @@
             background: var(--color-fire);
             color: #ffffff;
         }
+        .variant-btn-item.disabled {
+            opacity: 0.45 !important;
+            cursor: not-allowed !important;
+            background: #f5f5f4 !important;
+            border-color: #d6d3d1 !important;
+            color: #78716c !important;
+            pointer-events: none;
+            user-select: none;
+        }
+        .variant-btn-item.disabled:hover {
+            border-color: #d6d3d1 !important;
+            color: #78716c !important;
+        }
+        .variant-stock-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 9999px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+        .variant-btn-item.disabled .variant-stock-tag {
+            background: rgba(120, 113, 108, 0.12);
+            color: #78716c;
+            border-color: rgba(120, 113, 108, 0.25);
+        }
         .condition-note-box {
             margin-top: 6px;
             background: rgba(250, 248, 245, 0.85);
@@ -1536,7 +1563,7 @@
 
                 <!-- KHỐI HIỂN THỊ GIÁ -->
                 <div class="price-banner-box">
-                    <span class="price-original-strike" id="originalPriceDisplay" th:if="${book.originalPrice != null}" 
+                    <span class="price-original-strike" id="originalPriceDisplay" th:if="${book.originalPrice != null and book.originalPrice > book.price}" 
                           th:text="${#numbers.formatDecimal(book.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'">
                         120.000 đ
                     </span>
@@ -1585,46 +1612,58 @@
                     <div class="attr-label">Tình Trạng</div>
                     <div style="flex: 1;">
                         <div class="variant-buttons-list">
-                            <!-- 1. BẢN SÁCH CŨ TIẾT KIỆM (NGOÀI CÙNG BÊN TRÁI - GIÁ THẤP NHẤT) -->
-                            <div class="variant-btn-item active" 
+                            <!-- 1. BẢN SÁCH CŨ TIẾT KIỆM (ĐỘ MỚI 80% - 85%) -->
+                            <div class="variant-btn-item"
+                                 th:classappend="${primaryTier == 'budget' and budgetStock > 0 ? 'active' : (budgetStock <= 0 ? 'disabled' : '')}"
                                  data-type="budget"
-                                 th:data-price="${book.price != null ? #numbers.formatDecimal(book.price * 0.85, 0, 0) : 0}"
-                                 th:data-original="${book.originalPrice != null ? #numbers.formatDecimal(book.originalPrice, 0, 0) : #numbers.formatDecimal(book.price, 0, 0)}"
-                                 data-condition="85"
-                                 data-label="Bản Sách Cũ Tiết Kiệm (85% Mới)"
-                                 data-note="Độ mới 80% - 85%, giấy ngả màu thời gian tự nhiên, có nếp đọc nhẹ nhưng bảo đảm không mất chữ, tiết kiệm 15% chi phí cho bạn đọc."
+                                 th:data-stock="${budgetStock}"
+                                 th:data-book-id="${budgetBookId}"
+                                 th:data-price="${#numbers.formatDecimal(budgetPrice, 0, 0)}"
+                                 th:data-original="${book.originalPrice != null ? #numbers.formatDecimal(book.originalPrice, 0, 0) : #numbers.formatDecimal(budgetPrice, 0, 0)}"
+                                 th:data-condition="${budgetCond}"
+                                 th:data-label="'Bản Tiết Kiệm (' + ${budgetCond} + '% Mới)'"
+                                 th:data-note="'Độ mới ' + ${budgetCond} + '% (Đã kiểm định): Sách nguyên bản, giấy ngả màu thời gian tự nhiên nhưng bảo đảm đủ trang 100%. Hiện có ' + ${budgetStock} + ' quyển tại kho.'"
                                  onclick="selectVariant(this)">
-                                <i class="fa-solid fa-book-open text-secondary"></i>
-                                <span>Bản Tiết Kiệm (85% Mới)</span>
-                                <span class="variant-price-tag" th:text="${book.price != null ? #numbers.formatDecimal(book.price * 0.85, 0, 'POINT', 0, 'COMMA') : ''} + ' đ'">38.250 đ</span>
+                                <i th:class="${budgetStock > 0 ? 'fa-solid fa-book-open text-secondary' : 'fa-solid fa-lock text-muted'}"></i>
+                                <span th:text="${budgetStock > 0 ? 'Bản Tiết Kiệm (' + budgetCond + '% Mới)' : 'Bản Tiết Kiệm (80-85%)'}">Bản Tiết Kiệm (85% Mới)</span>
+                                <span class="variant-price-tag" th:if="${budgetStock > 0}" th:text="${#numbers.formatDecimal(budgetPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'">38.250 đ</span>
+                                <span class="variant-stock-tag" th:text="${budgetStock > 0 ? 'Còn ' + budgetStock + ' quyển' : '0 quyển (Khóa)'}">0 quyển</span>
                             </div>
 
-                            <!-- 2. BẢN TIÊU CHUẨN (ĐỘ MỚI NGUYÊN BẢN CỦA SÁCH) -->
-                            <div class="variant-btn-item" 
+                            <!-- 2. BẢN TIÊU CHUẨN (ĐỘ MỚI 86% - 95%) -->
+                            <div class="variant-btn-item"
+                                 th:classappend="${primaryTier == 'standard' and standardStock > 0 ? 'active' : (standardStock <= 0 ? 'disabled' : '')}"
                                  data-type="standard"
-                                 th:data-price="${#numbers.formatDecimal(book.price, 0, 0)}"
-                                 th:data-original="${book.originalPrice != null ? #numbers.formatDecimal(book.originalPrice, 0, 0) : #numbers.formatDecimal(book.price, 0, 0)}"
-                                 th:data-condition="${book.conditionPercent}"
-                                 th:data-label="'Bản Tiêu Chuẩn (' + ${book.conditionPercent} + '% Mới)'"
-                                 th:data-note="'Độ mới ' + ${book.conditionPercent} + '%, sách nguyên bản, gáy chắc chắn, các trang sạch đẹp và đầy đủ 100%, đúng theo biên bản kiểm định của chuỗi.'"
+                                 th:data-stock="${standardStock}"
+                                 th:data-book-id="${standardBookId}"
+                                 th:data-price="${#numbers.formatDecimal(standardPrice, 0, 0)}"
+                                 th:data-original="${book.originalPrice != null ? #numbers.formatDecimal(book.originalPrice, 0, 0) : #numbers.formatDecimal(standardPrice, 0, 0)}"
+                                 th:data-condition="${standardCond}"
+                                 th:data-label="'Bản Tiêu Chuẩn (' + ${standardCond} + '% Mới)'"
+                                 th:data-note="'Độ mới ' + ${standardCond} + '% (Đã kiểm định): Sách nguyên bản, gáy chắc chắn, các trang sạch đẹp và đầy đủ 100%, đúng theo biên bản kiểm định. Hiện có ' + ${standardStock} + ' quyển tại kho.'"
                                  onclick="selectVariant(this)">
-                                <i class="fa-solid fa-book text-success"></i>
-                                <span th:text="'Bản Chuẩn ' + ${book.conditionPercent} + '% (Đã Duyệt)'">Bản Chuẩn 95% (Đã Duyệt)</span>
-                                <span class="variant-price-tag" th:text="${#numbers.formatDecimal(book.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">45.000 đ</span>
+                                <i th:class="${standardStock > 0 ? 'fa-solid fa-book text-success' : 'fa-solid fa-lock text-muted'}"></i>
+                                <span th:text="${standardStock > 0 ? 'Bản Chuẩn ' + standardCond + '% (Đã Duyệt)' : 'Bản Chuẩn (90-95%)'}">Bản Chuẩn 90% (Đã Duyệt)</span>
+                                <span class="variant-price-tag" th:if="${standardStock > 0}" th:text="${#numbers.formatDecimal(standardPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'">45.000 đ</span>
+                                <span class="variant-stock-tag" th:text="${standardStock > 0 ? 'Còn ' + standardStock + ' quyển' : '0 quyển (Khóa)'}">0 quyển</span>
                             </div>
 
-                            <!-- 3. BẢN SƯU TẦM (ĐỘ MỚI 99% + BOOKMARK) -->
-                            <div class="variant-btn-item" 
+                            <!-- 3. BẢN SƯU TẦM (ĐỘ MỚI 96% - 99%) -->
+                            <div class="variant-btn-item"
+                                 th:classappend="${primaryTier == 'collector' and collectorStock > 0 ? 'active' : (collectorStock <= 0 ? 'disabled' : '')}"
                                  data-type="collector"
-                                 th:data-price="${book.price != null ? #numbers.formatDecimal(book.price * 1.15, 0, 0) : 0}"
-                                 th:data-original="${book.originalPrice != null ? #numbers.formatDecimal(book.originalPrice, 0, 0) : #numbers.formatDecimal(book.price, 0, 0)}"
-                                 data-condition="99"
-                                 data-label="Bản Sưu Tầm (99% Mới + Bookmark)"
-                                 data-note="Độ mới 98% - 99%, tình trạng sưu tầm xuất sắc như vừa bóc seal, tặng kèm Bookmark kim loại/gỗ khắc laser của Chuỗi Sách Cũ TP.HCM."
+                                 th:data-stock="${collectorStock}"
+                                 th:data-book-id="${collectorBookId}"
+                                 th:data-price="${#numbers.formatDecimal(collectorPrice, 0, 0)}"
+                                 th:data-original="${book.originalPrice != null ? #numbers.formatDecimal(book.originalPrice, 0, 0) : #numbers.formatDecimal(collectorPrice, 0, 0)}"
+                                 th:data-condition="${collectorCond}"
+                                 th:data-label="'Bản Sưu Tầm (' + ${collectorCond} + '% Mới)'"
+                                 th:data-note="'Độ mới ' + ${collectorCond} + '% (Đã kiểm định): Tình trạng sưu tầm xuất sắc như vừa bóc seal, tặng kèm Bookmark Chuỗi Sách Cũ TP.HCM. Hiện có ' + ${collectorStock} + ' quyển tại kho.'"
                                  onclick="selectVariant(this)">
-                                <i class="fa-solid fa-gem" style="color: var(--rebook-leather);"></i>
-                                <span>Bản Sưu Tầm (99% Mới)</span>
-                                <span class="variant-price-tag" th:text="${book.price != null ? #numbers.formatDecimal(book.price * 1.15, 0, 'POINT', 0, 'COMMA') : ''} + ' đ'">51.750 đ</span>
+                                <i th:class="${collectorStock > 0 ? 'fa-solid fa-gem' : 'fa-solid fa-lock text-muted'}" th:style="${collectorStock > 0 ? 'color: var(--rebook-leather);' : ''}"></i>
+                                <span th:text="${collectorStock > 0 ? 'Bản Sưu Tầm ' + collectorCond + '% (Đã Duyệt)' : 'Bản Sưu Tầm (98-99%)'}">Bản Sưu Tầm 99% (Đã Duyệt)</span>
+                                <span class="variant-price-tag" th:if="${collectorStock > 0}" th:text="${#numbers.formatDecimal(collectorPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'">75.000 đ</span>
+                                <span class="variant-stock-tag" th:text="${collectorStock > 0 ? 'Còn ' + collectorStock + ' quyển' : '0 quyển (Khóa)'}">0 quyển</span>
                             </div>
                         </div>
 
@@ -2300,7 +2339,14 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' đ';
         }
 
+        /* Số lượng tồn kho tối đa theo tình trạng đang chọn */
+        let maxStock = parseInt(document.getElementById('stockDisplay')?.dataset?.maxStock) || 0;
+
         function selectVariant(el) {
+            if (!el || el.classList.contains('disabled')) return;
+            const tierStock = parseInt(el.getAttribute('data-stock')) || 0;
+            if (tierStock <= 0) return;
+
             document.querySelectorAll('.variant-btn-item').forEach(btn => btn.classList.remove('active'));
             el.classList.add('active');
 
@@ -2309,6 +2355,7 @@
             const note = el.getAttribute('data-note') || '';
             const condPercent = el.getAttribute('data-condition') || '90';
             const condType = el.getAttribute('data-type') || 'standard';
+            const tierBookId = el.getAttribute('data-book-id');
 
             // 1. Cập nhật giá bán hiện tại với định dạng đầy đủ (ví dụ ₫51.750)
             const priceEl = document.getElementById('currentPriceDisplay');
@@ -2337,14 +2384,37 @@
                 noteText.innerText = note;
             }
 
-            // 4. Cập nhật các trường ẩn trong form giỏ hàng
+            // 4. Cập nhật tồn kho theo tình trạng sách đang chọn
+            maxStock = tierStock;
+            const stockDisplayEl = document.getElementById('stockDisplay');
+            if (stockDisplayEl) {
+                stockDisplayEl.dataset.maxStock = tierStock;
+                stockDisplayEl.innerText = tierStock + ' quyển có sẵn (Độ mới ' + condPercent + '%) tại TP.HCM';
+            }
+            const qtyInput = document.getElementById('buyQty');
+            if (qtyInput && (parseInt(qtyInput.value) || 1) > tierStock) {
+                qtyInput.value = tierStock;
+            }
+
+            // 5. Cập nhật các trường ẩn trong form giỏ hàng
             const condInput = document.getElementById('selectedCondition');
             if (condInput) condInput.value = condType;
             const condPercentInput = document.getElementById('selectedConditionPercent');
             if (condPercentInput) condPercentInput.value = condPercent;
             const customPriceInput = document.getElementById('selectedCustomPrice');
             if (customPriceInput) customPriceInput.value = Math.round(price);
+            if (tierBookId) {
+                const bookIdInput = document.querySelector('#cartForm input[name="bookId"]');
+                if (bookIdInput) bookIdInput.value = tierBookId;
+            }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const activeVariant = document.querySelector('.variant-btn-item.active');
+            if (activeVariant) {
+                selectVariant(activeVariant);
+            }
+        });
 
         function toggleStoreDrawer() {
             const drawer = document.getElementById('storeDrawer');
@@ -2354,9 +2424,6 @@
                 drawer.style.display = 'none';
             }
         }
-
-        /* Số lượng tồn kho tối đa — đọc từ data attribute trên thẻ hiển thị stock */
-        const maxStock = parseInt(document.getElementById('stockDisplay')?.dataset?.maxStock) || 0;
 
         /**
          * Tăng/giảm số lượng mua, giới hạn trong [1, maxStock]

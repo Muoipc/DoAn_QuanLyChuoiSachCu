@@ -377,7 +377,10 @@ INSERT INTO users (id, role_id, username, email, password, full_name, phone, ava
 (3, 2, 'manager_q1', 'quan1@oldbookstore.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Quản Lý CN Quận 1', '0923456789', '/images/avatars/avatar-default.png', TRUE),
 (4, 3, 'phuc_customer', 'phuc@student.hcmute.edu.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Nguyễn Song Hoàng Phúc', '0934567890', '/images/avatars/avatar-phuc.png', TRUE),
 (5, 3, 'cuong_customer', 'cuong@student.hcmute.edu.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Thái Duy Cường', '0945678901', '/images/avatars/avatar-cuong.png', TRUE),
-(6, 4, 'shipper_hung', 'shipper_hung@oldbookstore.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Trần Văn Hùng (Shipper)', '0956789012', '/images/avatars/avatar-default.png', TRUE);
+(6, 4, 'shipper_hung', 'shipper_hung@oldbookstore.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Trần Văn Hùng (Shipper)', '0956789012', '/images/avatars/avatar-default.png', TRUE),
+(100, 3, 'phuc0125', 'nguyensonghoangphuc0125@gmail.com', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Nguyễn Song Hoàng Phúc', '0901234567', '/images/avatars/avatar-phuc.png', TRUE),
+(101, 4, 'shipper_an', 'shipper_an@oldbookstore.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Nguyễn Văn An (Shipper)', '0866773884', '/images/avatars/avatar-default.png', TRUE),
+(102, 2, 'seller_demo', 'seller_demo@rebook.vn', '$2a$10$Whn3DmaeYo7HxBDwnmX8BOB20XUJ14LXC/rACz8BAE1phMFcAM03i', 'Đối Tác Bán Hàng Demo', '0988776655', '/images/avatars/avatar-default.png', TRUE);
 
 -- 3. Nạp địa chỉ giao hàng mẫu
 INSERT INTO addresses (id, user_id, receiver_name, phone, province, district, ward, street_address, is_default) VALUES
@@ -387,7 +390,7 @@ INSERT INTO addresses (id, user_id, receiver_name, phone, province, district, wa
 
 -- 4. Nạp 5 chi nhánh chuỗi cửa hàng sách cũ tại TP. Hồ Chí Minh
 INSERT INTO stores (id, manager_id, store_name, slug, phone, email, address, province, district, open_time, close_time, image, is_active) VALUES
-(1, 2, 'Chi Nhánh 1: Thủ Đức (Gần HCMUTE)', 'chi-nhanh-thu-duc', '02837221223', 'thuduc@oldbookstore.vn', 'Số 48 Võ Văn Ngân, Phường Linh Chiểu', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', '08:00', '21:30', 'https://images.unsplash.com/photo-1507842229451-7f01be777a26?w=800', TRUE),
+(1, 2, 'Chi Nhánh 1: Thủ Đức (Gần HCMUTE)', 'chi-nhanh-thu-duc', '02837221223', 'thuduc@oldbookstore.vn', 'Số 48 Võ Văn Ngân, Phường Linh Chiểu', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', '08:00', '21:30', '/images/store-thuduc.jpg', TRUE),
 (2, 3, 'Chi Nhánh 2: Đường Sách Quận 1', 'chi-nhanh-quan-1', '02838229988', 'quan1@oldbookstore.vn', 'Đường Sách Nguyễn Văn Bình, Phường Bến Nghé', 'TP. Hồ Chí Minh', 'Quận 1', '08:30', '22:00', 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800', TRUE),
 (3, NULL, 'Chi Nhánh 3: Làng Đại Học Quốc Gia', 'chi-nhanh-lang-dai-hoc', '02837244555', 'langdaihoc@oldbookstore.vn', 'Khu Đô Thị ĐHQG-HCM, Phường Linh Trung', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', '07:30', '21:30', 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800', TRUE),
 (4, NULL, 'Chi Nhánh 4: Phố Sách Cũ Phú Nhuận', 'chi-nhanh-phu-nhuan', '02838447766', 'phunhuan@oldbookstore.vn', 'Số 120 Trần Huy Liệu, Phường 15', 'TP. Hồ Chí Minh', 'Quận Phú Nhuận', '08:00', '21:00', 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800', TRUE),
@@ -405,25 +408,6 @@ INSERT INTO `categories` (`id`, `parent_id`, `category_name`, `slug`, `descripti
 (8, NULL, 'Truyện Tranh & Manga Cổ', 'truyen-tranh-manga', 'Bộ truyện tranh gắn liền tuổi thơ và ấn bản sưu tầm', 'fa-palette', 1);
 
 -- 6. Nạp danh sách 20 cuốn sách cũ mẫu chuẩn bìa thật 100% (Khớp ảnh bìa thực tế)
-INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
-VALUES (1, 1, 'Yêu Những Điều Không Hoàn Hảo', 'yeu-nhung-dieu-khong-hoan-hao', 'Hae Min', 'NXB Thế Giới', 2018, '9786047748123', 95, 'Bản in nguyên vẹn 95%, ruột sạch đẹp không ghi chú, đã niêm phong màng co bảo quản.', 'Tác phẩm tản văn chữa lành tâm hồn sâu sắc của Đại đức Hae Min, giúp người đọc bao dung và thấu hiểu chính mình giữa dòng đời vội vã.', 120000, 68000, 65000, 48, 1250, 1, 1)
-ON DUPLICATE KEY UPDATE
-category_id=VALUES(category_id), title=VALUES(title), slug=VALUES(slug), author=VALUES(author), publisher=VALUES(publisher),
-publish_year=VALUES(publish_year), isbn=VALUES(isbn), condition_percent=VALUES(condition_percent), condition_notes=VALUES(condition_notes),
-description=VALUES(description), original_price=VALUES(original_price), price=VALUES(price), discount_price=VALUES(discount_price),
-total_sold=VALUES(total_sold), views_count=VALUES(views_count), is_active=1, is_featured=1;
-INSERT INTO book_images (book_id, image_url, angle_description, is_primary, display_order)
-VALUES (1, '/images/books/book-1.jpg', 'Ảnh bìa thực tế nguyên bản', 1, 1);
-INSERT INTO inventory (store_id, book_id, quantity)
-VALUES (1, 1, 4);
-INSERT INTO inventory (store_id, book_id, quantity)
-VALUES (2, 1, 2);
-INSERT INTO inventory (store_id, book_id, quantity)
-VALUES (3, 1, 0);
-INSERT INTO inventory (store_id, book_id, quantity)
-VALUES (4, 1, 3);
-INSERT INTO inventory (store_id, book_id, quantity)
-VALUES (5, 1, 4);
 INSERT INTO books (id, category_id, title, slug, author, publisher, publish_year, isbn, condition_percent, condition_notes, description, original_price, price, discount_price, total_sold, views_count, is_active, is_featured)
 VALUES (2, 1, 'Nhà Giả Kim (The Alchemist)', 'nha-gia-kim-paulo-coelho', 'Paulo Coelho', 'NXB Nhã Nam', 2015, '9780062315007', 90, 'Sách nguyên vẹn, gáy chắc, mép sách hơi ố vàng nhẹ theo thời gian, không thiếu trang.', 'Kiệt tác vượt thời gian về hành trình theo đuổi vận mệnh của chàng chăn cừu Santiago qua sa mạc.', 79000, 45000, 42000, 35, 980, 1, 1)
 ON DUPLICATE KEY UPDATE
@@ -815,7 +799,7 @@ INSERT INTO orders (id, order_code, user_id, store_id, shipping_unit_id, shipper
 
 -- 12. Nạp chi tiết đơn hàng
 INSERT INTO order_items (id, order_id, book_id, book_title, condition_percent, price, quantity, total_price) VALUES
-(1, 1, 1, 'Số Đỏ (Bản in NXB Văn Học 1996)', 85, 45000.00, 1, 45000.00),
+(1, 1, 2, 'Số Đỏ (Bản in NXB Văn Học 1996)', 85, 45000.00, 1, 45000.00),
 (2, 1, 4, 'Lập Trình Web Với Java & Spring (Giáo trình)', 92, 80000.00, 1, 80000.00),
 (3, 2, 6, 'Đắc Nhân Tâm (Bản dịch Nguyễn Hiến Lê 1974)', 80, 150000.00, 1, 150000.00),
 (4, 3, 4, 'Lập Trình Web Với Java & Spring (Giáo trình)', 92, 80000.00, 1, 80000.00),
@@ -823,20 +807,18 @@ INSERT INTO order_items (id, order_id, book_id, book_title, condition_percent, p
 
 -- 13. Nạp đánh giá mẫu (Kiểm tra độ dài >= 50 ký tự và có ảnh Cloudinary)
 INSERT INTO reviews (id, user_id, book_id, order_id, rating, comment, media_url, media_type) VALUES
-(1, 4, 1, 1, 5, 'Sách cũ nhưng được bảo quản rất cẩn thận, bìa tuy có ố nhẹ đúng chất thời gian năm 1996 nhưng các trang bên trong hoàn toàn không bị mối mọt, chữ in rõ nét, đọc rất thích!', 'https://res.cloudinary.com/demo/image/upload/v1/samples/books/review-sodo-real.jpg', 'IMAGE'),
+(1, 4, 2, 1, 5, 'Sách cũ nhưng được bảo quản rất cẩn thận, bìa tuy có ố nhẹ đúng chất thời gian năm 1996 nhưng các trang bên trong hoàn toàn không bị mối mọt, chữ in rõ nét, đọc rất thích!', 'https://res.cloudinary.com/demo/image/upload/v1/samples/books/review-sodo-real.jpg', 'IMAGE'),
 (2, 4, 4, 1, 5, 'Giáo trình Lập trình Web của trường bản này còn rất mới, các phần ghi chú của anh chị khóa trước để lại rất hữu ích cho kỳ thi cuối kỳ môn này. Đóng gói rất chắc chắn!', 'https://res.cloudinary.com/demo/image/upload/v1/samples/books/review-java-real.jpg', 'IMAGE');
 
 -- 14. Nạp đơn đăng ký ký gửi sách cũ mẫu
-INSERT INTO book_consignments (id, user_id, store_id, book_title, author, publisher, publish_year, condition_percent, condition_description, photos_json, proposed_price, agreed_price, status, admin_notes) VALUES
-(1, 4, 1, 'Kính Vạn Hoa (Trọn bộ 54 tập bản cũ)', 'Nguyễn Nhật Ánh', 'NXB Kim Đồng', 2002, 85, 'Bộ truyện tuổi thơ giữ được 50/54 cuốn, bìa có nếp gấp nhẹ nhưng gáy đều nguyên vẹn không long trang.', '["https://res.cloudinary.com/demo/image/upload/v1/samples/books/kinh-van-hoa-1.jpg","https://res.cloudinary.com/demo/image/upload/v1/samples/books/kinh-van-hoa-2.jpg"]', 600000.00, 550000.00, 'APPROVED', 'Đã thẩm định hình ảnh đạt yêu cầu, hẹn bạn Phúc mang sách ra chi nhánh Thủ Đức để nhận tiền.');
 
 -- 15. Nạp danh sách yêu thích và sách đã xem mẫu
 INSERT INTO wishlists (user_id, book_id) VALUES
 (4, 3), (4, 5), (4, 6),
-(5, 1), (5, 4);
+(5, 3), (5, 4);
 
 INSERT INTO viewed_books (user_id, book_id) VALUES
-(4, 1), (4, 2), (4, 4), (4, 6),
+(4, 3), (4, 2), (4, 4), (4, 6),
 (5, 3), (5, 4), (5, 7);
 
 -- 16. Nạp kho voucher mẫu cho người dùng (user_vouchers)
@@ -846,3 +828,4 @@ INSERT INTO user_vouchers (user_id, voucher_id, is_used, saved_at, used_at) VALU
 (4, 7, 0, '2026-09-22 14:20:00', NULL),
 (5, 6, 0, '2026-09-22 11:00:00', NULL),
 (5, 9, 0, '2026-09-23 09:00:00', NULL);
+

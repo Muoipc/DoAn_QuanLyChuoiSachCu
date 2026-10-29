@@ -18,21 +18,11 @@ import java.util.Locale;
  * CẤU HÌNH ĐA NGÔN NGỮ (INTERNATIONALIZATION - I18N) & WEB MVC
  * Phụ trách: Phúc (24162096) - Nhánh: feature/client-phuc
  * Đối tác kiểm tra: Cường (24162013) - Nhánh: feature/admin-cuong
- *
- * Ý nghĩa nghiệp vụ:
- * 1. Hỗ trợ chuyển đổi song ngữ: Tiếng Việt (vi) và Tiếng Anh (en) chuẩn sàn Shopee.
- * 2. Lưu trữ ngôn ngữ đã chọn vào Cookie 'app_lang' trong 30 ngày để khách quay lại
- *    vẫn giữ nguyên ngôn ngữ đã chọn.
- * 3. Cho phép đổi ngôn ngữ linh hoạt qua tham số URL: ?lang=vi hoặc ?lang=en.
- * 4. Tải các tệp từ điển i18n/messages_vi.properties và i18n/messages_en.properties.
  * ============================================================================
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    /**
-     * Cấu hình CookieLocaleResolver lưu ngôn ngữ vào Cookie trình duyệt
-     */
     @Bean
     public LocaleResolver localeResolver() {
         CookieLocaleResolver resolver = new CookieLocaleResolver("app_lang");
@@ -42,9 +32,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return resolver;
     }
 
-    /**
-     * Interceptor bắt tham số URL ?lang=vi hoặc ?lang=en để đổi ngôn ngữ tức thì
-     */
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
@@ -58,9 +45,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Cấu hình định tuyến tài nguyên tĩnh tải lên (Upload) phục vụ Avatar, Danh mục và Quản trị
-     * Ánh xạ URL /upload/** vào thư mục vật lý ~/upload/ trên máy chủ
-     * Ánh xạ URL /uploads/** vào thư mục uploads của dự án
+     * Cấu hình định tuyến tài nguyên tĩnh tải lên (Upload) phục vụ Avatar, Ký gửi, Sách, Chi nhánh
+     * Ưu tiên đọc trực tiếp từ thư mục vật lý trên ổ đĩa trước khi đọc trong JAR (classpath)
+     * để ảnh vừa tải lên hiển thị ngay lập tức mà không cần khởi động lại Server.
      */
     @Override
     public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
@@ -72,12 +59,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + uploadPath + "/");
 
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:src/main/resources/static/uploads/", "classpath:/static/uploads/");
+                .addResourceLocations(
+                        "file:src/main/resources/static/uploads/",
+                        "file:target/classes/static/uploads/",
+                        "classpath:/static/uploads/"
+                );
+
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations(
+                        "file:src/main/resources/static/images/",
+                        "file:target/classes/static/images/",
+                        "classpath:/static/images/"
+                );
     }
 
-    /**
-     * Nạp nguồn tài nguyên đa ngôn ngữ từ thư mục i18n/messages
-     */
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();

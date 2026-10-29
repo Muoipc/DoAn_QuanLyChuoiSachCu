@@ -100,4 +100,18 @@ public class BookConsignment {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    /**
+     * Trả về đường dẫn ảnh đầu tiên trong photosJson (hỗ trợ cả mảng JSON lẫn chuỗi URL đơn)
+     */
+    public String getPrimaryPhotoUrl() {
+        if (photosJson == null || photosJson.isBlank()) {
+            return "/images/books/book-1.jpg";
+        }
+        String cleaned = photosJson.replace("[", "").replace("]", "").replace("\"", "").trim();
+        if (cleaned.contains(",")) {
+            cleaned = cleaned.split(",")[0].trim();
+        }
+        return cleaned.isEmpty() ? "/images/books/book-1.jpg" : cleaned;
+    }
 }

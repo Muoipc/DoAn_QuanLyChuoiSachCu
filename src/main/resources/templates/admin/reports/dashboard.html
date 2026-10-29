@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{admin/layout/admin-layout :: adminLayout(~{::title}, ~{::content})}">
 <head>
@@ -30,10 +30,34 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
         }
+        .kpi-glass-card {
+            cursor: pointer;
+            text-decoration: none !important;
+        }
         .kpi-glass-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 14px 30px rgba(45, 24, 15, 0.09);
             border-color: rgba(238, 77, 45, 0.35);
+        }
+        .kpi-glass-card.active-revenue {
+            border: 2px solid #F59E0B !important;
+            background: rgba(254, 243, 199, 0.92) !important;
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.16), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .kpi-glass-card.active-orders {
+            border: 2px solid #8C4A27 !important;
+            background: rgba(245, 236, 228, 0.92) !important;
+            box-shadow: 0 12px 30px rgba(140, 74, 39, 0.16), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .kpi-glass-card.active-books {
+            border: 2px solid #10B981 !important;
+            background: rgba(236, 253, 245, 0.92) !important;
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.16), inset 0 1.5px 1.5px #ffffff !important;
+        }
+        .kpi-glass-card.active-consignments {
+            border: 2px solid #2563EB !important;
+            background: rgba(239, 246, 255, 0.92) !important;
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.16), inset 0 1.5px 1.5px #ffffff !important;
         }
         .kpi-title {
             color: #78716C;
@@ -243,56 +267,304 @@
         </div>
     </div>
 
-    <!-- 4 THẺ THỐNG KÊ KPI LIQUID GLASS -->
+    <!-- 4 THẺ THỐNG KÊ KPI LIQUID GLASS (NHẤN ĐỂ XEM CHI TIẾT) -->
     <div class="row g-3 mb-4">
         <!-- Thẻ 1: Doanh Thu Tổng -->
         <div class="col-sm-6 col-xl-3">
-            <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
+            <a th:href="@{/admin/reports(year=${selectedYear}, metric=${selectedMetric == 'REVENUE' ? null : 'REVENUE'})}"
+               class="kpi-glass-card h-100 d-flex align-items-center justify-content-between"
+               th:classappend="${selectedMetric == 'REVENUE'} ? 'active-revenue' : ''">
                 <div>
-                    <div class="kpi-title">Doanh Thu Tổng</div>
+                    <div class="kpi-title d-flex align-items-center gap-1">
+                        <span>Doanh Thu Tổng</span>
+                        <i class="fa-solid fa-hand-pointer opacity-50" style="font-size: 10px;" title="Nhấn để xem chi tiết"></i>
+                    </div>
                     <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalRevenue != null ? #numbers.formatDecimal(summary.totalRevenue, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</h4>
+                    <div class="text-muted mt-1" style="font-size: 11px;">Nhấn xem các đơn ghi nhận thu</div>
                 </div>
                 <div class="kpi-icon-squircle kpi-icon-revenue">
                     <i class="fa-solid fa-coins"></i>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Thẻ 2: Đơn Hàng Mới -->
         <div class="col-sm-6 col-xl-3">
-            <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
+            <a th:href="@{/admin/reports(year=${selectedYear}, metric=${selectedMetric == 'ORDERS' ? null : 'ORDERS'})}"
+               class="kpi-glass-card h-100 d-flex align-items-center justify-content-between"
+               th:classappend="${selectedMetric == 'ORDERS'} ? 'active-orders' : ''">
                 <div>
-                    <div class="kpi-title">Đơn Hàng Mới</div>
+                    <div class="kpi-title d-flex align-items-center gap-1">
+                        <span>Đơn Hàng Mới</span>
+                        <i class="fa-solid fa-hand-pointer opacity-50" style="font-size: 10px;" title="Nhấn để xem chi tiết"></i>
+                    </div>
                     <h4 class="kpi-value mb-0 mt-1" th:text="${summary.totalOrders != null ? summary.totalOrders : 0}">0</h4>
+                    <div class="text-muted mt-1" style="font-size: 11px;">Nhấn xem danh sách đơn hàng</div>
                 </div>
                 <div class="kpi-icon-squircle kpi-icon-orders">
                     <i class="fa-solid fa-bag-shopping"></i>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Thẻ 3: Sách Đã Bán -->
         <div class="col-sm-6 col-xl-3">
-            <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
+            <a th:href="@{/admin/reports(year=${selectedYear}, metric=${selectedMetric == 'BOOKS' ? null : 'BOOKS'})}"
+               class="kpi-glass-card h-100 d-flex align-items-center justify-content-between"
+               th:classappend="${selectedMetric == 'BOOKS'} ? 'active-books' : ''">
                 <div>
-                    <div class="kpi-title">Sách Đã Bán</div>
+                    <div class="kpi-title d-flex align-items-center gap-1">
+                        <span>Sách Đã Bán</span>
+                        <i class="fa-solid fa-hand-pointer opacity-50" style="font-size: 10px;" title="Nhấn để xem chi tiết"></i>
+                    </div>
                     <h4 class="kpi-value mb-0 mt-1" th:text="${summary['totalBooks'] != null ? summary['totalBooks'] : 0}">0</h4>
+                    <div class="text-muted mt-1" style="font-size: 11px;">Nhấn xem chi tiết đầu sách</div>
                 </div>
                 <div class="kpi-icon-squircle kpi-icon-books">
                     <i class="fa-solid fa-book-bookmark"></i>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Thẻ 4: Sách Ký Gửi Mới -->
         <div class="col-sm-6 col-xl-3">
-            <div class="kpi-glass-card h-100 d-flex align-items-center justify-content-between">
+            <a th:href="@{/admin/reports(year=${selectedYear}, metric=${selectedMetric == 'CONSIGNMENTS' ? null : 'CONSIGNMENTS'})}"
+               class="kpi-glass-card h-100 d-flex align-items-center justify-content-between"
+               th:classappend="${selectedMetric == 'CONSIGNMENTS'} ? 'active-consignments' : ''">
                 <div>
-                    <div class="kpi-title">Sách Ký Gửi Mới</div>
-                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary['pendingConsignments'] != null ? summary['pendingConsignments'] : (summary['totalUsers'] != null ? summary['totalUsers'] : 0)}">0</h4>
+                    <div class="kpi-title d-flex align-items-center gap-1">
+                        <span>Tin Ký Gửi Chờ Duyệt</span>
+                        <i class="fa-solid fa-hand-pointer opacity-50" style="font-size: 10px;" title="Nhấn để xem chi tiết"></i>
+                    </div>
+                    <h4 class="kpi-value mb-0 mt-1" th:text="${summary['pendingConsignments'] != null ? summary['pendingConsignments'] : 0}">0</h4>
+                    <div class="text-muted mt-1" style="font-size: 11px;">Nhấn xem phiếu chờ thẩm định</div>
                 </div>
                 <div class="kpi-icon-squircle kpi-icon-users">
                     <i class="fa-solid fa-handshake"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- BẢNG CHI TIẾT THEO THÔNG SỐ KPI ĐANG CHỌN -->
+    <div th:if="${selectedMetric != null}" class="glass-card mb-4">
+        <div class="glass-card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div>
+                <span th:if="${selectedMetric == 'REVENUE'}" class="text-dark">
+                    <i class="fa-solid fa-coins me-2 text-warning"></i>Chi Tiết Các Đơn Hàng Ghi Nhận Doanh Thu (<span th:text="${metricOrders != null ? metricOrders.size() : 0}">0</span> đơn)
+                </span>
+                <span th:if="${selectedMetric == 'ORDERS'}" class="text-dark">
+                    <i class="fa-solid fa-bag-shopping me-2" style="color: #8C4A27;"></i>Chi Tiết Toàn Bộ Đơn Hàng Hệ Thống (<span th:text="${metricOrders != null ? metricOrders.size() : 0}">0</span> đơn)
+                </span>
+                <span th:if="${selectedMetric == 'BOOKS'}" class="text-dark">
+                    <i class="fa-solid fa-book-bookmark me-2 text-success"></i>Chi Tiết Danh Mục Sách &amp; Sản Lượng Đã Bán (<span th:text="${metricBooks != null ? metricBooks.size() : 0}">0</span> đầu sách)
+                </span>
+                <span th:if="${selectedMetric == 'CONSIGNMENTS'}" class="text-dark">
+                    <i class="fa-solid fa-handshake me-2 text-primary"></i>Chi Tiết Phiếu Ký Gửi Đang Chờ Duyệt (<span th:text="${metricConsignments != null ? metricConsignments.size() : 0}">0</span> phiếu)
+                </span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a th:if="${selectedMetric == 'REVENUE' or selectedMetric == 'ORDERS'}" th:href="@{/admin/orders}" class="btn btn-sm btn-theme">
+                    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Quản Lý Đơn Hàng
+                </a>
+                <a th:if="${selectedMetric == 'BOOKS'}" th:href="@{/admin/books}" class="btn btn-sm btn-theme">
+                    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Quản Lý Kho Sách
+                </a>
+                <a th:if="${selectedMetric == 'CONSIGNMENTS'}" th:href="@{/admin/consignments(status='PENDING')}" class="btn btn-sm btn-theme">
+                    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Trang Thẩm Định Ký Gửi
+                </a>
+                <a th:href="@{/admin/reports(year=${selectedYear})}" class="btn btn-sm btn-outline-theme">
+                    <i class="fa-solid fa-xmark me-1"></i>Đóng chi tiết
+                </a>
+            </div>
+        </div>
+
+        <!-- 1 & 2. Bảng chi tiết cho REVENUE hoặc ORDERS -->
+        <div th:if="${selectedMetric == 'REVENUE' or selectedMetric == 'ORDERS'}" class="card-body p-0">
+            <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
+                <table class="table glass-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Mã Đơn</th>
+                            <th>Khách Hàng</th>
+                            <th>Chi Nhánh</th>
+                            <th>Thanh Toán</th>
+                            <th class="text-center">Trạng Thái</th>
+                            <th class="text-end">Tổng Tiền</th>
+                            <th class="text-end pe-4">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${metricOrders == null or metricOrders.empty}">
+                            <td colspan="7" class="text-center py-4 text-muted small">Chưa có đơn hàng nào trong danh mục này.</td>
+                        </tr>
+                        <tr th:each="o : ${metricOrders}">
+                            <td class="ps-4">
+                                <span class="fw-bold text-dark" th:text="${o.orderCode}">#ORD</span>
+                                <div class="text-muted" style="font-size: 11px;" th:text="${o.createdAt != null ? #temporals.format(o.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></div>
+                            </td>
+                            <td>
+                                <div class="small fw-semibold text-dark" th:text="${o.receiverName}">Khách hàng</div>
+                                <div class="text-muted" style="font-size: 11px;" th:text="${o.receiverPhone}"></div>
+                            </td>
+                            <td class="small text-muted" th:text="${o.store != null ? o.store.storeName : 'Toàn hệ thống'}">Chi nhánh</td>
+                            <td>
+                                <span class="badge bg-light text-dark border" th:text="${o.paymentMethod != null ? o.paymentMethod.name() : 'COD'}">COD</span>
+                                <span class="badge ms-1"
+                                      th:classappend="${o.paymentStatus != null and o.paymentStatus.name() == 'PAID'} ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning-emphasis'"
+                                      th:text="${o.paymentStatus != null and o.paymentStatus.name() == 'PAID' ? 'Đã TT' : 'Chưa TT'}">Đã TT</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-sq-4px"
+                                      th:classappend="${o.orderStatus != null and o.orderStatus.name() == 'DELIVERED'} ? 'bg-success-subtle text-success' :
+                                                     (${o.orderStatus != null and o.orderStatus.name() == 'CANCELLED'} ? 'bg-danger-subtle text-danger' :
+                                                     (${o.orderStatus != null and o.orderStatus.name() == 'SHIPPING'} ? 'bg-warning-subtle text-dark' : 'bg-primary-subtle text-primary'))"
+                                      th:text="${o.orderStatus != null ? o.orderStatus.name() : 'NEW'}">DELIVERED</span>
+                            </td>
+                            <td class="text-end fw-bold" style="color: #EE4D2D;" th:text="${#numbers.formatDecimal(o.finalAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</td>
+                            <td class="text-end pe-4">
+                                <a th:href="@{/admin/orders/{id}(id=${o.id})}" class="btn btn-sm btn-outline-theme py-1 px-2">
+                                    <i class="fa-solid fa-eye me-1"></i>Xem
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Bảng chi tiết cho BOOKS -->
+        <div th:if="${selectedMetric == 'BOOKS'}" class="card-body p-0">
+            <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
+                <table class="table glass-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Đầu Sách &amp; Tác Giả</th>
+                            <th>Thể Loại</th>
+                            <th class="text-center">Độ Mới</th>
+                            <th class="text-end">Giá Bán</th>
+                            <th class="text-center">Đã Bán</th>
+                            <th class="text-end pe-4">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${metricBooks == null or metricBooks.empty}">
+                            <td colspan="6" class="text-center py-4 text-muted small">Chưa có dữ liệu sách.</td>
+                        </tr>
+                        <tr th:each="b : ${metricBooks}">
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img th:src="${b.getPrimaryImageUrl()}" class="book-cover-thumb" alt="Bìa sách" onerror="this.src='/images/books/book-1.jpg';">
+                                    <div>
+                                        <div class="fw-semibold text-dark small" th:text="${b.title}">Tên sách</div>
+                                        <div class="text-muted" style="font-size: 11px;" th:text="${b.author}">Tác giả</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="small text-muted" th:text="${b.category != null ? b.category.categoryName : '-'}">Thể loại</td>
+                            <td class="text-center">
+                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill"
+                                      th:text="${(b.conditionPercent != null ? b.conditionPercent : 90) + '%'}">90%</span>
+                            </td>
+                            <td class="text-end fw-bold" style="color: var(--rebook-leather);" th:text="${#numbers.formatDecimal(b.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</td>
+                            <td class="text-center">
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3" th:text="${(b.totalSold != null ? b.totalSold : 0) + ' cuốn'}">0 cuốn</span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <a th:href="@{/admin/books/edit/{id}(id=${b.id})}" class="btn btn-sm btn-outline-theme py-1 px-2">
+                                    <i class="fa-solid fa-pen-to-square me-1"></i>Chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 4. Bảng chi tiết cho CONSIGNMENTS -->
+        <div th:if="${selectedMetric == 'CONSIGNMENTS'}" class="card-body p-0">
+            <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
+                <table class="table glass-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Mã Phiếu</th>
+                            <th>Sách Ký Gửi &amp; Tác Giả</th>
+                            <th>Người Gửi</th>
+                            <th class="text-center">Độ Mới</th>
+                            <th class="text-end">Giá Kỳ Vọng</th>
+                            <th>Chi Nhánh</th>
+                            <th class="text-end pe-4">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${metricConsignments == null or metricConsignments.empty}">
+                            <td colspan="7" class="text-center py-4 text-muted small">Hiện không có phiếu ký gửi nào đang chờ duyệt.</td>
+                        </tr>
+                        <tr th:each="c : ${metricConsignments}">
+                            <td class="ps-4">
+                                <span class="fw-bold text-dark" th:text="'#KG' + ${c.id}">#KG1</span>
+                                <div class="text-muted" style="font-size: 11px;" th:text="${c.createdAt != null ? #temporals.format(c.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></div>
+                            </td>
+                            <td>
+                                <div class="fw-semibold text-dark small" th:text="${c.bookTitle}">Tên sách</div>
+                                <div class="text-muted" style="font-size: 11px;" th:text="${c.author}">Tác giả</div>
+                            </td>
+                            <td>
+                                <div class="small fw-semibold text-dark" th:text="${c.user != null ? c.user.fullName : 'Khách hàng'}">Người gửi</div>
+                                <div class="text-muted" style="font-size: 11px;" th:text="${c.contactPhone}"></div>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill"
+                                      th:text="${(c.conditionPercent != null ? c.conditionPercent : 85) + '%'}">85%</span>
+                            </td>
+                            <td class="text-end fw-bold text-danger" th:text="${c.expectedPrice != null ? #numbers.formatDecimal(c.expectedPrice, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'Thỏa thuận'}">0 ₫</td>
+                            <td class="small text-muted" th:text="${c.store != null ? c.store.storeName : 'Toàn hệ thống'}">Chi nhánh</td>
+                            <td class="text-end pe-4">
+                                <a th:href="@{/admin/consignments/{id}(id=${c.id})}" class="btn btn-sm btn-theme py-1 px-2">
+                                    <i class="fa-solid fa-gavel me-1"></i>Thẩm định
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- THANH TỔNG QUAN SÀN GIAO DỊCH KÝ GỬI & HOA HỒNG (MÔ HÌNH CHỢ TỐT ĐỐI TÁC) -->
+    <div class="glass-card mb-4 p-3" style="border-left: 4px solid #EE4D2D;">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="p-2 rounded-3 text-white d-flex align-items-center justify-content-center"
+                     style="width: 42px; height: 42px; background: linear-gradient(135deg, #8C4A27, #EE4D2D);">
+                    <i class="fa-solid fa-store fs-5"></i>
+                </div>
+                <div>
+                    <div class="fw-bold text-dark" style="font-size: 14px;">
+                        Hoạt Động Sàn Ký Gửi Sách Cũ &amp; Chiết Khấu Đối Tác (80/20)
+                    </div>
+                    <div class="text-muted small">
+                        Kiểm duyệt tin đăng bán sách cũ từ độc giả, định giá tại chi nhánh và tự động hoàn tiền về Ví người bán.
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap align-items-center gap-3">
+                <a th:href="@{/admin/consignments(status='PENDING')}" class="text-decoration-none px-3 py-2 rounded-3 bg-warning-subtle border border-warning-subtle text-dark small">
+                    <i class="fa-solid fa-hourglass-half text-warning me-1"></i>
+                    Chờ kiểm duyệt: <strong th:text="${summary.pendingConsignments != null ? summary.pendingConsignments : 0}">0</strong> tin
+                </a>
+                <a th:href="@{/admin/consignments(status='APPROVED')}" class="text-decoration-none px-3 py-2 rounded-3 bg-info-subtle border border-info-subtle text-dark small">
+                    <i class="fa-solid fa-scale-balanced text-primary me-1"></i>
+                    Đã chốt giá: <strong th:text="${summary.approvedConsignments != null ? summary.approvedConsignments : 0}">0</strong> tin
+                </a>
+                <a th:href="@{/admin/consignments(status='STORED')}" class="text-decoration-none px-3 py-2 rounded-3 bg-success-subtle border border-success-subtle text-dark small">
+                    <i class="fa-solid fa-circle-check text-success me-1"></i>
+                    Đã lên sàn: <strong th:text="${summary.storedConsignments != null ? summary.storedConsignments : 0}">0</strong> cuốn
+                </a>
+                <div class="px-3 py-2 rounded-3 bg-white border small">
+                    <i class="fa-solid fa-percent text-danger me-1"></i>
+                    Hoa hồng sàn (20%): <strong style="color: #EE4D2D;" th:text="${summary.platformCommission != null ? #numbers.formatDecimal(summary.platformCommission, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</strong>
                 </div>
             </div>
         </div>

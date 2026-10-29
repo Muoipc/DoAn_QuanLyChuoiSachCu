@@ -4,13 +4,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import vn.iotstar.entity.Book;
+import vn.iotstar.entity.BookConsignment;
+import vn.iotstar.entity.Order;
 import vn.iotstar.entity.Store;
+import vn.iotstar.repository.BookConsignmentRepository;
+import vn.iotstar.repository.BookRepository;
+import vn.iotstar.repository.OrderRepository;
 import vn.iotstar.security.CustomUserDetails;
 import vn.iotstar.service.IReportService;
 import vn.iotstar.service.IStoreService;
@@ -19,6 +27,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,22 +42,34 @@ public class AdminReportController {
     @Autowired
     private IStoreService storeService;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
+    private BookConsignmentRepository consignmentRepository;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Dashboard Quản Trị Hệ Thống & Báo Cáo Doanh Thu Trực Quan Với Chart.js:
      * - Admin: Toàn quyền xem tổng quan chuỗi, cơ cấu doanh thu tất cả chi nhánh.
      * - Store Manager: Chỉ xem báo cáo, doanh thu và đơn hàng của chi nhánh mình phụ trách.
+     * - Hỗ trợ nhấn vào từng thẻ KPI (metric = REVENUE | ORDERS | BOOKS | CONSIGNMENTS) để xem bảng chi tiết.
      */
     @GetMapping({"", "/", "/dashboard", "/reports", "/analytics"})
     public String dashboard(
             @RequestParam(name = "year", required = false) Integer yearParam,
+            @RequestParam(name = "metric", required = false) String metric,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model
     ) throws JsonProcessingException {
         int year = (yearParam != null) ? yearParam : LocalDate.now().getYear();
         boolean isAdmin = userDetails != null && "ROLE_ADMIN".equals(userDetails.getRoleName());
         Store managedStore = (userDetails != null) ? storeService.findByManagerId(userDetails.getId()) : null;
+        Long storeId = (managedStore != null) ? managedStore.getId() : -1L;
 
         Map<String, Object> summary;
         Map<Integer, BigDecimal> monthly;
@@ -64,13 +85,44 @@ public class AdminReportController {
             model.addAttribute("topBooks", reportService.getTopSellingBooks(5));
         } else {
             // STORE MANAGER: Dữ liệu duy nhất của chi nhánh được phân công
-            Long storeId = (managedStore != null) ? managedStore.getId() : -1L;
             summary = reportService.getDashboardSummaryByStore(storeId);
             monthly = reportService.getMonthlyRevenueByStore(year, storeId);
             String stName = (managedStore != null) ? managedStore.getStoreName() : "Chi Nhánh Của Bạn";
             storeRevenue.put(stName, (BigDecimal) summary.getOrDefault("totalRevenue", BigDecimal.ZERO));
             statusDist = reportService.getOrderStatusDistributionByStore(storeId);
             model.addAttribute("topBooks", reportService.getTopSellingBooksByStore(storeId, 5));
+        }
+
+        // Xử lý dữ liệu chi tiết khi người dùng nhấn vào từng thẻ thông số KPI
+        String normalizedMetric = (metric != null && !metric.isBlank()) ? metric.trim().toUpperCase() : null;
+        model.addAttribute("selectedMetric", normalizedMetric);
+
+        if (normalizedMetric != null) {
+            List<Order> baseOrders = isAdmin
+                    ? orderRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
+                    : orderRepository.findByStoreIdOrderByCreatedAtDesc(storeId);
+
+            if ("REVENUE".equals(normalizedMetric)) {
+                List<Order> revenueOrders = baseOrders.stream()
+                        .filter(o -> o.getOrderStatus() == Order.OrderStatus.DELIVERED
+                                || o.getPaymentStatus() == Order.PaymentStatus.PAID)
+                        .toList();
+                model.addAttribute("metricOrders", revenueOrders);
+            } else if ("ORDERS".equals(normalizedMetric)) {
+                model.addAttribute("metricOrders", baseOrders);
+            } else if ("BOOKS".equals(normalizedMetric)) {
+                List<Book> allBooks = new ArrayList<>(bookRepository.findAll());
+                allBooks.sort(Comparator.comparingInt((Book b) -> b.getTotalSold() != null ? b.getTotalSold() : 0).reversed());
+                model.addAttribute("metricBooks", allBooks);
+            } else if ("CONSIGNMENTS".equals(normalizedMetric)) {
+                Long filterStore = isAdmin ? null : storeId;
+                List<BookConsignment> pendingList = consignmentRepository.searchAdminConsignments(
+                        BookConsignment.ConsignmentStatus.PENDING,
+                        filterStore,
+                        PageRequest.of(0, 50)
+                ).getContent();
+                model.addAttribute("metricConsignments", pendingList);
+            }
         }
 
         // 1. Thẻ tổng quan

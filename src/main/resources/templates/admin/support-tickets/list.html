@@ -54,9 +54,9 @@
                             <th>Khách Hàng &amp; Liên Hệ</th>
                             <th>Mã Đơn / Chủ Đề</th>
                             <th>Nội Dung Yêu Cầu</th>
-                            <th>Thời Gian</th>
-                            <th>Trạng Thái</th>
-                            <th class="text-end pe-3" style="width: 140px;">Thao Tác</th>
+                            <th style="width: 150px;">Thời Gian</th>
+                            <th style="width: 140px;">Trạng Thái</th>
+                            <th class="text-end pe-3" style="width: 175px;">Thao Tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,40 +78,58 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="badge bg-light text-dark border mb-1" th:text="${t.category != null ? t.category : 'Hỗ trợ chung'}">Vấn đề đơn hàng</span>
-                                <div class="small fw-semibold text-danger font-monospace" th:if="${t.orderCode != null and !t.orderCode.isEmpty()}">
+                                <span class="d-inline-flex align-items-center gap-1 rounded-pill px-3 py-1 fw-semibold"
+                                      style="font-size: 12px; background: rgba(140, 74, 39, 0.08); color: #8C4A27; border: 1px solid rgba(140, 74, 39, 0.22); white-space: nowrap;">
+                                    <i class="fa-solid fa-tag" style="font-size: 10px;"></i>
+                                    <span th:text="${t.category != null ? t.category : 'Hỗ trợ chung'}">Vấn đề đơn hàng</span>
+                                </span>
+                                <div class="small fw-semibold text-danger font-monospace mt-1" th:if="${t.orderCode != null and !t.orderCode.isEmpty()}">
                                     <i class="fa-solid fa-barcode me-1"></i><span th:text="${t.orderCode}">ORD123456</span>
                                 </div>
                             </td>
                             <td>
-                                <div class="small text-dark" style="max-width: 320px; line-height: 1.45;" th:text="${t.message}">Nội dung khiếu nại...</div>
-                                <div th:if="${t.adminReply != null and !t.adminReply.isEmpty()}" class="mt-2 p-2 rounded bg-light border" style="font-size: 12px; color: #065F46;">
+                                <div class="small text-dark" style="max-width: 340px; line-height: 1.5;" th:text="${t.message}">Nội dung khiếu nại...</div>
+                                <div th:if="${t.adminReply != null and !t.adminReply.isEmpty()}" class="mt-2 p-2 rounded-3 border" style="font-size: 12px; color: #065F46; background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.25) !important;">
                                     <strong><i class="fa-solid fa-reply me-1"></i>Phản hồi:</strong> <span th:text="${t.adminReply}">Nội dung phản hồi...</span>
                                 </div>
                             </td>
-                            <td class="small text-muted" th:text="${#temporals.format(t.createdAt, 'HH:mm dd/MM/yyyy')}">
+                            <td class="small text-muted text-nowrap" th:text="${#temporals.format(t.createdAt, 'HH:mm dd/MM/yyyy')}">
                                 10:20 14/10/2026
                             </td>
-                            <td>
-                                <span th:if="${t.status.name() == 'OPEN'}" class="badge bg-warning text-dark px-2 py-1">
-                                    <i class="fa-solid fa-hourglass-half me-1"></i>Chờ Xử Lý
+                            <td class="text-nowrap">
+                                <span th:if="${t.status.name() == 'OPEN'}"
+                                      class="d-inline-flex align-items-center gap-1 rounded-pill px-3 py-1 fw-bold"
+                                      style="font-size: 12px; background: rgba(245, 158, 11, 0.14); color: #B45309; border: 1px solid rgba(245, 158, 11, 0.3); white-space: nowrap;">
+                                    <i class="fa-solid fa-hourglass-half" style="font-size: 11px;"></i>
+                                    <span>Chờ xử lý</span>
                                 </span>
-                                <span th:if="${t.status.name() == 'RESOLVED'}" class="badge bg-success px-2 py-1">
-                                    <i class="fa-solid fa-circle-check me-1"></i>Đã Xử Lý
+                                <span th:if="${t.status.name() == 'RESOLVED'}"
+                                      class="d-inline-flex align-items-center gap-1 rounded-pill px-3 py-1 fw-bold"
+                                      style="font-size: 12px; background: rgba(16, 185, 129, 0.14); color: #047857; border: 1px solid rgba(16, 185, 129, 0.3); white-space: nowrap;">
+                                    <i class="fa-solid fa-circle-check" style="font-size: 11px;"></i>
+                                    <span>Đã xử lý</span>
                                 </span>
                             </td>
-                            <td class="text-end pe-3">
-                                <div class="d-inline-flex gap-1">
+                            <td class="text-end pe-3 text-nowrap">
+                                <div class="d-inline-flex gap-2 align-items-center flex-nowrap">
                                     <!-- NÚT PHẢN HỒI (MỞ MODAL) -->
-                                    <button type="button" class="btn btn-sm btn-outline-theme px-2"
-                                            th:onclick="'openReplyModal(' + ${t.id} + ', \'' + ${#strings.escapeJavaScript(t.fullName)} + '\', \'' + ${#strings.escapeJavaScript(t.message)} + '\')'"
-                                            title="Phản hồi phiếu hỗ trợ">
-                                        <i class="fa-solid fa-reply"></i>
+                                    <button type="button"
+                                            style="height: 34px; padding: 0 14px; border-radius: 9999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; background: var(--rebook-leather); color: #ffffff; border: none; box-shadow: 0 2px 8px rgba(140, 74, 39, 0.2); cursor: pointer;"
+                                            th:data-id="${t.id}"
+                                            th:data-name="${t.fullName}"
+                                            th:data-msg="${t.message}"
+                                            th:data-reply="${t.adminReply != null ? t.adminReply : ''}"
+                                            onclick="openReplyModalFromBtn(this)"
+                                            title="Phản hồi và xử lý phiếu hỗ trợ">
+                                        <i class="fa-solid fa-reply" style="font-size: 11px;"></i>
+                                        <span>Xử lý</span>
                                     </button>
                                     <!-- NÚT XÓA -->
-                                    <form th:action="@{/admin/support-tickets/{id}/delete(id=${t.id})}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phiếu hỗ trợ này?');" style="display:inline;">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger px-2" title="Xóa">
-                                            <i class="fa-solid fa-trash-can"></i>
+                                    <form th:action="@{/admin/support-tickets/{id}/delete(id=${t.id})}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phiếu hỗ trợ này?');" style="display:inline; margin:0;">
+                                        <button type="submit"
+                                                style="width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: rgba(254, 242, 242, 0.9); color: #DC2626; border: 1px solid rgba(254, 202, 202, 0.85); padding: 0; flex-shrink: 0; cursor: pointer;"
+                                                title="Xóa phiếu hỗ trợ">
+                                            <i class="fa-solid fa-trash-can" style="font-size: 12.5px;"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -155,11 +173,18 @@
     </div>
 
     <script>
-        function openReplyModal(id, customerName, message) {
+        function openReplyModalFromBtn(btn) {
+            var id = btn.getAttribute('data-id');
+            var customerName = btn.getAttribute('data-name') || '';
+            var message = btn.getAttribute('data-msg') || '';
+            var existingReply = btn.getAttribute('data-reply') || '';
+            openReplyModal(id, customerName, message, existingReply);
+        }
+        function openReplyModal(id, customerName, message, existingReply) {
             document.getElementById('replyForm').action = '/admin/support-tickets/' + id + '/resolve';
             document.getElementById('modalCustomerName').textContent = customerName;
             document.getElementById('modalCustomerMsg').textContent = message;
-            document.getElementById('modalReplyText').value = '';
+            document.getElementById('modalReplyText').value = existingReply || '';
             var myModal = new bootstrap.Modal(document.getElementById('replyModal'));
             myModal.show();
         }
