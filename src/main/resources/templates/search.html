@@ -111,7 +111,7 @@
             margin: 0 auto 0 auto !important;
             transform: none !important;
             position: relative;
-            z-index: 30;
+            z-index: 10005;
             background: #ffffff;
             border-radius: 18px;
             padding: 6px 8px 6px 18px;
@@ -1544,7 +1544,14 @@
             if (event) event.stopPropagation();
             const pop = document.getElementById('heroFilterPopover');
             if (!pop) return;
-            pop.style.display = (pop.style.display === 'none' || !pop.style.display) ? 'block' : 'none';
+            const willOpen = (pop.style.display === 'none' || !pop.style.display);
+            if (willOpen) {
+                const omni = document.getElementById('googleOmniboxDropdown');
+                if (omni) omni.style.display = 'none';
+                const wrap = document.getElementById('searchOmniboxWrapper');
+                if (wrap) wrap.classList.remove('is-open');
+            }
+            pop.style.display = willOpen ? 'block' : 'none';
         }
 
         function closeHeroFilterPopover(event) {
@@ -1893,6 +1900,8 @@
         // 4. Dropdown Show / Hide
         function openGoogleOmnibox() {
             if (!wrapper || !dropdown) return;
+            const pop = document.getElementById('heroFilterPopover');
+            if (pop) pop.style.display = 'none';
             wrapper.classList.add('is-open');
             dropdown.style.display = 'block';
         }
