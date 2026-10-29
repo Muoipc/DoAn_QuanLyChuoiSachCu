@@ -494,6 +494,9 @@
                     <!-- Header hàng: Mã đơn & Trạng thái -->
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="order-code-badge" th:text="${ord.orderCode}">OBS-2026-1234</span>
+                        <span th:if="${ord.orderStatus.name() == 'PICKED_UP'}" class="apple-status-pill" style="background: rgba(124, 58, 237, 0.14); color: #6d28d9; border: 1px solid rgba(124, 58, 237, 0.3);">
+                            <i class="fa-solid fa-boxes-packing"></i>Đã lấy hàng
+                        </span>
                         <span th:if="${ord.orderStatus.name() == 'SHIPPING'}" class="apple-status-pill status-pill-shipping">
                             <i class="fa-solid fa-truck-fast"></i>Đang giao
                         </span>

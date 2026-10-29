@@ -1383,16 +1383,31 @@
         // Tự động kích hoạt active sidebar item theo URL hiện tại (bổ trợ cho Thymeleaf)
         document.addEventListener('DOMContentLoaded', function() {
             const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+            const urlParams = new URLSearchParams(window.location.search);
+            const statusParam = urlParams.get('status');
             const sidebarLinks = Array.from(document.querySelectorAll('.sidebar-item a'));
             
             // Xóa active cũ để tránh lỗi kích hoạt kép
             sidebarLinks.forEach(link => link.parentElement.classList.remove('active'));
 
+            let targetLink = null;
+
+            // 0. Nếu URL có tham số lọc trạng thái (ví dụ kênh Shipper: /shipper/orders?status=SHIPPING)
+            if (statusParam) {
+                const effectiveStatus = (statusParam === 'PICKED_UP') ? 'SHIPPING' : statusParam;
+                targetLink = sidebarLinks.find(link => {
+                    const href = link.getAttribute('href') || '';
+                    return href.startsWith(currentPath) && href.includes('status=' + effectiveStatus);
+                });
+            }
+
             // 1. Tìm exact match trước (ưu tiên số 1)
-            let targetLink = sidebarLinks.find(link => {
-                const href = (link.getAttribute('href') || '').replace(/\/$/, '');
-                return href === currentPath || (href === '/admin/reports' && (currentPath === '/admin' || currentPath === '/admin/dashboard'));
-            });
+            if (!targetLink) {
+                targetLink = sidebarLinks.find(link => {
+                    const href = (link.getAttribute('href') || '').replace(/\/$/, '');
+                    return href === currentPath || (href === '/admin/reports' && (currentPath === '/admin' || currentPath === '/admin/dashboard'));
+                });
+            }
 
             // 2. Nếu không có exact match, tìm prefix match dài nhất (longest prefix match)
             if (!targetLink) {
