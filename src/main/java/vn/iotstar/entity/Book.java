@@ -164,7 +164,7 @@ public class Book {
      */
     public BigDecimal getMinPrice() {
         if (price != null) {
-            return price.multiply(new BigDecimal("0.85")).setScale(0, java.math.RoundingMode.HALF_UP);
+            return price.setScale(0, java.math.RoundingMode.HALF_UP);
         }
         return BigDecimal.ZERO;
     }

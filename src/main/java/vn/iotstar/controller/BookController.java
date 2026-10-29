@@ -164,6 +164,89 @@ public class BookController {
         } else {
             model.addAttribute("isStoreOnline", false);
         }
+        // 8. Tính toán số lượng tồn kho và giá bán theo từng phân loại tình trạng sách (Tiết kiệm / Tiêu chuẩn / Sưu tầm)
+        int cond = book.getConditionPercent() != null ? book.getConditionPercent() : 90;
+        String primaryTier = (cond <= 85) ? "budget" : ((cond >= 96) ? "collector" : "standard");
+
+        int budgetStock = 0;
+        int standardStock = 0;
+        int collectorStock = 0;
+
+        java.math.BigDecimal basePrice = book.getPrice() != null ? book.getPrice() : java.math.BigDecimal.ZERO;
+        java.math.BigDecimal budgetPrice = basePrice.multiply(new java.math.BigDecimal("0.85")).setScale(0, java.math.RoundingMode.HALF_UP);
+        java.math.BigDecimal standardPrice = basePrice;
+        java.math.BigDecimal collectorPrice = basePrice.multiply(new java.math.BigDecimal("1.15")).setScale(0, java.math.RoundingMode.HALF_UP);
+
+        int budgetCond = 85;
+        int standardCond = 92;
+        int collectorCond = 99;
+
+        Long budgetBookId = book.getId();
+        Long standardBookId = book.getId();
+        Long collectorBookId = book.getId();
+
+        if ("budget".equals(primaryTier)) {
+            budgetStock = totalStock;
+            budgetPrice = basePrice;
+            budgetCond = cond;
+            standardPrice = basePrice.multiply(new java.math.BigDecimal("1.15")).setScale(0, java.math.RoundingMode.HALF_UP);
+            collectorPrice = basePrice.multiply(new java.math.BigDecimal("1.30")).setScale(0, java.math.RoundingMode.HALF_UP);
+        } else if ("collector".equals(primaryTier)) {
+            collectorStock = totalStock;
+            collectorPrice = basePrice;
+            collectorCond = cond;
+            standardPrice = basePrice.multiply(new java.math.BigDecimal("0.90")).setScale(0, java.math.RoundingMode.HALF_UP);
+            budgetPrice = basePrice.multiply(new java.math.BigDecimal("0.80")).setScale(0, java.math.RoundingMode.HALF_UP);
+        } else {
+            standardStock = totalStock;
+            standardPrice = basePrice;
+            standardCond = cond;
+        }
+
+        if (book.getTitle() != null && !book.getTitle().isBlank()) {
+            List<Book> sameTitleBooks = bookRepository.findByTitleContainingIgnoreCase(book.getTitle().trim());
+            for (Book sib : sameTitleBooks) {
+                if (sib != null && !sib.getId().equals(book.getId()) && Boolean.TRUE.equals(sib.getIsActive())
+                        && sib.getTitle() != null && sib.getTitle().trim().equalsIgnoreCase(book.getTitle().trim())) {
+                    int sibStock = inventoryRepository.findByBookIdWithStore(sib.getId())
+                            .stream().mapToInt(inv -> inv.getQuantity() != null ? inv.getQuantity() : 0).sum();
+                    if (sibStock > 0) {
+                        int sibCond = sib.getConditionPercent() != null ? sib.getConditionPercent() : 90;
+                        if (sibCond <= 85 && budgetStock == 0) {
+                            budgetStock = sibStock;
+                            budgetPrice = sib.getPrice() != null ? sib.getPrice() : budgetPrice;
+                            budgetCond = sibCond;
+                            budgetBookId = sib.getId();
+                        } else if (sibCond >= 96 && collectorStock == 0) {
+                            collectorStock = sibStock;
+                            collectorPrice = sib.getPrice() != null ? sib.getPrice() : collectorPrice;
+                            collectorCond = sibCond;
+                            collectorBookId = sib.getId();
+                        } else if (sibCond >= 86 && sibCond <= 95 && standardStock == 0) {
+                            standardStock = sibStock;
+                            standardPrice = sib.getPrice() != null ? sib.getPrice() : standardPrice;
+                            standardCond = sibCond;
+                            standardBookId = sib.getId();
+                        }
+                    }
+                }
+            }
+        }
+
+        model.addAttribute("primaryTier", primaryTier);
+        model.addAttribute("budgetStock", budgetStock);
+        model.addAttribute("standardStock", standardStock);
+        model.addAttribute("collectorStock", collectorStock);
+        model.addAttribute("budgetPrice", budgetPrice);
+        model.addAttribute("standardPrice", standardPrice);
+        model.addAttribute("collectorPrice", collectorPrice);
+        model.addAttribute("budgetCond", budgetCond);
+        model.addAttribute("standardCond", standardCond);
+        model.addAttribute("collectorCond", collectorCond);
+        model.addAttribute("budgetBookId", budgetBookId);
+        model.addAttribute("standardBookId", standardBookId);
+        model.addAttribute("collectorBookId", collectorBookId);
+
         model.addAttribute("book", book);
         model.addAttribute("inventoryList", inventoryList);
         model.addAttribute("totalStock", totalStock);
