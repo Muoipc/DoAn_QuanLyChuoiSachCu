@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} != null ? ${pageTitle} : 'Cổng Thanh Toán VNPay Sandbox - ReBook'">Cổng Thanh Toán VNPay Sandbox</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --vnpay-blue: #005baa;
+            --vnpay-red: #ed1c24;
+            --vnpay-dark: #1e293b;
+            --vnpay-light: #f8fafc;
+            --vnpay-border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: var(--vnpay-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .vnpay-header {
+            background: #ffffff;
+            border-bottom: 2px solid var(--vnpay-border);
+            padding: 14px 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .vnpay-badge-sandbox {
+            background: #fee2e2;
+            color: #b91c1c;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            border: 1px solid #fca5a5;
+            text-transform: uppercase;
+        }
+        .timer-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #64748b;
+            background: #f8fafc;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            border: 1px solid var(--vnpay-border);
+        }
+        .timer-num {
+            color: var(--vnpay-red);
+            font-weight: 800;
+            font-size: 15px;
+            min-width: 45px;
+        }
+
+        /* MAIN WRAP */
+        .vnpay-main {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 16px;
+            flex: 1;
+            width: 100%;
+        }
+
+        .gateway-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .gateway-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ORDER SUMMARY CARD (LEFT) */
+        .order-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid var(--vnpay-border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            height: fit-content;
+        }
+        .order-card-head {
+            background: linear-gradient(135deg, #005baa 0%, #004380 100%);
+            color: #ffffff;
+            padding: 18px 20px;
+        }
+        .merchant-name {
+            font-size: 13px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        .order-amount-big {
+            font-size: 26px;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+        .order-card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 13px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--vnpay-border);
+        }
+        .info-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .info-label { color: #64748b; }
+        .info-val { font-weight: 700; color: #0f172a; text-align: right; }
+
+        /* PAYMENT FORM CARD (RIGHT) */
+        .payment-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid var(--vnpay-border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            padding: 24px;
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1.5px solid var(--vnpay-border);
+            margin-bottom: 20px;
+            gap: 8px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 16px;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1.5px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn.active {
+            color: var(--vnpay-blue);
+            border-bottom-color: var(--vnpay-blue);
+        }
+
+        .alert-sandbox-notice {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 12.5px;
+            color: #0369a1;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .form-group-vnpay {
+            margin-bottom: 16px;
+        }
+        .form-label-vnpay {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+        .form-input-vnpay {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1.5px solid var(--vnpay-border);
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            outline: none;
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+        .form-input-vnpay:focus {
+            border-color: var(--vnpay-blue);
+            box-shadow: 0 0 0 3px rgba(0, 91, 170, 0.12);
+        }
+
+        .input-row-flex {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .btn-confirm-pay {
+            width: 100%;
+            padding: 13px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #005baa 0%, #004380 100%);
+            color: #ffffff;
+            border: none;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 91, 170, 0.28);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .btn-confirm-pay:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .btn-cancel-pay {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 100%;
+            padding: 6px;
+        }
+        .btn-cancel-pay:hover {
+            color: var(--vnpay-red);
+        }
+
+        .test-card-preset {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 11.5px;
+            color: #475569;
+            margin-top: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-copy-preset {
+            background: #e2e8f0;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- VNPAY HEADER -->
+    <header class="vnpay-header">
+        <div class="header-content">
+            <div class="logo-box">
+                <span style="font-size:22px; font-weight:900; color:var(--vnpay-blue); letter-spacing:-0.5px;">
+                    VN<span style="color:var(--vnpay-red);">PAY</span>
+                </span>
+                <span class="vnpay-badge-sandbox">Sandbox Gateway</span>
+            </div>
+            <div class="timer-box">
+                <i class="fa-regular fa-clock"></i>
+                <span>Hết hạn trong:</span>
+                <span class="timer-num" id="payCountdown">14:59</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="vnpay-main">
+        <div class="gateway-grid">
+
+            <!-- CỘT TRÁI: THÔNG TIN ĐƠN HÀNG -->
+            <div class="order-card">
+                <div class="order-card-head">
+                    <div class="merchant-name">CỬA HÀNG SÁCH CŨ REBOOK</div>
+                    <div class="order-amount-big" th:text="${#numbers.formatDecimal(amount, 0, 'POINT', 0, 'COMMA')} + ' đ'">100.000 đ</div>
+                </div>
+                <div class="order-card-body">
+                    <div class="info-row">
+                        <span class="info-label">Mã đơn hàng:</span>
+                        <span class="info-val" th:text="${order.orderCode}">ORD123456789</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Người thanh toán:</span>
+                        <span class="info-val" th:text="${order.receiverName}">Nguyễn Song Hoàng Phúc</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Số điện thoại:</span>
+                        <span class="info-val" th:text="${order.receiverPhone}">0901234567</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Chi nhánh xuất hàng:</span>
+                        <span class="info-val" th:text="${order.store != null ? order.store.storeName : 'Chuỗi Sách Cũ'}">Tổng Kho Sách Cũ TP.HCM</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Phương thức:</span>
+                        <span class="info-val" style="color:var(--vnpay-blue);">Cổng Trực Tuyến VNPay</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: FORM THANH TOÁN VNPAY -->
+            <div class="payment-card">
+                <div class="tabs-header">
+                    <button type="button" class="tab-btn active" id="tabAtmBtn" onclick="switchTab('atm')">
+                        <i class="fa-solid fa-credit-card"></i> Thẻ ATM Nội Địa
+                    </button>
+                    <button type="button" class="tab-btn" id="tabQrBtn" onclick="switchTab('qr')">
+                        <i class="fa-solid fa-qrcode"></i> Quét VNPAY-QR
+                    </button>
+                </div>
+
+                <div class="alert-sandbox-notice">
+                    <i class="fa-solid fa-circle-info" style="font-size:16px; margin-top:2px;"></i>
+                    <div>
+                        <strong>Môi trường thử nghiệm VNPay Sandbox:</strong><br>
+                        Hệ thống đã nạp sẵn thông tin thẻ kiểm thử chuẩn do VNPay cung cấp. Bạn chỉ cần nhấn <strong>"Xác Nhận Thanh Toán"</strong> để hoàn tất đơn hàng tức thì.
+                    </div>
+                </div>
+
+                <!-- TAB 1: THẺ ATM / TÀI KHOẢN NGÂN HÀNG -->
+                <div id="tabAtmContent">
+                    <form th:action="@{/checkout/vnpay-return}" method="get" id="vnpayMockForm">
+                        <input type="hidden" name="vnp_TxnRef" th:value="${order.orderCode}">
+                        <input type="hidden" name="vnp_ResponseCode" value="00">
+                        <input type="hidden" name="vnp_TransactionNo" id="inputTxnNo" value="14589230">
+
+                        <div class="form-group-vnpay">
+                            <label class="form-label-vnpay">Ngân hàng phát hành thẻ</label>
+                            <select class="form-input-vnpay" style="cursor:pointer;">
+                                <option value="NCB" selected>NCB — Ngân Hàng Quốc Dân (Sandbox Test)</option>
+                                <option value="VIETCOMBANK">Vietcombank — Ngân Hàng Ngoại Thương</option>
+                                <option value="TECHCOMBANK">Techcombank — Ngân Hàng Kỹ Thương</option>
+                                <option value="MBBANK">MBBank — Ngân Hàng Quân Đội</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group-vnpay">
+                            <label class="form-label-vnpay">Số thẻ thử nghiệm VNPay (Test Card)</label>
+                            <input type="text" class="form-input-vnpay" id="inputCardNumber" value="9704198526191432198" required>
+                            <div class="test-card-preset">
+                                <span>Thẻ test NCB: <strong>9704198526191432198</strong></span>
+                                <button type="button" class="btn-copy-preset" onclick="document.getElementById('inputCardNumber').value='9704198526191432198'">Nạp</button>
+                            </div>
+                        </div>
+
+                        <div class="input-row-flex">
+                            <div class="form-group-vnpay">
+                                <label class="form-label-vnpay">Tên chủ thẻ (Không dấu)</label>
+                                <input type="text" class="form-input-vnpay" value="NGUYEN VAN A" style="text-transform:uppercase;" required>
+                            </div>
+                            <div class="form-group-vnpay">
+                                <label class="form-label-vnpay">Ngày phát hành (MM/YY)</label>
+                                <input type="text" class="form-input-vnpay" value="07/15" placeholder="MM/YY" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group-vnpay">
+                            <label class="form-label-vnpay">Mã xác thực OTP (Mặc định Sandbox: 123456)</label>
+                            <input type="text" class="form-input-vnpay" value="123456" style="letter-spacing:4px; font-weight:800;" required>
+                        </div>
+
+                        <button type="submit" class="btn-confirm-pay">
+                            <i class="fa-solid fa-lock"></i> Xác Nhận Thanh Toán Thành Công
+                        </button>
+                    </form>
+                </div>
+
+                <!-- TAB 2: QUÉT MÃ QR -->
+                <div id="tabQrContent" style="display:none; text-align:center; padding:10px 0;">
+                    <div style="background:#fff; display:inline-block; padding:14px; border-radius:14px; border:1.5px solid var(--vnpay-border); box-shadow:0 4px 16px rgba(0,0,0,0.06); margin-bottom:14px;">
+                        <img th:src="'https://img.vietqr.io/image/MB-0382345678-compact2.png?amount=' + ${amount} + '&addInfo=' + ${order.orderCode} + '&accountName=REBOOK%20CHUOI%20SACH%20CU'"
+                             alt="VNPay QR Code" style="width:220px; height:220px; object-fit:contain;">
+                        <div style="font-size:12px; color:#64748b; margin-top:6px; font-weight:600;">
+                            Mã QR Động Thanh Toán VNPay Sandbox
+                        </div>
+                    </div>
+
+                    <form th:action="@{/checkout/vnpay-return}" method="get">
+                        <input type="hidden" name="vnp_TxnRef" th:value="${order.orderCode}">
+                        <input type="hidden" name="vnp_ResponseCode" value="00">
+                        <input type="hidden" name="vnp_TransactionNo" value="98765432">
+                        <button type="submit" class="btn-confirm-pay" style="background:linear-gradient(135deg, #16a34a 0%, #15803d 100%);">
+                            <i class="fa-solid fa-circle-check"></i> Giả Lập Quét Mã &amp; Thanh Toán Thành Công
+                        </button>
+                    </form>
+                </div>
+
+                <!-- HỦY GIAO DỊCH -->
+                <form th:action="@{/checkout/vnpay-return}" method="get" style="margin-top:10px;">
+                    <input type="hidden" name="vnp_TxnRef" th:value="${order.orderCode}">
+                    <input type="hidden" name="vnp_ResponseCode" value="24">
+                    <button type="submit" class="btn-cancel-pay">
+                        <i class="fa-solid fa-arrow-left me-1"></i> Hủy giao dịch &amp; quay lại giỏ hàng
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Sinh Transaction No ngẫu nhiên
+        const txnInput = document.getElementById('inputTxnNo');
+        if (txnInput) {
+            txnInput.value = 'VNP' + Math.floor(10000000 + Math.random() * 90000000);
+        }
+
+        // Bộ đếm ngược 15 phút
+        let secondsLeft = 15 * 60;
+        const countdownEl = document.getElementById('payCountdown');
+        setInterval(() => {
+            if (secondsLeft > 0) {
+                secondsLeft--;
+                const m = Math.floor(secondsLeft / 60);
+                const s = secondsLeft % 60;
+                countdownEl.innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+            } else {
+                countdownEl.innerText = '00:00';
+            }
+        }, 1000);
+
+        // Chuyển Tab
+        function switchTab(tab) {
+            const atmBtn = document.getElementById('tabAtmBtn');
+            const qrBtn = document.getElementById('tabQrBtn');
+            const atmContent = document.getElementById('tabAtmContent');
+            const qrContent = document.getElementById('tabQrContent');
+
+            if (tab === 'atm') {
+                atmBtn.classList.add('active');
+                qrBtn.classList.remove('active');
+                atmContent.style.display = 'block';
+                qrContent.style.display = 'none';
+            } else {
+                qrBtn.classList.add('active');
+                atmBtn.classList.remove('active');
+                qrContent.style.display = 'block';
+                atmContent.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

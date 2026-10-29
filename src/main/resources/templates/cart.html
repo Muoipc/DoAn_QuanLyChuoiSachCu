@@ -707,7 +707,7 @@
             <!-- HÀNG TIÊU ĐỀ BẢNG (CHUẨN OPEN-DESIGN) -->
             <div class="cart-table-header">
                 <div style="display: flex; align-items: center; justify-content: center;">
-                    <input type="checkbox" class="checkbox-custom" checked id="checkAllHead">
+                    <input type="checkbox" class="checkbox-custom" checked id="checkAllHead" onchange="toggleAll(this.checked)" onclick="toggleAll(this.checked)">
                 </div>
                 <div>Sản Phẩm</div>
                 <div style="text-align: right; padding-right: 12px;">Đơn Giá</div>
@@ -720,7 +720,7 @@
             <div class="cart-table-card">
                 <div class="shop-group-header">
                     <div style="width: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <input type="checkbox" class="checkbox-custom" checked id="checkShopGroup">
+                        <input type="checkbox" class="checkbox-custom" checked id="checkShopGroup" onchange="toggleAll(this.checked)" onclick="toggleAll(this.checked)">
                     </div>
                     <span class="badge-mall-tag">Sách Chọn Lọc</span>
                     <span>Nhà Sách Cũ TP.HCM</span>
@@ -734,7 +734,7 @@
                      th:data-qty="${item.quantity}">
                     <!-- Checkbox -->
                     <div style="display: flex; align-items: center; justify-content: center;">
-                        <input type="checkbox" class="checkbox-custom item-check" checked th:value="${item.id}">
+                        <input type="checkbox" class="checkbox-custom item-check" checked th:value="${item.id}" onchange="onItemCheckChange()" onclick="onItemCheckChange()">
                     </div>
 
                     <!-- Cột Sản phẩm: Ảnh bìa + Tên sách + Phân loại hàng + Tag kho -->
@@ -827,8 +827,8 @@
             <div class="cart-sticky-bottom-bar cart-summary-card">
                 <div class="sticky-left-actions">
                     <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-                        <input type="checkbox" class="checkbox-custom" checked id="checkAllBottom">
-                        <span style="font-weight:700;">Chọn Tất Cả (<span th:text="${totalQuantity}">1</span>)</span>
+                        <input type="checkbox" class="checkbox-custom" checked id="checkAllBottom" onchange="toggleAll(this.checked)" onclick="toggleAll(this.checked)">
+                        <span style="font-weight:700;">Chọn Tất Cả (<span id="cartTotalItemsCount" th:text="${totalQuantity}">1</span>)</span>
                     </label>
                     <button type="button" class="btn-del-all" onclick="confirmClearCart()" style="background:none; border:none; padding:4px 8px; cursor:pointer; font-size:inherit; font-family:inherit;">
                         <i class="fa-regular fa-trash-can me-1"></i> Xóa Tất Cả
@@ -1065,18 +1065,34 @@
     </footer>
 
     <script th:inline="javascript">
+        function toggleAll(checked) {
+            const h = document.getElementById('checkAllHead');
+            const b = document.getElementById('checkAllBottom');
+            const s = document.getElementById('checkShopGroup');
+            if (h) h.checked = checked;
+            if (b) b.checked = checked;
+            if (s) s.checked = checked;
+            document.querySelectorAll('.item-check').forEach(cb => cb.checked = checked);
+            calculateCartFinalTotal();
+        }
+
+        function onItemCheckChange() {
+            const itemChecks = document.querySelectorAll('.item-check');
+            const allChecked = itemChecks.length > 0 && Array.from(itemChecks).every(c => c.checked);
+            const someChecked = Array.from(itemChecks).some(c => c.checked);
+            const h = document.getElementById('checkAllHead');
+            const b = document.getElementById('checkAllBottom');
+            const s = document.getElementById('checkShopGroup');
+            if (h) h.checked = allChecked;
+            if (b) b.checked = allChecked;
+            if (s) s.checked = someChecked;
+            calculateCartFinalTotal();
+        }
+
         const checkAllHead = document.getElementById('checkAllHead');
         const checkAllBottom = document.getElementById('checkAllBottom');
         const checkShopGroup = document.getElementById('checkShopGroup');
         const itemChecks = document.querySelectorAll('.item-check');
-
-        function toggleAll(checked) {
-            if (checkAllHead) checkAllHead.checked = checked;
-            if (checkAllBottom) checkAllBottom.checked = checked;
-            if (checkShopGroup) checkShopGroup.checked = checked;
-            itemChecks.forEach(cb => cb.checked = checked);
-            calculateCartFinalTotal();
-        }
 
         if (checkAllHead) {
             checkAllHead.addEventListener('change', function() { toggleAll(this.checked); });
@@ -1089,14 +1105,7 @@
         }
 
         itemChecks.forEach(cb => {
-            cb.addEventListener('change', function() {
-                const allChecked = Array.from(itemChecks).every(c => c.checked);
-                const someChecked = Array.from(itemChecks).some(c => c.checked);
-                if (checkAllHead) checkAllHead.checked = allChecked;
-                if (checkAllBottom) checkAllBottom.checked = allChecked;
-                if (checkShopGroup) checkShopGroup.checked = someChecked;
-                calculateCartFinalTotal();
-            });
+            cb.addEventListener('change', onItemCheckChange);
         });
 
         /* LOGIC TÍNH TIỀN TẠM TÍNH VÀ ÁP DỤNG VOUCHER CHO CART */
