@@ -615,10 +615,17 @@
                         </td>
 
                         <td>
-                            <strong class="text-dark d-block" style="font-size: 13.5px;" th:text="${c.bookTitle}">Tên sách</strong>
-                            <div class="text-muted small" style="font-size: 11.5px;">
-                                <i class="fa-solid fa-feather-pointed me-1" style="font-size: 10px;"></i>
-                                <span th:text="${c.author}">Tác giả</span>
+                            <div class="d-flex align-items-center gap-2">
+                                <img th:src="${c.primaryPhotoUrl}" alt="Ảnh sách"
+                                     style="width: 40px; height: 54px; object-fit: cover; border-radius: 6px; border: 1px solid #e2e8f0; flex-shrink: 0;"
+                                     onerror="this.onerror=null;this.src='/images/books/book-1.jpg';">
+                                <div>
+                                    <strong class="text-dark d-block" style="font-size: 13.5px;" th:text="${c.bookTitle}">Tên sách</strong>
+                                    <div class="text-muted small" style="font-size: 11.5px;">
+                                        <i class="fa-solid fa-feather-pointed me-1" style="font-size: 10px;"></i>
+                                        <span th:text="${c.author}">Tác giả</span>
+                                    </div>
+                                </div>
                             </div>
                         </td>
 
