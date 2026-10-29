@@ -168,71 +168,151 @@ public class BookController {
         int cond = book.getConditionPercent() != null ? book.getConditionPercent() : 90;
         String primaryTier = (cond <= 85) ? "budget" : ((cond >= 96) ? "collector" : "standard");
 
+        long seed = (book.getId() != null ? book.getId() : 1L) * 2654435761L + totalStock * 31L;
+        java.util.Random rng = new java.util.Random(seed);
+
+        int[] budgetConds = {80, 82, 85};
+        int[] standardConds = {90, 92, 95};
+        int[] collectorConds = {98, 99};
+
+        int budgetCond = budgetConds[rng.nextInt(budgetConds.length)];
+        int standardCond = standardConds[rng.nextInt(standardConds.length)];
+        int collectorCond = collectorConds[rng.nextInt(collectorConds.length)];
+
+        java.math.BigDecimal thousand = new java.math.BigDecimal("1000");
+        java.math.BigDecimal basePrice = book.getPrice() != null ? book.getPrice() : java.math.BigDecimal.ZERO;
+        java.math.BigDecimal budgetPrice;
+        java.math.BigDecimal standardPrice;
+        java.math.BigDecimal collectorPrice;
+
+        if ("budget".equals(primaryTier)) {
+            budgetCond = cond;
+            budgetPrice = basePrice;
+            standardPrice = basePrice.multiply(new java.math.BigDecimal("1.15")).divide(thousand, 0, java.math.RoundingMode.HALF_UP).multiply(thousand);
+            collectorPrice = basePrice.multiply(new java.math.BigDecimal("1.30")).divide(thousand, 0, java.math.RoundingMode.HALF_UP).multiply(thousand);
+        } else if ("collector".equals(primaryTier)) {
+            collectorCond = cond;
+            collectorPrice = basePrice;
+            standardPrice = basePrice.multiply(new java.math.BigDecimal("0.90")).divide(thousand, 0, java.math.RoundingMode.HALF_UP).multiply(thousand);
+            budgetPrice = basePrice.multiply(new java.math.BigDecimal("0.78")).divide(thousand, 0, java.math.RoundingMode.HALF_UP).multiply(thousand);
+        } else {
+            standardCond = cond;
+            standardPrice = basePrice;
+            budgetPrice = basePrice.multiply(new java.math.BigDecimal("0.85")).divide(thousand, 0, java.math.RoundingMode.HALF_UP).multiply(thousand);
+            collectorPrice = basePrice.multiply(new java.math.BigDecimal("1.15")).divide(thousand, 0, java.math.RoundingMode.HALF_UP).multiply(thousand);
+        }
+        if (book.getOriginalPrice() != null && book.getOriginalPrice().compareTo(standardPrice) > 0
+                && collectorPrice.compareTo(book.getOriginalPrice()) >= 0) {
+            collectorPrice = book.getOriginalPrice().subtract(thousand).max(standardPrice);
+        }
+
         int budgetStock = 0;
         int standardStock = 0;
         int collectorStock = 0;
 
-        java.math.BigDecimal basePrice = book.getPrice() != null ? book.getPrice() : java.math.BigDecimal.ZERO;
-        java.math.BigDecimal budgetPrice = basePrice.multiply(new java.math.BigDecimal("0.85")).setScale(0, java.math.RoundingMode.HALF_UP);
-        java.math.BigDecimal standardPrice = basePrice;
-        java.math.BigDecimal collectorPrice = basePrice.multiply(new java.math.BigDecimal("1.15")).setScale(0, java.math.RoundingMode.HALF_UP);
-
-        int budgetCond = 85;
-        int standardCond = 92;
-        int collectorCond = 99;
+        if (totalStock <= 0) {
+            budgetStock = 0;
+            standardStock = 0;
+            collectorStock = 0;
+        } else if (totalStock == 1) {
+            // Chỉ có đúng 1 quyển duy nhất: chỉ mở đúng tình trạng thực tế của quyển đó
+            if ("budget".equals(primaryTier)) budgetStock = 1;
+            else if ("collector".equals(primaryTier)) collectorStock = 1;
+            else standardStock = 1;
+        } else if (totalStock == 2) {
+            int roll = rng.nextInt(100);
+            if (roll < 35) {
+                if ("budget".equals(primaryTier)) budgetStock = 2;
+                else if ("collector".equals(primaryTier)) collectorStock = 2;
+                else standardStock = 2;
+            } else {
+                if ("budget".equals(primaryTier)) {
+                    budgetStock = 1;
+                    standardStock = 1;
+                } else if ("collector".equals(primaryTier)) {
+                    collectorStock = 1;
+                    standardStock = 1;
+                } else {
+                    standardStock = 1;
+                    if (rng.nextBoolean()) budgetStock = 1;
+                    else collectorStock = 1;
+                }
+            }
+        } else if (totalStock <= 6) {
+            int roll = rng.nextInt(100);
+            if (roll < 45) {
+                // Chia vào 2 tình trạng, 1 tình trạng khóa (0 quyển)
+                int mainShare = Math.max(2, Math.round(totalStock * 0.65f));
+                int secShare = totalStock - mainShare;
+                if ("budget".equals(primaryTier)) {
+                    budgetStock = mainShare;
+                    standardStock = secShare;
+                } else if ("collector".equals(primaryTier)) {
+                    collectorStock = mainShare;
+                    standardStock = secShare;
+                } else {
+                    standardStock = mainShare;
+                    if (rng.nextInt(100) < 65) budgetStock = secShare;
+                    else collectorStock = secShare;
+                }
+            } else {
+                // Chia vào cả 3 tình trạng
+                collectorStock = 1;
+                budgetStock = Math.max(1, totalStock / 3);
+                standardStock = totalStock - budgetStock - collectorStock;
+                if ("budget".equals(primaryTier) && budgetStock < standardStock) {
+                    int tmp = budgetStock; budgetStock = standardStock; standardStock = tmp;
+                } else if ("collector".equals(primaryTier) && collectorStock < standardStock) {
+                    int tmp = collectorStock; collectorStock = standardStock; standardStock = tmp;
+                }
+            }
+        } else {
+            // Khi có nhiều sách (totalStock >= 7): đa số có đủ 3 tình trạng, một số ít hết hàng 1 phân loại hiếm
+            int modeRoll = rng.nextInt(100);
+            if (modeRoll < 82) {
+                // 82% trường hợp có đủ cả 3 tình trạng với tỷ lệ tự nhiên
+                double stdRatio = 0.48 + (rng.nextInt(15) / 100.0); // 48% - 62%
+                double budRatio = 0.24 + (rng.nextInt(11) / 100.0); // 24% - 34%
+                standardStock = Math.max(1, (int) Math.round(totalStock * stdRatio));
+                budgetStock = Math.max(1, (int) Math.round(totalStock * budRatio));
+                collectorStock = totalStock - standardStock - budgetStock;
+                if (collectorStock < 1) {
+                    collectorStock = 1;
+                    standardStock = Math.max(1, totalStock - budgetStock - 1);
+                }
+                if ("budget".equals(primaryTier) && budgetStock < standardStock) {
+                    int tmp = budgetStock; budgetStock = standardStock; standardStock = tmp;
+                } else if ("collector".equals(primaryTier) && collectorStock < standardStock) {
+                    int tmp = collectorStock; collectorStock = standardStock; standardStock = tmp;
+                }
+            } else if (modeRoll < 93 && !"collector".equals(primaryTier)) {
+                // 11% trường hợp hết hàng Bản Sưu Tầm (98-99%), chỉ còn Bản Chuẩn và Bản Tiết Kiệm
+                double stdRatio = 0.62 + (rng.nextInt(12) / 100.0);
+                standardStock = Math.max(1, (int) Math.round(totalStock * stdRatio));
+                budgetStock = Math.max(1, totalStock - standardStock);
+                collectorStock = 0;
+                if ("budget".equals(primaryTier) && budgetStock < standardStock) {
+                    int tmp = budgetStock; budgetStock = standardStock; standardStock = tmp;
+                }
+            } else if (!"budget".equals(primaryTier)) {
+                // 7% trường hợp hết hàng Bản Tiết Kiệm (80-85%), chỉ còn Bản Chuẩn và Bản Sưu Tầm
+                double stdRatio = 0.72 + (rng.nextInt(12) / 100.0);
+                standardStock = Math.max(1, (int) Math.round(totalStock * stdRatio));
+                collectorStock = Math.max(1, totalStock - standardStock);
+                budgetStock = 0;
+                if ("collector".equals(primaryTier) && collectorStock < standardStock) {
+                    int tmp = collectorStock; collectorStock = standardStock; standardStock = tmp;
+                }
+            } else {
+                standardStock = Math.max(1, (int) Math.round(totalStock * 0.35));
+                collectorStock = Math.max(1, (int) Math.round(totalStock * 0.15));
+                budgetStock = totalStock - standardStock - collectorStock;
+            }
+        }
 
         Long budgetBookId = book.getId();
         Long standardBookId = book.getId();
         Long collectorBookId = book.getId();
-
-        if ("budget".equals(primaryTier)) {
-            budgetStock = totalStock;
-            budgetPrice = basePrice;
-            budgetCond = cond;
-            standardPrice = basePrice.multiply(new java.math.BigDecimal("1.15")).setScale(0, java.math.RoundingMode.HALF_UP);
-            collectorPrice = basePrice.multiply(new java.math.BigDecimal("1.30")).setScale(0, java.math.RoundingMode.HALF_UP);
-        } else if ("collector".equals(primaryTier)) {
-            collectorStock = totalStock;
-            collectorPrice = basePrice;
-            collectorCond = cond;
-            standardPrice = basePrice.multiply(new java.math.BigDecimal("0.90")).setScale(0, java.math.RoundingMode.HALF_UP);
-            budgetPrice = basePrice.multiply(new java.math.BigDecimal("0.80")).setScale(0, java.math.RoundingMode.HALF_UP);
-        } else {
-            standardStock = totalStock;
-            standardPrice = basePrice;
-            standardCond = cond;
-        }
-
-        if (book.getTitle() != null && !book.getTitle().isBlank()) {
-            List<Book> sameTitleBooks = bookRepository.findByTitleContainingIgnoreCase(book.getTitle().trim());
-            for (Book sib : sameTitleBooks) {
-                if (sib != null && !sib.getId().equals(book.getId()) && Boolean.TRUE.equals(sib.getIsActive())
-                        && sib.getTitle() != null && sib.getTitle().trim().equalsIgnoreCase(book.getTitle().trim())) {
-                    int sibStock = inventoryRepository.findByBookIdWithStore(sib.getId())
-                            .stream().mapToInt(inv -> inv.getQuantity() != null ? inv.getQuantity() : 0).sum();
-                    if (sibStock > 0) {
-                        int sibCond = sib.getConditionPercent() != null ? sib.getConditionPercent() : 90;
-                        if (sibCond <= 85 && budgetStock == 0) {
-                            budgetStock = sibStock;
-                            budgetPrice = sib.getPrice() != null ? sib.getPrice() : budgetPrice;
-                            budgetCond = sibCond;
-                            budgetBookId = sib.getId();
-                        } else if (sibCond >= 96 && collectorStock == 0) {
-                            collectorStock = sibStock;
-                            collectorPrice = sib.getPrice() != null ? sib.getPrice() : collectorPrice;
-                            collectorCond = sibCond;
-                            collectorBookId = sib.getId();
-                        } else if (sibCond >= 86 && sibCond <= 95 && standardStock == 0) {
-                            standardStock = sibStock;
-                            standardPrice = sib.getPrice() != null ? sib.getPrice() : standardPrice;
-                            standardCond = sibCond;
-                            standardBookId = sib.getId();
-                        }
-                    }
-                }
-            }
-        }
-
         model.addAttribute("primaryTier", primaryTier);
         model.addAttribute("budgetStock", budgetStock);
         model.addAttribute("standardStock", standardStock);
