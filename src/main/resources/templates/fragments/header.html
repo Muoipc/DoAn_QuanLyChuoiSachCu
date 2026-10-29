@@ -1679,9 +1679,9 @@
             <div style="display:flex; align-items:center; gap:14px; flex-shrink:0;">
                 <!-- 1. Nút Thông Báo hình tròn ngoài Header kèm Popover -->
                 <div class="shopee-noti-wrapper" id="headerNotiWrapper" onmouseenter="loadHeaderUserNotifications()">
-                    <a th:href="@{/orders}" class="chotot-circle-btn" aria-label="Thông báo" title="Thông báo">
+                    <a th:href="@{/orders}" class="chotot-circle-btn" aria-label="Thông báo" title="Thông báo" style="position:relative;">
                         <i class="fa-regular fa-bell"></i>
-                        <span id="headerNotiBadge" class="notification-badge" style="display:none; position:absolute; top:-2px; right:-2px; background:#EE4D2D; width:8px; height:8px; border-radius:9999px; border:1.5px solid #ffffff;"></span>
+                        <span id="headerNotiBadge" style="display:none; position:absolute; top:-3px; right:-3px; background:#EE4D2D; color:#ffffff; font-size:10px; font-weight:800; min-width:18px; height:18px; border-radius:9999px; border:2px solid #ffffff; line-height:1; display:flex; align-items:center; justify-content:center; padding:0 3px; box-sizing:border-box; box-shadow:0 2px 6px rgba(238,77,45,0.4); font-family:system-ui, -apple-system, sans-serif;"></span>
                     </a>
                     <div class="shopee-noti-popover">
                         <div class="noti-popover-header d-flex justify-content-between align-items-center" style="display:flex; justify-content:space-between; align-items:center;">
@@ -2093,7 +2093,9 @@
                 .then(function(data) {
                     if (badgeEl) {
                         if (data.unreadCount > 0) {
-                            badgeEl.style.display = 'block';
+                            badgeEl.style.display = 'inline-flex';
+                            badgeEl.style.alignItems = 'center';
+                            badgeEl.style.justifyContent = 'center';
                             badgeEl.innerText = data.unreadCount > 9 ? '9+' : data.unreadCount;
                         } else {
                             badgeEl.style.display = 'none';
@@ -2159,9 +2161,15 @@
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     var badgeEl = document.getElementById('headerNotiBadge');
-                    if (badgeEl && data.unreadCount > 0) {
-                        badgeEl.style.display = 'block';
-                        badgeEl.innerText = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                    if (badgeEl) {
+                        if (data.unreadCount > 0) {
+                            badgeEl.style.display = 'inline-flex';
+                            badgeEl.style.alignItems = 'center';
+                            badgeEl.style.justifyContent = 'center';
+                            badgeEl.innerText = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                        } else {
+                            badgeEl.style.display = 'none';
+                        }
                     }
                 }).catch(function(){});
         });
