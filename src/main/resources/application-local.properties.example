@@ -1,0 +1,11 @@
+# ==============================================================================
+# HƯỚNG DẪN CẤU HÌNH CHO THÀNH VIÊN CLONE PROJECT (CHẠY AI & GỬI MAIL OTP)
+# Đổi tên file này thành "application-local.properties" nằm cùng thư mục src/main/resources/
+# ==============================================================================
+
+# 1. API Key OpenRouter cho tính năng AI Trực Quầy & CSKH 24/7 (Lấy từ trưởng nhóm)
+openrouter.api-key=YOUR_OPENROUTER_API_KEY_HERE
+
+# 2. Cấu hình gửi mail OTP kích hoạt tài khoản
+spring.mail.username=nguyensonghoangphuc0125@gmail.com
+spring.mail.password=ueaadculevopqhth
