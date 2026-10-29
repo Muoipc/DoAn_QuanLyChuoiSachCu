@@ -216,7 +216,7 @@
                 </div>
                 <div class="detail-row">
                     <span style="color:var(--color-text-secondary);">Phương thức thanh toán:</span>
-                    <strong th:text="${order.paymentMethod.name() == 'VNPAY' ? 'Cổng trực tuyến VNPay' : (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'Chuyển khoản VietQR 24/7' : 'Thanh toán tiền mặt khi nhận sách (COD)')}">COD</strong>
+                    <strong th:text="${order.paymentMethod.name() == 'VNPAY' ? 'Cổng trực tuyến VNPay' : (order.paymentMethod.name() == 'MOMO' ? 'Ví điện tử MoMo' : (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'Chuyển khoản VietQR 24/7' : 'Thanh toán tiền mặt khi nhận sách (COD)'))}">COD</strong>
                 </div>
                 <div class="detail-row">
                     <span style="color:var(--color-text-secondary);">Trạng thái thanh toán:</span>
@@ -224,7 +224,7 @@
                         <i class="fa-solid fa-circle-check"></i> ĐÃ THANH TOÁN (PAID)
                     </span>
                     <span th:unless="${order.paymentStatus.name() == 'PAID'}" style="color: #b45309; font-weight:800;">
-                        <i class="fa-solid fa-clock"></i> <span th:text="${order.paymentMethod.name() == 'BANK_TRANSFER' ? 'CHỜ CHUYỂN KHOẢN (VietQR)' : 'CHƯA THANH TOÁN (Chờ nhận sách COD)'}">CHƯA THANH TOÁN</span>
+                        <i class="fa-solid fa-clock"></i> <span th:text="${order.paymentMethod.name() == 'MOMO' ? 'CHỜ THANH TOÁN VÍ MOMO' : (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'CHỜ CHUYỂN KHOẢN (VietQR)' : 'CHƯA THANH TOÁN (Chờ nhận sách COD)')}">CHƯA THANH TOÁN</span>
                     </span>
                 </div>
                 <div class="detail-row" style="font-size: 16px; font-weight: 800; padding-top: 14px; margin-top: 6px; border-top: 1.5px solid rgba(220, 213, 201, 0.8);">
@@ -233,20 +233,20 @@
                 </div>
             </div>
 
-            <!-- Khối Mã VietQR Động Dành Cho Đơn Chuyển Khoản Hoặc Khách Muốn Thanh Toán Trước -->
-            <div th:if="${order.paymentStatus.name() != 'PAID' and (order.paymentMethod.name() == 'BANK_TRANSFER' or order.paymentMethod.name() == 'COD')}" 
+            <!-- Khối Mã VietQR / MoMo Động Dành Cho Đơn Chuyển Khoản Hoặc Khách Muốn Thanh Toán Trước -->
+            <div th:if="${order.paymentStatus.name() != 'PAID' and (order.paymentMethod.name() == 'BANK_TRANSFER' or order.paymentMethod.name() == 'MOMO' or order.paymentMethod.name() == 'COD')}" 
                  style="background:#FAF8F5; border:1.5px solid #ECE7DE; border-radius:18px; padding:22px; margin:22px 0; text-align:center;">
                 <div style="display:inline-flex; align-items:center; gap:8px; background:#EFF6FF; color:#1D4ED8; font-weight:800; font-size:12.5px; padding:6px 14px; border-radius:999px; margin-bottom:14px; border:1px solid #BFDBFE;">
-                    <i class="fa-solid fa-qrcode"></i> <span th:text="${order.paymentMethod.name() == 'BANK_TRANSFER' ? 'QUÉT MÃ VIETQR ĐỂ HOÀN TẤT THANH TOÁN' : 'THANH TOÁN TRƯỚC QUA VIETQR (TÙY CHỌN)'}">QUÉT MÃ VIETQR ĐỂ HOÀN TẤT THANH TOÁN</span>
+                    <i class="fa-solid fa-qrcode"></i> <span th:text="${order.paymentMethod.name() == 'MOMO' ? 'QUÉT MÃ MOMO ĐỂ HOÀN TẤT THANH TOÁN' : (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'QUÉT MÃ VIETQR ĐỂ HOÀN TẤT THANH TOÁN' : 'THANH TOÁN TRƯỚC QUA VIETQR / MOMO (TÙY CHỌN)')}">QUÉT MÃ ĐỂ HOÀN TẤT THANH TOÁN</span>
                 </div>
                 
                 <div style="display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:24px; margin-top:8px;">
                     <!-- Ảnh QR sinh động từ VietQR Open API -->
                     <div style="background:#FFFFFF; padding:12px; border-radius:14px; border:1px solid #ECE7DE; box-shadow:0 4px 16px rgba(45, 24, 15, 0.06);">
-                        <img th:src="'https://img.vietqr.io/image/MB-0382345678-compact2.png?amount=' + ${order.finalAmount.longValue()} + '&addInfo=' + ${order.orderCode} + '&accountName=REBOOK%20CHUOI%20SACH%20CU'" 
-                             alt="Mã QR Chuyển Khoản VietQR" style="width:210px; height:210px; object-fit:contain; border-radius:8px;">
+                        <img th:src="${order.paymentMethod.name() == 'MOMO'} ? ('https://img.vietqr.io/image/970422-0901234567-compact2.png?amount=' + ${order.finalAmount.longValue()} + '&addInfo=' + ${order.orderCode} + '&accountName=MOMO%20REBOOK%20STORE') : ('https://img.vietqr.io/image/MB-0382345678-compact2.png?amount=' + ${order.finalAmount.longValue()} + '&addInfo=' + ${order.orderCode} + '&accountName=REBOOK%20CHUOI%20SACH%20CU')" 
+                             alt="Mã QR Chuyển Khoản" style="width:210px; height:210px; object-fit:contain; border-radius:8px;">
                         <div style="font-size:11px; color:#78716C; margin-top:6px; font-weight:500;">
-                            <i class="fa-solid fa-camera me-1"></i>Mở App Ngân hàng bất kỳ để quét
+                            <i class="fa-solid fa-camera me-1"></i><span th:text="${order.paymentMethod.name() == 'MOMO' ? 'Mở App MoMo để quét mã' : 'Mở App Ngân hàng hoặc MoMo để quét'}">Mở App Ngân hàng để quét</span>
                         </div>
                     </div>
 

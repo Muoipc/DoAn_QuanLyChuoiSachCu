@@ -921,6 +921,11 @@
                             <i class="fa-solid fa-credit-card text-primary"></i>
                             <span>VNPay (ATM / Visa)</span>
                         </div>
+
+                        <div class="payment-option-pill" id="payOptMomo" onclick="selectPaymentMethod('MOMO')">
+                            <i class="fa-solid fa-wallet" style="color:#d82d8b;"></i>
+                            <span>Ví MoMo</span>
+                        </div>
                     </div>
 
                     <!-- Mô tả phương thức -->
@@ -1078,8 +1083,8 @@
     <script th:inline="javascript">
         const rawSubtotal = /*[[${subtotal}]]*/ 68000;
         let currentShippingFee = 0;
-        let currentVoucherDiscount = 20000;
-        let currentCoinsDiscount = 2000;
+        let currentVoucherDiscount = 0;
+        let currentCoinsDiscount = 0;
 
         function formatVND(num) {
             return Math.max(0, num).toLocaleString('vi-VN') + ' đ';
@@ -1174,22 +1179,28 @@
             document.getElementById('inputStoreId').value = radio.value;
         }
 
-        // 2. Chuyển đổi phương thức thanh toán (COD vs VietQR vs VNPay)
+        // 2. Chuyển đổi phương thức thanh toán (COD vs VietQR vs VNPay vs MoMo)
         function selectPaymentMethod(method) {
             const optCod = document.getElementById('payOptCod');
             const optQr = document.getElementById('payOptQr');
             const optVnpay = document.getElementById('payOptVnpay');
+            const optMomo = document.getElementById('payOptMomo');
             const descBox = document.getElementById('paymentDescBox');
             const inputPayment = document.getElementById('inputPaymentMethod');
 
             if (optCod) optCod.classList.remove('active');
             if (optQr) optQr.classList.remove('active');
             if (optVnpay) optVnpay.classList.remove('active');
+            if (optMomo) optMomo.classList.remove('active');
 
             if (method === 'VNPAY') {
                 if (optVnpay) optVnpay.classList.add('active');
                 inputPayment.value = 'VNPAY';
-                descBox.innerHTML = '<i class="fa-solid fa-credit-card text-primary me-1"></i> <strong>VNPay:</strong> Thanh toán qua cổng VNPay Sandbox bằng thẻ ATM nội địa / Visa / Mastercard.';
+                descBox.innerHTML = '<i class="fa-solid fa-credit-card text-primary me-1"></i> <strong>VNPay Sandbox:</strong> Thanh toán trực tuyến qua thẻ ATM nội địa / Visa / Mastercard / VNPAY-QR.';
+            } else if (method === 'MOMO') {
+                if (optMomo) optMomo.classList.add('active');
+                inputPayment.value = 'MOMO';
+                descBox.innerHTML = '<i class="fa-solid fa-wallet me-1" style="color:#d82d8b;"></i> <strong>Ví MoMo:</strong> Thanh toán quét mã QR ví MoMo tức thì 24/7.';
             } else if (method === 'BANK_TRANSFER' || method === 'VIETQR') {
                 if (optQr) optQr.classList.add('active');
                 inputPayment.value = 'BANK_TRANSFER';
