@@ -85,13 +85,13 @@ public class AdminConsignmentController {
         model.addAttribute("managedStore", managedStore);
 
         // Đếm theo trạng thái (Đồng bộ theo phạm vi chi nhánh)
-        if (isAdmin) {
+        if (isAdmin && effectiveStoreId == null) {
             model.addAttribute("countPending", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.PENDING));
             model.addAttribute("countApproved", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.APPROVED));
             model.addAttribute("countStored", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.STORED));
             model.addAttribute("countRejected", consignmentService.countByStatus(BookConsignment.ConsignmentStatus.REJECTED));
         } else {
-            Long sId = (managedStore != null) ? managedStore.getId() : -1L;
+            Long sId = (effectiveStoreId != null) ? effectiveStoreId : ((managedStore != null) ? managedStore.getId() : -1L);
             model.addAttribute("countPending", consignmentService.countByStoreIdAndStatus(sId, BookConsignment.ConsignmentStatus.PENDING));
             model.addAttribute("countApproved", consignmentService.countByStoreIdAndStatus(sId, BookConsignment.ConsignmentStatus.APPROVED));
             model.addAttribute("countStored", consignmentService.countByStoreIdAndStatus(sId, BookConsignment.ConsignmentStatus.STORED));

@@ -445,11 +445,13 @@
         </div>
     </div>
 
-    <!-- 2. THỐNG KÊ TRẠNG THÁI CHUẨN OPENDESIGN -->
+    <!-- 2. THỐNG KÊ TRẠNG THÁI CHUẨN OPENDESIGN (NHẤN ĐỂ LỌC CHI TIẾT) -->
     <div class="row g-3 mb-4">
         <!-- Chờ Duyệt -->
         <div class="col-lg-3 col-sm-6">
-            <div class="inv-metric-card h-100">
+            <a th:href="@{/admin/consignments(status=${selectedStatus != null and selectedStatus.name() == 'PENDING' ? null : 'PENDING'}, storeId=${selectedStoreId})}"
+               class="inv-metric-card text-decoration-none d-block h-100"
+               th:classappend="${selectedStatus != null and selectedStatus.name() == 'PENDING'} ? 'active-warning' : ''">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="inv-metric-label">Chờ Duyệt Thẩm Định</span>
                     <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill">PENDING</span>
@@ -460,12 +462,14 @@
                         <i class="fa-solid fa-hourglass-half"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Đã Duyệt Giá -->
         <div class="col-lg-3 col-sm-6">
-            <div class="inv-metric-card h-100">
+            <a th:href="@{/admin/consignments(status=${selectedStatus != null and selectedStatus.name() == 'APPROVED' ? null : 'APPROVED'}, storeId=${selectedStoreId})}"
+               class="inv-metric-card text-decoration-none d-block h-100"
+               th:classappend="${selectedStatus != null and selectedStatus.name() == 'APPROVED'} ? 'active-primary' : ''">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="inv-metric-label">Đã Duyệt Giá</span>
                     <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">APPROVED</span>
@@ -476,12 +480,14 @@
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Đã Nhập Kho -->
         <div class="col-lg-3 col-sm-6">
-            <div class="inv-metric-card h-100">
+            <a th:href="@{/admin/consignments(status=${selectedStatus != null and selectedStatus.name() == 'STORED' ? null : 'STORED'}, storeId=${selectedStoreId})}"
+               class="inv-metric-card text-decoration-none d-block h-100"
+               th:classappend="${selectedStatus != null and selectedStatus.name() == 'STORED'} ? 'active-success' : ''">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="inv-metric-label">Đã Nhập Kho Bày Bán</span>
                     <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">STORED</span>
@@ -492,12 +498,14 @@
                         <i class="fa-solid fa-boxes-stacked"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Từ Chối -->
         <div class="col-lg-3 col-sm-6">
-            <div class="inv-metric-card h-100">
+            <a th:href="@{/admin/consignments(status=${selectedStatus != null and selectedStatus.name() == 'REJECTED' ? null : 'REJECTED'}, storeId=${selectedStoreId})}"
+               class="inv-metric-card text-decoration-none d-block h-100"
+               th:classappend="${selectedStatus != null and selectedStatus.name() == 'REJECTED'} ? 'active-danger' : ''">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <span class="inv-metric-label">Từ Chối Nhận</span>
                     <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">REJECTED</span>
@@ -508,7 +516,7 @@
                         <i class="fa-solid fa-circle-xmark"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 

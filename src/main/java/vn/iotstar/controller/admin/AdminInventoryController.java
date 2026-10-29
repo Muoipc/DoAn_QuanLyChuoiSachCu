@@ -268,7 +268,26 @@ public class AdminInventoryController {
             availableStores = (managedStore != null) ? List.of(managedStore) : Collections.emptyList();
         }
 
-        List<StockTransfer> transfers = stockTransferService.searchTransfers(status, filterStoreId);
+        List<StockTransfer> allTransfers = stockTransferService.searchTransfers(null, filterStoreId);
+        long totalCount = allTransfers.size();
+        long pendingCount = allTransfers.stream().filter(t -> t.getStatus() == StockTransfer.TransferStatus.PENDING).count();
+        long approvedCount = allTransfers.stream().filter(t -> t.getStatus() == StockTransfer.TransferStatus.APPROVED).count();
+        long rejectedCount = allTransfers.stream().filter(t ->
+                t.getStatus() == StockTransfer.TransferStatus.REJECTED ||
+                t.getStatus() == StockTransfer.TransferStatus.CANCELLED
+        ).count();
+
+        List<StockTransfer> transfers;
+        if (status == null) {
+            transfers = allTransfers;
+        } else if (status == StockTransfer.TransferStatus.REJECTED) {
+            transfers = allTransfers.stream().filter(t ->
+                    t.getStatus() == StockTransfer.TransferStatus.REJECTED ||
+                    t.getStatus() == StockTransfer.TransferStatus.CANCELLED
+            ).toList();
+        } else {
+            transfers = stockTransferService.searchTransfers(status, filterStoreId);
+        }
 
         model.addAttribute("transfers", transfers);
         model.addAttribute("stores", availableStores);
@@ -276,7 +295,10 @@ public class AdminInventoryController {
         model.addAttribute("selectedStoreId", filterStoreId);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("managedStore", managedStore);
-        model.addAttribute("pendingCount", stockTransferService.countPendingTransfers());
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("pendingCount", pendingCount);
+        model.addAttribute("approvedCount", approvedCount);
+        model.addAttribute("rejectedCount", rejectedCount);
 
         return "admin/inventory/transfers";
     }
