@@ -443,10 +443,13 @@
                         <option value="false" th:selected="${selectedIsActive == false}">Đã ẩn / Tạm ngưng</option>
                     </select>
                 </div>
-                <div class="col-lg-1 col-md-2 d-grid">
-                    <button type="submit" class="glass-btn-dark">
-                        <i class="fa-solid fa-filter me-1"></i>Lọc
+                <div class="col-lg-1 col-md-2 d-flex gap-2 align-items-center">
+                    <button type="submit" class="btn-filter-circle" title="Lọc dữ liệu">
+                        <i class="fa-solid fa-filter"></i>
                     </button>
+                    <a th:href="@{/admin/books}" class="btn-reset-circle" title="Làm mới bộ lọc">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </a>
                 </div>
             </form>
         </div>

@@ -24,6 +24,7 @@
            REBOOK WHITE APPLE LIQUID GLASS & SQUIRCLE ICONS DESIGN SYSTEM
            ===================================================================== */
         :root {
+            color-scheme: light !important;
             /* Nền Canvas Sạch Sẽ (Loại bỏ triệt để đốm radial-gradient) */
             --rebook-canvas: #FAFAF9;
             --rebook-white: #FFFFFF;
@@ -106,6 +107,30 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Triệt tiêu hoàn toàn menu màu đen của hệ điều hành trên toàn bộ Admin */
+        html, body, select, option, optgroup, input, textarea, .form-select, .glass-select, .apple-pill-select {
+            color-scheme: light !important;
+        }
+
+        select, .form-select, .glass-select, .apple-pill-select {
+            background-color: #FFFFFF !important;
+            color: #1C1917 !important;
+            border-color: #E2DACE !important;
+        }
+
+        select option, select optgroup, .form-select option {
+            background-color: #FFFFFF !important;
+            color: #1C1917 !important;
+            padding: 8px 12px;
+        }
+
+        select:focus, .form-select:focus, .glass-select:focus, .apple-pill-select:focus {
+            background-color: #FFFFFF !important;
+            border-color: var(--rebook-leather) !important;
+            box-shadow: 0 0 0 3px rgba(140, 74, 39, 0.15) !important;
+            outline: none !important;
         }
 
         /* =====================================================================
