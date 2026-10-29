@@ -219,7 +219,7 @@ public class NotificationServiceImpl implements INotificationService {
             "Ban quản trị ReBook đã phản hồi yêu cầu về [" + (ticket.getCategory() != null ? ticket.getCategory() : "Hỗ trợ") + "]: " + 
                 (ticket.getAdminReply() != null ? ticket.getAdminReply() : "Đã xử lý hoàn tất."),
             Notification.NotificationType.SUPPORT_TICKET,
-            "/user/account/profile?tab=support",
+            "/user/support-tickets",
             null,
             recipient,
             "ROLE_USER"

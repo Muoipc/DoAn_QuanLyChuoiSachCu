@@ -727,10 +727,14 @@
                 </div>
 
                 <!-- DANH SÁCH CÁC CUỐN SÁCH CŨ TRONG GIỎ (CARD-IN-CARD 14PX) -->
-                <div th:each="item : ${cartItems}" class="cart-item-row">
+                <div th:each="item : ${cartItems}" class="cart-item-row" 
+                     th:data-item-id="${item.id}"
+                     th:data-price="${item.itemTotal}"
+                     th:data-savings="${item.savings != null ? item.savings : 0}"
+                     th:data-qty="${item.quantity}">
                     <!-- Checkbox -->
                     <div style="display: flex; align-items: center; justify-content: center;">
-                        <input type="checkbox" class="checkbox-custom item-check" checked>
+                        <input type="checkbox" class="checkbox-custom item-check" checked th:value="${item.id}">
                     </div>
 
                     <!-- Cột Sản phẩm: Ảnh bìa + Tên sách + Phân loại hàng + Tag kho -->
@@ -742,10 +746,10 @@
                                 Tên cuốn sách cũ
                             </a>
                             
-                            <!-- Dropdown Phân loại hàng -->
-                            <div class="cart-variant-box">
+                            <!-- Phân loại hàng kèm trigger tiêu chuẩn kiểm định độ mới -->
+                            <div class="cart-variant-box" onclick="openConditionGradingGuide(event)" title="Xem tiêu chuẩn 4 cấp độ mới ReBook" style="cursor:pointer;">
                                 <span>Phân loại: <strong th:text="${item.book != null && item.book.conditionPercent != null ? item.book.conditionPercent : 90} + '% Mới'">95% Mới</strong></span>
-                                <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
+                                <i class="fa-solid fa-circle-info text-muted ms-1" style="font-size:11px;"></i>
                             </div>
 
                             <!-- Tag chi nhánh sẵn kho tinh tế -->
@@ -787,8 +791,10 @@
                                 onclick="confirmRemoveCartItem(this.getAttribute('data-href'), this.getAttribute('data-title'))">
                             Xóa
                         </button>
-                        <a th:href="@{'/books/' + ${item.book.id}}" class="link-similar-books">
-                            <span>Tìm tương tự</span> <i class="fa-solid fa-caret-down"></i>
+                        <a th:href="@{/search(cat=${item.book != null && item.book.category != null ? item.book.category.id : 1})}" 
+                           class="link-similar-books" 
+                           title="Tìm các tựa sách khác cùng thể loại">
+                            <span>Tìm tương tự</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:9px;"></i>
                         </a>
                     </div>
                 </div>
@@ -835,10 +841,10 @@
                             <i class="fa-solid fa-ticket me-1"></i> Giảm giá Voucher: <span id="cartSummaryVoucherVal">-0 đ</span>
                         </div>
                         <div class="total-payment-line">
-                            <span>Tổng thanh toán (<strong th:text="${totalQuantity} + ' Sản phẩm'">1 Sản phẩm</strong>):</span>
+                            <span>Tổng thanh toán (<strong id="cartSelectedQtyDisplay" th:text="${totalQuantity} + ' Sản phẩm'">1 Sản phẩm</strong>):</span>
                             <span class="total-amount-fire" id="cartFinalTotalDisplay" th:text="${#numbers.formatDecimal(totalPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'">68.000 đ</span>
                         </div>
-                        <div class="savings-note-gold" th:if="${totalSavings != null and totalSavings.doubleValue() > 0}" 
+                        <div class="savings-note-gold" id="cartSavingsDisplay" th:if="${totalSavings != null and totalSavings.doubleValue() > 0}" 
                              th:text="'Tiết kiệm được ' + ${#numbers.formatDecimal(totalSavings, 0, 'POINT', 0, 'COMMA')} + ' đ so với sách mới'">
                             Tiết kiệm được 52.000 đ
                         </div>
@@ -1016,6 +1022,40 @@
         </div>
     </div>
 
+    <!-- MODAL TIÊU CHUẨN 4 CẤP ĐỘ MỚI SÁCH CŨ REBOOK (APPLE LIQUID GLASS) -->
+    <div class="modal-overlay-shopee" id="conditionGuideModal" style="display:none;" onclick="if(event.target===this) closeConditionGradingGuide();">
+        <div class="modal-body-shopee" style="max-width: 520px; width: 92vw; border-radius: 20px; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(32px) saturate(200%); border: 1.5px solid rgba(255, 255, 255, 0.95); box-shadow: 0 24px 60px rgba(45, 24, 15, 0.22); padding: 0; overflow: hidden;">
+            <div style="padding: 18px 22px; border-bottom: 1px solid #ECE7DE; display: flex; justify-content: space-between; align-items: center; background: #FAF8F5;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-certificate" style="color: var(--rebook-leather); font-size: 16px;"></i>
+                    <h3 style="font-size: 15.5px; font-weight: 800; color: #1C1917; margin: 0;">Tiêu Chuẩn 4 Cấp Độ Mới Sách Cũ ReBook</h3>
+                </div>
+                <button type="button" onclick="closeConditionGradingGuide()" style="border: none; background: none; font-size: 22px; cursor: pointer; color: #78716C; padding: 0; line-height: 1;">&times;</button>
+            </div>
+            <div style="padding: 18px 22px; display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+                <div style="padding: 10px 14px; border-radius: 10px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25);">
+                    <div style="font-weight: 800; color: #047857; margin-bottom: 2px;">🌟 99% — Like New (Như Mới)</div>
+                    <div style="color: #44403C; font-size: 12px; line-height: 1.45;">Sách mới tinh, chưa qua sử dụng hoặc chỉ đọc lướt 1 lần. Bìa bóng loáng, không nếp gấp, không vết ố, nguyên gáy.</div>
+                </div>
+                <div style="padding: 10px 14px; border-radius: 10px; background: rgba(140, 74, 39, 0.06); border: 1px solid rgba(140, 74, 39, 0.2);">
+                    <div style="font-weight: 800; color: var(--rebook-leather); margin-bottom: 2px;">✨ 95% — Rất Đẹp (Sưu Tầm)</div>
+                    <div style="color: #44403C; font-size: 12px; line-height: 1.45;">Bìa đẹp nguyên vẹn, ruột sách sạch sẽ, trang giấy thẳng thớm, không bị quăn góc và tuyệt đối không có bút đánh dấu.</div>
+                </div>
+                <div style="padding: 10px 14px; border-radius: 10px; background: rgba(217, 119, 6, 0.06); border: 1px solid rgba(217, 119, 6, 0.2);">
+                    <div style="font-weight: 800; color: #B45309; margin-bottom: 2px;">📖 90% — Tốt (Đọc Thường)</div>
+                    <div style="color: #44403C; font-size: 12px; line-height: 1.45;">Giấy ngả vàng nhẹ tự nhiên theo thời gian, đủ 100% trang, gáy chắc chắn, có thể có chữ ký lưu niệm nhỏ trang lót.</div>
+                </div>
+                <div style="padding: 10px 14px; border-radius: 10px; background: #FAF8F5; border: 1px solid #ECE7DE;">
+                    <div style="font-weight: 800; color: #78716C; margin-bottom: 2px;">📚 80% — Khá (Tiết Kiệm)</div>
+                    <div style="color: #57534E; font-size: 12px; line-height: 1.45;">Bìa sờn mép nhẹ, giấy ố vàng thời gian nhưng đầy đủ nội dung nguyên vẹn, thích hợp học tập và nghiên cứu giá rẻ.</div>
+                </div>
+            </div>
+            <div style="padding: 12px 22px; border-top: 1px solid #ECE7DE; background: #FAF8F5; text-align: right;">
+                <button type="button" onclick="closeConditionGradingGuide()" style="padding: 6px 20px; border-radius: 8px; border: 1px solid #D6CEBE; background: #fff; font-size: 12.5px; font-weight: 700; color: #57534E; cursor: pointer;">Đã Hiểu</button>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="cart-footer">
         <div class="container-shopee">
@@ -1035,6 +1075,7 @@
             if (checkAllBottom) checkAllBottom.checked = checked;
             if (checkShopGroup) checkShopGroup.checked = checked;
             itemChecks.forEach(cb => cb.checked = checked);
+            calculateCartFinalTotal();
         }
 
         if (checkAllHead) {
@@ -1047,8 +1088,18 @@
             checkShopGroup.addEventListener('change', function() { toggleAll(this.checked); });
         }
 
+        itemChecks.forEach(cb => {
+            cb.addEventListener('change', function() {
+                const allChecked = Array.from(itemChecks).every(c => c.checked);
+                const someChecked = Array.from(itemChecks).some(c => c.checked);
+                if (checkAllHead) checkAllHead.checked = allChecked;
+                if (checkAllBottom) checkAllBottom.checked = allChecked;
+                if (checkShopGroup) checkShopGroup.checked = someChecked;
+                calculateCartFinalTotal();
+            });
+        });
+
         /* LOGIC TÍNH TIỀN TẠM TÍNH VÀ ÁP DỤNG VOUCHER CHO CART */
-        const rawSubtotal = /*[[${totalPrice}]]*/ 68000;
         let appliedVoucherCode = null;
         let appliedVoucherDiscount = 0;
         const coinsDiscount = 2000;
@@ -1058,12 +1109,58 @@
         }
 
         function calculateCartFinalTotal() {
-            const coinsVal = 0;
-            const finalTotal = Math.max(0, rawSubtotal - appliedVoucherDiscount - coinsVal);
-            
+            let selectedSubtotal = 0;
+            let selectedQty = 0;
+            let selectedSavings = 0;
+
+            const rows = document.querySelectorAll('.cart-item-row');
+            rows.forEach(row => {
+                const cb = row.querySelector('.item-check');
+                if (cb && cb.checked) {
+                    const price = parseFloat(row.getAttribute('data-price')) || 0;
+                    const qty = parseInt(row.getAttribute('data-qty')) || 1;
+                    const savings = parseFloat(row.getAttribute('data-savings')) || 0;
+                    selectedSubtotal += price;
+                    selectedQty += qty;
+                    selectedSavings += savings;
+                }
+            });
+
+            // Nếu không chọn sản phẩm nào thì voucher không áp dụng
+            let currentVoucherDiscount = (selectedSubtotal > 0) ? appliedVoucherDiscount : 0;
+            const finalTotal = Math.max(0, selectedSubtotal - currentVoucherDiscount);
+
             const displayEl = document.getElementById('cartFinalTotalDisplay');
             if (displayEl) {
                 displayEl.innerText = formatVND(finalTotal);
+            }
+
+            const qtyDisplay = document.getElementById('cartSelectedQtyDisplay');
+            if (qtyDisplay) {
+                qtyDisplay.innerText = selectedQty + ' Sản phẩm';
+            }
+
+            const savingsDisplay = document.getElementById('cartSavingsDisplay');
+            if (savingsDisplay) {
+                if (selectedSavings > 0 && selectedQty > 0) {
+                    savingsDisplay.style.display = 'block';
+                    savingsDisplay.innerText = 'Tiết kiệm được ' + formatVND(selectedSavings) + ' so với sách mới';
+                } else {
+                    savingsDisplay.style.display = 'none';
+                }
+            }
+
+            const checkoutBtn = document.getElementById('btnCartCheckout');
+            if (checkoutBtn) {
+                if (selectedQty === 0) {
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.style.opacity = '0.5';
+                    checkoutBtn.style.cursor = 'not-allowed';
+                } else {
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.style.opacity = '1';
+                    checkoutBtn.style.cursor = 'pointer';
+                }
             }
         }
 
@@ -1102,14 +1199,31 @@
             }
         }
 
+        function getSelectedSubtotal() {
+            let total = 0;
+            document.querySelectorAll('.cart-item-row').forEach(row => {
+                const cb = row.querySelector('.item-check');
+                if (cb && cb.checked) {
+                    total += parseFloat(row.getAttribute('data-price')) || 0;
+                }
+            });
+            return total;
+        }
+
         function applyVoucherCode(code) {
             if (!code) return;
             code = code.trim().toUpperCase();
 
+            const currentSubtotal = getSelectedSubtotal();
+            if (currentSubtotal <= 0) {
+                showModalAlert('Vui lòng chọn sản phẩm trước khi áp dụng voucher!', false);
+                return;
+            }
+
             fetch('/api/vouchers/check', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: code, orderAmount: rawSubtotal })
+                body: JSON.stringify({ code: code, orderAmount: currentSubtotal })
             })
             .then(res => res.json())
             .then(data => {
@@ -1213,11 +1327,25 @@
         }
 
         function proceedToCheckout() {
-            if (appliedVoucherCode) {
-                window.location.href = '/checkout?voucherCode=' + encodeURIComponent(appliedVoucherCode);
-            } else {
-                window.location.href = '/checkout';
+            const selectedIds = [];
+            document.querySelectorAll('.cart-item-row').forEach(row => {
+                const cb = row.querySelector('.item-check');
+                if (cb && cb.checked) {
+                    const id = row.getAttribute('data-item-id') || cb.value;
+                    if (id) selectedIds.push(id);
+                }
+            });
+
+            if (selectedIds.length === 0) {
+                alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
+                return;
             }
+
+            let checkoutUrl = '/checkout?selectedItems=' + encodeURIComponent(selectedIds.join(','));
+            if (appliedVoucherCode) {
+                checkoutUrl += '&voucherCode=' + encodeURIComponent(appliedVoucherCode);
+            }
+            window.location.href = checkoutUrl;
         }
 
         // ================= XÁC NHẬN XÓA APPLE LIQUID GLASS =================
@@ -1241,6 +1369,17 @@
                 cancelText: 'Giữ Lại',
                 confirmUrl: '/cart/clear'
             });
+        }
+
+        function openConditionGradingGuide(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            const m = document.getElementById('conditionGuideModal');
+            if (m) m.style.display = 'flex';
+        }
+
+        function closeConditionGradingGuide() {
+            const m = document.getElementById('conditionGuideModal');
+            if (m) m.style.display = 'none';
         }
 
         // Khởi tạo tính tổng tiền ban đầu (đã bao gồm xu tích lũy mặc định)

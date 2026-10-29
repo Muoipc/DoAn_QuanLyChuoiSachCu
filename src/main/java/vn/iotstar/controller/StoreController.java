@@ -8,10 +8,14 @@ import vn.iotstar.entity.Book;
 import vn.iotstar.entity.Category;
 import vn.iotstar.entity.Inventory;
 import vn.iotstar.entity.Store;
+import vn.iotstar.entity.StoreFollower;
+import vn.iotstar.entity.User;
 import vn.iotstar.repository.BookRepository;
 import vn.iotstar.repository.CategoryRepository;
 import vn.iotstar.repository.InventoryRepository;
+import vn.iotstar.repository.StoreFollowerRepository;
 import vn.iotstar.repository.StoreRepository;
+import vn.iotstar.repository.UserRepository;
 import vn.iotstar.security.CustomUserDetails;
 import vn.iotstar.service.IVoucherService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,6 +48,12 @@ public class StoreController {
     @Autowired
     private IVoucherService voucherService;
 
+    @Autowired
+    private StoreFollowerRepository storeFollowerRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     /**
      * Danh sách 5 chi nhánh cửa hàng sách cũ TP.HCM.
      */
@@ -59,7 +69,7 @@ public class StoreController {
      * Chi tiết cửa hàng / chi nhánh theo ID (Shopee Shop Storefront).
      * Hỗ trợ bộ lọc categoryId từ PDP: /stores/{id}?categoryId=...&entryPoint=ShopByPDP&itemId=...
      */
-    @GetMapping("/{id}")
+    @GetMapping("/{id:[0-9]+}")
     public String storeDetail(
             @PathVariable("id") Long id,
             @RequestParam(value = "categoryId", required = false) Integer categoryId,
@@ -207,12 +217,16 @@ public class StoreController {
         boolean isLoggedIn = (userDetails != null && userDetails.getId() != null);
         model.addAttribute("isLoggedIn", isLoggedIn);
 
-        @SuppressWarnings("unchecked")
-        Set<Long> followed = (Set<Long>) request.getSession().getAttribute("FOLLOWED_STORES");
-        boolean isFollowed = (followed != null && followed.contains(id));
+        boolean isOnline = StoreChatController.isStoreOnline(store);
+        model.addAttribute("isStoreOnline", isOnline);
+
+        boolean isFollowed = false;
+        if (isLoggedIn) {
+            isFollowed = storeFollowerRepository.existsByUserIdAndStoreId(userDetails.getId(), id);
+        }
         model.addAttribute("isFollowed", isFollowed);
 
-        long followersCount = (store.getId() * 320) + (isFollowed ? 1 : 0) + 450;
+        long followersCount = storeFollowerRepository.countByStoreId(store.getId());
         String joinYear = store.getCreatedAt() != null ? String.valueOf(store.getCreatedAt().getYear()) : "2024";
         model.addAttribute("followersCount", followersCount);
         model.addAttribute("joinYear", joinYear);
@@ -256,8 +270,7 @@ public class StoreController {
     }
 
     /**
-     * API Toggle Theo Dõi chi nhánh cửa hàng.
-     * Lưu trạng thái vào Session để khi F5 trang không bị mất trạng thái.
+     * API Toggle Theo Dõi chi nhánh cửa hàng bền vững trong CSDL MySQL.
      * URL: POST /stores/api/toggle-follow/{id}
      */
     @PostMapping("/api/toggle-follow/{id}")
@@ -275,24 +288,25 @@ public class StoreController {
             return org.springframework.http.ResponseEntity.status(401).body(resp);
         }
 
-        @SuppressWarnings("unchecked")
-        Set<Long> followed = (Set<Long>) request.getSession().getAttribute("FOLLOWED_STORES");
-        if (followed == null) {
-            followed = new HashSet<>();
-        }
-
+        Long userId = userDetails.getId();
+        boolean exists = storeFollowerRepository.existsByUserIdAndStoreId(userId, storeId);
         boolean isNowFollowed;
-        if (followed.contains(storeId)) {
-            followed.remove(storeId);
+        if (exists) {
+            storeFollowerRepository.deleteByUserIdAndStoreId(userId, storeId);
             isNowFollowed = false;
         } else {
-            followed.add(storeId);
+            User user = userRepository.findById(userId).orElse(null);
+            Store store = storeRepository.findById(storeId).orElse(null);
+            if (user != null && store != null) {
+                storeFollowerRepository.save(new StoreFollower(user, store));
+            }
             isNowFollowed = true;
         }
-        request.getSession().setAttribute("FOLLOWED_STORES", followed);
 
+        long updatedFollowersCount = storeFollowerRepository.countByStoreId(storeId);
         resp.put("success", true);
         resp.put("followed", isNowFollowed);
+        resp.put("followersCount", updatedFollowersCount);
         resp.put("message", isNowFollowed ? "Đã theo dõi chi nhánh thành công!" : "Đã hủy theo dõi chi nhánh!");
         return org.springframework.http.ResponseEntity.ok(resp);
     }

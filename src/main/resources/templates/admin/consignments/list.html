@@ -521,8 +521,8 @@
     </div>
 
     <!-- 3. FILTER TABS & STORE SELECT -->
-    <div class="card-liquid-glass mb-4 p-3">
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div class="card-liquid-glass mb-4 p-3" style="overflow: visible !important; position: relative; z-index: 1050;">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3" style="overflow: visible !important;">
             <div class="d-flex flex-wrap gap-2">
                 <a class="filter-tab-pill default" 
                    th:classappend="${selectedStatus == null} ? 'active' : ''" 
@@ -551,17 +551,37 @@
                 </a>
             </div>
 
-            <form th:action="@{/admin/consignments}" method="get" class="d-flex align-items-center gap-2">
+            <form th:action="@{/admin/consignments}" method="get" class="d-flex align-items-center gap-2" id="consignmentFilterForm" style="overflow: visible !important;">
                 <input type="hidden" name="status" th:if="${selectedStatus != null}" th:value="${selectedStatus}">
-                <div class="input-group input-group-sm" style="min-width: 240px;">
-                    <span class="input-group-text bg-white border-end-0 rounded-start-pill text-muted">
-                        <i class="fa-solid fa-store"></i>
-                    </span>
-                    <select name="storeId" class="form-select form-select-sm border-start-0 rounded-end-pill" onchange="this.form.submit()">
-                        <option value="">-- Mọi chi nhánh tiếp nhận --</option>
-                        <option th:each="st : ${stores}" th:value="${st.id}" th:text="${st.storeName}" th:selected="${selectedStoreId == st.id}"></option>
-                    </select>
+                <div class="rebook-admin-dropdown" id="consignmentStoreDropdown" style="min-width: 260px;">
+                    <input type="hidden" name="storeId" id="inputStoreId" th:value="${selectedStoreId}">
+                    <button type="button" class="rebook-dropdown-trigger" onclick="toggleAdminDropdown(this, event)">
+                        <div class="d-flex align-items-center gap-2 overflow-hidden">
+                            <i class="fa-solid fa-store dropdown-icon-prefix"></i>
+                            <span class="dropdown-trigger-label" id="storeSelectLabel">
+                                <th:block th:if="${selectedStoreId == null}">-- Mọi chi nhánh tiếp nhận --</th:block>
+                                <th:block th:each="st : ${stores}" th:if="${selectedStoreId != null and st.id == selectedStoreId}" th:text="${st.storeName}"></th:block>
+                            </span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down dropdown-chevron"></i>
+                    </button>
+                    <div class="rebook-dropdown-menu">
+                        <div class="rebook-dropdown-item" th:classappend="${selectedStoreId == null} ? 'active' : ''"
+                             onclick="selectTransferDropdownItem(this, '', '-- Mọi chi nhánh tiếp nhận --')">
+                            <span>-- Mọi chi nhánh tiếp nhận --</span>
+                            <i class="fa-solid fa-check dropdown-check" th:if="${selectedStoreId == null}"></i>
+                        </div>
+                        <div th:each="st : ${stores}" class="rebook-dropdown-item"
+                             th:classappend="${selectedStoreId != null and selectedStoreId == st.id} ? 'active' : ''"
+                             th:attr="onclick='selectTransferDropdownItem(this, \'' + ${st.id} + '\', \'' + ${#strings.escapeJavaScript(st.storeName)} + '\')'">
+                            <span th:text="${st.storeName}">Chi Nhánh</span>
+                            <i class="fa-solid fa-check dropdown-check" th:if="${selectedStoreId != null and selectedStoreId == st.id}"></i>
+                        </div>
+                    </div>
                 </div>
+                <a th:if="${selectedStoreId != null}" th:href="@{/admin/consignments(status=${selectedStatus})}" class="btn-reset-circle" title="Xem tất cả chi nhánh">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </a>
             </form>
         </div>
     </div>

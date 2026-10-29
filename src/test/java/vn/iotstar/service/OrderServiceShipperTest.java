@@ -73,4 +73,24 @@ class OrderServiceShipperTest {
         assertEquals(Order.OrderStatus.RETURNED, order.getOrderStatus());
         assertTrue(order.getCustomerNotes() != null && order.getCustomerNotes().contains("Khách không nghe máy"));
     }
+
+    @Test
+    @DisplayName("Quy trình Shipper lấy hàng từ cửa hàng (PICKED_UP) và bắt đầu đi giao (SHIPPING)")
+    void testShipperPickUpAndStartShipping() {
+        Long orderId = 101L;
+        Order order = new Order();
+        order.setId(orderId);
+        order.setOrderStatus(Order.OrderStatus.CONFIRMED);
+
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // 1. Shipper lấy hàng tại kho
+        orderService.updateOrderStatus(orderId, Order.OrderStatus.PICKED_UP, "Đã lấy hàng từ chi nhánh");
+        assertEquals(Order.OrderStatus.PICKED_UP, order.getOrderStatus());
+
+        // 2. Shipper bắt đầu giao tới khách
+        orderService.updateOrderStatus(orderId, Order.OrderStatus.SHIPPING, "Đang trên đường giao");
+        assertEquals(Order.OrderStatus.SHIPPING, order.getOrderStatus());
+    }
 }

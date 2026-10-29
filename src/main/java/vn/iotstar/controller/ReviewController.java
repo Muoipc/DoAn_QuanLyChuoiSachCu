@@ -39,7 +39,6 @@ import java.util.*;
 public class ReviewController {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-    private static final Long DEFAULT_GUEST_USER_ID = 4L;
 
     @Autowired
     private ReviewRepository reviewRepository;
@@ -54,14 +53,13 @@ public class ReviewController {
     private UserRepository userRepository;
 
     /**
-     * Xác định User ID hiện tại: ưu tiên từ phiên đăng nhập Spring Security,
-     * nếu là chế độ test cục bộ thì dùng DEFAULT_GUEST_USER_ID.
+     * Xác định User ID hiện tại từ phiên đăng nhập Spring Security.
      */
     private Long resolveUserId(CustomUserDetails userDetails) {
         if (userDetails != null && userDetails.getId() != null) {
             return userDetails.getId();
         }
-        return DEFAULT_GUEST_USER_ID;
+        return null;
     }
 
     /**
@@ -146,6 +144,12 @@ public class ReviewController {
             return "redirect:/login";
         }
 
+        // Kiểm tra độ dài nhận xét tối thiểu 50 ký tự theo quy định
+        if (comment == null || comment.trim().length() < 50) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Nội dung nhận xét sách phải có tối thiểu 50 ký tự theo quy định!");
+            return getSafeRedirect(redirectUrl, orderId, bookId);
+        }
+
         // Kiểm tra xem đã đánh giá trong đơn hàng này chưa
         if (orderId != null && reviewRepository.existsByUserIdAndBookIdAndOrderId(userId, bookId, orderId)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Bạn đã đánh giá cuốn sách này trong đơn hàng rồi!");
@@ -155,6 +159,9 @@ public class ReviewController {
         User user = userRepository.findById(userId).orElse(null);
         Book book = bookRepository.findById(bookId).orElse(null);
         Order order = (orderId != null) ? orderRepository.findById(orderId).orElse(null) : null;
+        if (order != null && (order.getUser() == null || !order.getUser().getId().equals(userId))) {
+            order = null; // Bác bỏ orderId không thuộc về tài khoản này
+        }
 
         // Nếu không có orderId từ form, thử tìm đơn hàng DELIVERED gần nhất của user có sách này
         if (order == null && user != null && book != null) {
@@ -170,10 +177,16 @@ public class ReviewController {
             review.setBook(book);
             review.setOrder(order);
             review.setRating(Math.max(1, Math.min(5, rating != null ? rating : 5)));
-            review.setComment(comment != null && !comment.trim().isEmpty() ? comment.trim() : "Sách đúng cam kết mô tả của cửa hàng.");
+            review.setComment(comment.trim());
             if (mediaUrl != null && !mediaUrl.isBlank()) {
-                review.setMediaUrl(mediaUrl.trim());
-                review.setMediaType(Review.MediaType.IMAGE);
+                String mUrl = mediaUrl.trim();
+                review.setMediaUrl(mUrl);
+                String lower = mUrl.toLowerCase();
+                if (lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".mov") || lower.endsWith(".ogg")) {
+                    review.setMediaType(Review.MediaType.VIDEO);
+                } else {
+                    review.setMediaType(Review.MediaType.IMAGE);
+                }
             } else {
                 review.setMediaType(Review.MediaType.NONE);
             }
@@ -220,6 +233,13 @@ public class ReviewController {
             return ResponseEntity.status(401).body(response);
         }
 
+        // Kiểm tra độ dài nhận xét tối thiểu 50 ký tự theo quy định
+        if (comment == null || comment.trim().length() < 50) {
+            response.put("success", false);
+            response.put("message", "Nội dung nhận xét sách phải có tối thiểu 50 ký tự theo quy định!");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         // Kiểm tra xem đã đánh giá đơn hàng này chưa
         if (orderId != null && reviewRepository.existsByUserIdAndBookIdAndOrderId(userId, bookId, orderId)) {
             response.put("success", false);
@@ -230,6 +250,9 @@ public class ReviewController {
         User user = userRepository.findById(userId).orElse(null);
         Book book = bookRepository.findById(bookId).orElse(null);
         Order order = (orderId != null) ? orderRepository.findById(orderId).orElse(null) : null;
+        if (order != null && (order.getUser() == null || !order.getUser().getId().equals(userId))) {
+            order = null; // Bác bỏ orderId không thuộc về tài khoản này
+        }
 
         if (order == null && user != null && book != null) {
             List<Order> deliveredOrders = reviewRepository.findDeliveredOrdersByUserIdAndBookId(userId, bookId);
@@ -249,10 +272,16 @@ public class ReviewController {
         review.setBook(book);
         review.setOrder(order);
         review.setRating(Math.max(1, Math.min(5, rating != null ? rating : 5)));
-        review.setComment(comment != null && !comment.trim().isEmpty() ? comment.trim() : "Sách đúng cam kết chất lượng.");
+        review.setComment(comment.trim());
         if (mediaUrl != null && !mediaUrl.isBlank()) {
-            review.setMediaUrl(mediaUrl.trim());
-            review.setMediaType(Review.MediaType.IMAGE);
+            String mUrl = mediaUrl.trim();
+            review.setMediaUrl(mUrl);
+            String lower = mUrl.toLowerCase();
+            if (lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".mov") || lower.endsWith(".ogg")) {
+                review.setMediaType(Review.MediaType.VIDEO);
+            } else {
+                review.setMediaType(Review.MediaType.IMAGE);
+            }
         } else {
             review.setMediaType(Review.MediaType.NONE);
         }
@@ -347,7 +376,9 @@ public class ReviewController {
             if (originalFilename != null && originalFilename.contains(".")) {
                 ext = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
             }
-            String filename = "review_" + System.currentTimeMillis() + "_" + UUID.randomUUID().toString().substring(0, 8) + ext;
+            boolean isVideo = ext.equals(".mp4") || ext.equals(".webm") || ext.equals(".mov") || ext.equals(".ogg");
+            String prefix = isVideo ? "review_vid_" : "review_";
+            String filename = prefix + System.currentTimeMillis() + "_" + UUID.randomUUID().toString().substring(0, 8) + ext;
 
             // 1. Lưu vào thư mục target/classes để server đang chạy truy xuất ngay lập tức
             Path targetPath = Paths.get("target/classes/static/images/reviews", filename);
@@ -364,7 +395,8 @@ public class ReviewController {
             String imageUrl = "/images/reviews/" + filename;
             response.put("success", true);
             response.put("imageUrl", imageUrl);
-            response.put("message", "Tải ảnh thực tế thành công!");
+            response.put("mediaType", isVideo ? "VIDEO" : "IMAGE");
+            response.put("message", isVideo ? "Tải video đánh giá thực tế thành công!" : "Tải ảnh thực tế thành công!");
             return ResponseEntity.ok(response);
         } catch (IOException e) {
             response.put("success", false);

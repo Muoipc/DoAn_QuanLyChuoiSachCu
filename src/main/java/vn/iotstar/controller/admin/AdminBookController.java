@@ -217,10 +217,17 @@ public class AdminBookController {
     }
 
     /**
-     * Xóa sách cũ
+     * Xóa sách cũ (Chỉ Quản trị viên toàn hệ thống ROLE_ADMIN mới có quyền xóa)
      */
     @GetMapping("/delete/{id}")
-    public String deleteBook(@PathVariable("id") Long id, RedirectAttributes redirect) {
+    public String deleteBook(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect) {
+        if (userDetails == null || !"ROLE_ADMIN".equals(userDetails.getRoleName())) {
+            redirect.addFlashAttribute("errorMessage", "Chỉ Quản trị viên tối cao (Admin) mới có quyền xóa hoàn toàn sách khỏi hệ thống chuỗi!");
+            return "redirect:/admin/books";
+        }
         try {
             bookService.deleteBook(id);
             redirect.addFlashAttribute("successMessage", "Đã xóa sách mã #" + id + " thành công!");

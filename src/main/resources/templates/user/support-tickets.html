@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} != null ? ${pageTitle} : 'Hỗ Trợ & Khiếu Nại — ReBook'">Hỗ Trợ & Khiếu Nại — ReBook</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <style>
+        :root {
+            --color-book-primary: #8C4A27;
+            --color-book-hover: #733615;
+            --color-book-light: #F5ECE4;
+            --color-bg-paper: #F8F5EE;
+            --color-card-bg: #ffffff;
+            --color-text-main: #1C1917;
+            --color-text-secondary: #574E45;
+            --color-text-light: #78716C;
+            --color-border: #E8DEC8;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: var(--color-bg-paper);
+            color: var(--color-text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        .container-shopee {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .profile-container-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 24px;
+            margin-top: 24px;
+            margin-bottom: 50px;
+        }
+
+        /* SIDEBAR */
+        .profile-sidebar {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-radius: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.92);
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08);
+            padding: 24px 18px;
+            height: fit-content;
+        }
+
+        .sidebar-user-brief {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(232, 222, 200, 0.7);
+            margin-bottom: 18px;
+        }
+        .user-avatar-brief {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-book-primary);
+        }
+        .user-name-brief {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--color-text-main);
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .nav-menu-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .nav-menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            transition: all 0.2s ease;
+        }
+        .nav-menu-item a:hover {
+            background: rgba(140, 74, 39, 0.08);
+            color: var(--color-book-primary);
+        }
+        .nav-menu-item.active a {
+            background: var(--color-book-primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);
+        }
+
+        /* MAIN CONTENT CARD */
+        .profile-content-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-radius: 20px;
+            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            padding: 32px;
+        }
+
+        .main-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1.5px solid rgba(232, 222, 200, 0.6);
+            margin-bottom: 24px;
+        }
+        .main-card-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--color-text-main);
+        }
+        .main-card-sub {
+            font-size: 13.5px;
+            color: #78716C;
+            margin-top: 4px;
+        }
+
+        /* STATS PILLS */
+        .ticket-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-pill-card {
+            background: #ffffff;
+            border: 1px solid var(--color-border);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--color-text-main);
+        }
+        .stat-label {
+            font-size: 12.5px;
+            color: #78716C;
+            font-weight: 600;
+        }
+
+        /* TABLE */
+        .tickets-table-wrap {
+            border: 1px solid var(--color-border);
+            border-radius: 14px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+        .table-custom th {
+            background: #F5ECE4;
+            color: var(--color-book-primary);
+            font-weight: 700;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--color-border);
+            text-align: left;
+        }
+        .table-custom td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(232, 222, 200, 0.4);
+            vertical-align: middle;
+        }
+        .table-custom tr:hover td {
+            background: rgba(245, 236, 228, 0.2);
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .badge-open {
+            background: #FEF3C7;
+            color: #B45309;
+            border: 1px solid #FDE68A;
+        }
+        .badge-resolved {
+            background: #D1FAE5;
+            color: #047857;
+            border: 1px solid #A7F3D0;
+        }
+
+        .btn-create-ticket {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #8C4A27 0%, #A0522D 100%);
+            color: #ffffff !important;
+            font-weight: 700;
+            font-size: 13.5px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 12px rgba(140, 74, 39, 0.25);
+            transition: all 0.2s ease;
+        }
+        .btn-create-ticket:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(140, 74, 39, 0.35);
+        }
+
+        /* MODAL DETAIL */
+        .modal-ticket-backdrop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1050;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-ticket-card {
+            background: #ffffff;
+            border-radius: 18px;
+            width: 90%;
+            max-width: 620px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            padding: 28px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Fragment -->
+    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
+
+    <main class="container-shopee profile-container-layout">
+        <!-- SIDEBAR TÀI KHOẢN -->
+        <aside class="profile-sidebar">
+            <div class="sidebar-user-brief">
+                <img th:src="${user != null and user.avatar != null and user.avatar != '' ? user.avatar : '/images/avatars/avatar-default.png'}" 
+                     alt="Avatar" class="user-avatar-brief" onerror="this.src='/images/avatars/avatar-default.png';">
+                <div>
+                    <div class="user-name-brief" th:text="${user != null ? (user.fullName != null ? user.fullName : user.username) : 'Tài khoản'}">Tên người dùng</div>
+                    <small style="color: #10B981; font-weight:700;"><i class="fa-solid fa-circle-check me-1"></i>Thành viên</small>
+                </div>
+            </div>
+
+            <ul class="nav-menu-list">
+                <li class="nav-menu-item">
+                    <a th:href="@{/user/account/profile}">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Tài Khoản Của Tôi</span>
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a th:href="@{/orders}">
+                        <i class="fa-regular fa-file-lines"></i>
+                        <span>Đơn Mua</span>
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a th:href="@{/user/wishlist}">
+                        <i class="fa-regular fa-heart"></i>
+                        <span>Sách Yêu Thích</span>
+                    </a>
+                </li>
+                <li class="nav-menu-item active">
+                    <a th:href="@{/user/support-tickets}">
+                        <i class="fa-solid fa-headset"></i>
+                        <span>Hỗ Trợ & Khiếu Nại</span>
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a th:href="@{/help}">
+                        <i class="fa-regular fa-circle-question"></i>
+                        <span>Trung Tâm Trợ Giúp</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- NỘI DUNG CHÍNH -->
+        <section class="profile-content-card">
+            <div class="main-card-header">
+                <div>
+                    <h1 class="main-card-title"><i class="fa-solid fa-headset me-2" style="color: var(--color-book-primary);"></i>Hỗ Trợ & Khiếu Nại Khách Hàng</h1>
+                    <p class="main-card-sub">Theo dõi các yêu cầu hỗ trợ, khiếu nại đơn hàng và phản hồi chính thức từ Ban Quản Trị Chuỗi Sách Cũ.</p>
+                </div>
+                <a th:href="@{/help#contact-form}" class="btn-create-ticket">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Tạo Phiếu Hỗ Trợ Mới</span>
+                </a>
+            </div>
+
+            <!-- CHỈ SỐ THỐNG KÊ -->
+            <div class="ticket-stats-grid">
+                <div class="stat-pill-card">
+                    <div class="stat-icon" style="background:#F5ECE4; color:var(--color-book-primary);">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" th:text="${tickets != null ? tickets.size() : 0}">0</div>
+                        <div class="stat-label">Tổng phiếu đã gửi</div>
+                    </div>
+                </div>
+
+                <div class="stat-pill-card">
+                    <div class="stat-icon" style="background:#FEF3C7; color:#B45309;">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" th:text="${countOpen}">0</div>
+                        <div class="stat-label">Đang chờ tiếp nhận</div>
+                    </div>
+                </div>
+
+                <div class="stat-pill-card">
+                    <div class="stat-icon" style="background:#D1FAE5; color:#047857;">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" th:text="${countResolved}">0</div>
+                        <div class="stat-label">Đã giải quyết xong</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DANH SÁCH PHIẾU HỖ TRỢ -->
+            <div class="tickets-table-wrap">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">Mã Phiếu</th>
+                            <th>Chủ Đề & Nội Dung</th>
+                            <th style="width: 130px;">Mã Đơn</th>
+                            <th style="width: 140px;">Ngày Tạo</th>
+                            <th style="width: 130px;">Trạng Thái</th>
+                            <th style="width: 110px; text-align:center;">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${tickets == null or tickets.isEmpty()}">
+                            <td colspan="6" style="text-align: center; padding: 40px 16px; color: #78716C;">
+                                <i class="fa-regular fa-comment-dots" style="font-size: 32px; margin-bottom: 10px; display:block; color:#D7CBB8;"></i>
+                                Bạn chưa có phiếu yêu cầu hỗ trợ nào. Cần trợ giúp? Nhấn "Tạo Phiếu Hỗ Trợ Mới".
+                            </td>
+                        </tr>
+                        <tr th:each="t : ${tickets}">
+                            <td class="fw-bold" style="color: var(--color-book-primary);">#<span th:text="${t.id}">101</span></td>
+                            <td>
+                                <div class="fw-bold" th:text="${t.category}">Tư vấn đổi trả</div>
+                                <div class="text-truncate text-muted" style="max-width: 320px; font-size: 12.5px;" th:text="${t.message}">Nội dung tóm tắt...</div>
+                            </td>
+                            <td>
+                                <span th:if="${t.orderCode != null and t.orderCode != ''}" class="badge bg-light text-dark border font-monospace" th:text="${t.orderCode}">ORD-123</span>
+                                <span th:if="${t.orderCode == null or t.orderCode == ''}" class="text-muted small">&mdash;</span>
+                            </td>
+                            <td class="text-muted" style="font-size: 12.5px;" th:text="${#temporals.format(t.createdAt, 'dd/MM/yyyy HH:mm')}">28/10/2026 12:00</td>
+                            <td>
+                                <span th:if="${t.status.name() == 'OPEN'}" class="badge-status badge-open">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> Chờ duyệt
+                                </span>
+                                <span th:if="${t.status.name() == 'IN_PROGRESS'}" class="badge-status badge-open">
+                                    <i class="fa-solid fa-hourglass-half"></i> Đang xử lý
+                                </span>
+                                <span th:if="${t.status.name() == 'RESOLVED'}" class="badge-status badge-resolved">
+                                    <i class="fa-solid fa-check-double"></i> Đã phản hồi
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" 
+                                        th:data-id="${t.id}"
+                                        th:data-category="${t.category}"
+                                        th:data-message="${t.message}"
+                                        th:data-reply="${t.adminReply}"
+                                        th:data-status="${t.status.name()}"
+                                        th:data-time="${#temporals.format(t.createdAt, 'dd/MM/yyyy HH:mm')}"
+                                        th:data-resolved-time="${t.resolvedAt != null ? #temporals.format(t.resolvedAt, 'dd/MM/yyyy HH:mm') : ''}"
+                                        onclick="openTicketModal(this)">
+                                    Chi tiết
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL XEM CHI TIẾT PHIẾU VÀ LỜI PHẢN HỒI CỦA CSKH -->
+    <div id="ticketModalBackdrop" class="modal-ticket-backdrop" onclick="closeTicketModal(event)">
+        <div class="modal-ticket-card" onclick="event.stopPropagation()">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #E8DEC8; padding-bottom:14px; margin-bottom:18px;">
+                <h5 id="modalTicketTitle" class="fw-bold mb-0" style="color:var(--color-book-primary);">Chi Tiết Phiếu Hỗ Trợ</h5>
+                <button type="button" class="btn-close" onclick="closeTicketModalDirect()"></button>
+            </div>
+            
+            <div class="mb-3">
+                <label class="text-muted small fw-bold">Chủ đề & Thời gian gửi</label>
+                <div id="modalTicketMeta" class="fw-bold" style="color:var(--color-text-main);">Tư vấn</div>
+            </div>
+
+            <div class="mb-3 p-3 rounded" style="background:#F8F5EE; border:1px solid #E8DEC8;">
+                <label class="text-muted small fw-bold mb-1 d-block"><i class="fa-regular fa-comment-dots me-1"></i>Nội dung bạn đã gửi:</label>
+                <div id="modalTicketMessage" style="white-space: pre-wrap; font-size: 13.5px;">...</div>
+            </div>
+
+            <div id="modalReplySection" class="p-3 rounded" style="background:#F0FDF4; border:1.5px solid #86EFAC;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <i class="fa-solid fa-headset text-success"></i>
+                    <span class="fw-bold text-success" style="font-size: 14px;">Phản Hồi Từ Ban Quản Trị CSKH ReBook:</span>
+                </div>
+                <div id="modalTicketReply" style="white-space: pre-wrap; font-size: 13.5px; color:#14532D; line-height:1.6;">...</div>
+                <small id="modalReplyTime" class="text-muted d-block mt-2 fst-italic" style="font-size: 11.5px;"></small>
+            </div>
+
+            <div style="text-align:right; margin-top:20px;">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" onclick="closeTicketModalDirect()">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        function openTicketModal(btn) {
+            const id = btn.getAttribute('data-id');
+            const category = btn.getAttribute('data-category');
+            const message = btn.getAttribute('data-message');
+            const reply = btn.getAttribute('data-reply');
+            const status = btn.getAttribute('data-status');
+            const time = btn.getAttribute('data-time');
+            const resolvedTime = btn.getAttribute('data-resolved-time');
+
+            document.getElementById('modalTicketTitle').innerText = 'Chi Tiết Phiếu Hỗ Trợ #' + id;
+            document.getElementById('modalTicketMeta').innerText = category + ' — ' + time;
+            document.getElementById('modalTicketMessage').innerText = message;
+
+            const replySection = document.getElementById('modalReplySection');
+            const replyEl = document.getElementById('modalTicketReply');
+            const replyTimeEl = document.getElementById('modalReplyTime');
+
+            if (reply && reply.trim() !== '') {
+                replySection.style.display = 'block';
+                replyEl.innerText = reply;
+                replyTimeEl.innerText = resolvedTime ? 'Phản hồi lúc: ' + resolvedTime : '';
+            } else {
+                replySection.style.display = 'block';
+                replySection.style.background = '#FFFBEB';
+                replySection.style.borderColor = '#FDE68A';
+                replyEl.innerHTML = '<span class="text-warning-emphasis"><i class="fa-solid fa-hourglass-half me-1"></i>Đội ngũ CSKH đang tiếp nhận và xử lý yêu cầu của bạn. Phản hồi sẽ được gửi tới bạn trong vòng 24 giờ.</span>';
+                replyTimeEl.innerText = '';
+            }
+
+            const modal = document.getElementById('ticketModalBackdrop');
+            modal.style.display = 'flex';
+        }
+
+        function closeTicketModal(event) {
+            if (event.target.id === 'ticketModalBackdrop') {
+                document.getElementById('ticketModalBackdrop').style.display = 'none';
+            }
+        }
+        function closeTicketModalDirect() {
+            document.getElementById('ticketModalBackdrop').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

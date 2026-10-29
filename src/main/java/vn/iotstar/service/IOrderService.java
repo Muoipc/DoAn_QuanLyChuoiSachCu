@@ -2,6 +2,7 @@ package vn.iotstar.service;
 
 import vn.iotstar.entity.Order;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,6 +30,25 @@ public interface IOrderService {
             String voucherCode,
             String customerNotes
     );
+
+    /**
+     * Tạo đơn hàng từ các sản phẩm được chọn cụ thể trong giỏ hàng.
+     */
+    default Order createOrderFromCart(
+            Long userId,
+            Order.DeliveryMethod deliveryMethod,
+            Long storeId,
+            String receiverName,
+            String receiverPhone,
+            String receiverAddress,
+            Integer shippingUnitId,
+            Order.PaymentMethod paymentMethod,
+            String voucherCode,
+            String customerNotes,
+            List<Long> selectedItemIds
+    ) {
+        return createOrderFromCart(userId, deliveryMethod, storeId, receiverName, receiverPhone, receiverAddress, shippingUnitId, paymentMethod, voucherCode, customerNotes);
+    }
 
     /**
      * Tạo đơn hàng trực tiếp ("Mua Ngay" / Instant Checkout) cho 1 cuốn sách duy nhất.

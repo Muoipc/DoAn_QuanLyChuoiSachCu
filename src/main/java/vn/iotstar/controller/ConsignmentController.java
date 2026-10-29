@@ -70,7 +70,7 @@ public class ConsignmentController {
             Optional<User> uOpt = userRepository.findByUsername(authentication.getName());
             if (uOpt.isPresent()) return uOpt.get();
         }
-        return userRepository.findById(4L).orElse(null);
+        return null;
     }
 
     /**
@@ -280,10 +280,18 @@ public class ConsignmentController {
      * POST /consignments/{id}/accept-price: Khách hàng đồng ý với mức giá shop thẩm định
      */
     @PostMapping("/{id}/accept-price")
-    public String acceptPrice(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String acceptPrice(@PathVariable("id") Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
+        User currentUser = getCurrentUser(authentication);
+        if (currentUser == null) {
+            return "redirect:/login?redirectURL=/consignments/my-list";
+        }
         Optional<BookConsignment> opt = consignmentRepository.findById(id);
         if (opt.isPresent()) {
             BookConsignment c = opt.get();
+            if (c.getUser() == null || !c.getUser().getId().equals(currentUser.getId())) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Bạn không có quyền thao tác trên phiếu ký gửi của người khác!");
+                return "redirect:/consignments/my-list";
+            }
             if (c.getStatus() == BookConsignment.ConsignmentStatus.APPROVED) {
                 c.setAdminNotes((c.getAdminNotes() != null ? c.getAdminNotes() + "\n" : "") + "[Khách hàng đã đồng ý mức giá thẩm định]");
                 consignmentRepository.save(c);
@@ -297,10 +305,18 @@ public class ConsignmentController {
      * POST /consignments/{id}/cancel: Khách hàng hủy phiếu ký gửi khi đang ở trạng thái PENDING
      */
     @PostMapping("/{id}/cancel")
-    public String cancelConsignment(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String cancelConsignment(@PathVariable("id") Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
+        User currentUser = getCurrentUser(authentication);
+        if (currentUser == null) {
+            return "redirect:/login?redirectURL=/consignments/my-list";
+        }
         Optional<BookConsignment> opt = consignmentRepository.findById(id);
         if (opt.isPresent()) {
             BookConsignment c = opt.get();
+            if (c.getUser() == null || !c.getUser().getId().equals(currentUser.getId())) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Bạn không có quyền thao tác trên phiếu ký gửi của người khác!");
+                return "redirect:/consignments/my-list";
+            }
             if (c.getStatus() == BookConsignment.ConsignmentStatus.PENDING) {
                 consignmentRepository.delete(c);
                 redirectAttributes.addFlashAttribute("successMessage", "Đã hủy phiếu ký gửi #" + id + " thành công!");

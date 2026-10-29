@@ -49,6 +49,9 @@ public class BookController {
     private vn.iotstar.repository.StoreRepository storeRepository;
 
     @Autowired
+    private vn.iotstar.repository.StoreFollowerRepository storeFollowerRepository;
+
+    @Autowired
     private vn.iotstar.repository.VoucherRepository voucherRepository;
 
     /**
@@ -137,7 +140,7 @@ public class BookController {
             hasReviewed = reviewRepository.existsByUserIdAndBookId(currentUserId, id);
         }
         long actualLikes = wishlistRepository.countByBookId(id);
-        long likesCount = 120 + actualLikes;
+        long likesCount = actualLikes;
 
         // 7. Đưa dữ liệu vào Model cho Thymeleaf render
         Store primaryStore = null;
@@ -153,8 +156,13 @@ public class BookController {
         if (primaryStore != null) {
             long storeBooksCount = inventoryRepository.countByStoreId(primaryStore.getId());
             model.addAttribute("storeBookCount", storeBooksCount > 0 ? storeBooksCount : totalStock);
-            model.addAttribute("storeFollowers", ((primaryStore.getId() * 320) + 450) + "");
+            long storeFollowers = storeFollowerRepository.countByStoreId(primaryStore.getId());
+            model.addAttribute("storeFollowers", String.valueOf(storeFollowers));
             model.addAttribute("storeJoinYear", primaryStore.getCreatedAt() != null ? String.valueOf(primaryStore.getCreatedAt().getYear()) : "2024");
+            boolean isStoreOnline = StoreChatController.isStoreOnline(primaryStore);
+            model.addAttribute("isStoreOnline", isStoreOnline);
+        } else {
+            model.addAttribute("isStoreOnline", false);
         }
         model.addAttribute("book", book);
         model.addAttribute("inventoryList", inventoryList);

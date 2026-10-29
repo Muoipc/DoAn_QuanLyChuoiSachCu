@@ -106,10 +106,10 @@ public class StoreRegistrationServiceImpl implements IStoreRegistrationService {
 
         Store savedStore = storeRepository.save(store);
 
-        // 2. Nâng quyền người dùng thành ROLE_MANAGER
-        Role managerRole = roleRepository.findByName("ROLE_MANAGER")
-                .orElseGet(() -> roleRepository.save(new Role(2, "ROLE_MANAGER", "Quản lý chi nhánh cửa hàng")));
-        applicant.setRole(managerRole);
+        // 2. Nâng quyền người dùng thành ROLE_VENDOR (Chủ gian hàng / Người bán đối tác theo chuẩn UTEx)
+        Role vendorRole = roleRepository.findByName("ROLE_VENDOR")
+                .orElseGet(() -> roleRepository.save(new Role(5, "ROLE_VENDOR", "Đối tác bán hàng / Chủ gian hàng")));
+        applicant.setRole(vendorRole);
         userRepository.save(applicant);
 
         // 3. Cập nhật trạng thái hồ sơ thành APPROVED

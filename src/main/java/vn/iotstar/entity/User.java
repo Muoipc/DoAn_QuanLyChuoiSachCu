@@ -38,6 +38,9 @@ public class User {
     @Column(nullable = false)
     private Boolean enabled = false;
 
+    @Column(name = "loyalty_points")
+    private Integer loyaltyPoints = 0;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -66,6 +69,8 @@ public class User {
     public void setAvatar(String avatar) { this.avatar = avatar; }
     public Boolean getEnabled() { return enabled; }
     public void setEnabled(Boolean enabled) { this.enabled = enabled; }
+    public Integer getLoyaltyPoints() { return loyaltyPoints != null ? loyaltyPoints : 0; }
+    public void setLoyaltyPoints(Integer loyaltyPoints) { this.loyaltyPoints = loyaltyPoints != null ? loyaltyPoints : 0; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

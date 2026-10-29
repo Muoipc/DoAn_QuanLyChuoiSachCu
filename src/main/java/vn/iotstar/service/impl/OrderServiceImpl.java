@@ -72,9 +72,32 @@ public class OrderServiceImpl implements IOrderService {
             Order.PaymentMethod paymentMethod,
             String voucherCode,
             String customerNotes) {
+        return createOrderFromCart(userId, deliveryMethod, storeId, receiverName, receiverPhone, receiverAddress, shippingUnitId, paymentMethod, voucherCode, customerNotes, null);
+    }
+
+    @Override
+    public Order createOrderFromCart(
+            Long userId,
+            Order.DeliveryMethod deliveryMethod,
+            Long storeId,
+            String receiverName,
+            String receiverPhone,
+            String receiverAddress,
+            Integer shippingUnitId,
+            Order.PaymentMethod paymentMethod,
+            String voucherCode,
+            String customerNotes,
+            List<Long> selectedItemIds) {
 
         Cart cart = cartService.getOrCreateCartForUser(userId);
         List<CartItem> cartItems = cartService.getCartItemsWithDetails(cart.getId());
+
+        if (selectedItemIds != null && !selectedItemIds.isEmpty()) {
+            java.util.Set<Long> idSet = new java.util.HashSet<>(selectedItemIds);
+            cartItems = cartItems.stream()
+                    .filter(ci -> idSet.contains(ci.getId()))
+                    .toList();
+        }
 
         if (cartItems.isEmpty()) {
             throw new IllegalStateException("Giỏ hàng của bạn đang trống, không thể tạo đơn hàng!");
@@ -205,8 +228,16 @@ public class OrderServiceImpl implements IOrderService {
             bookRepository.save(book);
         }
 
-        // 7. Xóa sạch giỏ hàng của khách sau khi tạo đơn thành công
-        cartService.clearCart(cart.getId());
+        // 7. Xóa các món đã mua khỏi giỏ hàng
+        if (selectedItemIds != null && !selectedItemIds.isEmpty()) {
+            for (CartItem ci : cartItems) {
+                try {
+                    cartService.removeCartItem(ci.getId());
+                } catch (Exception ignored) {}
+            }
+        } else {
+            cartService.clearCart(cart.getId());
+        }
 
         // 8. Bắn thông báo WebSocket thời gian thực tới Admin & Quản lý
         if (messagingTemplate != null) {
@@ -514,6 +545,16 @@ public class OrderServiceImpl implements IOrderService {
             order.setPaymentStatus(Order.PaymentStatus.PAID);
         }
 
+        // Tích lũy 1% điểm thưởng thành viên khi đơn hàng giao thành công
+        if (newStatus == Order.OrderStatus.DELIVERED && order.getUser() != null) {
+            int earnedPoints = (int) Math.round(order.getFinalAmount().doubleValue() * 0.01);
+            if (earnedPoints > 0) {
+                User u = order.getUser();
+                u.setLoyaltyPoints(u.getLoyaltyPoints() + earnedPoints);
+                userRepository.save(u);
+            }
+        }
+
         // Ghi nhận ghi chú hoặc lý do giao hàng từ Shipper
         if (note != null && !note.trim().isEmpty()) {
             String prefix = "[Lý do Shipper]: " + note.trim();
@@ -560,7 +601,7 @@ public class OrderServiceImpl implements IOrderService {
 
         order.setShipper(shipper);
         if (order.getOrderStatus() == Order.OrderStatus.NEW || order.getOrderStatus() == Order.OrderStatus.CONFIRMED) {
-            order.setOrderStatus(Order.OrderStatus.SHIPPING);
+            order.setOrderStatus(Order.OrderStatus.PICKED_UP);
         }
         orderRepository.save(order);
     }

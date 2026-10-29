@@ -13,7 +13,7 @@
             <h4 class="fw-bold mb-1" style="color: var(--rebook-ink-main);"><i class="fa-solid fa-layer-group me-2" style="color: var(--rebook-leather);"></i>Danh Mục Thể Loại Sách</h4>
             <p class="text-muted small mb-0">Quản lý các chuyên mục thể loại sách cũ (Văn học, CNTT, Kinh tế, Lịch sử, Giáo trình HCMUTE...).</p>
         </div>
-        <a th:href="@{/admin/categories/create}" class="btn btn-theme">
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/categories/create}" class="btn btn-theme">
             <i class="fa-solid fa-plus me-1"></i>Thêm Danh Mục Mới
         </a>
     </div>
@@ -48,17 +48,21 @@
                             <td><span class="badge bg-light text-dark border" th:text="${c.icon}">fa-book</span></td>
                             <td class="small text-muted" th:text="${c.description}">Mô tả chuyên mục</td>
                             <td class="text-center">
-                                <form th:action="@{/admin/categories/toggle-active/{id}(id=${c.id})}" method="post" style="display:inline;">
+                                <form sec:authorize="hasRole('ADMIN')" th:action="@{/admin/categories/toggle-active/{id}(id=${c.id})}" method="post" style="display:inline;">
                                     <button type="submit" class="btn btn-sm" th:classappend="${c.isActive ? 'badge bg-success-subtle text-success border border-success-subtle' : 'badge bg-secondary-subtle text-secondary border'}" style="font-size: 11.5px; padding: 4px 10px; border-radius: 9999px;">
                                         <span th:text="${c.isActive ? 'Hoạt động' : 'Tạm ẩn'}">Hoạt động</span>
                                     </button>
                                 </form>
+                                <span sec:authorize="!hasRole('ADMIN')" class="btn btn-sm disabled" th:classappend="${c.isActive ? 'badge bg-success-subtle text-success border border-success-subtle' : 'badge bg-secondary-subtle text-secondary border'}" style="font-size: 11.5px; padding: 4px 10px; border-radius: 9999px;">
+                                    <span th:text="${c.isActive ? 'Hoạt động' : 'Tạm ẩn'}">Hoạt động</span>
+                                </span>
                             </td>
                             <td class="text-end pe-4">
-                                <div class="d-inline-flex gap-1">
+                                <div sec:authorize="hasRole('ADMIN')" class="d-inline-flex gap-1">
                                     <a th:href="@{/admin/categories/edit/{id}(id=${c.id})}" class="icon-action-btn btn-edit" title="Chỉnh sửa"><i class="fa-solid fa-pen-to-square"></i></a>
                                     <a th:href="@{/admin/categories/delete/{id}(id=${c.id})}" class="icon-action-btn btn-delete" onclick="return confirm('Bạn muốn xóa danh mục này?');" title="Xóa"><i class="fa-solid fa-trash-can"></i></a>
                                 </div>
+                                <span sec:authorize="!hasRole('ADMIN')" class="text-muted small fst-italic">Chỉ xem</span>
                             </td>
                         </tr>
                     </tbody>

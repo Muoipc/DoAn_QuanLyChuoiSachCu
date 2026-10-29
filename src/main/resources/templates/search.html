@@ -473,7 +473,7 @@
             display: flex;
             align-items: center;
             gap: 7px;
-            background: #FFFFFF;
+            background: transparent;
         }
 
         .sort-label {
@@ -485,24 +485,105 @@
             gap: 4px;
         }
 
-        .sort-native-select {
+        /* Custom Sort Dropdown ReBook Leather */
+        .custom-sort-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .custom-sort-btn {
             height: 34px;
-            padding: 0 10px;
-            border-radius: 8px;
-            border: 1px solid #E5E0D8;
+            padding: 0 12px;
             background: #FFFFFF;
+            border: 1px solid #ECE7DE;
+            border-radius: 9px;
             font-size: 12.5px;
             font-weight: 600;
-            color: #1C1917;
+            color: #2D1810;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             cursor: pointer;
-            outline: none;
+            box-shadow: 0 1px 3px rgba(45, 24, 15, 0.04);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+
+        .custom-sort-btn:hover {
+            border-color: #8C4A27;
+            background: #FAF8F5;
+            color: #8C4A27;
+        }
+
+        .custom-sort-btn .sort-chevron {
+            font-size: 10.5px;
+            color: #8C4A27;
+            transition: transform 0.2s ease;
+        }
+
+        .custom-sort-dropdown.open .sort-chevron {
+            transform: rotate(180deg);
+        }
+
+        .custom-sort-dropdown.open .custom-sort-btn {
+            border-color: #8C4A27;
+            box-shadow: 0 0 0 2px rgba(140, 74, 39, 0.08);
+            background: #FAF8F5;
+        }
+
+        .custom-sort-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 0;
+            min-width: 175px;
+            background: #FFFFFF;
+            border: 1px solid #E8E2D8;
+            border-radius: 12px;
+            padding: 6px;
+            box-shadow: 0 12px 28px -4px rgba(45, 24, 15, 0.14), 0 4px 10px rgba(0, 0, 0, 0.03);
+            display: none;
+            flex-direction: column;
+            gap: 2px;
+            z-index: 1000;
+            animation: sortFadeIn 0.15s ease-out;
+        }
+
+        @keyframes sortFadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .custom-sort-dropdown.open .custom-sort-menu {
+            display: flex;
+        }
+
+        .custom-sort-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #44403C;
+            text-decoration: none;
             transition: all 0.15s;
         }
 
-        .sort-native-select:focus,
-        .sort-native-select:hover {
-            border-color: #8C4A27;
-            box-shadow: 0 0 0 2px rgba(140, 74, 39, 0.08);
+        .custom-sort-item:hover {
+            background: #FAF8F5;
+            color: #8C4A27;
+        }
+
+        .custom-sort-item.active {
+            background: rgba(140, 74, 39, 0.08);
+            color: #8C4A27;
+            font-weight: 700;
+        }
+
+        .custom-sort-item .check-icon {
+            font-size: 11px;
+            color: #8C4A27;
         }
 
         .pagination-mini-compact {
@@ -1350,18 +1431,39 @@
             <div class="search-compact-controls">
                 <div class="sort-selector-wrapper">
                     <span class="sort-label"><i class="fa-solid fa-arrow-down-short-wide"></i> Sắp xếp:</span>
-                    <select class="sort-native-select" onchange="location.href=this.value">
-                        <option th:value="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='popular')}"
-                                th:selected="${selectedSort == 'popular' or selectedSort == null}">Phổ Biến</option>
-                        <option th:value="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='latest')}"
-                                th:selected="${selectedSort == 'latest'}">Mới Nhất</option>
-                        <option th:value="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='sales')}"
-                                th:selected="${selectedSort == 'sales'}">Bán Chạy Nhất</option>
-                        <option th:value="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='price-asc')}"
-                                th:selected="${selectedSort == 'price-asc'}">Giá Thấp → Cao</option>
-                        <option th:value="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='price-desc')}"
-                                th:selected="${selectedSort == 'price-desc'}">Giá Cao → Thấp</option>
-                    </select>
+                    <div class="custom-sort-dropdown" id="customSortDropdown">
+                        <button type="button" class="custom-sort-btn" onclick="toggleSortDropdown(event)">
+                            <span class="sort-btn-text" th:text="${selectedSort == 'latest' ? 'Mới Nhất' : (selectedSort == 'sales' ? 'Bán Chạy Nhất' : (selectedSort == 'price-asc' ? 'Giá Thấp → Cao' : (selectedSort == 'price-desc' ? 'Giá Cao → Thấp' : 'Phổ Biến')))}">Phổ Biến</span>
+                            <i class="fa-solid fa-chevron-down sort-chevron"></i>
+                        </button>
+                        <div class="custom-sort-menu" id="customSortMenu">
+                            <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='popular')}" 
+                               class="custom-sort-item" th:classappend="${selectedSort == 'popular' or selectedSort == null} ? 'active' : ''">
+                                <span>Phổ Biến</span>
+                                <i class="fa-solid fa-check check-icon" th:if="${selectedSort == 'popular' or selectedSort == null}"></i>
+                            </a>
+                            <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='latest')}" 
+                               class="custom-sort-item" th:classappend="${selectedSort == 'latest'} ? 'active' : ''">
+                                <span>Mới Nhất</span>
+                                <i class="fa-solid fa-check check-icon" th:if="${selectedSort == 'latest'}"></i>
+                            </a>
+                            <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='sales')}" 
+                               class="custom-sort-item" th:classappend="${selectedSort == 'sales'} ? 'active' : ''">
+                                <span>Bán Chạy Nhất</span>
+                                <i class="fa-solid fa-check check-icon" th:if="${selectedSort == 'sales'}"></i>
+                            </a>
+                            <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='price-asc')}" 
+                               class="custom-sort-item" th:classappend="${selectedSort == 'price-asc'} ? 'active' : ''">
+                                <span>Giá Thấp → Cao</span>
+                                <i class="fa-solid fa-check check-icon" th:if="${selectedSort == 'price-asc'}"></i>
+                            </a>
+                            <a th:href="@{/search(keyword=${selectedQuery}, cat=${selectedCat}, store=${selectedStore}, sort='price-desc')}" 
+                               class="custom-sort-item" th:classappend="${selectedSort == 'price-desc'} ? 'active' : ''">
+                                <span>Giá Cao → Thấp</span>
+                                <i class="fa-solid fa-check check-icon" th:if="${selectedSort == 'price-desc'}"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Phân trang mini góc phải -->
@@ -1923,7 +2025,19 @@
             if (wrapper && !wrapper.contains(e.target)) {
                 closeGoogleOmnibox();
             }
+            const sortDd = document.getElementById('customSortDropdown');
+            if (sortDd && !sortDd.contains(e.target)) {
+                sortDd.classList.remove('open');
+            }
         });
+
+        window.toggleSortDropdown = function(e) {
+            if (e) e.stopPropagation();
+            const sortDd = document.getElementById('customSortDropdown');
+            if (sortDd) {
+                sortDd.classList.toggle('open');
+            }
+        };
 
         renderRecentQueries();
     })();

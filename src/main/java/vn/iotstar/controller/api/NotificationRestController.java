@@ -55,7 +55,12 @@ public class NotificationRestController {
     }
 
     @PostMapping("/{id}/read")
-    public ResponseEntity<Map<String, Object>> markAsRead(@PathVariable("id") Long id) {
+    public ResponseEntity<Map<String, Object>> markAsRead(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null || userDetails.getId() == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Yêu cầu đăng nhập!"));
+        }
         notificationService.markAsRead(id);
         return ResponseEntity.ok(Map.of("success", true));
     }

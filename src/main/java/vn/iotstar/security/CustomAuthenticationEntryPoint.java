@@ -27,10 +27,23 @@ public class CustomAuthenticationEntryPoint extends LoginUrlAuthenticationEntryP
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
+        String uri = request.getRequestURI();
+
+        // Với REST API hoặc AJAX request: Trả về HTTP 401 Unauthorized thay vì redirect 302 HTML
+        String acceptHeader = request.getHeader("Accept");
+        String requestedWith = request.getHeader("X-Requested-With");
+        if ((uri != null && uri.startsWith("/api/"))
+                || (acceptHeader != null && acceptHeader.contains("application/json"))
+                || "XMLHttpRequest".equalsIgnoreCase(requestedWith)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"success\":false,\"requireLogin\":true,\"message\":\"Yêu cầu đăng nhập hoặc phiên làm việc đã hết hạn!\"}");
+            return;
+        }
+
         // Lưu SavedRequest vào session theo chuẩn Spring Security
         requestCache.saveRequest(request, response);
 
-        String uri = request.getRequestURI();
         if (uri != null && uri.startsWith("/login")) {
             super.commence(request, response, authException);
             return;

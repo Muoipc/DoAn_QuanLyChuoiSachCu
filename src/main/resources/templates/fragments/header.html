@@ -1506,14 +1506,15 @@
                         <span class="shopee-user-name" sec:authentication="name">nguyensonghoangph...</span>
                     </div>
                     <div class="shopee-user-popover">
-                        <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="shopee-popover-item popover-item-admin">
+                        <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'VENDOR')" th:href="@{/admin/books}" class="shopee-popover-item popover-item-admin">
                             <i class="fa-solid fa-gauge-high"></i>
-                            <span>Kênh Quản Trị</span>
+                            <span>Kênh Quản Trị / Bán Hàng</span>
                         </a>
-                        <a sec:authorize="!hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/seller/register}" class="shopee-popover-item" style="color:#8C4A27; font-weight:700;">
-                            <i class="fa-solid fa-store" style="color:#8C4A27;"></i>
-                            <span class="i18n-text" data-i18n="Kênh Người Bán">Kênh Người Bán</span>
+                        <a sec:authorize="hasRole('SHIPPER')" th:href="@{/shipper/orders}" class="shopee-popover-item" style="color: #2563EB; font-weight:700;">
+                            <i class="fa-solid fa-truck-fast"></i>
+                            <span>Cổng Giao Hàng Shipper</span>
                         </a>
+                        <!-- Đã loại bỏ hoàn toàn nút Mở gian hàng trong menu tài khoản User -->
                         <a th:href="@{/user/account/profile}" class="shopee-popover-item">
                             <i class="fa-regular fa-user"></i>
                             <span>Tài Khoản Của Tôi</span>
@@ -1525,6 +1526,10 @@
                         <a th:href="@{/user/wishlist}" class="shopee-popover-item">
                             <i class="fa-regular fa-heart"></i>
                             <span>Sách Yêu Thích</span>
+                        </a>
+                        <a th:href="@{/user/support-tickets}" class="shopee-popover-item">
+                            <i class="fa-solid fa-headset"></i>
+                            <span>Hỗ Trợ & Khiếu Nại</span>
                         </a>
                         <div class="popover-divider"></div>
                         <a th:href="@{/logout}" class="shopee-popover-item logout-item">
@@ -1539,7 +1544,7 @@
 
     <!-- 2. HEADER CHÍNH CHUẨN CHỢ TỐT VINTAGE (STICKY TOP 0) -->
     <header class="shopee-header-section" th:classappend="${isHome == true} ? 'chotot-home-header' : ''">
-        <div class="container-shopee header-main-row" style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
+        <div class="container-shopee header-main-row" style="display:flex; align-items:center; justify-content:space-between; gap:16px; position:relative;">
             <!-- Brand Logo dạng pill trắng nổi bật chuẩn Apple Liquid Glass -->
             <div class="chotot-header-left" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
                 <a th:href="@{/}" class="shopee-brand-logo chotot-brand-pill" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none;">
@@ -1661,7 +1666,7 @@
             </form>
 
             <!-- NẾU LÀ HOME / SEARCH / CONSIGNMENT (CÓ HERO BANNER PHÍA DƯỚI) -> NAV TABS Ở CHÍNH GIỮA HEADER -->
-            <nav th:if="${isHome == true}" class="chotot-nav-tabs" style="margin: 0 auto;">
+            <nav th:if="${isHome == true}" class="chotot-nav-tabs" style="position: absolute; left: 50%; transform: translateX(-50%); z-index: 10;">
                 <a th:href="@{/}" class="chotot-nav-tab" th:classappend="${activeTab != 'consignment' and isHome == true and (selectedCat == null and (selectedQuery == null or selectedQuery == ''))} ? 'active' : ''">
                     <span class="i18n-text" data-i18n="Sách Cũ">Sách Cũ</span>
                 </a>
@@ -1715,14 +1720,15 @@
                         <i class="fa-solid fa-chevron-down" style="font-size:10px; color:#78716C;"></i>
                     </div>
                     <div class="shopee-user-popover">
-                        <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/admin/books}" class="shopee-popover-item popover-item-admin">
+                        <a sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'VENDOR')" th:href="@{/admin/books}" class="shopee-popover-item popover-item-admin">
                             <i class="fa-solid fa-gauge-high"></i>
-                            <span>Kênh Quản Trị</span>
+                            <span>Kênh Quản Trị / Bán Hàng</span>
                         </a>
-                        <a sec:authorize="!hasAnyRole('ADMIN', 'MANAGER')" th:href="@{/seller/register}" class="shopee-popover-item" style="color:#8C4A27; font-weight:700;">
-                            <i class="fa-solid fa-store" style="color:#8C4A27;"></i>
-                            <span class="i18n-text" data-i18n="Kênh Người Bán">Kênh Người Bán</span>
+                        <a sec:authorize="hasRole('SHIPPER')" th:href="@{/shipper/orders}" class="shopee-popover-item" style="color: #2563EB; font-weight:700;">
+                            <i class="fa-solid fa-truck-fast"></i>
+                            <span>Cổng Giao Hàng Shipper</span>
                         </a>
+                        <!-- Đã loại bỏ hoàn toàn nút Mở gian hàng trong menu tài khoản User -->
                         <a th:href="@{/user/account/profile}" class="shopee-popover-item">
                             <i class="fa-regular fa-user"></i>
                             <span>Tài Khoản Của Tôi</span>
@@ -1734,6 +1740,10 @@
                         <a th:href="@{/user/wishlist}" class="shopee-popover-item">
                             <i class="fa-regular fa-heart"></i>
                             <span>Sách Yêu Thích</span>
+                        </a>
+                        <a th:href="@{/user/support-tickets}" class="shopee-popover-item">
+                            <i class="fa-solid fa-headset"></i>
+                            <span>Hỗ Trợ & Khiếu Nại</span>
                         </a>
                         <div class="popover-divider"></div>
                         <a th:href="@{/logout}" class="shopee-popover-item logout-item">
@@ -1791,6 +1801,58 @@
             flex-direction: column;
             gap: 12px;
             pointer-events: none;
+        }
+
+        /* Typing Indicator Hiệu Ứng Shop Đang Soạn Tin Nhắn */
+        .typing-bubble-wrap {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            margin-bottom: 6px;
+            animation: typingFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes typingFadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-bubble {
+            background: #FAF8F5;
+            border: 1px solid #ECE7DE;
+            border-radius: 14px;
+            border-bottom-left-radius: 4px;
+            padding: 7px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04);
+        }
+        .typing-dot {
+            width: 5.5px;
+            height: 5.5px;
+            border-radius: 50%;
+            background: #8C4A27;
+            display: inline-block;
+            animation: chatDotBounce 1.3s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.18s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.36s; }
+        @keyframes chatDotBounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.3;
+            }
+            30% {
+                transform: translateY(-4.5px);
+                opacity: 1;
+            }
+        }
+        .typing-label {
+            font-size: 10.5px;
+            color: #8C4A27;
+            font-weight: 600;
+            margin-left: 5px;
+            font-style: normal;
         }
         .liquid-toast-item {
             pointer-events: auto;
@@ -2017,7 +2079,9 @@
     </style>
 
     <!-- SCRIPT ĐIỀU KHIỂN CHUNG CHO HEADER & TOAST/MODAL TOÀN CỤC -->
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var isUserLoggedIn = /*[[${#authorization.expression('isAuthenticated()')}]]*/ false;
         // ================= DYNAMIC NOTIFICATION SYSTEM (CLIENT) =================
         function loadHeaderUserNotifications() {
             var listEl = document.getElementById('headerNotiList');
@@ -2443,6 +2507,26 @@
         }
 
         function loadShopConversations() {
+            var container = document.getElementById('miniChatShopListContainer');
+            if (!container) return;
+
+            if (!isUserLoggedIn) {
+                container.innerHTML = '<div style="text-align:center; padding:36px 18px; color:#52525B;">' +
+                    '<div style="width:48px; height:48px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:20px;">' +
+                        '<i class="fa-solid fa-user-lock"></i>' +
+                    '</div>' +
+                    '<strong style="font-size:13.5px; color:#1C1917; display:block; margin-bottom:5px;">Chưa Đăng Nhập</strong>' +
+                    '<p style="font-size:12px; color:#78716C; line-height:1.45; margin-bottom:16px;">' +
+                        'Khách vãng lai không thể xem tin nhắn hoặc lịch sử. Vui lòng đăng nhập để lưu trữ cuộc trò chuyện riêng với quầy.' +
+                    '</p>' +
+                    '<a href="/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search) + '" style="display:inline-block; padding:7px 20px; border-radius:8px; background:#8C4A27; color:#fff; text-decoration:none; font-weight:700; font-size:12.5px; box-shadow:0 3px 8px rgba(140,74,39,0.25);">' +
+                        '<i class="fa-solid fa-right-to-bracket me-1"></i>Đăng Nhập Ngay' +
+                    '</a>' +
+                '</div>';
+                updateFloatingUnreadBadge(0);
+                return;
+            }
+
             fetch('/api/chat/conversations')
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
@@ -2474,6 +2558,24 @@
                     });
 
                     var totalUnreadAll = 0;
+                    var cskhHtml = '<div class="shop-conv-row cskh-conv-row" onclick="openChatWithSupportDesk()" ' +
+                        'style="display:flex; align-items:center; gap:12px; padding:10px 18px; cursor:pointer; transition:background 0.12s; background:#FAF7F2; border-bottom:1px solid #ECE7DE; position:relative;" ' +
+                        'onmouseover="this.style.background=\'#F2ECE4\';" onmouseout="this.style.background=\'#FAF7F2\';">' +
+                        '<div style="position:relative; width:40px; height:40px; flex-shrink:0;">' +
+                            '<div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg, #8C4A27 0%, #A0522D 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-size:17px; box-shadow:0 2px 6px rgba(140,74,39,0.2);">' +
+                                '<i class="fa-solid fa-headset"></i>' +
+                            '</div>' +
+                            '<span style="position:absolute; bottom:0; right:0; width:9px; height:9px; border-radius:50%; background:#10B981; border:2px solid #FFFFFF;" title="Trực tuyến 24/7"></span>' +
+                        '</div>' +
+                        '<div style="flex:1; min-width:0; padding-right:10px;">' +
+                            '<div style="font-size:13px; font-weight:700; color:#8C4A27; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px;">Tổng Đài CSKH ReBook</div>' +
+                            '<div style="font-size:12px; color:#78716C; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Hỗ trợ đơn hàng & Khiếu nại 24/7</div>' +
+                        '</div>' +
+                        '<div style="display:flex; flex-direction:column; align-items:flex-end; gap:3px; flex-shrink:0;">' +
+                            '<span style="font-size:10.5px; font-weight:700; color:#059669; background:#D1FAE5; padding:2px 8px; border-radius:9999px; white-space:nowrap;">Online 24/7</span>' +
+                        '</div>' +
+                    '</div>';
+
                     var html = '';
                     list.forEach(function(s) {
                         var isPinned = !!pinnedMap[s.storeId];
@@ -2520,7 +2622,7 @@
                             '<button type="button" class="btn-row-more" onclick="openRowActionsDropdown(event, ' + s.storeId + ', \'' + escapeMiniJs(s.storeName) + '\')" style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); width:32px; height:32px; border-radius:50%; background:none; border:none; color:#52525B; font-size:17px; cursor:pointer; align-items:center; justify-content:center; padding:0; z-index:5;" onmouseover="this.style.background=\'#E4E4E7\'; this.style.color=\'#18181B\';" onmouseout="this.style.background=\'none\'; this.style.color=\'#52525B\';"><i class="fa-solid fa-ellipsis-vertical"></i></button>' +
                         '</div>';
                     });
-                    container.innerHTML = html;
+                    container.innerHTML = cskhHtml + html;
                     updateFloatingUnreadBadge(totalUnreadAll);
                 })
                 .catch(function(err) { console.error('Lỗi tải cuộc trò chuyện:', err); });
@@ -2832,6 +2934,77 @@
             loadStoreChatMessages(currentStoreId, bookTitle);
         }
 
+        function openChatWithSupportDesk() {
+            currentStoreId = 0;
+            currentStoreName = 'Chăm Sóc Khách Hàng (Tổng Đài 24/7)';
+            stopMiniChatPolling();
+
+            var widget = document.getElementById('aiMiniChatWidget');
+            var fab = document.getElementById('aiFloatingBtn');
+            if (widget) widget.style.display = 'flex';
+            if (fab) fab.classList.add('hidden-fab');
+
+            var listView = document.getElementById('miniChatShopListView');
+            var roomView = document.getElementById('miniChatRoomView');
+            if (listView) listView.style.display = 'none';
+            if (roomView) roomView.style.display = 'flex';
+
+            var nameEl = document.getElementById('activeStoreName');
+            var distEl = document.getElementById('activeStoreDistrict');
+            var avtEl = document.getElementById('activeStoreAvatar');
+            var staffEl = document.getElementById('activeStoreStaffStatus');
+            var inputEl = document.getElementById('miniChatInput');
+            var quickBar = document.getElementById('miniChatQuickBar');
+
+            if (nameEl) nameEl.textContent = 'Chăm Sóc Khách Hàng (Tổng Đài 24/7)';
+            if (distEl) distEl.textContent = 'Hệ Thống Chuỗi Sách Cũ TP.HCM';
+            if (staffEl) staffEl.textContent = 'Trực tuyến 24/7';
+            if (avtEl) avtEl.src = '/images/brand-book-icon.png';
+            if (inputEl) {
+                inputEl.placeholder = 'Nhập thắc mắc hoặc phản ánh gửi Ban CSKH...';
+                inputEl.focus();
+            }
+            if (quickBar) quickBar.style.display = 'none';
+
+            cancelChatMediaUpload();
+
+            var chatBody = document.getElementById('miniChatBody');
+            if (!chatBody) return;
+            renderedMsgIds.clear();
+
+            var welcomeHtml = '<div style="display:flex; justify-content:center; margin-bottom:8px;">' +
+                '<span style="background:#F4F4F5; color:#71717A; font-size:11px; padding:3px 10px; border-radius:9999px;">Hôm nay · Kết nối Ban CSKH Toàn Sàn</span>' +
+            '</div>' +
+            '<div class="mini-chat-bubble-row" style="display:flex; gap:8px; align-items:flex-start; margin-bottom:12px;">' +
+                '<div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #8C4A27 0%, #A0522D 100%); display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; flex-shrink:0;">' +
+                    '<i class="fa-solid fa-headset"></i>' +
+                '</div>' +
+                '<div style="max-width:88%; background:#FFFFFF; border:1px solid #ECE7DE; border-radius:14px; border-top-left-radius:4px; padding:12px 14px; box-shadow:0 2px 6px rgba(0,0,0,0.03);">' +
+                    '<div style="font-weight:700; color:#8C4A27; font-size:12.5px; margin-bottom:4px;">Ban Quản Trị CSKH ReBook kính chào Quý khách!</div>' +
+                    '<div style="color:#1C1917; font-size:12.5px; line-height:1.5; margin-bottom:12px;">' +
+                        'Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7 về đơn hàng, chất lượng sách, đổi trả hoặc định giá ký gửi. Bạn có thể chọn tiện ích nhanh bên dưới hoặc gõ tin nhắn trực tiếp:' +
+                    '</div>' +
+                    '<div style="display:flex; flex-direction:column; gap:6px;">' +
+                        '<a href="tel:19002416" style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:#FEF2F2; color:#DC2626; border-radius:8px; font-weight:700; font-size:12px; text-decoration:none;">' +
+                            '<i class="fa-solid fa-phone-volume"></i> Hotline: 1900 2416 (Miễn cước 24/7)' +
+                        '</a>' +
+                        '<div onclick="openQuickTicketModal()" style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:#EFF6FF; color:#2563EB; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;">' +
+                            '<i class="fa-solid fa-file-circle-plus"></i> Tạo phiếu khiếu nại / yêu cầu hỗ trợ' +
+                        '</div>' +
+                        '<a href="/orders" style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:#FAF5F0; color:#8C4A27; border-radius:8px; font-weight:700; font-size:12px; text-decoration:none;">' +
+                            '<i class="fa-solid fa-box"></i> Tra cứu danh sách đơn mua của tôi' +
+                        '</a>' +
+                        '<a href="/help" style="display:flex; align-items:center; gap:8px; padding:7px 10px; background:#F0FDF4; color:#16A34A; border-radius:8px; font-weight:700; font-size:12px; text-decoration:none;">' +
+                            '<i class="fa-solid fa-circle-question"></i> Xem Trung Tâm Trợ Giúp & FAQ' +
+                        '</a>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+            chatBody.innerHTML = welcomeHtml;
+            scrollMiniChatBottom();
+        }
+
         function backToShopList() {
             stopMiniChatPolling();
             var listView = document.getElementById('miniChatShopListView');
@@ -2929,8 +3102,18 @@
 
             var typingRow = document.createElement('div');
             typingRow.id = 'miniChatTyping';
-            typingRow.style.cssText = 'display:flex; gap:8px; align-items:center; color:#78716c; font-size:12px; margin-bottom:4px;';
-            typingRow.innerHTML = '<div style="width:24px; height:24px; border-radius:50%; background:#8C4A27; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px;"><i class="fa-solid fa-store"></i></div> <span style="font-style:italic;">' + escapeMiniHtml(currentStoreName) + ' đang kiểm tra...</span>';
+            typingRow.className = 'typing-bubble-wrap';
+
+            var avatarHtml = '<div style="width:26px; height:26px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-bottom:2px;"><i class="fa-solid fa-robot"></i></div>';
+
+            typingRow.innerHTML = avatarHtml +
+                '<div class="typing-bubble">' +
+                    '<span class="typing-dot"></span>' +
+                    '<span class="typing-dot"></span>' +
+                    '<span class="typing-dot"></span>' +
+                    '<span class="typing-label">' + escapeMiniHtml(currentStoreName) + ' đang soạn tin...</span>' +
+                '</div>';
+
             body.appendChild(typingRow);
             scrollMiniChatBottom();
         }
@@ -3007,6 +3190,17 @@
                             var hasNew = false;
                             data.messages.forEach(function(m) {
                                 if (m.id && !renderedMsgIds.has(String(m.id))) {
+                                    // Khử trùng lặp: Nếu là tin khách hàng gửi và trên màn hình đang có tin nhắn tạm temp-*, reconcile ngay
+                                    if (m.senderType === 'CUSTOMER') {
+                                        var tempCustomerRow = document.querySelector('[data-msg-id^="temp-"]');
+                                        if (tempCustomerRow) {
+                                            var oldId = tempCustomerRow.getAttribute('data-msg-id');
+                                            tempCustomerRow.setAttribute('data-msg-id', String(m.id));
+                                            renderedMsgIds.delete(oldId);
+                                            renderedMsgIds.add(String(m.id));
+                                            return;
+                                        }
+                                    }
                                     appendChatMessageDOM(m.senderType, m.content, m.bookTitle, m.bookPrice, m.bookImage, m.conditionPercent, m.bookId, m.mediaUrl, m.mediaType, m.createdAt, m.senderName, m.id);
                                     hasNew = true;
                                 }
@@ -3051,7 +3245,37 @@
 
         function loadStoreChatMessages(storeId, autoSendBookTitle) {
             var body = document.getElementById('miniChatBody');
+            var inputEl = document.getElementById('miniChatInput');
+            var quickBar = document.getElementById('miniChatQuickBar');
             if (!body) return;
+
+            if (!isUserLoggedIn) {
+                body.innerHTML = '<div style="text-align:center; padding:36px 18px; color:#52525B;">' +
+                    '<div style="width:48px; height:48px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:20px;">' +
+                        '<i class="fa-solid fa-lock"></i>' +
+                    '</div>' +
+                    '<strong style="font-size:14px; color:#1C1917; display:block; margin-bottom:6px;">Yêu Cầu Đăng Nhập</strong>' +
+                    '<p style="font-size:12px; color:#78716C; line-height:1.5; margin-bottom:16px;">' +
+                        'Khách vãng lai không thể nhắn tin hoặc xem lịch sử. Vui lòng đăng nhập tài khoản để nhắn tin riêng với quầy <strong>' + escapeMiniHtml(currentStoreName) + '</strong>.' +
+                    '</p>' +
+                    '<a href="/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search) + '" style="display:inline-block; padding:8px 22px; border-radius:9px; background:#8C4A27; color:#fff; text-decoration:none; font-weight:700; font-size:12.5px; box-shadow:0 3px 8px rgba(140,74,39,0.25);">' +
+                        '<i class="fa-solid fa-right-to-bracket me-1"></i>Đăng Nhập Ngay' +
+                    '</a>' +
+                '</div>';
+                if (inputEl) {
+                    inputEl.disabled = true;
+                    inputEl.placeholder = 'Vui lòng đăng nhập để gửi tin nhắn...';
+                }
+                if (quickBar) quickBar.style.display = 'none';
+                return;
+            }
+
+            if (inputEl) {
+                inputEl.disabled = false;
+                inputEl.placeholder = 'Nhắn tin cho ' + currentStoreName + '...';
+            }
+            if (quickBar) quickBar.style.display = 'flex';
+
             body.innerHTML = '<div style="text-align:center; padding:20px; color:#A8A29E; font-size:11.5px;">Đang tải tin nhắn...</div>';
             renderedMsgIds.clear();
 
@@ -3104,6 +3328,12 @@
         }
 
         function sendMiniChatMessage() {
+            if (!isUserLoggedIn) {
+                alert('Vui lòng đăng nhập tài khoản để nhắn tin trò chuyện với cửa hàng!');
+                window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+                return;
+            }
+
             var inp = document.getElementById('miniChatInput');
             if (!inp || isSendingMiniChat) return;
             var text = inp.value.trim();
@@ -3158,12 +3388,38 @@
         }
 
         function postChatMessageToServer(text, mediaUrl, mediaType, tempMsgId) {
+            if (currentStoreId === 0) {
+                // KÊNH CHĂM SÓC KHÁCH HÀNG AI TOÀN SÀN
+                fetch('/help/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text || 'Gửi tệp đính kèm' })
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    hideMiniChatTyping();
+                    isSendingMiniChat = false;
+                    var replyMsg = (data && data.reply) ? data.reply : 'Dạ Ban CSKH ReBook đã tiếp nhận yêu cầu. Mọi phản hồi cần hỗ trợ khẩn cấp, bạn vui lòng liên hệ Hotline 1900 2416 nhé!';
+                    appendChatMessageDOM('STORE_STAFF', replyMsg, null, null, null, null, null, null, null, formatMiniChatTime(), 'Trợ Lý AI CSKH ReBook', 'cskh_' + Date.now());
+                    scrollMiniChatBottom();
+                })
+                .catch(function(err) {
+                    hideMiniChatTyping();
+                    isSendingMiniChat = false;
+                    var replyMsg = 'Dạ em là Trợ lý CSKH ReBook. Em đã ghi nhận câu hỏi của anh/chị. Anh/chị có thể gọi ngay Hotline miễn cước 1900 2416 để được hỗ trợ tức thì nhé!';
+                    appendChatMessageDOM('STORE_STAFF', replyMsg, null, null, null, null, null, null, null, formatMiniChatTime(), 'Trợ Lý AI CSKH ReBook', 'cskh_' + Date.now());
+                    scrollMiniChatBottom();
+                });
+                return;
+            }
+
             var formData = new URLSearchParams();
             if (text) formData.append('content', text);
             if (mediaUrl) formData.append('mediaUrl', mediaUrl);
             if (mediaType) formData.append('mediaType', mediaType);
             if (currentBookId) formData.append('bookId', currentBookId);
 
+            var sendTimestamp = Date.now();
             fetch('/api/chat/store/' + currentStoreId + '/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -3171,27 +3427,41 @@
             })
             .then(function(res) { return res.json(); })
             .then(function(data) {
-                hideMiniChatTyping();
-                isSendingMiniChat = false;
-
-                // Reconcile: thay thế tempId thành userMsgId thực tế từ DB
-                if (data && data.userMsgId && tempMsgId) {
-                    var tempRow = document.querySelector('[data-msg-id="' + tempMsgId + '"]');
-                    if (tempRow) {
-                        tempRow.setAttribute('data-msg-id', String(data.userMsgId));
-                    }
-                    renderedMsgIds.delete(tempMsgId);
+                // 1. RECONCILE NGAY LẬP TỨC: Khóa trùng lặp với polling ngầm
+                if (data && data.userMsgId) {
                     renderedMsgIds.add(String(data.userMsgId));
+                    if (tempMsgId) {
+                        var tempRow = document.querySelector('[data-msg-id="' + tempMsgId + '"]');
+                        if (tempRow) {
+                            tempRow.setAttribute('data-msg-id', String(data.userMsgId));
+                        }
+                        renderedMsgIds.delete(tempMsgId);
+                    }
+                }
+                if (data && data.replyMsgId) {
+                    renderedMsgIds.add(String(data.replyMsgId));
                 }
 
-                var reply = data.reply || null;
-                var b = data.suggestedBook || null;
-                var replyTime = data.createdAt || formatMiniChatTime();
+                var elapsed = Date.now() - sendTimestamp;
+                var waitMore = Math.max(0, 700 - elapsed);
 
-                if (reply) {
-                    appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime, data.senderName, data.replyMsgId);
-                }
-                scrollMiniChatBottom();
+                setTimeout(function() {
+                    hideMiniChatTyping();
+                    isSendingMiniChat = false;
+
+                    var reply = data.reply || null;
+                    var b = data.suggestedBook || null;
+                    var replyTime = data.createdAt || formatMiniChatTime();
+
+                    if (reply) {
+                        // Kiểm tra xem tin nhắn reply đã tồn tại trên màn hình chưa (tránh polling vừa vẽ xong)
+                        var existingReply = data.replyMsgId ? document.querySelector('[data-msg-id="' + data.replyMsgId + '"]') : null;
+                        if (!existingReply) {
+                            appendChatMessageDOM('STORE_STAFF', reply, b ? b.title : null, b ? b.price : null, b ? b.imageUrl : null, b ? b.conditionPercent : null, b ? b.id : null, null, null, replyTime, data.senderName, data.replyMsgId);
+                        }
+                    }
+                    scrollMiniChatBottom();
+                }, waitMore);
             })
             .catch(function() {
                 hideMiniChatTyping();
@@ -3255,14 +3525,15 @@
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                     .replace(/\n/g, '<br>');
 
-                var isAiMessage = (senderName && senderName.indexOf('Trợ lý AI') !== -1);
+                var isAiMessage = (senderName && (senderName.indexOf('Trợ lý AI') !== -1 || senderName.indexOf('Bé Mọt') !== -1 || senderName.indexOf('Cậu Ba') !== -1 || senderName.indexOf('Thầy Giáo') !== -1 || senderName.indexOf('Cố Nhân') !== -1 || senderName.indexOf('Mọt') !== -1 || senderName.indexOf('AI') !== -1));
                 var avatarHtml = isAiMessage
-                    ? '<div style="width:26px; height:26px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;" title="Trợ lý AI tự động"><i class="fa-solid fa-robot"></i></div>'
+                    ? '<div style="width:26px; height:26px; border-radius:50%; background:#FAF5F0; border:1px solid #E5DFD5; color:#8C4A27; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;" title="Trợ lý AI riêng của quầy"><i class="fa-solid fa-robot"></i></div>'
                     : '<div style="width:26px; height:26px; border-radius:50%; background:#ECFDF5; border:1px solid #A7F3D0; color:#059669; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:2px;" title="Nhân viên quầy"><i class="fa-solid fa-user-tie"></i></div>';
 
+                var displayName = escapeMiniHtml(senderName || (isAiMessage ? 'Trợ lý AI quầy' : 'Quản lý quầy'));
                 var senderBadge = isAiMessage
-                    ? '<div style="font-size:10px; font-weight:700; color:#8C4A27; margin-bottom:2px; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-robot" style="font-size:9.5px;"></i> Trợ lý AI ReBook</div>'
-                    : '<div style="font-size:10px; font-weight:800; color:#059669; margin-bottom:2px; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-circle-check" style="font-size:9px;"></i> ' + escapeMiniHtml(senderName || 'Quản lý quầy') + '</div>';
+                    ? '<div style="font-size:10px; font-weight:700; color:#8C4A27; margin-bottom:2px; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-robot" style="font-size:9.5px;"></i> ' + displayName + '</div>'
+                    : '<div style="font-size:10px; font-weight:800; color:#059669; margin-bottom:2px; display:flex; align-items:center; gap:4px;"><i class="fa-solid fa-circle-check" style="font-size:9px;"></i> ' + displayName + '</div>';
 
                 var bubbleStyle = isAiMessage
                     ? 'background:#FAF8F5; border:1px solid #ECE7DE;'
@@ -3457,6 +3728,122 @@
         </div>
 
     </div>
+
+    <!-- MODAL GỬI PHIẾU HỖ TRỢ NHANH TOÀN SÀN (AJAX QUICK TICKET) -->
+    <div id="quickTicketModalBackdrop" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); z-index:100000; align-items:center; justify-content:center;">
+        <div style="background:#FFFFFF; border-radius:20px; width:92%; max-width:480px; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,0.25); max-height:90vh; overflow-y:auto; font-family:'Roboto', sans-serif;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #E8DEC8; padding-bottom:12px; margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-headset" style="color:#8C4A27; font-size:18px;"></i>
+                    <h5 style="margin:0; font-weight:800; color:#1C1917; font-size:16px;">Gửi Yêu Cầu Hỗ Trợ CSKH</h5>
+                </div>
+                <button type="button" onclick="closeQuickTicketModal()" style="background:none; border:none; font-size:20px; cursor:pointer; color:#78716C;">&times;</button>
+            </div>
+
+            <form id="quickTicketForm" onsubmit="handleQuickTicketSubmit(event)">
+                <div style="margin-bottom:12px;">
+                    <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:4px; color:#44403C;">Họ và Tên *</label>
+                    <input type="text" id="qtFullName" required placeholder="Nhập họ tên của bạn" style="width:100%; height:38px; border-radius:10px; border:1px solid #D7CBB8; padding:0 12px; font-size:13px; outline:none;" th:value="${user != null ? (user.fullName != null ? user.fullName : user.username) : ''}">
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:4px; color:#44403C;">Email nhận phản hồi *</label>
+                        <input type="email" id="qtEmail" required placeholder="email@example.com" style="width:100%; height:38px; border-radius:10px; border:1px solid #D7CBB8; padding:0 12px; font-size:13px; outline:none;" th:value="${user != null ? user.email : ''}">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:4px; color:#44403C;">Số điện thoại</label>
+                        <input type="tel" id="qtPhone" placeholder="09xxxxxxxx" style="width:100%; height:38px; border-radius:10px; border:1px solid #D7CBB8; padding:0 12px; font-size:13px; outline:none;" th:value="${user != null ? user.phone : ''}">
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:4px; color:#44403C;">Chủ đề hỗ trợ</label>
+                        <select id="qtCategory" style="width:100%; height:38px; border-radius:10px; border:1px solid #D7CBB8; padding:0 8px; font-size:13px; outline:none; background:#fff;">
+                            <option value="Tư vấn đơn hàng">Đơn hàng & Giao nhận</option>
+                            <option value="Ký gửi sách cũ">Ký gửi & Định giá sách</option>
+                            <option value="Đổi trả & Hoàn tiền">Đổi trả & Hoàn tiền</option>
+                            <option value="Chất lượng sách">Chất lượng / Tình trạng sách</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:4px; color:#44403C;">Mã đơn (nếu có)</label>
+                        <input type="text" id="qtOrderCode" placeholder="Ví dụ: ORD-12345" style="width:100%; height:38px; border-radius:10px; border:1px solid #D7CBB8; padding:0 12px; font-size:13px; outline:none;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:4px; color:#44403C;">Nội dung cần hỗ trợ / khiếu nại *</label>
+                    <textarea id="qtMessage" required rows="3" placeholder="Mô tả chi tiết vấn đề bạn đang gặp phải để CSKH hỗ trợ nhanh nhất..." style="width:100%; border-radius:10px; border:1px solid #D7CBB8; padding:8px 12px; font-size:13px; outline:none; resize:none;"></textarea>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" onclick="closeQuickTicketModal()" style="padding:8px 18px; border-radius:9999px; border:1px solid #D7CBB8; background:#fff; font-size:13px; font-weight:600; cursor:pointer;">Hủy</button>
+                    <button type="submit" id="btnSubmitQuickTicket" style="padding:8px 22px; border-radius:9999px; border:none; background:linear-gradient(135deg, #8C4A27 0%, #A0522D 100%); color:#fff; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(140, 74, 39, 0.25);">Gửi Yêu Cầu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openQuickTicketModal(prefilledOrderCode) {
+            var modal = document.getElementById('quickTicketModalBackdrop');
+            if (modal) modal.style.display = 'flex';
+            if (prefilledOrderCode) {
+                var orderInp = document.getElementById('qtOrderCode');
+                if (orderInp) orderInp.value = prefilledOrderCode;
+            }
+        }
+        function closeQuickTicketModal() {
+            var modal = document.getElementById('quickTicketModalBackdrop');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function handleQuickTicketSubmit(e) {
+            e.preventDefault();
+            var submitBtn = document.getElementById('btnSubmitQuickTicket');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Đang gửi...';
+
+            var payload = {
+                fullName: document.getElementById('qtFullName').value,
+                email: document.getElementById('qtEmail').value,
+                phone: document.getElementById('qtPhone').value,
+                orderCode: document.getElementById('qtOrderCode').value,
+                category: document.getElementById('qtCategory').value,
+                message: document.getElementById('qtMessage').value
+            };
+
+            fetch('/help/api/quick-submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Gửi Yêu Cầu';
+                if (data.success) {
+                    closeQuickTicketModal();
+                    if (window.showLiquidToast) {
+                        window.showLiquidToast(data.message, 'success');
+                    } else {
+                        alert(data.message);
+                    }
+                    document.getElementById('quickTicketForm').reset();
+                } else {
+                    alert(data.message || 'Lỗi khi gửi yêu cầu hỗ trợ.');
+                }
+            })
+            .catch(function(err) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Gửi Yêu Cầu';
+                alert('Không thể kết nối đến máy chủ: ' + err.message);
+            });
+        }
+    </script>
 
     <!-- NÚT CHAT VỚI SHOP NỔI TOÀN CỤC (FLOATING FAB VỚI UNREAD BADGE - 3D CLAYMORPHISM BONG BÓNG CHAT) -->
     <div id="aiFloatingBtn" class="ai-floating-widget-btn" onclick="toggleAiMiniChat()" title="Chat với Cửa Hàng">

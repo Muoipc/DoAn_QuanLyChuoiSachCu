@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.iotstar.entity.SupportTicket;
+import vn.iotstar.entity.User;
 import vn.iotstar.repository.SupportTicketRepository;
 import vn.iotstar.security.CustomUserDetails;
 
@@ -74,12 +75,14 @@ public class AdminSupportTicketController {
         ticket.setResolvedAt(LocalDateTime.now());
         SupportTicket savedTicket = supportTicketRepository.save(ticket);
 
-        if (savedTicket.getEmail() != null && notificationService != null) {
-            userRepository.findByEmail(savedTicket.getEmail()).ifPresent(u -> {
-                try {
-                    notificationService.notifySupportTicketResolved(savedTicket, u);
-                } catch (Exception ignored) {}
-            });
+        User targetUser = savedTicket.getUser();
+        if (targetUser == null && savedTicket.getEmail() != null) {
+            targetUser = userRepository.findByEmail(savedTicket.getEmail()).orElse(null);
+        }
+        if (targetUser != null && notificationService != null) {
+            try {
+                notificationService.notifySupportTicketResolved(savedTicket, targetUser);
+            } catch (Exception ignored) {}
         }
 
         redirect.addFlashAttribute("successMessage", "Đã phản hồi và hoàn tất giải quyết phiếu #" + id);
