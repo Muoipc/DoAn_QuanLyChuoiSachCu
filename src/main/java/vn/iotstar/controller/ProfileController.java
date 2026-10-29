@@ -88,49 +88,64 @@ public class ProfileController {
      * Hiển thị trang Hồ Sơ Của Tôi chuẩn Shopee
      */
     @GetMapping({"/profile", ""})
-    @Transactional(readOnly = true)
     public String viewProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(value = "tab", defaultValue = "profile") String tab,
             HttpServletRequest request,
             Model model) {
 
-        if (userDetails == null || userDetails.getId() == null) {
-            String uri = request.getRequestURI();
-            String qs = request.getQueryString();
-            String fullUrl = (qs != null && !qs.isBlank()) ? (uri + "?" + qs) : uri;
-            return "redirect:/login?redirectURL=" + URLEncoder.encode(fullUrl, StandardCharsets.UTF_8);
+        try {
+            if (userDetails == null || userDetails.getId() == null) {
+                String uri = request.getRequestURI();
+                String qs = request.getQueryString();
+                String fullUrl = (qs != null && !qs.isBlank()) ? (uri + "?" + qs) : uri;
+                return "redirect:/login?redirectURL=" + URLEncoder.encode(fullUrl, StandardCharsets.UTF_8);
+            }
+
+            Long userId = resolveUserId(userDetails);
+            User user = userRepository.findById(userId).orElse(null);
+
+            if (user == null) {
+                return "redirect:/login?redirectURL=/user/account/profile";
+            }
+
+            // Lấy danh sách địa chỉ nhận hàng của khách
+            List<Address> addresses = addressRepository.findByUserIdOrderByIsDefaultDescCreatedAtDesc(userId);
+
+            // Số lượng đơn hàng & số phiếu ký gửi
+            int totalOrders = 0;
+            try {
+                totalOrders = orderRepository.findByUserIdWithItems(userId).size();
+            } catch (Exception ex) {
+                totalOrders = orderRepository.findByUserIdOrderByCreatedAtDesc(userId, org.springframework.data.domain.Pageable.unpaged()).getContent().size();
+            }
+
+            int totalConsignments = 0;
+            try {
+                totalConsignments = consignmentRepository.findByUserIdOrderByCreatedAtDesc(userId).size();
+            } catch (Exception ignored) {}
+
+            // Danh sách phiếu hỗ trợ khiếu nại của khách hàng
+            List<vn.iotstar.entity.SupportTicket> userTickets = java.util.Collections.emptyList();
+            try {
+                if (user.getEmail() != null && !user.getEmail().isBlank()) {
+                    userTickets = supportTicketRepository.findByEmailOrderByCreatedAtDesc(user.getEmail());
+                }
+            } catch (Exception ignored) {}
+
+            model.addAttribute("user", user);
+            model.addAttribute("addresses", addresses != null ? addresses : java.util.Collections.emptyList());
+            model.addAttribute("totalOrders", totalOrders);
+            model.addAttribute("totalConsignments", totalConsignments);
+            model.addAttribute("userTickets", userTickets);
+            model.addAttribute("activeTab", tab);
+            model.addAttribute("pageTitle", "Hồ Sơ Của Tôi — Chuỗi Cửa Hàng Sách Cũ TP.HCM");
+
+            return "user/profile";
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Profile Error: " + e.getMessage(), e);
         }
-
-        Long userId = resolveUserId(userDetails);
-        User user = userRepository.findById(userId).orElse(null);
-
-        if (user == null) {
-            return "redirect:/login?redirectURL=/user/account/profile";
-        }
-
-        // Lấy danh sách địa chỉ nhận hàng của khách
-        List<Address> addresses = addressRepository.findByUserIdOrderByIsDefaultDescCreatedAtDesc(userId);
-
-        // Số lượng đơn hàng & số phiếu ký gửi
-        int totalOrders = orderRepository.findByUserIdWithItems(userId).size();
-        int totalConsignments = consignmentRepository.findByUserIdOrderByCreatedAtDesc(userId).size();
-
-        // Danh sách phiếu hỗ trợ khiếu nại của khách hàng
-        try { supportTicketRepository.deleteChatLogsFromTickets(); } catch (Exception ignored) {}
-        List<vn.iotstar.entity.SupportTicket> userTickets = (user.getEmail() != null && !user.getEmail().isBlank())
-                ? supportTicketRepository.findByEmailOrderByCreatedAtDesc(user.getEmail())
-                : java.util.Collections.emptyList();
-
-        model.addAttribute("user", user);
-        model.addAttribute("addresses", addresses);
-        model.addAttribute("totalOrders", totalOrders);
-        model.addAttribute("totalConsignments", totalConsignments);
-        model.addAttribute("userTickets", userTickets);
-        model.addAttribute("activeTab", tab);
-        model.addAttribute("pageTitle", "Hồ Sơ Của Tôi — Chuỗi Cửa Hàng Sách Cũ TP.HCM");
-
-        return "user/profile";
     }
 
     /**
