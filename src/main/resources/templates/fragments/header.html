@@ -3417,7 +3417,9 @@
             if (text) formData.append('content', text);
             if (mediaUrl) formData.append('mediaUrl', mediaUrl);
             if (mediaType) formData.append('mediaType', mediaType);
-            if (currentBookId) formData.append('bookId', currentBookId);
+            if (currentBookId && !isNaN(Number(currentBookId)) && Number(currentBookId) > 0) {
+                formData.append('bookId', Number(currentBookId));
+            }
 
             var sendTimestamp = Date.now();
             fetch('/api/chat/store/' + currentStoreId + '/send', {
@@ -3437,9 +3439,6 @@
                         }
                         renderedMsgIds.delete(tempMsgId);
                     }
-                }
-                if (data && data.replyMsgId) {
-                    renderedMsgIds.add(String(data.replyMsgId));
                 }
 
                 var elapsed = Date.now() - sendTimestamp;

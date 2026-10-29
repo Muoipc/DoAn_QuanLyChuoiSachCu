@@ -302,6 +302,25 @@ public class CheckoutController {
             }
         }
 
+        // Bổ sung dữ liệu người nhận dự phòng nếu khách chưa lưu địa chỉ
+        User currentUser = userRepository.findById(userId).orElse(null);
+        if (receiverAddress == null || receiverAddress.isBlank()) {
+            Address defaultAddr = addressRepository.findByUserIdOrderByIsDefaultDescCreatedAtDesc(userId).stream().findFirst().orElse(null);
+            if (defaultAddr != null) {
+                receiverAddress = defaultAddr.getStreetAddress() + ", " + defaultAddr.getWard() + ", " + defaultAddr.getDistrict() + ", " + defaultAddr.getProvince();
+            } else if (deliveryMethod == Order.DeliveryMethod.STORE_PICKUP) {
+                receiverAddress = "Nhận trực tiếp tại chi nhánh ReBook";
+            } else {
+                receiverAddress = "Số 1 Võ Văn Ngân, Phường Linh Chiểu, TP. Thủ Đức, TP. Hồ Chí Minh";
+            }
+        }
+        if (receiverName == null || receiverName.isBlank()) {
+            receiverName = (currentUser != null && currentUser.getFullName() != null && !currentUser.getFullName().isBlank()) ? currentUser.getFullName() : "Khách Hàng ReBook";
+        }
+        if (receiverPhone == null || receiverPhone.isBlank()) {
+            receiverPhone = (currentUser != null && currentUser.getPhone() != null && !currentUser.getPhone().isBlank()) ? currentUser.getPhone() : "0901234567";
+        }
+
         if (buyNow && condition != null && !"standard".equalsIgnoreCase(condition)) {
             String condNote = "budget".equalsIgnoreCase(condition) ? "[Phân loại: Bản Tiết Kiệm (85% Mới)]" : "[Phân loại: Bản Sưu Tầm (99% Mới + Bookmark)]";
             customerNotes = (customerNotes != null && !customerNotes.isBlank()) ? (customerNotes + " " + condNote) : condNote;
@@ -319,7 +338,7 @@ public class CheckoutController {
                         deliveryMethod,
                         receiverName,
                         receiverPhone,
-                        receiverAddress != null ? receiverAddress : "Tại chi nhánh",
+                        receiverAddress,
                         shippingUnitId,
                         paymentMethod,
                         voucherCode,
@@ -344,7 +363,7 @@ public class CheckoutController {
                         storeId,
                         receiverName,
                         receiverPhone,
-                        receiverAddress != null ? receiverAddress : "Tại chi nhánh",
+                        receiverAddress,
                         shippingUnitId,
                         paymentMethod,
                         voucherCode,
@@ -355,9 +374,7 @@ public class CheckoutController {
 
             // Nếu chọn thanh toán trực tuyến qua VNPay Sandbox
             if (paymentMethod == Order.PaymentMethod.VNPAY) {
-                long amountVnd = order.getFinalAmount().longValue();
-                String paymentUrl = VNPayConfig.createPaymentUrl(order.getOrderCode(), amountVnd, request);
-                return "redirect:" + paymentUrl;
+                return "redirect:/checkout/vnpay-sandbox?orderCode=" + order.getOrderCode();
             }
 
             // Thanh toán khi nhận sách (COD)
@@ -370,6 +387,31 @@ public class CheckoutController {
             }
             return "redirect:/checkout";
         }
+    }
+
+    /**
+     * Màn hình mô phỏng Cổng thanh toán trực tuyến VNPay Sandbox (High-Fidelity Gateway).
+     * Cho phép kiểm thử đầy đủ: Thẻ ATM nội địa (NCB test), VietQR, Visa/MasterCard.
+     * URL: GET /checkout/vnpay-sandbox
+     */
+    @GetMapping("/vnpay-sandbox")
+    public String vnpaySandbox(
+            @RequestParam("orderCode") String orderCode,
+            Model model,
+            HttpServletRequest request) {
+        Optional<Order> orderOpt = orderService.findByOrderCode(orderCode);
+        if (orderOpt.isEmpty()) {
+            return "redirect:/checkout";
+        }
+        Order order = orderOpt.get();
+        long amountVnd = order.getFinalAmount().longValue();
+        String externalVnpayUrl = VNPayConfig.createPaymentUrl(order.getOrderCode(), amountVnd, request);
+
+        model.addAttribute("order", order);
+        model.addAttribute("amount", amountVnd);
+        model.addAttribute("externalVnpayUrl", externalVnpayUrl);
+        model.addAttribute("pageTitle", "Cổng Thanh Toán VNPay Sandbox - Đơn Hàng #" + orderCode);
+        return "vnpay-sandbox";
     }
 
     /**
