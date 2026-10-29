@@ -149,7 +149,7 @@
 </head>
 <body>
     <!-- HEADER -->
-    <div th:replace="~{fragments/header :: header}"></div>
+    <th:block th:replace="~{fragments/header :: shopeeHeader}"></th:block>
 
     <!-- MAIN CONTENT -->
     <main class="container-wishlist">
@@ -171,7 +171,7 @@
         <div th:if="${wishlistItems != null and not #lists.isEmpty(wishlistItems)}" class="wishlist-grid">
             <div th:each="item : ${wishlistItems}" class="wishlist-book-card" th:id="'wishlist-card-' + ${item.book.id}">
                 <div class="wishlist-thumb-box">
-                    <img th:src="${item.book.coverImage != null ? item.book.coverImage : '/images/books/book_1.jpg'}" 
+                    <img th:src="${item.book.primaryImageUrl}" 
                          th:alt="${item.book.title}" class="wishlist-thumb-img">
                 </div>
                 <a th:href="@{'/books/' + ${item.book.id}}" class="wishlist-book-title" th:text="${item.book.title}">

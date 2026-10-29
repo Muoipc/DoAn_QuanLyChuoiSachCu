@@ -69,7 +69,7 @@ public class StoreController {
      * Chi tiết cửa hàng / chi nhánh theo ID (Shopee Shop Storefront).
      * Hỗ trợ bộ lọc categoryId từ PDP: /stores/{id}?categoryId=...&entryPoint=ShopByPDP&itemId=...
      */
-    @GetMapping("/{id}")
+    @GetMapping("/{id:[0-9]+}")
     public String storeDetail(
             @PathVariable("id") Long id,
             @RequestParam(value = "categoryId", required = false) Integer categoryId,

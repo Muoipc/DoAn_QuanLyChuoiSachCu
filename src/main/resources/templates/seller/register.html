@@ -500,7 +500,56 @@
 
                 <!-- CỘT BÊN PHẢI: FORM ĐĂNG KÝ GIAN HÀNG & TẠO TÀI KHOẢN QUẢN LÝ RIÊNG -->
                 <div>
-                    <div class="seller-form-card">
+                    <!-- 1. MÀN HÌNH NỘP HỒ SƠ THÀNH CÔNG (HIỂN THỊ KHI VỪA SUBMIT) -->
+                    <div th:if="${submittedReg != null}" class="seller-form-card" style="margin-bottom: 24px; text-align: center; border: 2px solid #8C4A27;">
+                        <div class="status-hero-card" style="background: transparent; border: none; padding: 10px 0;">
+                            <div class="status-badge-lg status-badge-pending" style="font-size: 14px; padding: 10px 22px;">
+                                <i class="fa-solid fa-circle-check text-success"></i> HỒ SƠ ĐÃ ĐƯỢC TIẾP NHẬN THÀNH CÔNG
+                            </div>
+                            <h2 style="font-size: 24px; font-weight: 900; color: #1C1917; margin: 16px 0 8px;">
+                                <span th:text="${submittedReg.storeName}">Tiệm Sách Cũ</span>
+                            </h2>
+                            <p style="font-size: 14px; color: #78716C; max-width: 520px; margin: 0 auto 20px; line-height: 1.6;">
+                                Cảm ơn bạn đã gửi hồ sơ đăng ký mở gian hàng! Mã hồ sơ của bạn là <strong style="color: #8C4A27;" th:text="'#REG-' + ${submittedReg.id}">#REG-101</strong>. Ban quản trị ReBook sẽ thẩm định thông tin và duyệt trong vòng <strong>24 giờ làm việc</strong>.
+                            </p>
+
+                            <!-- BẢNG TÓM TẮT THÔNG TIN HỒ SƠ -->
+                            <div style="background: #FAF8F5; border: 1.5px solid #E5DFD5; border-radius: 14px; padding: 20px 24px; max-width: 540px; margin: 0 auto 24px; text-align: left; font-size: 13.5px;">
+                                <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #E5DFD5;">
+                                    <span style="color: #78716C;">Tài khoản Quản lý:</span>
+                                    <strong style="color: #8C4A27;" th:text="'@' + ${submittedUser != null ? submittedUser.username : ''}">@username</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #E5DFD5;">
+                                    <span style="color: #78716C;">Chủ quầy / Đại diện:</span>
+                                    <strong th:text="${submittedReg.ownerName}">Họ và Tên</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #E5DFD5;">
+                                    <span style="color: #78716C;">Hotline quầy:</span>
+                                    <strong th:text="${submittedReg.phone}">0901234567</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #E5DFD5;">
+                                    <span style="color: #78716C;">Địa chỉ:</span>
+                                    <strong th:text="${submittedReg.address + ', ' + submittedReg.district + ', TP.HCM'}">Địa chỉ</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                                    <span style="color: #78716C;">Trạng thái:</span>
+                                    <span class="badge bg-warning text-dark px-2 py-1" style="font-weight: 700;">ĐANG CHỜ XÉT DUYỆT</span>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+                                <a th:href="@{/login}" class="btn-submit-registration" style="text-decoration: none;">
+                                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Đăng Nhập Quản Lý
+                                </a>
+                                <a th:href="@{/}" class="btn-submit-registration" style="text-decoration: none; background: #57534E;">
+                                    <i class="fa-solid fa-house"></i> Về Trang Mua Sắm
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. FORM ĐIỀN ĐĂNG KÝ (HIỂN THỊ KHI CHƯA SUBMIT) -->
+                    <div class="seller-form-card" th:if="${submittedReg == null}">
                         <form th:action="@{/seller/register}" method="post" enctype="multipart/form-data" th:object="${form}" id="sellerApplyForm">
 
                             <!-- KHỐI 1: TẠO TÀI KHOẢN QUẢN LÝ CỬA HÀNG RIÊNG BIỆT (TÁCH BIỆT TÀI KHOẢN USER) -->
