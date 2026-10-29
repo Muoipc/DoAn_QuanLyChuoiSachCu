@@ -114,6 +114,15 @@
                                             <i class="fa-solid fa-key"></i>
                                         </button>
                                     </form>
+
+                                    <!-- Nút Xóa Tài Khoản (Admin chỉ xóa nếu không phải chính mình) -->
+                                    <form th:if="${u.role.name != 'ROLE_ADMIN'}" th:action="@{/admin/users/{id}/delete(id=${u.id})}" method="post" class="d-inline"
+                                          th:data-uname="${u.username}"
+                                          onsubmit="return confirm('CẢNH BÁO: Bạn có chắc chắn muốn XÓA VĨNH VIỄN tài khoản @' + this.getAttribute('data-uname') + ' khỏi hệ thống? Hành động này không thể hoàn tác!');">
+                                        <button type="submit" class="icon-action-btn btn-delete text-danger" title="Xóa vĩnh viễn tài khoản">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

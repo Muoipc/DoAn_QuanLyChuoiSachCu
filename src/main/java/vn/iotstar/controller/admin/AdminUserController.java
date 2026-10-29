@@ -29,6 +29,9 @@ public class AdminUserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private vn.iotstar.service.IUserService userService;
+
     /**
      * Danh sách tài khoản người dùng và phân quyền (CHỈ DÀNH RIÊNG CHO QUẢN TRỊ VIÊN - ADMIN)
      */
@@ -193,6 +196,40 @@ public class AdminUserController {
             redirect.addFlashAttribute("successMessage", "Đã đặt lại mật khẩu cho tài khoản '" + user.getUsername() + "' về mặc định (123456)!");
         } catch (Exception e) {
             redirect.addFlashAttribute("errorMessage", "Lỗi reset mật khẩu: " + e.getMessage());
+        }
+
+        return "redirect:/admin/users";
+    }
+
+    /**
+     * Xóa tài khoản người dùng
+     * POST /admin/users/{id}/delete
+     */
+    @PostMapping("/{id}/delete")
+    public String deleteUser(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect
+    ) {
+        if (userDetails == null || !"ROLE_ADMIN".equals(userDetails.getRoleName())) {
+            redirect.addFlashAttribute("errorMessage", "Chỉ Quản trị viên (Admin) mới có quyền xóa tài khoản người dùng!");
+            return "redirect:/admin";
+        }
+
+        if (userDetails.getId().equals(id)) {
+            redirect.addFlashAttribute("errorMessage", "Bạn không thể tự xóa tài khoản Quản trị viên đang đăng nhập!");
+            return "redirect:/admin/users";
+        }
+
+        try {
+            User user = userRepository.findById(id).orElse(null);
+            String username = user != null ? user.getUsername() : String.valueOf(id);
+            userService.deleteUserById(id);
+            redirect.addFlashAttribute("successMessage", "Đã xóa vĩnh viễn tài khoản '@" + username + "' khỏi hệ thống thành công!");
+        } catch (IllegalStateException e) {
+            redirect.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            redirect.addFlashAttribute("errorMessage", "Không thể xóa người dùng: " + e.getMessage());
         }
 
         return "redirect:/admin/users";

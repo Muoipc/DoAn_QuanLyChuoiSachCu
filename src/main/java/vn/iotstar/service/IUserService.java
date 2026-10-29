@@ -18,4 +18,5 @@ public interface IUserService {
     void requestForgotPassword(String email);
     boolean resetPassword(String email, String otpCode, String newPassword);
     Optional<User> findByUsernameOrEmail(String usernameOrEmail);
+    void deleteUserById(Long userId);
 }
