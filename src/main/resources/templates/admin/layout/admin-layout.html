@@ -986,6 +986,69 @@
             transform: translateY(-2px) rotate(45deg);
             box-shadow: 0 4px 12px var(--rebook-leather-glow) !important;
         }
+        /* Nút icon tròn chuông thông báo Apple Liquid Glass */
+        .header-bell-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50% !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid var(--rebook-border) !important;
+            color: #57534E !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(45, 24, 15, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 0 !important;
+            cursor: pointer;
+            position: relative;
+        }
+        .header-bell-btn:hover {
+            background: #FFFFFF !important;
+            border-color: var(--rebook-leather) !important;
+            color: var(--rebook-leather) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px var(--rebook-leather-glow);
+        }
+
+        /* Badge thông báo đỏ cam Apple Liquid Glass - tròn trịa, số căn giữa tuyệt đối */
+        .header-bell-badge {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            min-width: 19px;
+            height: 19px;
+            padding: 0 5px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #EE4D2D 0%, #D03B1C 100%);
+            color: #FFFFFF;
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 2px 8px rgba(208, 59, 28, 0.45);
+            pointer-events: none;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            letter-spacing: -0.2px;
+            box-sizing: border-box;
+        }
+
+        /* Sidebar Badge tinh tế */
+        .sidebar-badge-pill {
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #EE4D2D 0%, #D03B1C 100%);
+            color: #FFFFFF;
+            box-shadow: 0 2px 6px rgba(238, 77, 45, 0.35);
+        }
     </style>
 </head>
 <body>
@@ -1111,7 +1174,7 @@
                     <a th:href="@{/admin/consignments}">
                         <i class="fa-solid fa-hand-holding-dollar"></i>
                         <span>Thẩm Định Ký Gửi</span>
-                        <span class="badge bg-danger rounded-pill ms-auto" id="sidebarConsignmentBadge"
+                        <span class="sidebar-badge-pill ms-auto" id="sidebarConsignmentBadge"
                               th:if="${pendingConsignmentCount != null and pendingConsignmentCount > 0}"
                               th:text="${pendingConsignmentCount}">0</span>
                     </a>
@@ -1201,11 +1264,11 @@
             <div class="d-flex align-items-center gap-3">
                 <!-- Chuông thông báo WebSocket STOMP & Hệ thống -->
                 <div class="dropdown">
-                    <button class="btn glass-btn position-relative rounded-pill px-3 py-2" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Thông báo hệ thống">
-                        <i class="fa-solid fa-bell text-secondary"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light"
+                    <button class="header-bell-btn" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Thông báo hệ thống">
+                        <i class="fa-solid fa-bell fs-6"></i>
+                        <span class="header-bell-badge"
                               id="notifBadge"
-                              th:style="${unreadNotifCount != null and unreadNotifCount > 0} ? 'display:inline-block; font-size:10px;' : 'display:none; font-size:10px;'"
+                              th:style="${unreadNotifCount != null and unreadNotifCount > 0} ? 'display:inline-flex;' : 'display:none;'"
                               th:text="${unreadNotifCount != null ? unreadNotifCount : 0}">0</span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end glass-dropdown-menu shadow-lg border-0 p-3 mt-2" aria-labelledby="notifDropdown" style="width: 350px; max-height: 480px; overflow-y: auto;">
@@ -1445,7 +1508,7 @@
             if (badge) {
                 let current = parseInt(badge.textContent || '0') + 1;
                 badge.textContent = current;
-                badge.style.display = 'inline-block';
+                badge.style.display = 'inline-flex';
                 if (unreadDisplay) unreadDisplay.textContent = current;
             }
 
@@ -1534,7 +1597,7 @@
             if (badge) {
                 let current = parseInt(badge.textContent || '0') + 1;
                 badge.textContent = current;
-                badge.style.display = 'inline-block';
+                badge.style.display = 'inline-flex';
                 if (unreadDisplay) unreadDisplay.textContent = current;
             }
 
