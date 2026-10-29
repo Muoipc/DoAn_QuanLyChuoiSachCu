@@ -122,10 +122,19 @@
             outline: none !important;
         }
 
+        .glass-card:has(.rebook-admin-dropdown) {
+            overflow: visible !important;
+            z-index: 1050 !important;
+        }
+
         /* ReBook Custom Admin Dropdown (Apple Liquid Glass) */
         .rebook-admin-dropdown {
             position: relative;
             width: 100%;
+            z-index: 100;
+        }
+        .rebook-admin-dropdown.open {
+            z-index: 99999 !important;
         }
         .rebook-dropdown-trigger {
             width: 100%;
@@ -192,11 +201,11 @@
             border: 1.5px solid #E8E2D8;
             border-radius: 16px;
             padding: 6px;
-            box-shadow: 0 16px 36px -4px rgba(45, 24, 15, 0.16), 0 4px 12px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 48px -4px rgba(45, 24, 15, 0.22), 0 8px 16px rgba(0, 0, 0, 0.06);
             display: none;
             flex-direction: column;
             gap: 2px;
-            z-index: 1050;
+            z-index: 99999 !important;
             max-height: 280px;
             overflow-y: auto;
             animation: dropdownFadeIn 0.18s var(--spring-bounce);
@@ -495,9 +504,9 @@
     </div>
 
     <!-- 3. FILTER BAR LIQUID GLASS -->
-    <div class="glass-card mb-4">
-        <div class="p-3 p-md-4">
-            <form th:action="@{/admin/orders}" method="get" class="row g-3 align-items-center">
+    <div class="glass-card mb-4" style="overflow: visible !important; position: relative; z-index: 1050;">
+        <div class="p-3 p-md-4" style="overflow: visible !important;">
+            <form th:action="@{/admin/orders}" method="get" class="row g-3 align-items-center" style="overflow: visible !important;">
                 <input type="hidden" name="status" th:if="${selectedStatus != null}" th:value="${selectedStatus}">
                 
                 <!-- Tìm kiếm theo mã đơn / Tên / SĐT -->
