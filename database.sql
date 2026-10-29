@@ -346,7 +346,7 @@ INSERT INTO addresses (id, user_id, receiver_name, phone, province, district, wa
 
 -- 4. Nạp 5 chi nhánh chuỗi cửa hàng sách cũ tại TP. Hồ Chí Minh
 INSERT INTO stores (id, manager_id, store_name, slug, phone, email, address, province, district, open_time, close_time, image, is_active) VALUES
-(1, 2, 'Chi Nhánh 1: Thủ Đức (Gần HCMUTE)', 'chi-nhanh-thu-duc', '02837221223', 'thuduc@oldbookstore.vn', 'Số 48 Võ Văn Ngân, Phường Linh Chiểu', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', '08:00', '21:30', 'https://images.unsplash.com/photo-1507842229451-7f01be777a26?w=800', TRUE),
+(1, 2, 'Chi Nhánh 1: Thủ Đức (Gần HCMUTE)', 'chi-nhanh-thu-duc', '02837221223', 'thuduc@oldbookstore.vn', 'Số 48 Võ Văn Ngân, Phường Linh Chiểu', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', '08:00', '21:30', '/images/store-thuduc.jpg', TRUE),
 (2, 3, 'Chi Nhánh 2: Đường Sách Quận 1', 'chi-nhanh-quan-1', '02838229988', 'quan1@oldbookstore.vn', 'Đường Sách Nguyễn Văn Bình, Phường Bến Nghé', 'TP. Hồ Chí Minh', 'Quận 1', '08:30', '22:00', 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800', TRUE),
 (3, NULL, 'Chi Nhánh 3: Làng Đại Học Quốc Gia', 'chi-nhanh-lang-dai-hoc', '02837244555', 'langdaihoc@oldbookstore.vn', 'Khu Đô Thị ĐHQG-HCM, Phường Linh Trung', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', '07:30', '21:30', 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800', TRUE),
 (4, NULL, 'Chi Nhánh 4: Phố Sách Cũ Phú Nhuận', 'chi-nhanh-phu-nhuan', '02838447766', 'phunhuan@oldbookstore.vn', 'Số 120 Trần Huy Liệu, Phường 15', 'TP. Hồ Chí Minh', 'Quận Phú Nhuận', '08:00', '21:00', 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800', TRUE),
