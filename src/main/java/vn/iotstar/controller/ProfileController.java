@@ -117,6 +117,7 @@ public class ProfileController {
         int totalConsignments = consignmentRepository.findByUserIdOrderByCreatedAtDesc(userId).size();
 
         // Danh sách phiếu hỗ trợ khiếu nại của khách hàng
+        try { supportTicketRepository.deleteChatLogsFromTickets(); } catch (Exception ignored) {}
         List<vn.iotstar.entity.SupportTicket> userTickets = (user.getEmail() != null && !user.getEmail().isBlank())
                 ? supportTicketRepository.findByEmailOrderByCreatedAtDesc(user.getEmail())
                 : java.util.Collections.emptyList();
