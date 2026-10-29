@@ -324,11 +324,31 @@
             color: white;
             transform: scale(1.08);
         }
-        .cat-card-title {
-            font-size: 13.5px;
+        .help-cat-card.active {
+            background: #ffffff;
+            border-color: var(--color-book-primary);
+            box-shadow: 0 14px 32px rgba(140, 74, 39, 0.22);
+            transform: translateY(-4px);
+        }
+        .help-cat-card.active .cat-icon-circle {
+            background: var(--color-book-primary);
+            color: white;
+            transform: scale(1.08);
+        }
+        .help-cat-card.active .cat-card-title {
+            color: var(--color-book-primary);
+            font-weight: 800;
+        }
+        .faq-badge {
+            display: inline-block;
+            font-size: 11px;
             font-weight: 700;
-            color: var(--color-text-main);
-            line-height: 1.35;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            background: #f5efe6;
+            color: #8C4A27;
+            margin-right: 10px;
+            vertical-align: middle;
         }
 
         /* FAQ ACCORDION (APPLE LIQUID GLASS) */
@@ -495,12 +515,13 @@
         <div class="container-help">
             <h1 class="hero-title-main">Xin chào, Chuỗi Sách Cũ có thể giúp gì cho bạn?</h1>
             
-            <form action="/help" method="get" class="help-search-container">
+            <form action="/help" method="get" class="help-search-container" onsubmit="event.preventDefault(); liveSearchFaq(this.querySelector('input').value);">
                 <div class="help-search-box">
                     <input type="text" name="q" th:value="${searchKeyword}" 
                            class="help-search-input" 
+                           oninput="liveSearchFaq(this.value)"
                            placeholder="Nhập từ khóa câu hỏi (ví dụ: đổi trả, kiểm định 95%, phí ship, nhận tại shop, ký gửi...)">
-                    <button type="submit" class="btn-help-search">
+                    <button type="button" onclick="liveSearchFaq(this.form.querySelector('input').value)" class="btn-help-search">
                         <i class="fa-solid fa-magnifying-glass me-1"></i> Tìm Kiếm
                     </button>
                 </div>
@@ -535,59 +556,78 @@
             </div>
         </div>
 
-        <!-- 6. LƯỚI 6 DANH MỤC TRỢ GIÚP CHUẨN SHOPEE HELP CENTER -->
+        <!-- 6. LƯỚI 6 DANH MỤC TRỢ GIÚP CHUẨN SHOPEE HELP CENTER (CLICK ĐỂ LỌC CÂU HỎI TƯƠNG ỨNG) -->
         <div class="section-heading-row">
             <h2 class="section-title"><i class="fa-solid fa-shapes text-warning"></i> Danh Mục Trợ Giúp</h2>
         </div>
 
         <div class="help-categories-grid">
             <!-- 1. Mua Sắm -->
-            <div class="help-cat-card" onclick="scrollToFaq()">
+            <div class="help-cat-card" data-category="cat-shopping" onclick="filterCategory('cat-shopping', this)">
                 <div class="cat-icon-circle"><i class="fa-solid fa-bag-shopping"></i></div>
                 <div class="cat-card-title">Mua Sắm Cùng Chuỗi</div>
             </div>
 
             <!-- 2. Khuyến Mãi -->
-            <div class="help-cat-card" onclick="scrollToFaq()">
+            <div class="help-cat-card" data-category="cat-voucher" onclick="filterCategory('cat-voucher', this)">
                 <div class="cat-icon-circle"><i class="fa-solid fa-ticket"></i></div>
                 <div class="cat-card-title">Khuyến Mãi &amp; Voucher</div>
             </div>
 
             <!-- 3. Thanh Toán -->
-            <div class="help-cat-card" onclick="scrollToFaq()">
+            <div class="help-cat-card" data-category="cat-payment" onclick="filterCategory('cat-payment', this)">
                 <div class="cat-icon-circle"><i class="fa-solid fa-credit-card"></i></div>
                 <div class="cat-card-title">Thanh Toán &amp; VNPay</div>
             </div>
 
             <!-- 4. Vận Chuyển -->
-            <div class="help-cat-card" onclick="scrollToFaq()">
+            <div class="help-cat-card" data-category="cat-shipping" onclick="filterCategory('cat-shipping', this)">
                 <div class="cat-icon-circle"><i class="fa-solid fa-truck-fast"></i></div>
                 <div class="cat-card-title">Đơn Hàng &amp; Giao Nhận</div>
             </div>
 
             <!-- 5. Đổi Trả -->
-            <div class="help-cat-card" onclick="scrollToFaq()">
+            <div class="help-cat-card" data-category="cat-return" onclick="filterCategory('cat-return', this)">
                 <div class="cat-icon-circle"><i class="fa-solid fa-rotate-left"></i></div>
                 <div class="cat-card-title">Trả Hàng &amp; Hoàn Tiền</div>
             </div>
 
             <!-- 6. Ký Gửi -->
-            <div class="help-cat-card" onclick="scrollToFaq()">
+            <div class="help-cat-card" data-category="cat-consignment" onclick="filterCategory('cat-consignment', this)">
                 <div class="cat-icon-circle"><i class="fa-solid fa-recycle"></i></div>
                 <div class="cat-card-title">Ký Gửi &amp; Thu Mua Sách</div>
             </div>
         </div>
 
         <!-- 7. CÂU HỎI THƯỜNG GẶP (FAQ ACCORDION) -->
-        <div class="section-heading-row" id="faq-section">
-            <h2 class="section-title"><i class="fa-solid fa-circle-question text-danger"></i> Câu Hỏi Thường Gặp</h2>
+        <div class="section-heading-row" id="faq-section" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <h2 class="section-title" style="margin:0;"><i class="fa-solid fa-circle-question text-danger"></i> Câu Hỏi Thường Gặp</h2>
+                <span id="faqFilterTitle" style="font-size:13.5px; font-weight:600; color:#78716C;">(Hiển thị tất cả câu hỏi)</span>
+            </div>
+            <button id="resetFaqFilterBtn" onclick="resetCategoryFilter()" style="display:none; align-items:center; gap:6px; background:#FAF8F5; border:1px solid #D6D3D1; color:#78716C; padding:6px 14px; border-radius:9999px; font-size:13px; font-weight:700; cursor:pointer;">
+                <i class="fa-solid fa-rotate-left"></i> Xem tất cả câu hỏi
+            </button>
+        </div>
+
+        <!-- KHỐI BÁO RỖNG KHI TÌM KIẾM KHÔNG THẤY -->
+        <div id="faqNoResult" style="display:none; background:rgba(255,255,255,0.85); border-radius:18px; padding:32px; text-align:center; border:1.5px dashed #D6D3D1; margin-bottom:28px;">
+            <i class="fa-solid fa-magnifying-glass text-muted" style="font-size:36px; margin-bottom:12px;"></i>
+            <h4 style="font-size:16px; font-weight:800; color:#44403C; margin-bottom:6px;">Không tìm thấy câu hỏi phù hợp</h4>
+            <p style="font-size:13.5px; color:#78716C; margin-bottom:16px;">Vui lòng thử từ khóa khác, hoặc kết nối ngay với Trợ lý AI và gửi phiếu yêu cầu bên dưới để được giải đáp tức thì.</p>
+            <a th:href="@{/ai-assistant}" style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, #8C4A27, #6B3416); color:#fff; padding:10px 22px; border-radius:9999px; font-weight:700; font-size:13.5px; text-decoration:none;">
+                <i class="fa-solid fa-robot"></i> Chat với Trợ lý AI
+            </a>
         </div>
 
         <div class="faq-accordion-card faq-card help-content-card">
-            <!-- FAQ 1 -->
-            <div class="faq-item active">
+            <!-- 1. MUA SẮM: FAQ 1 -->
+            <div class="faq-item cat-shopping active">
                 <button class="faq-question-btn" onclick="toggleFaq(this)">
-                    <span>1. Làm sao để tôi biết một cuốn sách cũ còn hàng ở chi nhánh nào trong 5 chi nhánh TP.HCM?</span>
+                    <span>
+                        <span class="faq-badge">Mua Sắm</span>
+                        1. Làm sao để tôi biết một cuốn sách cũ còn hàng ở chi nhánh nào trong 5 chi nhánh TP.HCM?
+                    </span>
                     <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
                 </button>
                 <div class="faq-answer-panel">
@@ -595,10 +635,13 @@
                 </div>
             </div>
 
-            <!-- FAQ 2 -->
-            <div class="faq-item">
+            <!-- 1. MUA SẮM: FAQ 2 -->
+            <div class="faq-item cat-shopping">
                 <button class="faq-question-btn" onclick="toggleFaq(this)">
-                    <span>2. Thế nào là sách cũ độ mới 95%, 90% và 85% theo tiêu chuẩn của Chuỗi?</span>
+                    <span>
+                        <span class="faq-badge">Mua Sắm</span>
+                        2. Thế nào là sách cũ độ mới 95%, 90% và 85% theo tiêu chuẩn của Chuỗi?
+                    </span>
                     <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
                 </button>
                 <div class="faq-answer-panel">
@@ -611,10 +654,46 @@
                 </div>
             </div>
 
-            <!-- FAQ 3 -->
-            <div class="faq-item">
+            <!-- 2. KHUYẾN MÃI: FAQ 3 -->
+            <div class="faq-item cat-voucher">
                 <button class="faq-question-btn" onclick="toggleFaq(this)">
-                    <span>3. Tôi có được mở gói sách kiểm tra trước khi thanh toán tiền cho Shipper không?</span>
+                    <span>
+                        <span class="faq-badge">Khuyến Mãi</span>
+                        3. Làm sao để áp dụng mã giảm giá và voucher miễn phí vận chuyển (Freeship)?
+                    </span>
+                    <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
+                </button>
+                <div class="faq-answer-panel">
+                    Tại trang Giỏ hàng (<a th:href="@{/cart}" style="color:var(--color-book-primary); font-weight:700;">/cart</a>) hoặc trang Thanh toán (<a th:href="@{/checkout}" style="color:var(--color-book-primary); font-weight:700;">/checkout</a>), bạn sẽ thấy danh sách các voucher khuyến mãi hiện có. Bạn chỉ cần bấm <strong>"Áp Dụng"</strong>, hệ thống sẽ tự động trừ trực tiếp số tiền giảm giá hoặc giảm phí vận chuyển vào hóa đơn thanh toán của bạn.
+                </div>
+            </div>
+
+            <!-- 3. THANH TOÁN: FAQ 4 -->
+            <div class="faq-item cat-payment">
+                <button class="faq-question-btn" onclick="toggleFaq(this)">
+                    <span>
+                        <span class="faq-badge">Thanh Toán</span>
+                        4. Chuỗi Sách Cũ hỗ trợ những hình thức thanh toán nào?
+                    </span>
+                    <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
+                </button>
+                <div class="faq-answer-panel">
+                    Hệ thống tích hợp 3 phương thức thanh toán an toàn và tiện lợi:
+                    <ul style="margin: 8px 0 8px 20px;">
+                        <li><strong>Thanh toán tiền mặt khi nhận hàng (COD):</strong> Quý khách thanh toán cho nhân viên giao hàng sau khi đã kiểm tra sách.</li>
+                        <li><strong>Cổng thanh toán điện tử VNPay (Sandbox):</strong> Thanh toán tức thời qua ứng dụng ngân hàng hoặc ví VNPAY.</li>
+                        <li><strong>Chuyển khoản ngân hàng VietQR 24/7:</strong> Quét mã QR thanh toán nhanh có ghi chú tự động mã đơn hàng.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4. GIAO NHẬN: FAQ 5 -->
+            <div class="faq-item cat-shipping">
+                <button class="faq-question-btn" onclick="toggleFaq(this)">
+                    <span>
+                        <span class="faq-badge">Giao Nhận</span>
+                        5. Tôi có được mở gói sách kiểm tra trước khi thanh toán tiền cho Shipper không?
+                    </span>
                     <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
                 </button>
                 <div class="faq-answer-panel">
@@ -622,10 +701,13 @@
                 </div>
             </div>
 
-            <!-- FAQ 4 -->
-            <div class="faq-item">
+            <!-- 4. GIAO NHẬN: FAQ 6 -->
+            <div class="faq-item cat-shipping">
                 <button class="faq-question-btn" onclick="toggleFaq(this)">
-                    <span>4. Tôi muốn đến nhận sách trực tiếp tại chi nhánh Thủ Đức (gần ĐH SPKT HCMUTE) thì làm thế nào?</span>
+                    <span>
+                        <span class="faq-badge">Giao Nhận</span>
+                        6. Tôi muốn đến nhận sách trực tiếp tại chi nhánh Thủ Đức (gần ĐH SPKT HCMUTE) thì làm thế nào?
+                    </span>
                     <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
                 </button>
                 <div class="faq-answer-panel">
@@ -633,10 +715,13 @@
                 </div>
             </div>
 
-            <!-- FAQ 5 -->
-            <div class="faq-item">
+            <!-- 6. KÝ GỬI: FAQ 7 -->
+            <div class="faq-item cat-consignment">
                 <button class="faq-question-btn" onclick="toggleFaq(this)">
-                    <span>5. Quy trình Ký gửi hoặc Bán lại sách cũ cho Chuỗi diễn ra như thế nào?</span>
+                    <span>
+                        <span class="faq-badge">Ký Gửi</span>
+                        7. Quy trình Ký gửi hoặc Bán lại sách cũ cho Chuỗi diễn ra như thế nào?
+                    </span>
                     <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
                 </button>
                 <div class="faq-answer-panel">
@@ -644,10 +729,13 @@
                 </div>
             </div>
 
-            <!-- FAQ 6 -->
-            <div class="faq-item">
+            <!-- 5. ĐỔI TRẢ: FAQ 8 -->
+            <div class="faq-item cat-return">
                 <button class="faq-question-btn" onclick="toggleFaq(this)">
-                    <span>6. Chính sách bảo hành và đổi trả sách nếu phát hiện lỗi hoặc sai mô tả?</span>
+                    <span>
+                        <span class="faq-badge">Đổi Trả</span>
+                        8. Chính sách bảo hành và đổi trả sách nếu phát hiện lỗi hoặc sai mô tả?
+                    </span>
                     <i class="fa-solid fa-chevron-down faq-toggle-icon"></i>
                 </button>
                 <div class="faq-answer-panel">
@@ -775,15 +863,116 @@
         }
 
         function scrollToFaq() {
-            document.getElementById('faq-section').scrollIntoView({ behavior: 'smooth' });
+            const el = document.getElementById('faq-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function filterCategory(cat, card) {
+            const allCards = document.querySelectorAll('.help-cat-card');
+            const items = document.querySelectorAll('.faq-item');
+            const filterTitle = document.getElementById('faqFilterTitle');
+            const resetBtn = document.getElementById('resetFaqFilterBtn');
+            const noResult = document.getElementById('faqNoResult');
+
+            if (card && card.classList.contains('active')) {
+                // Click lại category đang chọn -> Bỏ lọc, hiện tất cả
+                allCards.forEach(function(c) { c.classList.remove('active'); });
+                items.forEach(function(it) { it.style.display = 'block'; });
+                if (filterTitle) filterTitle.innerText = '(Hiển thị tất cả 8 câu hỏi)';
+                if (resetBtn) resetBtn.style.display = 'none';
+                if (noResult) noResult.style.display = 'none';
+                return;
+            }
+
+            allCards.forEach(function(c) { c.classList.remove('active'); });
+            if (card) card.classList.add('active');
+
+            let visibleCount = 0;
+            let firstItem = null;
+
+            items.forEach(function(it) {
+                if (cat === 'all' || it.classList.contains(cat)) {
+                    it.style.display = 'block';
+                    visibleCount++;
+                    if (!firstItem) firstItem = it;
+                } else {
+                    it.style.display = 'none';
+                }
+            });
+
+            if (filterTitle) {
+                const catName = card ? card.querySelector('.cat-card-title').innerText : 'Tất cả';
+                filterTitle.innerText = '(Danh mục: ' + catName + ' - ' + visibleCount + ' câu hỏi)';
+            }
+            if (resetBtn) {
+                resetBtn.style.display = (cat === 'all') ? 'none' : 'inline-flex';
+            }
+            if (noResult) {
+                noResult.style.display = (visibleCount === 0) ? 'block' : 'none';
+            }
+
+            if (firstItem) {
+                firstItem.classList.add('active');
+            }
+
+            const faqSec = document.getElementById('faq-section');
+            if (faqSec) faqSec.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetCategoryFilter() {
+            filterCategory('all', null);
+            document.querySelectorAll('.help-cat-card').forEach(function(c) { c.classList.remove('active'); });
+            const input = document.querySelector('.help-search-input');
+            if (input) input.value = '';
+        }
+
+        function liveSearchFaq(query) {
+            const q = (query || '').toLowerCase().trim();
+            const items = document.querySelectorAll('.faq-item');
+            const noResult = document.getElementById('faqNoResult');
+            const filterTitle = document.getElementById('faqFilterTitle');
+            const resetBtn = document.getElementById('resetFaqFilterBtn');
+            let matchCount = 0;
+
+            document.querySelectorAll('.help-cat-card').forEach(function(c) { c.classList.remove('active'); });
+
+            const terms = q.split(/\s+/).filter(function(t) { return t.length > 0; });
+
+            items.forEach(function(it) {
+                const text = it.innerText.toLowerCase();
+                let matched = true;
+                if (terms.length > 0) {
+                    matched = terms.every(function(t) { return text.includes(t); });
+                }
+                if (matched) {
+                    it.style.display = 'block';
+                    matchCount++;
+                    if (q) it.classList.add('active'); // Tự động bung đáp án khi tìm kiếm
+                } else {
+                    it.style.display = 'none';
+                }
+            });
+
+            if (filterTitle) {
+                filterTitle.innerText = q ? '(Kết quả cho: "' + query + '" - ' + matchCount + ' câu hỏi)' : '(Hiển thị tất cả câu hỏi)';
+            }
+            if (resetBtn) {
+                resetBtn.style.display = q ? 'inline-flex' : 'none';
+            }
+            if (noResult) {
+                noResult.style.display = (matchCount === 0) ? 'block' : 'none';
+            }
+
+            const faqSec = document.getElementById('faq-section');
+            if (faqSec && q.length > 2) faqSec.scrollIntoView({ behavior: 'smooth' });
         }
 
         function quickSearch(tag) {
             const input = document.querySelector('.help-search-input');
             if (input) {
                 input.value = tag;
-                input.form.submit();
             }
+            liveSearchFaq(tag);
         }
     </script>
     <script src="/js/cart-popover.js"></script>
