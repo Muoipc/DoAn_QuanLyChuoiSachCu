@@ -101,16 +101,20 @@
                                 </span>
                             </td>
                             <td class="text-end pe-3">
-                                <div class="d-inline-flex gap-1">
+                                <div class="d-inline-flex gap-1 align-items-center">
                                     <!-- NÚT PHẢN HỒI (MỞ MODAL) -->
-                                    <button type="button" class="btn btn-sm btn-outline-theme px-2"
-                                            th:onclick="'openReplyModal(' + ${t.id} + ', \'' + ${#strings.escapeJavaScript(t.fullName)} + '\', \'' + ${#strings.escapeJavaScript(t.message)} + '\')'"
-                                            title="Phản hồi phiếu hỗ trợ">
-                                        <i class="fa-solid fa-reply"></i>
+                                    <button type="button" class="btn btn-sm btn-theme px-3 py-1 fw-semibold"
+                                            th:data-id="${t.id}"
+                                            th:data-name="${t.fullName}"
+                                            th:data-msg="${t.message}"
+                                            th:data-reply="${t.adminReply != null ? t.adminReply : ''}"
+                                            onclick="openReplyModalFromBtn(this)"
+                                            title="Phản hồi và xử lý phiếu hỗ trợ">
+                                        <i class="fa-solid fa-reply me-1"></i>Xử lý
                                     </button>
                                     <!-- NÚT XÓA -->
                                     <form th:action="@{/admin/support-tickets/{id}/delete(id=${t.id})}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa phiếu hỗ trợ này?');" style="display:inline;">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger px-2" title="Xóa">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger px-2 py-1" title="Xóa">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </button>
                                     </form>
@@ -155,11 +159,18 @@
     </div>
 
     <script>
-        function openReplyModal(id, customerName, message) {
+        function openReplyModalFromBtn(btn) {
+            var id = btn.getAttribute('data-id');
+            var customerName = btn.getAttribute('data-name') || '';
+            var message = btn.getAttribute('data-msg') || '';
+            var existingReply = btn.getAttribute('data-reply') || '';
+            openReplyModal(id, customerName, message, existingReply);
+        }
+        function openReplyModal(id, customerName, message, existingReply) {
             document.getElementById('replyForm').action = '/admin/support-tickets/' + id + '/resolve';
             document.getElementById('modalCustomerName').textContent = customerName;
             document.getElementById('modalCustomerMsg').textContent = message;
-            document.getElementById('modalReplyText').value = '';
+            document.getElementById('modalReplyText').value = existingReply || '';
             var myModal = new bootstrap.Modal(document.getElementById('replyModal'));
             myModal.show();
         }
