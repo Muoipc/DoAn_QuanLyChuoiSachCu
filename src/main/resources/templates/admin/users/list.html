@@ -78,10 +78,11 @@
                             <td class="small" th:text="${u.email}">email@domain.com</td>
                             <td class="small" th:text="${u.phone != null ? u.phone : '-'}">0901234567</td>
                             <td>
-                                <span th:if="${u.role.name == 'ROLE_ADMIN'}" class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1" style="font-size: 11.5px;">ADMIN</span>
-                                <span th:if="${u.role.name == 'ROLE_MANAGER'}" class="badge rounded-pill px-2.5 py-1" style="background: rgba(140, 74, 39, 0.1); color: var(--rebook-leather); border: 1px solid rgba(140, 74, 39, 0.25); font-size: 11.5px;">MANAGER</span>
-                                <span th:if="${u.role.name == 'ROLE_SHIPPER'}" class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2.5 py-1" style="font-size: 11.5px;">SHIPPER</span>
-                                <span th:if="${u.role.name == 'ROLE_USER'}" class="badge rounded-pill bg-light text-secondary border px-2.5 py-1" style="font-size: 11.5px;">CUSTOMER</span>
+                                <span th:if="${u.role.name == 'ROLE_ADMIN'}" class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-2 py-1" style="font-size: 11.5px;">ADMIN</span>
+                                <span th:if="${u.role.name == 'ROLE_MANAGER'}" class="badge rounded-pill px-2 py-1" style="background: rgba(140, 74, 39, 0.1); color: var(--rebook-leather); border: 1px solid rgba(140, 74, 39, 0.25); font-size: 11.5px;">MANAGER</span>
+                                <span th:if="${u.role.name == 'ROLE_VENDOR'}" class="badge rounded-pill px-2 py-1" style="background: rgba(140, 74, 39, 0.1); color: var(--rebook-leather); border: 1px solid rgba(140, 74, 39, 0.25); font-size: 11.5px;">VENDOR</span>
+                                <span th:if="${u.role.name == 'ROLE_SHIPPER'}" class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1" style="font-size: 11.5px;">SHIPPER</span>
+                                <span th:if="${u.role.name == 'ROLE_USER'}" class="badge rounded-pill bg-light text-secondary border px-2 py-1" style="font-size: 11.5px;">CUSTOMER</span>
                             </td>
                             <td class="text-center">
                                 <form th:action="@{/admin/users/{id}/toggle-enabled(id=${u.id})}" method="post" style="display:inline;">
@@ -112,6 +113,17 @@
                                           onsubmit="return confirm('Đặt lại mật khẩu cho tài khoản @' + this.getAttribute('data-uname') + ' về mặc định 123456?');">
                                         <button type="submit" class="icon-action-btn btn-edit" title="Đặt lại mật khẩu về mặc định (123456)">
                                             <i class="fa-solid fa-key"></i>
+                                        </button>
+                                    </form>
+
+                                    <!-- Nút Xóa Tài Khoản -->
+                                    <form th:if="${!#strings.equalsIgnoreCase(u.username, 'admin')}"
+                                          th:action="@{/admin/users/{id}/delete(id=${u.id})}" method="post" class="d-inline"
+                                          th:data-uname="${u.username}"
+                                          th:data-fname="${u.fullName}"
+                                          onsubmit="return confirm('Bạn có chắc chắn muốn XÓA VĨNH VIỄN tài khoản ' + this.getAttribute('data-fname') + ' (@' + this.getAttribute('data-uname') + ') khỏi hệ thống?');">
+                                        <button type="submit" class="icon-action-btn btn-delete" title="Xóa tài khoản vĩnh viễn">
+                                            <i class="fa-solid fa-trash-can"></i>
                                         </button>
                                     </form>
                                 </div>

@@ -29,6 +29,9 @@ public class AdminUserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
+
     /**
      * Danh sách tài khoản người dùng và phân quyền (CHỈ DÀNH RIÊNG CHO QUẢN TRỊ VIÊN - ADMIN)
      */
@@ -193,6 +196,69 @@ public class AdminUserController {
             redirect.addFlashAttribute("successMessage", "Đã đặt lại mật khẩu cho tài khoản '" + user.getUsername() + "' về mặc định (123456)!");
         } catch (Exception e) {
             redirect.addFlashAttribute("errorMessage", "Lỗi reset mật khẩu: " + e.getMessage());
+        }
+
+        return "redirect:/admin/users";
+    }
+
+    /**
+     * Xóa vĩnh viễn tài khoản người dùng khỏi hệ thống (CHỈ DÀNH RIÊNG CHO ADMIN)
+     * POST /admin/users/{id}/delete
+     */
+    @PostMapping("/{id}/delete")
+    @org.springframework.transaction.annotation.Transactional
+    public String deleteUser(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirect
+    ) {
+        if (userDetails == null || !"ROLE_ADMIN".equals(userDetails.getRoleName())) {
+            redirect.addFlashAttribute("errorMessage", "Chỉ Quản trị viên (Admin) mới có quyền xóa tài khoản người dùng!");
+            return "redirect:/admin";
+        }
+
+        try {
+            User user = userRepository.findById(id).orElse(null);
+            if (user == null) {
+                redirect.addFlashAttribute("errorMessage", "Không tìm thấy người dùng cần xóa!");
+                return "redirect:/admin/users";
+            }
+
+            if (user.getId().equals(userDetails.getId()) || "admin".equalsIgnoreCase(user.getUsername())) {
+                redirect.addFlashAttribute("errorMessage", "Không thể xóa tài khoản Quản trị viên gốc (@" + user.getUsername() + ") đang vận hành hệ thống!");
+                return "redirect:/admin/users";
+            }
+
+            String uname = user.getUsername();
+            String fname = user.getFullName();
+
+            // Dọn dẹp các bản ghi phụ thuộc khóa ngoại trước khi xóa tài khoản
+            jdbcTemplate.update("DELETE FROM cart_items WHERE cart_id IN (SELECT id FROM carts WHERE user_id = ?)", id);
+            jdbcTemplate.update("DELETE FROM carts WHERE user_id = ?", id);
+            jdbcTemplate.update("DELETE FROM addresses WHERE user_id = ?", id);
+            jdbcTemplate.update("DELETE FROM wishlists WHERE user_id = ?", id);
+            jdbcTemplate.update("DELETE FROM viewed_books WHERE user_id = ?", id);
+            jdbcTemplate.update("DELETE FROM user_vouchers WHERE user_id = ?", id);
+            jdbcTemplate.update("DELETE FROM store_followers WHERE user_id = ?", id);
+            jdbcTemplate.update("DELETE FROM chat_messages WHERE user_id = ?", id);
+            jdbcTemplate.update("DELETE FROM notifications WHERE recipient_id = ?", id);
+            jdbcTemplate.update("DELETE FROM reviews WHERE user_id = ?", id);
+            jdbcTemplate.update("DELETE FROM reviews WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)", id);
+            jdbcTemplate.update("DELETE FROM store_registrations WHERE user_id = ?", id);
+            jdbcTemplate.update("DELETE FROM support_tickets WHERE user_id = ?", id);
+            jdbcTemplate.update("UPDATE stores SET manager_id = NULL WHERE manager_id = ?", id);
+            jdbcTemplate.update("UPDATE orders SET shipper_id = NULL WHERE shipper_id = ?", id);
+            jdbcTemplate.update("DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)", id);
+            jdbcTemplate.update("DELETE FROM orders WHERE user_id = ?", id);
+            jdbcTemplate.update("DELETE FROM book_consignments WHERE user_id = ?", id);
+            jdbcTemplate.update("UPDATE stock_transfers SET approved_by_id = NULL WHERE approved_by_id = ?", id);
+            jdbcTemplate.update("DELETE FROM stock_transfer_items WHERE stock_transfer_id IN (SELECT id FROM stock_transfers WHERE requested_by_id = ?)", id);
+            jdbcTemplate.update("DELETE FROM stock_transfers WHERE requested_by_id = ?", id);
+
+            userRepository.deleteById(id);
+            redirect.addFlashAttribute("successMessage", "Đã xóa vĩnh viễn tài khoản '" + fname + "' (@" + uname + ") khỏi hệ thống!");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("errorMessage", "Lỗi xóa tài khoản: " + e.getMessage());
         }
 
         return "redirect:/admin/users";
