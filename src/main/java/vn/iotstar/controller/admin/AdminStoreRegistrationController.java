@@ -14,7 +14,7 @@ import vn.iotstar.service.IStoreRegistrationService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/store-registrations")
+@RequestMapping({"/admin/store-registrations", "/admin/stores/registrations"})
 public class AdminStoreRegistrationController {
 
     @Autowired
