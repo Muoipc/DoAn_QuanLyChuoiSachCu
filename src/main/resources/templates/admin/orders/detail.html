@@ -392,6 +392,7 @@
                 <!-- Status Badges -->
                 <span th:if="${order.orderStatus.name() == 'NEW'}" class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-1 fw-bold">Mới đặt</span>
                 <span th:if="${order.orderStatus.name() == 'CONFIRMED'}" class="badge bg-info-subtle text-info-emphasis border border-info-subtle rounded-pill px-3 py-1 fw-bold">Đã xác nhận</span>
+                <span th:if="${order.orderStatus.name() == 'PICKED_UP'}" class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-1 fw-bold">Đã lấy hàng</span>
                 <span th:if="${order.orderStatus.name() == 'SHIPPING'}" class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-3 py-1 fw-bold">Đang giao hàng</span>
                 <span th:if="${order.orderStatus.name() == 'DELIVERED'}" class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 fw-bold">Giao thành công</span>
                 <span th:if="${order.orderStatus.name() == 'CANCELLED'}" class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1 fw-bold">Đã hủy đơn</span>
@@ -671,7 +672,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold small text-dark">Chuyển Trạng Thái Mới:</label>
                             <select name="status" class="form-select fw-semibold" style="border-radius: 12px; background: rgba(255,255,255,0.85); border: 1.5px solid rgba(226, 218, 206, 0.9);">
-                                <option th:each="st : ${allStatuses}" th:value="${st.name()}" th:text="${st.name()}" th:selected="${order.orderStatus == st}"></option>
+                                <option th:each="st : ${allStatuses}" th:value="${st.name()}" th:text="${#strings.replace(st.name(), '_', ' ')}" th:selected="${order.orderStatus == st}"></option>
                             </select>
                         </div>
                         <div class="mb-3">
