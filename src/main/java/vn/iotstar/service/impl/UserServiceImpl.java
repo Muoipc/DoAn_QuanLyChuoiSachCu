@@ -1,5 +1,6 @@
 package vn.iotstar.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,9 +9,7 @@ import vn.iotstar.entity.Cart;
 import vn.iotstar.entity.OtpToken;
 import vn.iotstar.entity.Role;
 import vn.iotstar.entity.User;
-import vn.iotstar.repository.CartRepository;
-import vn.iotstar.repository.RoleRepository;
-import vn.iotstar.repository.UserRepository;
+import vn.iotstar.repository.*;
 import vn.iotstar.service.IOtpService;
 import vn.iotstar.service.IUserService;
 
@@ -29,6 +28,42 @@ public class UserServiceImpl implements IUserService {
     private final CartRepository cartRepository;
     private final IOtpService otpService;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired(required = false)
+    private CartItemRepository cartItemRepository;
+
+    @Autowired(required = false)
+    private WishlistRepository wishlistRepository;
+
+    @Autowired(required = false)
+    private ViewedBookRepository viewedBookRepository;
+
+    @Autowired(required = false)
+    private StoreFollowerRepository storeFollowerRepository;
+
+    @Autowired(required = false)
+    private UserVoucherRepository userVoucherRepository;
+
+    @Autowired(required = false)
+    private AddressRepository addressRepository;
+
+    @Autowired(required = false)
+    private ChatMessageRepository chatMessageRepository;
+
+    @Autowired(required = false)
+    private SupportTicketRepository supportTicketRepository;
+
+    @Autowired(required = false)
+    private NotificationRepository notificationRepository;
+
+    @Autowired(required = false)
+    private OrderRepository orderRepository;
+
+    @Autowired(required = false)
+    private BookConsignmentRepository bookConsignmentRepository;
+
+    @Autowired(required = false)
+    private StoreRepository storeRepository;
 
     public UserServiceImpl(
         UserRepository userRepository,
@@ -164,8 +199,110 @@ public class UserServiceImpl implements IUserService {
     /**
      * Tìm kiếm user theo Username hoặc Email (dùng cho Spring Security)
      */
+     @Override
+     public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
+         return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+     }
+
+    /**
+     * Xóa tài khoản người dùng an toàn:
+     * - Kiểm tra các ràng buộc tài chính (Đơn hàng, Ký gửi sách, Quản lý cửa hàng).
+     * - Nếu có dữ liệu lịch sử quan trọng, ném ngoại lệ hướng dẫn Khóa tài khoản thay vì xóa cứng.
+     * - Dọn dẹp dữ liệu phụ trợ liên quan: Giỏ hàng, Yêu thích, Lịch sử xem, Đang theo dõi, Voucher, Địa chỉ, Thông báo.
+     */
     @Override
-    public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
-        return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+    @Transactional
+    public void deleteUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với ID: " + userId));
+
+        // 1. Chặn xóa nếu là Admin hệ thống
+        if (user.getRole() != null && "ROLE_ADMIN".equalsIgnoreCase(user.getRole().getName())) {
+            throw new IllegalStateException("Không được phép xóa tài khoản Quản trị viên hệ thống (Admin)!");
+        }
+
+        // 2. Chặn xóa nếu đang phụ trách làm Quản lý chi nhánh cửa hàng
+        if (storeRepository != null) {
+            boolean isManager = storeRepository.findAll().stream()
+                    .anyMatch(s -> s.getManager() != null && s.getManager().getId().equals(userId));
+            if (isManager) {
+                throw new IllegalStateException("Người dùng này đang làm Quản lý chi nhánh cửa hàng. Vui lòng bàn giao chi nhánh trước khi xóa!");
+            }
+        }
+
+        // 3. Chặn xóa nếu đã có lịch sử giao dịch mua hàng hoặc nhận giao hàng
+        if (orderRepository != null) {
+            boolean hasOrders = !orderRepository.findByUserIdOrderByCreatedAtDesc(userId, org.springframework.data.domain.Pageable.unpaged()).isEmpty();
+            if (hasOrders) {
+                throw new IllegalStateException("Tài khoản đã có lịch sử phát sinh Đơn hàng. Để bảo toàn hóa đơn và dữ liệu kế toán, vui lòng sử dụng tính năng 'Khóa tài khoản' thay vì xóa vĩnh viễn!");
+            }
+        }
+
+        // 4. Chặn xóa nếu đang có phiếu Ký gửi sách
+        if (bookConsignmentRepository != null) {
+            boolean hasConsignments = !bookConsignmentRepository.findByUserIdOrderByCreatedAtDesc(userId).isEmpty();
+            if (hasConsignments) {
+                throw new IllegalStateException("Tài khoản đang có hồ sơ Ký gửi sách cũ. Vui lòng thanh lý hoặc tất toán phiếu ký gửi trước khi xóa!");
+            }
+        }
+
+        // 5. Dọn dẹp các bảng phụ trợ độc lập (Cascade cleanup)
+        if (cartRepository != null) {
+            cartRepository.findByUserId(userId).ifPresent(cart -> {
+                if (cartItemRepository != null) {
+                    cartItemRepository.deleteByCartId(cart.getId());
+                }
+                cartRepository.delete(cart);
+            });
+        }
+
+        if (wishlistRepository != null) {
+            wishlistRepository.findAll().stream()
+                    .filter(w -> w.getUser() != null && w.getUser().getId().equals(userId))
+                    .forEach(wishlistRepository::delete);
+        }
+
+        if (viewedBookRepository != null) {
+            viewedBookRepository.findAll().stream()
+                    .filter(v -> v.getUser() != null && v.getUser().getId().equals(userId))
+                    .forEach(viewedBookRepository::delete);
+        }
+
+        if (storeFollowerRepository != null) {
+            storeFollowerRepository.findAll().stream()
+                    .filter(sf -> sf.getUser() != null && sf.getUser().getId().equals(userId))
+                    .forEach(storeFollowerRepository::delete);
+        }
+
+        if (userVoucherRepository != null) {
+            userVoucherRepository.findAll().stream()
+                    .filter(uv -> uv.getUser() != null && uv.getUser().getId().equals(userId))
+                    .forEach(userVoucherRepository::delete);
+        }
+
+        if (addressRepository != null) {
+            addressRepository.findByUserIdOrderByIsDefaultDescCreatedAtDesc(userId)
+                    .forEach(addressRepository::delete);
+        }
+
+        if (chatMessageRepository != null) {
+            chatMessageRepository.findAll().stream()
+                    .filter(m -> m.getUser() != null && m.getUser().getId().equals(userId))
+                    .forEach(chatMessageRepository::delete);
+        }
+
+        if (supportTicketRepository != null) {
+            supportTicketRepository.findByUserIdOrderByCreatedAtDesc(userId)
+                    .forEach(supportTicketRepository::delete);
+        }
+
+        if (notificationRepository != null) {
+            notificationRepository.findAll().stream()
+                    .filter(n -> n.getRecipient() != null && n.getRecipient().getId().equals(userId))
+                    .forEach(notificationRepository::delete);
+        }
+
+        // Cuối cùng: Xóa người dùng khỏi bảng users
+        userRepository.delete(user);
     }
 }

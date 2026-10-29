@@ -30,7 +30,7 @@ public class AdminUserController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
+    private vn.iotstar.service.IUserService userService;
 
     /**
      * Danh sách tài khoản người dùng và phân quyền (CHỈ DÀNH RIÊNG CHO QUẢN TRỊ VIÊN - ADMIN)
@@ -202,11 +202,10 @@ public class AdminUserController {
     }
 
     /**
-     * Xóa vĩnh viễn tài khoản người dùng khỏi hệ thống (CHỈ DÀNH RIÊNG CHO ADMIN)
+     * Xóa tài khoản người dùng
      * POST /admin/users/{id}/delete
      */
     @PostMapping("/{id}/delete")
-    @org.springframework.transaction.annotation.Transactional
     public String deleteUser(
             @PathVariable("id") Long id,
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -217,48 +216,20 @@ public class AdminUserController {
             return "redirect:/admin";
         }
 
+        if (userDetails.getId().equals(id)) {
+            redirect.addFlashAttribute("errorMessage", "Bạn không thể tự xóa tài khoản Quản trị viên đang đăng nhập!");
+            return "redirect:/admin/users";
+        }
+
         try {
             User user = userRepository.findById(id).orElse(null);
-            if (user == null) {
-                redirect.addFlashAttribute("errorMessage", "Không tìm thấy người dùng cần xóa!");
-                return "redirect:/admin/users";
-            }
-
-            if (user.getId().equals(userDetails.getId()) || "admin".equalsIgnoreCase(user.getUsername())) {
-                redirect.addFlashAttribute("errorMessage", "Không thể xóa tài khoản Quản trị viên gốc (@" + user.getUsername() + ") đang vận hành hệ thống!");
-                return "redirect:/admin/users";
-            }
-
-            String uname = user.getUsername();
-            String fname = user.getFullName();
-
-            // Dọn dẹp các bản ghi phụ thuộc khóa ngoại trước khi xóa tài khoản
-            jdbcTemplate.update("DELETE FROM cart_items WHERE cart_id IN (SELECT id FROM carts WHERE user_id = ?)", id);
-            jdbcTemplate.update("DELETE FROM carts WHERE user_id = ?", id);
-            jdbcTemplate.update("DELETE FROM addresses WHERE user_id = ?", id);
-            jdbcTemplate.update("DELETE FROM wishlists WHERE user_id = ?", id);
-            jdbcTemplate.update("DELETE FROM viewed_books WHERE user_id = ?", id);
-            jdbcTemplate.update("DELETE FROM user_vouchers WHERE user_id = ?", id);
-            jdbcTemplate.update("DELETE FROM store_followers WHERE user_id = ?", id);
-            jdbcTemplate.update("DELETE FROM chat_messages WHERE user_id = ?", id);
-            jdbcTemplate.update("DELETE FROM notifications WHERE recipient_id = ?", id);
-            jdbcTemplate.update("DELETE FROM reviews WHERE user_id = ?", id);
-            jdbcTemplate.update("DELETE FROM reviews WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)", id);
-            jdbcTemplate.update("DELETE FROM store_registrations WHERE user_id = ?", id);
-            jdbcTemplate.update("DELETE FROM support_tickets WHERE user_id = ?", id);
-            jdbcTemplate.update("UPDATE stores SET manager_id = NULL WHERE manager_id = ?", id);
-            jdbcTemplate.update("UPDATE orders SET shipper_id = NULL WHERE shipper_id = ?", id);
-            jdbcTemplate.update("DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)", id);
-            jdbcTemplate.update("DELETE FROM orders WHERE user_id = ?", id);
-            jdbcTemplate.update("DELETE FROM book_consignments WHERE user_id = ?", id);
-            jdbcTemplate.update("UPDATE stock_transfers SET approved_by_id = NULL WHERE approved_by_id = ?", id);
-            jdbcTemplate.update("DELETE FROM stock_transfer_items WHERE stock_transfer_id IN (SELECT id FROM stock_transfers WHERE requested_by_id = ?)", id);
-            jdbcTemplate.update("DELETE FROM stock_transfers WHERE requested_by_id = ?", id);
-
-            userRepository.deleteById(id);
-            redirect.addFlashAttribute("successMessage", "Đã xóa vĩnh viễn tài khoản '" + fname + "' (@" + uname + ") khỏi hệ thống!");
+            String username = user != null ? user.getUsername() : String.valueOf(id);
+            userService.deleteUserById(id);
+            redirect.addFlashAttribute("successMessage", "Đã xóa vĩnh viễn tài khoản '@" + username + "' khỏi hệ thống thành công!");
+        } catch (IllegalStateException e) {
+            redirect.addFlashAttribute("errorMessage", e.getMessage());
         } catch (Exception e) {
-            redirect.addFlashAttribute("errorMessage", "Lỗi xóa tài khoản: " + e.getMessage());
+            redirect.addFlashAttribute("errorMessage", "Không thể xóa người dùng: " + e.getMessage());
         }
 
         return "redirect:/admin/users";
