@@ -906,7 +906,7 @@
 
             <!-- Khối chỉ số 2 cột bên phải (Chuẩn Shopee image_f83f6b.png) -->
             <div class="shop-stats-grid">
-                <!-- Cột 1 -->
+                <!-- Cột 1 (Các chỉ số được xem nhiều nhất đặt lên trước) -->
                 <div class="shop-stat-col">
                     <div class="shop-stat-box">
                         <i class="fa-solid fa-box-archive stat-icon"></i>
@@ -914,9 +914,9 @@
                         <span class="stat-value" th:text="${totalBooks}">20</span>
                     </div>
                     <div class="shop-stat-box">
-                        <i class="fa-solid fa-user-plus stat-icon"></i>
-                        <span class="stat-name">Đang Theo:</span>
-                        <span class="stat-value">3</span>
+                        <i class="fa-solid fa-users stat-icon" style="color:var(--color-fire);"></i>
+                        <span class="stat-name">Người Theo Dõi:</span>
+                        <span class="stat-value" id="storeFollowersCount" style="color:var(--color-fire); font-weight:800; transition:all 0.3s;" th:text="${followersCount != null ? #numbers.formatDecimal(followersCount, 0, 'POINT', 0, 'COMMA') : '0'}">0</span>
                     </div>
                     <div class="shop-stat-box">
                         <i class="fa-regular fa-comment-dots stat-icon"></i>
@@ -936,14 +936,14 @@
                 <!-- Cột 2 -->
                 <div class="shop-stat-col">
                     <div class="shop-stat-box">
-                        <i class="fa-solid fa-users stat-icon"></i>
-                        <span class="stat-name">Người Theo Dõi:</span>
-                        <span class="stat-value" id="storeFollowersCount" th:text="${followersCount != null ? #numbers.formatDecimal(followersCount, 0, 'POINT', 0, 'COMMA') : '850'}">850</span>
-                    </div>
-                    <div class="shop-stat-box">
-                        <i class="fa-solid fa-star stat-icon"></i>
+                        <i class="fa-solid fa-star stat-icon" style="color:#f59e0b;"></i>
                         <span class="stat-name">Đánh Giá:</span>
                         <span class="stat-value">4.9 (98% Hài Lòng)</span>
+                    </div>
+                    <div class="shop-stat-box">
+                        <i class="fa-solid fa-user-plus stat-icon"></i>
+                        <span class="stat-name">Đang Theo Dõi:</span>
+                        <span class="stat-value">3</span>
                     </div>
                     <div class="shop-stat-box">
                         <i class="fa-solid fa-user-check stat-icon"></i>
@@ -1213,13 +1213,23 @@
                         var countEl = document.getElementById('storeFollowersCount');
                         if (countEl && data.followersCount !== undefined) {
                             countEl.innerText = new Intl.NumberFormat('vi-VN').format(data.followersCount);
+                            countEl.style.transform = 'scale(1.28)';
+                            setTimeout(function() {
+                                countEl.style.transform = 'scale(1.0)';
+                            }, 250);
                         }
                         if (data.followed) {
                             btn.classList.add('followed');
                             btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Đã Theo Dõi';
+                            if (typeof showLiquidToast === 'function') {
+                                showLiquidToast('Đã theo dõi cửa hàng thành công!', 'success');
+                            }
                         } else {
                             btn.classList.remove('followed');
                             btn.innerHTML = '<i class="fa-solid fa-plus me-1"></i> Theo Dõi';
+                            if (typeof showLiquidToast === 'function') {
+                                showLiquidToast('Đã hủy theo dõi cửa hàng.', 'info');
+                            }
                         }
                     } else if (data.requireLogin) {
                         window.location.href = '/login?redirectURL=' + encodeURIComponent(window.location.pathname + window.location.search);
