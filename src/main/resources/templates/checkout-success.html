@@ -278,12 +278,12 @@
                 </div>
             </div>
 
-            <!-- Khối Mã VietQR Vietcombank tùy chọn nếu đơn chưa thanh toán (ví dụ đơn COD muốn thanh toán trước) -->
-            <div th:if="${order.paymentStatus.name() != 'PAID'}" 
+            <!-- Khối Mã VietQR Vietcombank chỉ hiển thị cho đơn chọn phương thức Chuyển khoản (BANK_TRANSFER) và chưa thanh toán -->
+            <div th:if="${order.paymentStatus.name() != 'PAID' and order.paymentMethod.name() == 'BANK_TRANSFER'}"
                  style="background:#FAF8F5; border:1.5px solid #ECE7DE; border-radius:18px; padding:22px; margin:22px 0; text-align:center;">
                 <div style="display:inline-flex; align-items:center; gap:8px; background:#ECFDF5; color:#047857; font-weight:800; font-size:12.5px; padding:6px 14px; border-radius:999px; margin-bottom:14px; border:1px solid #A7F3D0;">
                     <i class="fa-solid fa-qrcode"></i>
-                    <span>THANH TOÁN TRƯỚC QUA MÃ VIETQR VIETCOMBANK (TÙY CHỌN)</span>
+                    <span>QUÉT MÃ VIETQR VIETCOMBANK ĐỂ HOÀN TẤT THANH TOÁN</span>
                 </div>
                 
                 <div style="display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:24px; margin-top:8px;">

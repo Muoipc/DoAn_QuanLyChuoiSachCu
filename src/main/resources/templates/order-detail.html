@@ -758,8 +758,8 @@
                 </span>
             </div>
 
-            <!-- Khối Quét Mã VietQR cho đơn chưa thanh toán -->
-            <div th:if="${order.paymentStatus.name() != 'PAID' and order.orderStatus.name() != 'CANCELLED'}"
+            <!-- Khối Quét Mã VietQR cho đơn chọn chuyển khoản nhưng chưa thanh toán -->
+            <div th:if="${order.paymentStatus.name() != 'PAID' and order.orderStatus.name() != 'CANCELLED' and order.paymentMethod != null and order.paymentMethod.name() == 'BANK_TRANSFER'}"
                  style="background:#FAF8F5; border:1px solid #ECE7DE; border-radius:12px; padding:16px; margin-top:16px;">
                 <div style="font-weight:700; color:#1C1917; font-size:13px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
                     <i class="fa-solid fa-qrcode text-success"></i> Quét mã VietQR chuyển khoản (Vietcombank):
