@@ -375,7 +375,9 @@ public class CheckoutController {
             }
 
             // Nếu chọn thanh toán trực tuyến qua VNPay Sandbox
-            if (paymentMethod == Order.PaymentMethod.VNPAY) {
+            if (paymentMethod == Order.PaymentMethod.VNPAY
+                    || paymentMethod == Order.PaymentMethod.BANK_TRANSFER
+                    || paymentMethod == Order.PaymentMethod.MOMO) {
                 return "redirect:/checkout/vnpay-sandbox?orderCode=" + order.getOrderCode();
             }
 

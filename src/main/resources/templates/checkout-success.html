@@ -97,8 +97,22 @@
             padding: 8px 22px;
             border-radius: 9999px;
             border: 1.5px solid rgba(252, 213, 207, 0.8);
-            margin-bottom: 24px;
+            margin-bottom: 18px;
             box-shadow: 0 4px 12px rgba(140, 74, 39, 0.08);
+        }
+
+        .paid-banner-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ECFDF5;
+            color: #047857;
+            border: 1.5px solid #A7F3D0;
+            padding: 8px 20px;
+            border-radius: 9999px;
+            font-size: 13.5px;
+            font-weight: 800;
+            margin-bottom: 16px;
         }
 
         /* Thẻ lồng thẻ bo cong 14px */
@@ -108,7 +122,7 @@
             border-radius: 14px;
             padding: 24px 28px;
             text-align: left;
-            margin: 24px 0;
+            margin: 18px 0 24px;
             font-size: 14.5px;
             box-shadow: 0 4px 14px rgba(45, 24, 15, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9);
         }
@@ -118,6 +132,7 @@
             align-items: center;
             padding: 10px 0;
             border-bottom: 1px dashed rgba(230, 222, 212, 0.8);
+            gap: 12px;
         }
         .detail-row:last-child { border-bottom: none; }
 
@@ -177,6 +192,21 @@
             font-size: 22px;
             font-weight: 800 !important;
         }
+
+        .btn-demo-paid-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: #ffffff;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+        }
     </style>
 </head>
 <body>
@@ -189,18 +219,32 @@
                 <i class="fa-solid fa-check"></i>
             </div>
 
-            <h1 class="success-title">ĐẶT HÀNG THÀNH CÔNG!</h1>
-            <p style="color: var(--color-text-secondary); margin-bottom: 14px; font-size: 15px;">Cảm ơn bạn đã đồng hành hồi sinh những cuốn sách tri thức cũ.</p>
+            <h1 class="success-title"
+                th:text="${order.paymentStatus.name() == 'PAID' ? 'THANH TOÁN &amp; ĐẶT HÀNG THÀNH CÔNG!' : 'ĐẶT HÀNG THÀNH CÔNG!'}">
+                THANH TOÁN &amp; ĐẶT HÀNG THÀNH CÔNG!
+            </h1>
+            <p style="color: var(--color-text-secondary); margin-bottom: 14px; font-size: 15px;">
+                Cảm ơn bạn đã đồng hành hồi sinh những cuốn sách tri thức cũ tại ReBook.
+            </p>
             
-            <div class="order-code-badge">
-                MÃ ĐƠN HÀNG: <span th:text="${order.orderCode}">ORD123456</span>
+            <div>
+                <div class="order-code-badge">
+                    MÃ ĐƠN HÀNG: <span th:text="${order.orderCode}">ORD123456</span>
+                </div>
+            </div>
+
+            <div th:if="${order.paymentStatus.name() == 'PAID'}">
+                <div class="paid-banner-pill">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>ĐÃ XÁC NHẬN THANH TOÁN THÀNH CÔNG</span>
+                </div>
             </div>
 
             <!-- Khung chi tiết đơn lồng thẻ bo cong 14px -->
             <div class="details-box">
                 <div class="detail-row">
                     <span style="color:var(--color-text-secondary);">Hình thức nhận sách:</span>
-                    <strong th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Nhận tại Cửa hàng (Click & Collect)' : 'Giao hàng tận nơi'}">Nhận tại Cửa hàng</strong>
+                    <strong th:text="${order.deliveryMethod.name() == 'STORE_PICKUP' ? 'Nhận tại Cửa hàng (Click &amp; Collect)' : 'Giao hàng tận nơi'}">Giao hàng tận nơi</strong>
                 </div>
                 <div class="detail-row">
                     <span style="color:var(--color-text-secondary);">Chi nhánh phục vụ:</span>
@@ -208,7 +252,7 @@
                 </div>
                 <div class="detail-row">
                     <span style="color:var(--color-text-secondary);">Người nhận:</span>
-                    <strong th:text="${order.receiverName} + ' (' + ${order.receiverPhone} + ')'">Nguyễn Song Hoàng Phúc (0912345678)</strong>
+                    <strong th:text="${order.receiverName} + ' (' + ${order.receiverPhone} + ')'">Thái Duy Cường (0912345678)</strong>
                 </div>
                 <div class="detail-row">
                     <span style="color:var(--color-text-secondary);">Địa chỉ bàn giao:</span>
@@ -216,7 +260,7 @@
                 </div>
                 <div class="detail-row">
                     <span style="color:var(--color-text-secondary);">Phương thức thanh toán:</span>
-                    <strong th:text="${order.paymentMethod.name() == 'VNPAY' ? 'Cổng trực tuyến VNPay' : (order.paymentMethod.name() == 'MOMO' ? 'Ví điện tử MoMo' : (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'Chuyển khoản VietQR 24/7' : 'Thanh toán tiền mặt khi nhận sách (COD)'))}">COD</strong>
+                    <strong th:text="${order.paymentMethod.name() == 'VNPAY' ? 'VNPay (ATM / Visa / QR)' : (order.paymentMethod.name() == 'MOMO' ? 'Ví điện tử MoMo' : (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'Chuyển khoản VietQR 24/7 (Vietcombank)' : 'Thanh toán tiền mặt khi nhận sách (COD)'))}">COD</strong>
                 </div>
                 <div class="detail-row">
                     <span style="color:var(--color-text-secondary);">Trạng thái thanh toán:</span>
@@ -224,67 +268,73 @@
                         <i class="fa-solid fa-circle-check"></i> ĐÃ THANH TOÁN (PAID)
                     </span>
                     <span th:unless="${order.paymentStatus.name() == 'PAID'}" style="color: #b45309; font-weight:800;">
-                        <i class="fa-solid fa-clock"></i> <span th:text="${order.paymentMethod.name() == 'MOMO' ? 'CHỜ THANH TOÁN VÍ MOMO' : (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'CHỜ CHUYỂN KHOẢN (VietQR)' : 'CHƯA THANH TOÁN (Chờ nhận sách COD)')}">CHƯA THANH TOÁN</span>
+                        <i class="fa-solid fa-clock"></i>
+                        <span th:text="${order.paymentMethod.name() == 'MOMO' ? 'CHỜ THANH TOÁN VÍ MOMO' : (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'CHỜ CHUYỂN KHOẢN (VietQR)' : 'THANH TOÁN KHI NHẬN HÀNG (COD)')}">THANH TOÁN KHI NHẬN HÀNG</span>
                     </span>
                 </div>
                 <div class="detail-row" style="font-size: 16px; font-weight: 800; padding-top: 14px; margin-top: 6px; border-top: 1.5px solid rgba(220, 213, 201, 0.8);">
                     <span>TỔNG THANH TOÁN:</span>
-                    <span class="total-amount-fire" th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫204.000</span>
+                    <span class="total-amount-fire" th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫225.400</span>
                 </div>
             </div>
 
-            <!-- Khối Mã VietQR / MoMo Động Dành Cho Đơn Chuyển Khoản Hoặc Khách Muốn Thanh Toán Trước -->
-            <div th:if="${order.paymentStatus.name() != 'PAID' and (order.paymentMethod.name() == 'BANK_TRANSFER' or order.paymentMethod.name() == 'MOMO' or order.paymentMethod.name() == 'COD')}" 
+            <!-- Khối Mã VietQR Vietcombank tùy chọn nếu đơn chưa thanh toán (ví dụ đơn COD muốn thanh toán trước) -->
+            <div th:if="${order.paymentStatus.name() != 'PAID'}" 
                  style="background:#FAF8F5; border:1.5px solid #ECE7DE; border-radius:18px; padding:22px; margin:22px 0; text-align:center;">
-                <div style="display:inline-flex; align-items:center; gap:8px; background:#EFF6FF; color:#1D4ED8; font-weight:800; font-size:12.5px; padding:6px 14px; border-radius:999px; margin-bottom:14px; border:1px solid #BFDBFE;">
-                    <i class="fa-solid fa-qrcode"></i> <span th:text="${order.paymentMethod.name() == 'MOMO' ? 'QUÉT MÃ MOMO ĐỂ HOÀN TẤT THANH TOÁN' : (order.paymentMethod.name() == 'BANK_TRANSFER' ? 'QUÉT MÃ VIETQR ĐỂ HOÀN TẤT THANH TOÁN' : 'THANH TOÁN TRƯỚC QUA VIETQR / MOMO (TÙY CHỌN)')}">QUÉT MÃ ĐỂ HOÀN TẤT THANH TOÁN</span>
+                <div style="display:inline-flex; align-items:center; gap:8px; background:#ECFDF5; color:#047857; font-weight:800; font-size:12.5px; padding:6px 14px; border-radius:999px; margin-bottom:14px; border:1px solid #A7F3D0;">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <span>THANH TOÁN TRƯỚC QUA MÃ VIETQR VIETCOMBANK (TÙY CHỌN)</span>
                 </div>
                 
                 <div style="display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:24px; margin-top:8px;">
-                    <!-- Ảnh QR sinh động từ VietQR Open API -->
-                    <div style="background:#FFFFFF; padding:12px; border-radius:14px; border:1px solid #ECE7DE; box-shadow:0 4px 16px rgba(45, 24, 15, 0.06);">
-                        <img th:src="${order.paymentMethod.name() == 'MOMO'} ? ('https://img.vietqr.io/image/970422-0901234567-compact2.png?amount=' + ${order.finalAmount.longValue()} + '&addInfo=' + ${order.orderCode} + '&accountName=MOMO%20REBOOK%20STORE') : ('https://img.vietqr.io/image/MB-0382345678-compact2.png?amount=' + ${order.finalAmount.longValue()} + '&addInfo=' + ${order.orderCode} + '&accountName=REBOOK%20CHUOI%20SACH%20CU')" 
-                             alt="Mã QR Chuyển Khoản" style="width:210px; height:210px; object-fit:contain; border-radius:8px;">
-                        <div style="font-size:11px; color:#78716C; margin-top:6px; font-weight:500;">
-                            <i class="fa-solid fa-camera me-1"></i><span th:text="${order.paymentMethod.name() == 'MOMO' ? 'Mở App MoMo để quét mã' : 'Mở App Ngân hàng hoặc MoMo để quét'}">Mở App Ngân hàng để quét</span>
-                        </div>
+                    <div style="background:#0b241c; padding:10px; border-radius:16px; box-shadow:0 8px 24px rgba(15, 23, 42, 0.16);">
+                        <img src="/images/payment/vietcombank-qr-cuong.png" 
+                             alt="Mã QR Chuyển Khoản Vietcombank THAI DUY CUONG" style="width:210px; height:auto; object-fit:contain; border-radius:12px; display:block;">
                     </div>
 
-                    <!-- Bảng thông tin chuyển khoản kèm nút sao chép -->
                     <div style="text-align:left; flex:1; min-width:270px; max-width:360px;">
                         <div style="margin-bottom:10px;">
                             <div style="font-size:11.5px; color:#78716C;">Ngân hàng thụ hưởng:</div>
-                            <div style="font-weight:700; color:#1C1917; font-size:14px;">MBBank (Ngân Hàng Quân Đội)</div>
+                            <div style="font-weight:700; color:#1C1917; font-size:14px;">Vietcombank — PGD Lạc Dương</div>
                         </div>
                         <div style="margin-bottom:10px;">
                             <div style="font-size:11.5px; color:#78716C;">Số tài khoản:</div>
                             <div style="display:flex; align-items:center; justify-content:space-between; background:#FFFFFF; padding:6px 10px; border-radius:8px; border:1px solid #ECE7DE;">
-                                <strong style="color:var(--rebook-leather); font-size:15px; letter-spacing:0.5px;">0382345678</strong>
-                                <button type="button" onclick="navigator.clipboard.writeText('0382345678'); if(window.showLiquidToast) showLiquidToast('Đã sao chép số tài khoản!', 'success'); else alert('Đã sao chép số tài khoản: 0382345678');" style="border:none; background:none; color:#78716C; cursor:pointer; font-size:13px;" title="Sao chép"><i class="fa-regular fa-copy"></i></button>
+                                <strong style="color:#007a33; font-size:15px; letter-spacing:0.5px;">1034497633</strong>
+                                <button type="button" data-copy="1034497633" onclick="copyTextField(this, 'Đã sao chép STK: 1034497633')" style="border:none; background:none; color:#78716C; cursor:pointer; font-size:13px;" title="Sao chép"><i class="fa-regular fa-copy"></i></button>
                             </div>
                         </div>
                         <div style="margin-bottom:10px;">
                             <div style="font-size:11.5px; color:#78716C;">Chủ tài khoản:</div>
-                            <div style="font-weight:700; color:#1C1917; font-size:13.5px;">REBOOK CHUOI SACH CU</div>
+                            <div style="font-weight:700; color:#1C1917; font-size:13.5px;">THAI DUY CUONG</div>
                         </div>
                         <div style="margin-bottom:10px;">
                             <div style="font-size:11.5px; color:#78716C;">Số tiền cần chuyển:</div>
                             <div style="display:flex; align-items:center; justify-content:space-between; background:#FFFFFF; padding:6px 10px; border-radius:8px; border:1px solid #ECE7DE;">
-                                <strong style="color:#DC2626; font-size:15px;" th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫204.000</strong>
-                                <button type="button" th:onclick="'navigator.clipboard.writeText(\'' + ${order.finalAmount.longValue()} + '\'); if(window.showLiquidToast) showLiquidToast(\'Đã sao chép số tiền!\', \'success\'); else alert(\'Đã sao chép số tiền: ' + ${order.finalAmount.longValue()} + '\');'" style="border:none; background:none; color:#78716C; cursor:pointer; font-size:13px;" title="Sao chép"><i class="fa-regular fa-copy"></i></button>
+                                <strong style="color:#DC2626; font-size:15px;" th:text="'₫' + ${#numbers.formatDecimal(order.finalAmount, 0, 'POINT', 0, 'COMMA')}">₫225.400</strong>
+                                <button type="button" th:attr="data-copy=${order.finalAmount.longValue()}" onclick="copyTextField(this, 'Đã sao chép số tiền!')" style="border:none; background:none; color:#78716C; cursor:pointer; font-size:13px;" title="Sao chép"><i class="fa-regular fa-copy"></i></button>
                             </div>
                         </div>
                         <div>
-                            <div style="font-size:11.5px; color:#78716C;">Nội dung chuyển khoản (bắt buộc):</div>
+                            <div style="font-size:11.5px; color:#78716C;">Nội dung chuyển khoản:</div>
                             <div style="display:flex; align-items:center; justify-content:space-between; background:#FEF2F2; padding:6px 10px; border-radius:8px; border:1px dashed #F87171;">
                                 <strong style="color:#991B1B; font-size:14px;" th:text="${order.orderCode}">ORD123456</strong>
-                                <button type="button" th:onclick="'navigator.clipboard.writeText(\'' + ${order.orderCode} + '\'); if(window.showLiquidToast) showLiquidToast(\'Đã sao chép nội dung chuyển khoản!\', \'success\'); else alert(\'Đã sao chép mã đơn: ' + ${order.orderCode} + '\');'" style="border:none; background:none; color:#991B1B; cursor:pointer; font-size:13px;" title="Sao chép"><i class="fa-regular fa-copy"></i></button>
+                                <button type="button" th:attr="data-copy=${order.orderCode}" onclick="copyTextField(this, 'Đã sao chép mã đơn hàng!')" style="border:none; background:none; color:#991B1B; cursor:pointer; font-size:13px;" title="Sao chép"><i class="fa-regular fa-copy"></i></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div style="margin-top:14px; font-size:12px; color:#78716C; text-align:center;">
-                    <i class="fa-solid fa-bolt text-warning me-1"></i> Hệ thống và nhân viên quầy sẽ xác nhận đơn ngay khi phát sinh giao dịch.
+
+                <!-- Nút Demo Đã thanh toán xong nhỏ gọn -->
+                <div style="margin-top:14px;">
+                    <form th:action="@{/checkout/vnpay-return}" method="get" style="display:inline-block;">
+                        <input type="hidden" name="vnp_TxnRef" th:value="${order.orderCode}">
+                        <input type="hidden" name="vnp_ResponseCode" value="00">
+                        <input type="hidden" name="vnp_TransactionNo" value="VCB1034497633">
+                        <button type="submit" class="btn-demo-paid-inline">
+                            <i class="fa-solid fa-circle-check"></i> Đã thanh toán xong (Demo)
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -299,6 +349,17 @@
     <!-- FOOTER -->
     <div th:replace="~{fragments/footer :: footer}"></div>
 
+    <script>
+        function copyTextField(btn, msg) {
+            const val = btn.getAttribute('data-copy') || '';
+            if (navigator.clipboard && val) {
+                navigator.clipboard.writeText(val);
+            }
+            if (window.showLiquidToast) {
+                showLiquidToast(msg, 'success');
+            }
+        }
+    </script>
     <script src="/js/i18n.js"></script>
     <script src="/js/cart-popover.js"></script>
 </body>
