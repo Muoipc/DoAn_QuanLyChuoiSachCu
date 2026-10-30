@@ -337,7 +337,7 @@
             justify-content: space-between;
             position: sticky;
             top: 0;
-            z-index: 1030;
+            z-index: 10000 !important;
         }
 
         .navbar-toggle-btn {
@@ -388,13 +388,25 @@
         }
 
         .glass-dropdown-menu {
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: var(--liquid-glass-blur);
-            -webkit-backdrop-filter: var(--liquid-glass-blur);
-            border: 1px solid var(--rebook-border);
-            border-radius: var(--squircle-lg);
-            box-shadow: var(--liquid-glass-dropdown);
-            padding: 8px;
+            background: #FFFFFF !important;
+            border: 1.5px solid var(--rebook-border) !important;
+            border-radius: var(--squircle-lg) !important;
+            box-shadow: 0 16px 40px rgba(45, 24, 15, 0.16), 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+            padding: 10px !important;
+            z-index: 10050 !important;
+        }
+        .notif-item {
+            transition: all 0.15s ease;
+            border-radius: 10px;
+            padding: 8px 10px !important;
+            margin-bottom: 4px;
+        }
+        .notif-item:hover {
+            background: rgba(140, 74, 39, 0.06) !important;
+        }
+        .notif-item.unread-item {
+            background: rgba(140, 74, 39, 0.04);
+            border-left: 3px solid var(--rebook-leather) !important;
         }
         .glass-dropdown-menu .dropdown-item {
             border-radius: var(--squircle-sm);
@@ -1271,7 +1283,7 @@
                               th:style="${unreadNotifCount != null and unreadNotifCount > 0} ? 'display:inline-flex;' : 'display:none;'"
                               th:text="${unreadNotifCount != null ? unreadNotifCount : 0}">0</span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-end glass-dropdown-menu shadow-lg border-0 p-3 mt-2" aria-labelledby="notifDropdown" style="width: 350px; max-height: 480px; overflow-y: auto;">
+                    <div class="dropdown-menu dropdown-menu-end glass-dropdown-menu shadow-lg border-0 p-3 mt-2" aria-labelledby="notifDropdown" style="width: 380px; max-width: 90vw; max-height: 500px; overflow-y: auto; z-index: 10050 !important;">
                         <div class="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
                             <span class="fw-bold text-dark small"><i class="fa-solid fa-bell text-warning me-1"></i>Thông báo (<span id="unreadCountDisplay" th:text="${unreadNotifCount != null ? unreadNotifCount : 0}">0</span> chưa đọc)</span>
                             <button type="button" class="btn btn-link btn-sm text-decoration-none p-0 text-muted small" onclick="markAllNotificationsAsRead()" title="Đánh dấu tất cả đã đọc" style="font-size: 11px;">
@@ -1284,8 +1296,8 @@
                             Chưa có thông báo mới
                         </div>
                         <ul id="notifList" class="list-unstyled mb-0 small">
-                            <li th:each="n : ${adminNotifications}" class="border-bottom py-2 px-1 notif-item" th:classappend="${!n.isRead} ? 'bg-light-subtle' : ''">
-                                <a th:href="@{${n.targetUrl != null ? n.targetUrl : '#'}}" class="text-decoration-none text-dark d-block" th:onclick="|markNotificationAsRead(${n.id})|">
+                            <li th:each="n : ${adminNotifications}" class="border-bottom py-2 px-1 notif-item" th:classappend="${!n.isRead} ? 'unread-item' : ''">
+                                <a th:href="@{${n.targetUrl != null ? n.targetUrl : '#'}}" class="text-decoration-none text-dark d-block" th:attr="data-id=${n.id}" onclick="markNotificationAsRead(this.getAttribute('data-id'))">
                                     <div class="d-flex justify-content-between align-items-start mb-1">
                                         <div class="d-flex align-items-center gap-1.5">
                                             <i th:if="${n.type.name() == 'CONSIGNMENT'}" class="fa-solid fa-hand-holding-dollar text-warning"></i>
